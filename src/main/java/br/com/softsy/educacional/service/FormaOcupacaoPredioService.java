@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.softsy.educacional.dto.DestinacaoLixoDTO;
 import br.com.softsy.educacional.dto.FormaOcupacaoPredioDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
-import br.com.softsy.educacional.model.DestinacaoLixo;
 import br.com.softsy.educacional.model.FormaOcupacaoPredio;
 import br.com.softsy.educacional.repository.FormaOcupacaoPredioRepository;
 
