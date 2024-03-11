@@ -10,5 +10,5 @@ import br.com.softsy.educacional.model.DestinacaoLixo;
 @Repository
 public interface DestinacaoLixoRepository extends JpaRepository<DestinacaoLixo, Long>{
 
-	List<DestinacaoLixo> findByAtivo (Character ativo);
+	List<DestinacaoLixo> findByDestinacaoLixo (String destinacaoLixo);
 }
