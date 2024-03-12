@@ -15,32 +15,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.softsy.educacional.dto.SituacaoFuncionamentoDTO;
-import br.com.softsy.educacional.model.SituacaoFuncionamento;
-import br.com.softsy.educacional.service.SituacaoFuncionamentoService;
+import br.com.softsy.educacional.dto.TipoDependenciaDTO;
+import br.com.softsy.educacional.model.TipoDependencia;
+import br.com.softsy.educacional.service.TipoDependenciaService;
+
 
 @RestController
-@RequestMapping("/situacaoFuncionamento")
-public class SituacaoFuncionamentoController {
+@RequestMapping("/tipoDependencia")
+public class TipoDependenciaController {
 
-	@Autowired SituacaoFuncionamentoService service;
+	@Autowired TipoDependenciaService service;
 	
 	@GetMapping
-	public ResponseEntity<List<SituacaoFuncionamento>> listar(){
+	public ResponseEntity<List<TipoDependencia>> listar(){
 		return ResponseEntity.ok(service.listarTudo());
 	}
 
 	
-	@GetMapping("/{idSituacaoFuncionamento}")
-	public ResponseEntity<SituacaoFuncionamentoDTO> buscarPorId(@PathVariable Long idSituacaoFuncionamento){
-		return ResponseEntity.ok(service.buscarPorId(idSituacaoFuncionamento));
+	@GetMapping("/{idTipoDependencia}")
+	public ResponseEntity<TipoDependenciaDTO> buscarPorId(@PathVariable Long idTipoDependencia){
+		return ResponseEntity.ok(service.buscarPorId(idTipoDependencia));
 	}
 	
 	@PostMapping
-	public ResponseEntity<SituacaoFuncionamentoDTO> cadastrar(@RequestBody @Valid SituacaoFuncionamentoDTO dto){
-		SituacaoFuncionamentoDTO FormaDTO = service.salvar(dto);
+	public ResponseEntity<TipoDependenciaDTO> cadastrar(@RequestBody @Valid TipoDependenciaDTO dto){
+		TipoDependenciaDTO FormaDTO = service.salvar(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(FormaDTO.getIdSituacaoFuncionamento()).toUri();
+				.buildAndExpand(FormaDTO.getIdTipoDependencia()).toUri();
 		return ResponseEntity.created(uri).body(FormaDTO);
-	}
+	}	
+	
 }
