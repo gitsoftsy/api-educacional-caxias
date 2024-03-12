@@ -11,24 +11,24 @@ import javax.persistence.Table;
 
 import lombok.Data;
 
-
 @Entity
-@Table(name = "TBL_MODALIDADE_ESCOLA")
+@Table(name = "TBL_SITUACAO_FUNCIONAMENTO")
 @Data
-public class ModalidadeEscola {
-	
+public class SituacaoFuncionamento {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_MODALIDADE_ESCOLA")
-	private Long idModalidadeEscola;
+	@Column(name = "ID_SITUACAO_FUNCIONAMENTO")
+	private Long idSituacaoFuncionamento;
 	
-	@Column(name = "MODALIDADE_ESCOLA", nullable = false, unique = true)
-	private String modalidadeEscola;
+	@Column(name = "SITUACAO_FUNCIONAMENTO", nullable = false, unique = true)
+	private String situacaoFuncionamento;
 	
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
 	
 	@Column(name = "ATIVO", nullable = false)
 	private Character ativo;
-
+	
+	
 }
