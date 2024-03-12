@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.FormaOcupacaoPredioDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DestinacaoLixo;
 import br.com.softsy.educacional.model.FormaOcupacaoPredio;
 import br.com.softsy.educacional.repository.FormaOcupacaoPredioRepository;
 
@@ -59,6 +60,12 @@ public class FormaOcupacaoPredioService {
 		FormaOcupacaoPredio formaOcupacao = repository.getReferenceById(dto.getIdFormaOcupacaoPredio());
 		atualizaDados(formaOcupacao, dto);
 		return new FormaOcupacaoPredioDTO(formaOcupacao);
+	}
+	
+	@Transactional
+	public void ativaDesativa(char status, Long idFormaOcupacaoPredio) {
+		FormaOcupacaoPredio formaOcupacao = repository.getReferenceById(idFormaOcupacaoPredio);
+		formaOcupacao.setAtivo(status);
 	}
 	
 	private void atualizaDados(FormaOcupacaoPredio destino, FormaOcupacaoPredioDTO origem) {

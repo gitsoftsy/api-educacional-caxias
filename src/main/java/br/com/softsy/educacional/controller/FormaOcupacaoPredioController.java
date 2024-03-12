@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,5 +46,22 @@ public class FormaOcupacaoPredioController {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(FormaDTO.getIdFormaOcupacaoPredio()).toUri();
 		return ResponseEntity.created(uri).body(FormaDTO);
+	}
+	
+	@PutMapping
+	public ResponseEntity<?> atualizar(@RequestBody @Valid FormaOcupacaoPredioDTO dto){
+		return ResponseEntity.ok(service.atualizar(dto));
+	}
+	
+	@PutMapping("/{idFormaOcupacaoPredio}/ativar")
+	public ResponseEntity<?> ativar(@PathVariable Long idFormaOcupacaoPredio){
+		service.ativaDesativa('S', idFormaOcupacaoPredio);
+		return ResponseEntity.ok().build();	
+	}
+	
+	@PutMapping("/{idFormaOcupacaoPredio}/desativar")
+	public ResponseEntity<?> desativar(@PathVariable Long idFormaOcupacaoPredio){
+		service.ativaDesativa('N', idFormaOcupacaoPredio);
+		return ResponseEntity.ok().build();	
 	}
 }
