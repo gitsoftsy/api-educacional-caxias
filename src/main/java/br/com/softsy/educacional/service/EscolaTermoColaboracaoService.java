@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,9 @@ public class EscolaTermoColaboracaoService {
 	}
 	
 	private void atualizaDados(EscolaTermoColaboracao destino, CadastroEscolaTermoColaboracaoDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "idEscolaTermoColaboracao","dataCadastro","dataCadastro","dataValidade", "coordenador", "termoColaboracao", "idEscola");
+		BeanUtils.copyProperties(origem, destino, "idEscolaTermoColaboracao","dataCadastro", "anexo","idEscola");
+		
+		destino.setAnexo(Base64.decodeBase64(origem.getAnexo()));
 	}
 	
 	@Transactional(readOnly = true)

@@ -50,6 +50,7 @@ public class TratamentoLixoService {
 		TratamentoLixo tratamentoLixo = new TratamentoLixo();
 		BeanUtils.copyProperties(dto, tratamentoLixo, "idTratamentoLixo", "ativo", "dataCadastro");
 		tratamentoLixo.setDataCadastro(LocalDateTime.now());
+		tratamentoLixo.setAtivo('S');
 		return tratamentoLixo;
 	}
 	
