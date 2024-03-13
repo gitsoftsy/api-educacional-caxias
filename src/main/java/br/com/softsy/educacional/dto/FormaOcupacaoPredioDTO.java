@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.softsy.educacional.model.FormaOcupacaoPredio;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,8 +18,9 @@ public class FormaOcupacaoPredioDTO {
 	
 	@NotNull
 	private String formaOcupacaoPredio;
+	@JsonIgnore
 	private LocalDateTime dataCadastro;
-	
+	@JsonIgnore
 	private Character ativo;
 	
 	public FormaOcupacaoPredioDTO(FormaOcupacaoPredio formaOcupacao) {

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.softsy.educacional.model.Localizacao;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,8 +19,10 @@ public class LocalizacaoDTO {
 	@NotNull
 	private String localizacao;
 	
+	@JsonIgnore
 	private LocalDateTime dataCadastro;
 	
+	@JsonIgnore
 	private Character ativo;
 	
 	public LocalizacaoDTO(Localizacao localizacao) {

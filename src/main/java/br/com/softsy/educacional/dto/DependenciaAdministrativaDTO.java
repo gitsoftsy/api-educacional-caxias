@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,8 +19,10 @@ public class DependenciaAdministrativaDTO {
 	@NotNull
 	private String dependenciaAdministrativa;
 	
+	@JsonIgnore
 	private LocalDateTime dataCadastro;
 	
+	@JsonIgnore
 	private Character ativo;
 	
 	public DependenciaAdministrativaDTO(DependenciaAdministrativa dependenciaAdm) {
