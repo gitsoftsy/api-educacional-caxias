@@ -16,6 +16,7 @@ public class TipoTelefoneDTO {
 	
 	@NotNull
 	private String tipoTelefone;
+	
 	private LocalDateTime dataCadastro;
 	
 	public TipoTelefoneDTO(TipoTelefone tipoTelefone) {

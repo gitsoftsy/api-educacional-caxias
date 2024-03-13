@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,5 +45,23 @@ public class TratamentoLixoController {
 				.buildAndExpand(FormaDTO.getIdTratamentoLixo()).toUri();
 		return ResponseEntity.created(uri).body(FormaDTO);
 	}		
+	
+	@PutMapping
+	public ResponseEntity<?> atualizar(@RequestBody @Valid TratamentoLixoDTO dto){
+		return ResponseEntity.ok(service.atualizar(dto));
+	}
+	
+	@PutMapping("/{idTratamentoLixo}/ativar")
+	public ResponseEntity<?> ativar(@PathVariable Long idTratamentoLixo){
+		service.ativaDesativa('S', idTratamentoLixo);
+		return ResponseEntity.ok().build();	
+	}
+	
+	
+	@PutMapping("/{idTratamentoLixo}/desativar")
+	public ResponseEntity<?> desatviar(@PathVariable Long idTratamentoLixo){
+		service.ativaDesativa('N', idTratamentoLixo);
+		return ResponseEntity.ok().build();
+	}
 
 }

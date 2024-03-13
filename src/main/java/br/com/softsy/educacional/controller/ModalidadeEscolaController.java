@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +44,24 @@ public class ModalidadeEscolaController {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(FormaDTO.getIdModalidadeEscola()).toUri();
 		return ResponseEntity.created(uri).body(FormaDTO);
+	}
+	
+	@PutMapping
+	public ResponseEntity<?> atualizar(@RequestBody @Valid ModalidadeEscolaDTO dto){
+		return ResponseEntity.ok(service.atualizar(dto));
+	}
+	
+	@PutMapping("/{idModalidadeEscola}/ativar")
+	public ResponseEntity<?> ativar(@PathVariable Long idModalidadeEscola){
+		service.ativaDesativa('S', idModalidadeEscola);
+		return ResponseEntity.ok().build();	
+	}
+	
+	
+	@PutMapping("/{idModalidadeEscola}/desativar")
+	public ResponseEntity<?> desatviar(@PathVariable Long idModalidadeEscola){
+		service.ativaDesativa('N', idModalidadeEscola);
+		return ResponseEntity.ok().build();
 	}
 
 

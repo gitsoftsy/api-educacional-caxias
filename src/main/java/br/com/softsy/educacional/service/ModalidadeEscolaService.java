@@ -49,10 +49,16 @@ public class ModalidadeEscolaService {
 	
 	private ModalidadeEscola criarModalidadeEscolaAPartirDTO(ModalidadeEscolaDTO dto) {
 		ModalidadeEscola modalidadeEscola = new ModalidadeEscola();
-		BeanUtils.copyProperties(dto, modalidadeEscola, "idModalidadeEscola", "modalidadeEscola", "ativo", "dataCadastro");
+		BeanUtils.copyProperties(dto, modalidadeEscola, "idModalidadeEscola", "ativo", "dataCadastro");
 		modalidadeEscola.setAtivo('S');
 		modalidadeEscola.setDataCadastro(LocalDateTime.now());
 		return modalidadeEscola;
+	}
+	
+	@Transactional
+	public void ativaDesativa(char status, Long idModalidadeEscola) {
+		ModalidadeEscola destinacao = repository.getReferenceById(idModalidadeEscola);
+		destinacao.setAtivo(status);
 	}
 	
 	@Transactional
@@ -63,7 +69,7 @@ public class ModalidadeEscolaService {
 	}
 	
 	private void atualizaDados(ModalidadeEscola destino, ModalidadeEscolaDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "idModalidadeEscola", "modalidadeEscola", "ativo", "dataCadastro");
+		BeanUtils.copyProperties(origem, destino, "idModalidadeEscola", "ativo", "dataCadastro");
 		
 	}	
 }

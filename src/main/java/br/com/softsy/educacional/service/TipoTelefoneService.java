@@ -48,7 +48,7 @@ public class TipoTelefoneService {
 	
 	private TipoTelefone criarTipoTelefoneAPartirDTO(TipoTelefoneDTO dto) {
 		TipoTelefone tipoTelefone = new TipoTelefone();
-		BeanUtils.copyProperties(dto, tipoTelefone, "idTipoTelefone", "tipoTelefone", "dataCadastro");
+		BeanUtils.copyProperties(dto, tipoTelefone, "idTipoTelefone",  "dataCadastro");
 		tipoTelefone.setDataCadastro(LocalDateTime.now());
 		return tipoTelefone;
 	}
@@ -61,7 +61,7 @@ public class TipoTelefoneService {
 	}
 	
 	private void atualizaDados(TipoTelefone destino, TipoTelefoneDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "idTipoTelefone", "tipoTelefone", "dataCadastro");
+		BeanUtils.copyProperties(origem, destino, "idTipoTelefone", "dataCadastro");
 		
 	}
 

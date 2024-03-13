@@ -49,7 +49,7 @@ public class LinguaEnsinoService {
 	
 	private LinguaEnsino criarLinguaEnsinoAPartirDTO(LinguaEnsinoDTO dto) {
 		LinguaEnsino linguaEnsino = new LinguaEnsino();
-		BeanUtils.copyProperties(dto, linguaEnsino, "idLinguaEnsino", "linguaEnsino", "linguaIndigena", "ativo", "dataCadastro");
+		BeanUtils.copyProperties(dto, linguaEnsino, "idLinguaEnsino", "ativo", "dataCadastro");
 		linguaEnsino.setAtivo('S');
 		linguaEnsino.setDataCadastro(LocalDateTime.now());
 		return linguaEnsino;
@@ -63,8 +63,14 @@ public class LinguaEnsinoService {
 	}
 	
 	private void atualizaDados(LinguaEnsino destino, LinguaEnsinoDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "idLinguaEnsino", "linguaEnsino", "linguaIndigena", "ativo", "dataCadastro");
+		BeanUtils.copyProperties(origem, destino, "idLinguaEnsino", "ativo", "dataCadastro");
 		
 	}	
+	
+	@Transactional
+	public void ativaDesativa(char status, Long idLinguaEnsino) {
+		LinguaEnsino destinacao = repository.getReferenceById(idLinguaEnsino);
+		destinacao.setAtivo(status);
+	}
 	
 }

@@ -35,6 +35,9 @@ public class EscolaTermoColaboracao {
 	@Column(name = "TERMO_COLABORACAO", nullable = false)
 	private String termoColaboracao;
 	
+	@Column(name = "ANEXO", nullable = false)
+	private String anexo;
+	
 	@ManyToOne
 	@JoinColumn(name = "ID_ESCOLA", nullable = true)
 	private Escola escola;

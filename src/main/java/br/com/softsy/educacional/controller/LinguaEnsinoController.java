@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +43,24 @@ public class LinguaEnsinoController {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(FormaDTO.getIdLinguaEnsino()).toUri();
 		return ResponseEntity.created(uri).body(FormaDTO);
+	}
+	
+	@PutMapping
+	public ResponseEntity<?> atualizar(@RequestBody @Valid LinguaEnsinoDTO dto){
+		return ResponseEntity.ok(service.atualizar(dto));
+	}
+	
+	@PutMapping("/{idLinguaEnsino}/ativar")
+	public ResponseEntity<?> ativar(@PathVariable Long idLinguaEnsino){
+		service.ativaDesativa('S', idLinguaEnsino);
+		return ResponseEntity.ok().build();	
+	}
+	
+	
+	@PutMapping("/{idLinguaEnsino}/desativar")
+	public ResponseEntity<?> desatviar(@PathVariable Long idLinguaEnsino){
+		service.ativaDesativa('N', idLinguaEnsino);
+		return ResponseEntity.ok().build();
 	}
 
 }

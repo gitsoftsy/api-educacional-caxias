@@ -49,10 +49,16 @@ public class SituacaoFuncionamentoService {
 	
 	private SituacaoFuncionamento criarSituacaoFuncionamentoAPartirDTO(SituacaoFuncionamentoDTO dto) {
 		SituacaoFuncionamento situacaoFuncionamento = new SituacaoFuncionamento();
-		BeanUtils.copyProperties(dto, situacaoFuncionamento, "idSituacaoFuncionamento", "situacaoFuncionamento", "ativo", "dataCadastro");
+		BeanUtils.copyProperties(dto, situacaoFuncionamento, "idSituacaoFuncionamento", "ativo", "dataCadastro");
 		situacaoFuncionamento.setAtivo('S');
 		situacaoFuncionamento.setDataCadastro(LocalDateTime.now());
 		return situacaoFuncionamento;
+	}
+	
+	@Transactional
+	public void ativaDesativa(char status, Long idSituacaoFuncionamento) {
+		SituacaoFuncionamento destinacao = repository.getReferenceById(idSituacaoFuncionamento);
+		destinacao.setAtivo(status);
 	}
 	
 	@Transactional
@@ -63,7 +69,7 @@ public class SituacaoFuncionamentoService {
 	}
 	
 	private void atualizaDados(SituacaoFuncionamento destino, SituacaoFuncionamentoDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "idSituacaoFuncionamento", "situacaoFuncionamento", "ativo", "dataCadastro");
+		BeanUtils.copyProperties(origem, destino, "idSituacaoFuncionamento", "ativo", "dataCadastro");
 		
 	}	
 

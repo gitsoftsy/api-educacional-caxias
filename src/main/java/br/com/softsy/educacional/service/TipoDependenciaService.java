@@ -46,9 +46,15 @@ public class TipoDependenciaService {
 		}
 	}
 	
+	@Transactional
+	public void ativaDesativa(char status, Long idTipoDependencia) {
+		TipoDependencia destinacao = repository.getReferenceById(idTipoDependencia);
+		destinacao.setAtivo(status);
+	}
+	
 	private TipoDependencia criarTipoDependenciaAPartirDTO(TipoDependenciaDTO dto) {
 		TipoDependencia tipoDependencia = new TipoDependencia();
-		BeanUtils.copyProperties(dto, tipoDependencia, "idTipoDependencia", "tipoDependencia", "ativo", "dataCadastro");
+		BeanUtils.copyProperties(dto, tipoDependencia, "idTipoDependencia", "ativo", "dataCadastro");
 		tipoDependencia.setAtivo('S');
 		tipoDependencia.setDataCadastro(LocalDateTime.now());
 		return tipoDependencia;
@@ -62,7 +68,7 @@ public class TipoDependenciaService {
 	}
 	
 	private void atualizaDados(TipoDependencia destino, TipoDependenciaDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "idTipoDependencia", "tipoDependencia", "ativo", "dataCadastro");
+		BeanUtils.copyProperties(origem, destino, "idTipoDependencia", "ativo", "dataCadastro");
 		
 	}
 

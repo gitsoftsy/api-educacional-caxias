@@ -48,9 +48,15 @@ public class TratamentoLixoService {
 	
 	private TratamentoLixo criarTratamentoLixoAPartirDTO(TratamentoLixoDTO dto) {
 		TratamentoLixo tratamentoLixo = new TratamentoLixo();
-		BeanUtils.copyProperties(dto, tratamentoLixo, "idTratamentoLixo", "tratamentoLixo", "ativo", "dataCadastro");
+		BeanUtils.copyProperties(dto, tratamentoLixo, "idTratamentoLixo", "ativo", "dataCadastro");
 		tratamentoLixo.setDataCadastro(LocalDateTime.now());
 		return tratamentoLixo;
+	}
+	
+	@Transactional
+	public void ativaDesativa(char status, Long idTratamentoLixo) {
+		TratamentoLixo destinacao = repository.getReferenceById(idTratamentoLixo);
+		destinacao.setAtivo(status);
 	}
 	
 	@Transactional
@@ -61,7 +67,7 @@ public class TratamentoLixoService {
 	}
 	
 	private void atualizaDados(TratamentoLixo destino, TratamentoLixoDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "idTratamentoLixo", "tratamentoLixo", "ativo", "dataCadastro");
+		BeanUtils.copyProperties(origem, destino, "idTratamentoLixo", "ativo", "dataCadastro");
 		
 	}
 
