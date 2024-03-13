@@ -62,6 +62,8 @@ public class EscolaTermoColaboracaoService {
 		escolaTermoColaboracao.setEscola(escola);
 		escolaTermoColaboracao.setDataCadastro(LocalDateTime.now());
 		escolaTermoColaboracao.setDataValidade(LocalDateTime.now());
+		BeanUtils.copyProperties(dto, escolaTermoColaboracao, "idEscolaTermoColaboracao","anexo","idEscola", "dataValidade", "dataCadastro");
+		escolaTermoColaboracao.setAnexo(Base64.decodeBase64(dto.getAnexo()));
 		return escolaTermoColaboracao;
 		
 	}

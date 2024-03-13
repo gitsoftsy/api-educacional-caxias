@@ -33,17 +33,17 @@ public class EscolaTermoColaboracaoController {
 		return ResponseEntity.ok(service.listarTudo());
 	}
 	
+	@GetMapping("/{idEscolaTermoColaboracao}")
+	public ResponseEntity<EscolaTermoColaboracaoDTO> buscarPorId(@PathVariable Long idEscolaTermoColaboracao){
+		return ResponseEntity.ok(service.buscarPorId(idEscolaTermoColaboracao));
+	}
+	
 	@PostMapping
 	public ResponseEntity<CadastroEscolaTermoColaboracaoDTO> cadastrar(@RequestBody @Valid CadastroEscolaTermoColaboracaoDTO dto){
 		CadastroEscolaTermoColaboracaoDTO cadastroDTO = service.salvar(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(cadastroDTO.getEscolaId()).toUri();
 		return ResponseEntity.created(uri).body(cadastroDTO);
-	}
-	
-	@GetMapping("/{idEscolaTColaboracao}")
-	public ResponseEntity<EscolaTermoColaboracaoDTO> buscarPorId(@PathVariable Long idEscola){
-		return ResponseEntity.ok(service.buscarPorId(idEscola));
 	}
 	
 	@PutMapping
