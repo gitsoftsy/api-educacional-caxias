@@ -125,9 +125,9 @@ public class Escola {
 	private Set<EscolaTelefone> telefones = new HashSet<>();
 	
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)
-	private Set<EscolaTratamentoLixo> EscolaTratamento = new HashSet<>();
+	private Set<EscolaTratamentoLixo> escolaTratamento = new HashSet<>();
 	
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)
-	private Set<EscolaTermoColaboracao> EscolaTermoColaboracao = new HashSet<>();
+	private Set<EscolaTermoColaboracao> escolaTermoColaboracao = new HashSet<>();
 
 }
