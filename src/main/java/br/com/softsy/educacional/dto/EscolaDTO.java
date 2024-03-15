@@ -50,7 +50,6 @@ public class EscolaDTO {
 	private String numero;
 	
 	@NotNull
-	@JsonIgnore
 	private String bairro;
 	
 	@NotNull
