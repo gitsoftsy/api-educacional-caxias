@@ -128,22 +128,22 @@ public class EscolaDTO {
 		this.pppAtualizado12Meses = escola.getPppAtualizado12Meses();
 		this.acessivel = escola.getAcessivel();
 		
-		this.localizacao = new LocalizacaoDTO();
-	    this.localizacao.setIdLocalizacao(escola.getLocalizacao().getIdLocalizacao());
-	    this.localizacao.setLocalizacao(escola.getLocalizacao().getLocalizacao());
+		this.localizacao = new LocalizacaoDTO(escola.getLocalizacao());
+//	    this.localizacao.setIdLocalizacao(escola.getLocalizacao().getIdLocalizacao());
+//	    this.localizacao.setLocalizacao(escola.getLocalizacao().getLocalizacao());
 	    
-		this.dependenciaAdm = new DependenciaAdministrativaDTO();
-		this.dependenciaAdm.setIdDependenciaAdministrativa(escola.getDependenciaAdm().getIdDependenciaAdministrativa());
-		this.dependenciaAdm.setDependenciaAdministrativa(escola.getDependenciaAdm().getDependenciaAdministrativa());
+		this.dependenciaAdm = new DependenciaAdministrativaDTO(escola.getDependenciaAdm());
+//		this.dependenciaAdm.setIdDependenciaAdministrativa(escola.getDependenciaAdm().getIdDependenciaAdministrativa());
+//		this.dependenciaAdm.setDependenciaAdministrativa(escola.getDependenciaAdm().getDependenciaAdministrativa());
 		
-		this.situacaoFuncionamento = new SituacaoFuncionamentoDTO();
-		this.situacaoFuncionamento.setIdSituacaoFuncionamento(escola.getSituacaoFuncionamento().getIdSituacaoFuncionamento());
-		this.situacaoFuncionamento.setSituacaoFuncionamento(escola.getSituacaoFuncionamento().getSituacaoFuncionamento());
+		this.situacaoFuncionamento = new SituacaoFuncionamentoDTO(escola.getSituacaoFuncionamento());
+//		this.situacaoFuncionamento.setIdSituacaoFuncionamento(escola.getSituacaoFuncionamento().getIdSituacaoFuncionamento());
+//		this.situacaoFuncionamento.setSituacaoFuncionamento(escola.getSituacaoFuncionamento().getSituacaoFuncionamento());
 		
 		
-		this.formaOcupacaoPredio = new FormaOcupacaoPredioDTO();
-		this.formaOcupacaoPredio.setIdFormaOcupacaoPredio(escola.getFormaOcupacaoPredio().getIdFormaOcupacaoPredio());
-		this.formaOcupacaoPredio.setFormaOcupacaoPredio(escola.getFormaOcupacaoPredio().getFormaOcupacaoPredio());
+		this.formaOcupacaoPredio = new FormaOcupacaoPredioDTO(escola.getFormaOcupacaoPredio());
+//		this.formaOcupacaoPredio.setIdFormaOcupacaoPredio(escola.getFormaOcupacaoPredio().getIdFormaOcupacaoPredio());
+//		this.formaOcupacaoPredio.setFormaOcupacaoPredio(escola.getFormaOcupacaoPredio().getFormaOcupacaoPredio());
 	}
 	
 	

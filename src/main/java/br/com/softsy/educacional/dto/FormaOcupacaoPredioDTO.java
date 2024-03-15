@@ -18,9 +18,9 @@ public class FormaOcupacaoPredioDTO {
 	
 	@NotNull
 	private String formaOcupacaoPredio;
-	@JsonIgnore
+
 	private LocalDateTime dataCadastro;
-	@JsonIgnore
+
 	private Character ativo;
 	
 	public FormaOcupacaoPredioDTO(FormaOcupacaoPredio formaOcupacao) {

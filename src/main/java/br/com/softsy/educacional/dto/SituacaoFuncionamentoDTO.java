@@ -18,9 +18,9 @@ public class SituacaoFuncionamentoDTO {
 	
 	@NotNull
 	private String situacaoFuncionamento;
-	@JsonIgnore
+
 	private LocalDateTime dataCadastro;
-	@JsonIgnore
+
 	private Character ativo;
 	
 	public SituacaoFuncionamentoDTO(SituacaoFuncionamento situacaoFuncionamento) {

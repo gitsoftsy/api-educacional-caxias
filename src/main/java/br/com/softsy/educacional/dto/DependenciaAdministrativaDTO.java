@@ -19,10 +19,8 @@ public class DependenciaAdministrativaDTO {
 	@NotNull
 	private String dependenciaAdministrativa;
 	
-	@JsonIgnore
 	private LocalDateTime dataCadastro;
 	
-	@JsonIgnore
 	private Character ativo;
 	
 	public DependenciaAdministrativaDTO(DependenciaAdministrativa dependenciaAdm) {

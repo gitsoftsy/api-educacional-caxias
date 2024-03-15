@@ -19,10 +19,10 @@ public class LocalizacaoDTO {
 	@NotNull
 	private String localizacao;
 	
-	@JsonIgnore
+
 	private LocalDateTime dataCadastro;
 	
-	@JsonIgnore
+	
 	private Character ativo;
 	
 	public LocalizacaoDTO(Localizacao localizacao) {
