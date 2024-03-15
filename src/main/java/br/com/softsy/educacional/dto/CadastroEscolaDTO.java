@@ -26,7 +26,7 @@ public class CadastroEscolaDTO {
 	private String logoEscola;
 	
 	@NotNull
-	private Character tipoEscola;
+	private String tipoEscola;
 	
 	@NotNull
 	@CNPJ

@@ -39,8 +39,8 @@ public class Escola {
 	@Column(name = "LOGO_ESCOLA", nullable = false)
 	private String logoEscola;
 
-	@Column(name = "TIPO_ESCOLA", nullable = false)
-	private Character tipoEscola;
+	@Column(name = "TIPO_ESCOLA", nullable = false, length = 2)
+	private String tipoEscola;
 
 	@Column(name = "CNPJ", nullable = false)
 	private String cnpj;
