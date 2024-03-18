@@ -104,6 +104,15 @@ public class Escola {
 
 	@Column(name = "ACESSIVEL", nullable = false)
 	private Character acessivel;
+	
+	@Column(name = "POSSUI_AGUA_POTAVEL", nullable = false)
+	private Character possuiAguaPotavel;
+	
+	@Column(name = "INTERNET_BANDA_LARGA", nullable = false)
+	private Character internetBandaLarga;
+	
+	@Column(name = "MERENDA_ESCOLAR", nullable = false)
+	private Character merendaEscolar;
 
 	@ManyToOne
 	@JoinColumn(name = "ID_LOCALIZACAO", nullable = true)
@@ -120,6 +129,22 @@ public class Escola {
 	@ManyToOne
 	@JoinColumn(name = "ID_FORMA_OCUPACAO_PREDIO", nullable = false)
 	private FormaOcupacaoPredio formaOcupacaoPredio;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_ZONEAMENTO", nullable = false)
+	private Zoneamento zoneamento;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_CATEGORIA_ESCOLA_PRIVADA", nullable = false)
+	private CategoriaEscolaPrivada categoriaEscolaPrivada;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_ENTIDADE_SUPERIOR", nullable = false)
+	private EntidadeSuperior entidadeSuperior;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_ORGAO_PUBLICO", nullable =  false)
+	private OrgaoPublico orgaoPublico;
 
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)
 	private Set<EscolaTelefone> telefones = new HashSet<>();

@@ -82,6 +82,15 @@ public class CadastroEscolaDTO {
 	private Character acessivel;
 	
 	@NotNull
+	private Character merendaEscolar;
+	
+	@NotNull
+	private Character possuiAguaPotavel;
+	
+	@NotNull
+	private Character internetBandaLarga;
+	
+	@NotNull
 	private Long localizacaoId;
 	
 	@NotNull
@@ -92,6 +101,18 @@ public class CadastroEscolaDTO {
 	
 	@NotNull
 	private Long formaOcupacaoPredioId;
+	
+	@NotNull
+	private Long zoneamentoId;
+	
+	@NotNull
+	private Long categoriaEscolaPrivadaId;
+	
+	@NotNull
+	private Long entidadeSuperiorId;
+	
+	@NotNull
+	private Long orgaoPublicoId;
 	
 	
 	public CadastroEscolaDTO(Escola escola) {
@@ -120,10 +141,17 @@ public class CadastroEscolaDTO {
 		this.usaEspacoEntornoEscolar = escola.getUsaEspacoEntornoEscolar();
 		this.pppAtualizado12Meses = escola.getPppAtualizado12Meses();
 		this.acessivel = escola.getAcessivel();
+		this.merendaEscolar = escola.getMerendaEscolar();
+		this.internetBandaLarga = escola.getInternetBandaLarga();
+		this.possuiAguaPotavel = escola.getPossuiAguaPotavel();
 		this.localizacaoId = escola.getLocalizacao().getIdLocalizacao();
 		this.dependenciaAdmId = escola.getDependenciaAdm().getIdDependenciaAdministrativa();
 		this.situacaoFuncionamentoId = escola.getSituacaoFuncionamento().getIdSituacaoFuncionamento();
 		this.formaOcupacaoPredioId = escola.getFormaOcupacaoPredio().getIdFormaOcupacaoPredio();
+		this.zoneamentoId = escola.getZoneamento().getIdZoneamento();
+		this.categoriaEscolaPrivadaId = escola.getCategoriaEscolaPrivada().getIdCategoriaEscolaPrivada();
+		this.entidadeSuperiorId = escola.getEntidadeSuperior().getIdEntidadeSuperior();
+		this.orgaoPublicoId = escola.getOrgaoPublico().getIdOrgaoPublico();
 	}
 
 }

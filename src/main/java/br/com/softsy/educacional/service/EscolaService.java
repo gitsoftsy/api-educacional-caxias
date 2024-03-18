@@ -11,16 +11,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroEscolaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
+import br.com.softsy.educacional.model.CategoriaEscolaPrivada;
 import br.com.softsy.educacional.model.DependenciaAdministrativa;
+import br.com.softsy.educacional.model.EntidadeSuperior;
 import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.model.FormaOcupacaoPredio;
 import br.com.softsy.educacional.model.Localizacao;
+import br.com.softsy.educacional.model.OrgaoPublico;
 import br.com.softsy.educacional.model.SituacaoFuncionamento;
+import br.com.softsy.educacional.model.Zoneamento;
+import br.com.softsy.educacional.repository.CategoriaEscolaPrivadaRepository;
 import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
+import br.com.softsy.educacional.repository.EntidadeSuperiorRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
 import br.com.softsy.educacional.repository.FormaOcupacaoPredioRepository;
 import br.com.softsy.educacional.repository.LocalizacaoRepository;
+import br.com.softsy.educacional.repository.OrgaoPublicoRepository;
 import br.com.softsy.educacional.repository.SituacaoFuncionamentoRepository;
+import br.com.softsy.educacional.repository.ZoneamentoRepository;
 @Service
 public class EscolaService {
 	
@@ -38,6 +46,18 @@ public class EscolaService {
 	
 	@Autowired 
 	private FormaOcupacaoPredioRepository formaRepository;
+	
+	@Autowired
+	private ZoneamentoRepository zoneamentoRepository;
+	
+	@Autowired
+	private CategoriaEscolaPrivadaRepository categoriaEscolaPrivadaRepository;
+	
+	@Autowired
+	private EntidadeSuperiorRepository entidadeSuperiorRepository;
+	
+	@Autowired
+	private OrgaoPublicoRepository orgaoRepository;
 	
 	
 	public List<EscolaDTO> listarTudo(){
@@ -90,11 +110,23 @@ public class EscolaService {
 				.orElseThrow(() -> new IllegalArgumentException("Situação não encontrada"));
 		FormaOcupacaoPredio formaOcupacao = formaRepository.findById(dto.getFormaOcupacaoPredioId())
 				.orElseThrow(() -> new IllegalAccessError("FormaOcupação não encontrada"));
-		BeanUtils.copyProperties(dto, escola, "ativo", "dataCadastro", "idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId");
+		Zoneamento zoneamento = zoneamentoRepository.findById(dto.getZoneamentoId())
+				.orElseThrow(()-> new IllegalArgumentException("Zoneamento não encontrado"));
+		CategoriaEscolaPrivada categoriaEscolaPrivada = categoriaEscolaPrivadaRepository.findById(dto.getCategoriaEscolaPrivadaId())
+				.orElseThrow(() -> new IllegalArgumentException("CategoriaEscolaPrivada não encontrada"));
+		EntidadeSuperior entidadeSuperior = entidadeSuperiorRepository.findById(dto.getEntidadeSuperiorId())
+				.orElseThrow(()-> new IllegalArgumentException("Entidade superior não encontrada"));
+		OrgaoPublico orgaoPublico = orgaoRepository.findById(dto.getOrgaoPublicoId())
+				.orElseThrow(() -> new IllegalArgumentException("Orgao público não encontrado"));
+		BeanUtils.copyProperties(dto, escola, "ativo", "dataCadastro", "idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
 		escola.setLocalizacao(localizacao);
 		escola.setDependenciaAdm(dependenciaAdm);
 		escola.setSituacaoFuncionamento(situacaoFuncionamento);
 		escola.setFormaOcupacaoPredio(formaOcupacao);
+		escola.setZoneamento(zoneamento);
+		escola.setCategoriaEscolaPrivada(categoriaEscolaPrivada);
+		escola.setEntidadeSuperior(entidadeSuperior);
+		escola.setOrgaoPublico(orgaoPublico);
 		escola.setAtivo('S');
 		escola.setDataCadastro(LocalDateTime.now());
 		return escola;
@@ -102,6 +134,6 @@ public class EscolaService {
 	}
 	
 	private void atualizaDados(Escola destino, CadastroEscolaDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro", "idEscola");
+		BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro", "idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
 	}
 }

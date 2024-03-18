@@ -88,6 +88,15 @@ public class EscolaDTO {
 	private Character acessivel;
 	
 	@NotNull
+	private Character merendaEscolar;
+	
+	@NotNull
+	private Character possuiAguaPotavel;
+	
+	@NotNull
+	private Character internetBandaLarga;
+	
+	@NotNull
 	private LocalizacaoDTO localizacao;
 	
 	@NotNull
@@ -98,6 +107,18 @@ public class EscolaDTO {
 	
 	@NotNull
 	private FormaOcupacaoPredioDTO formaOcupacaoPredio;
+	
+	@NotNull
+	private ZoneamentoDTO zoneamento;
+	
+	@NotNull
+	private EntidadeSuperiorDTO entidadeSuperior;
+	
+	@NotNull
+	private CategoriaEscolaPrivadaDTO categoriaEscolaPrivada;
+	
+	@NotNull 
+	private OrgaoPublicoDTO orgaoPublico;
 	
 	
 	public EscolaDTO(Escola escola) {
@@ -126,6 +147,9 @@ public class EscolaDTO {
 		this.usaEspacoEntornoEscolar = escola.getUsaEspacoEntornoEscolar();
 		this.pppAtualizado12Meses = escola.getPppAtualizado12Meses();
 		this.acessivel = escola.getAcessivel();
+		this.merendaEscolar = escola.getMerendaEscolar();
+		this.internetBandaLarga = escola.getInternetBandaLarga();
+		this.possuiAguaPotavel = escola.getPossuiAguaPotavel();
 		
 		this.localizacao = new LocalizacaoDTO(escola.getLocalizacao());
 //	    this.localizacao.setIdLocalizacao(escola.getLocalizacao().getIdLocalizacao());
@@ -143,6 +167,14 @@ public class EscolaDTO {
 		this.formaOcupacaoPredio = new FormaOcupacaoPredioDTO(escola.getFormaOcupacaoPredio());
 //		this.formaOcupacaoPredio.setIdFormaOcupacaoPredio(escola.getFormaOcupacaoPredio().getIdFormaOcupacaoPredio());
 //		this.formaOcupacaoPredio.setFormaOcupacaoPredio(escola.getFormaOcupacaoPredio().getFormaOcupacaoPredio());
+		
+		this.zoneamento = new ZoneamentoDTO(escola.getZoneamento());
+		
+		this.categoriaEscolaPrivada = new CategoriaEscolaPrivadaDTO(escola.getCategoriaEscolaPrivada());
+		
+		this.entidadeSuperior = new EntidadeSuperiorDTO(escola.getEntidadeSuperior());
+		
+		this.orgaoPublico = new OrgaoPublicoDTO(escola.getOrgaoPublico());
 	}
 	
 	
