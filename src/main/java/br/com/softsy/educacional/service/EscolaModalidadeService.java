@@ -75,7 +75,12 @@ public class EscolaModalidadeService {
 	}
 	
 	private void atualizaDados(EscolaModalidade destino, CadastroEscolaModalidadeDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro", "idEscolaModalidade");
+		destino.setEscola(escolaRepository.findById(origem.getEscolaId())
+				.orElseThrow(()-> new IllegalArgumentException("Escola não encontrada")));
+		destino.setModalidadeEscola(modalidadeRepository.findById(origem.getModalidadeEscolaId())
+				.orElseThrow(()-> new IllegalArgumentException("Modalidade não encontrada")));
+			
+		
 	}
 	
 	@Transactional

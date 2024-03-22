@@ -74,7 +74,10 @@ public class EscolaTratamentoLixoService {
 	}
 	
 	private void atualizaDados(EscolaTratamentoLixo destino, CadastroEscolaTratamentoLixoDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro", "idEscolaTratamentoLixo");
+		destino.setEscola(escolaRepository.findById(origem.getEscolaId())
+				.orElseThrow(() -> new IllegalArgumentException("Escola não encontrada")));
+		destino.setTratamentoLixo(tratamentoRepository.findById(origem.getTratamentoLixoId())
+				.orElseThrow(() -> new IllegalArgumentException("Tratamento não encontrado")));
 	}
 	
 	@Transactional
