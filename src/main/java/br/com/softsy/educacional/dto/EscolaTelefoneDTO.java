@@ -11,6 +11,8 @@ public class EscolaTelefoneDTO {
 	private String telefone;
 	private Long idTelefoneEscola;
 	
+	private Long escolaId;
+	
 	private TipoTelefoneDTO tipoTelefone;
 	
 	
@@ -18,6 +20,7 @@ public class EscolaTelefoneDTO {
 	public EscolaTelefoneDTO(EscolaTelefone escolaTelefone) {
 		this.telefone = escolaTelefone.getTelefone();
 		this.idTelefoneEscola = escolaTelefone.getIdTelefoneEscola();
+		this.escolaId = escolaTelefone.getEscola().getIdEscola();
 		this.tipoTelefone = new TipoTelefoneDTO(escolaTelefone.getTipoTelefone());
 		
 	}

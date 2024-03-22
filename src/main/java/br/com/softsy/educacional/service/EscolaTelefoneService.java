@@ -83,7 +83,10 @@ public class EscolaTelefoneService {
 	}
 	
 	private void atualizaDados(EscolaTelefone destino, CadastroEscolaTelefoneDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro", "idEscolaTelefone");
+		destino.setEscola(escolaRepository.findById(origem.getEscolaId())
+				.orElseThrow(() -> new IllegalArgumentException("Escola não encontrada")));
+		destino.setTipoTelefone(tipoTelefoneRepository.findById(origem.getTipoTelefoneId())
+				.orElseThrow(() -> new IllegalArgumentException("Tipo telefone não encontrado")));
 	}
 	
 	@Transactional
