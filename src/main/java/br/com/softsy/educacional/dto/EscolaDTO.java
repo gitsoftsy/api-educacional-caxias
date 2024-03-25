@@ -152,21 +152,12 @@ public class EscolaDTO {
 		this.possuiAguaPotavel = escola.getPossuiAguaPotavel();
 		
 		this.localizacao = new LocalizacaoDTO(escola.getLocalizacao());
-//	    this.localizacao.setIdLocalizacao(escola.getLocalizacao().getIdLocalizacao());
-//	    this.localizacao.setLocalizacao(escola.getLocalizacao().getLocalizacao());
 	    
 		this.dependenciaAdm = new DependenciaAdministrativaDTO(escola.getDependenciaAdm());
-//		this.dependenciaAdm.setIdDependenciaAdministrativa(escola.getDependenciaAdm().getIdDependenciaAdministrativa());
-//		this.dependenciaAdm.setDependenciaAdministrativa(escola.getDependenciaAdm().getDependenciaAdministrativa());
 		
 		this.situacaoFuncionamento = new SituacaoFuncionamentoDTO(escola.getSituacaoFuncionamento());
-//		this.situacaoFuncionamento.setIdSituacaoFuncionamento(escola.getSituacaoFuncionamento().getIdSituacaoFuncionamento());
-//		this.situacaoFuncionamento.setSituacaoFuncionamento(escola.getSituacaoFuncionamento().getSituacaoFuncionamento());
-		
 		
 		this.formaOcupacaoPredio = new FormaOcupacaoPredioDTO(escola.getFormaOcupacaoPredio());
-//		this.formaOcupacaoPredio.setIdFormaOcupacaoPredio(escola.getFormaOcupacaoPredio().getIdFormaOcupacaoPredio());
-//		this.formaOcupacaoPredio.setFormaOcupacaoPredio(escola.getFormaOcupacaoPredio().getFormaOcupacaoPredio());
 		
 		this.zoneamento = new ZoneamentoDTO(escola.getZoneamento());
 		
@@ -176,22 +167,5 @@ public class EscolaDTO {
 		
 		this.orgaoPublico = new OrgaoPublicoDTO(escola.getOrgaoPublico());
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

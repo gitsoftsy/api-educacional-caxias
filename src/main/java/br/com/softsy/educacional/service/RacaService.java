@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.softsy.educacional.controller.Raca;
 import br.com.softsy.educacional.dto.RacaDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.Raca;
 import br.com.softsy.educacional.repository.RacaRepository;
 
 @Service

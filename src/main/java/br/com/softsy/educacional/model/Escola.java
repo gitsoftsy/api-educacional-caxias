@@ -154,5 +154,8 @@ public class Escola {
 	
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)
 	private Set<EscolaTermoColaboracao> escolaTermoColaboracao = new HashSet<>();
+	
+	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)
+	private Set<Turma> turma = new HashSet<>();
 
 }

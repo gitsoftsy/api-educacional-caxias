@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
 
-import br.com.softsy.educacional.controller.Raca;
+import br.com.softsy.educacional.model.Raca;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

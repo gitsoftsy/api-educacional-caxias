@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.RacaDTO;
+import br.com.softsy.educacional.model.Raca;
 import br.com.softsy.educacional.service.RacaService;
 
 @RestController

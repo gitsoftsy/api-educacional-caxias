@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import br.com.softsy.educacional.controller.Raca;
+import br.com.softsy.educacional.model.Raca;
 
 public interface RacaRepository extends JpaRepository<Raca, Long>{
 	

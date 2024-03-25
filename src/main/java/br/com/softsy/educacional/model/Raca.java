@@ -1,4 +1,4 @@
-package br.com.softsy.educacional.controller;
+package br.com.softsy.educacional.model;
 
 import java.time.LocalDateTime;
 
