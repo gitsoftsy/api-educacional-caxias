@@ -55,6 +55,7 @@ public class EscolaPpciService {
 
 	private EscolaPpci criarEscolaPpciAPartirDTO(CadastroEscolaPpciDTO dto) {
 		EscolaPpci escolaPpci = new EscolaPpci();
+		
 		Escola escola = escolaRepository.findById(dto.getEscolaId())
 				.orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
 		escolaPpci.setEscola(escola);

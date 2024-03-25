@@ -25,7 +25,6 @@ public class CadastroEscolaPpciDTO {
 
 	private String anexo;
 
-	@NotNull
 	private Long escolaId;
 
 	public CadastroEscolaPpciDTO(EscolaPpci escolaPpci) {
