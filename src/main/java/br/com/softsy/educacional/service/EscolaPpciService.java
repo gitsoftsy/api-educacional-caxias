@@ -60,20 +60,20 @@ public class EscolaPpciService {
 				.orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
 		escolaPpci.setEscola(escola);
 		escolaPpci.setDataCadastro(LocalDateTime.now());
-		escolaPpci.setDataValidade(LocalDateTime.now());
-		escolaPpci.setDataEmissao(LocalDateTime.now());
-		BeanUtils.copyProperties(dto, escolaPpci, "idEscolaPpci", "anexo", "idEscola", "dataValidade", "dataCadastro",
-				"dataEmissao");
+		BeanUtils.copyProperties(dto, escolaPpci, "idEscolaPpci", "anexo", "idEscola", "dataCadastro"
+				);
 		escolaPpci.setAnexo(Base64.decodeBase64(dto.getAnexo()));
 		return escolaPpci;
 
 	}
 
 	private void atualizaDados(EscolaPpci destino, CadastroEscolaPpciDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "idEscolaPpci", "dataCadastro", "anexo", "idEscola", "dataValidade",
-				"dataEmissao");
+		BeanUtils.copyProperties(origem, destino, "idEscolaPpci", "dataCadastro", "anexo", "idEscola"
+				);
 
 		destino.setAnexo(Base64.decodeBase64(origem.getAnexo()));
+		destino.setEscola(escolaRepository.findById(origem.getEscolaId())
+				.orElseThrow(()-> new IllegalArgumentException("Escola não encontrada")));
 	}
 
 	@Transactional(readOnly = true)
