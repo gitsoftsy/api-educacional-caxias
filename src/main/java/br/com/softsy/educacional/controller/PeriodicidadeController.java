@@ -29,7 +29,7 @@ public class PeriodicidadeController {
 	@Autowired PeriodicidadeService service;
 	
 	@GetMapping
-	public ResponseEntity<List<Periodicidade>> listar(){
+	public ResponseEntity<List<PeriodicidadeDTO>> listar(){
 		return ResponseEntity.ok(service.listarTudo());
 	}
 	

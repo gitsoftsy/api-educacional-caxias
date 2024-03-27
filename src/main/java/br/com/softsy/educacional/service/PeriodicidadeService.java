@@ -3,6 +3,7 @@ package br.com.softsy.educacional.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class PeriodicidadeService {
 
 	@Autowired PeriodicidadeRepository repository;
 	
-	public List<Periodicidade> listarTudo(){
-		return repository.findAll();
+	public List<PeriodicidadeDTO> listarTudo(){
+		return repository.findAll().stream().map(PeriodicidadeDTO::new).collect(Collectors.toList());
 	}
 	
 	@Transactional(readOnly = true)
