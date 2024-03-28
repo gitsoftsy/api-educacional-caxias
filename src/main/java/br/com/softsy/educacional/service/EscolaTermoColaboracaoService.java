@@ -66,8 +66,7 @@ public class EscolaTermoColaboracaoService {
 		Escola escola = escolaRepository.findById(dto.getEscolaId()).orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
 		escolaTermoColaboracao.setEscola(escola);
 		escolaTermoColaboracao.setDataCadastro(LocalDateTime.now());
-		escolaTermoColaboracao.setDataValidade(LocalDateTime.now());
-		BeanUtils.copyProperties(dto, escolaTermoColaboracao, "idEscolaTermoColaboracao","anexo","idEscola", "dataValidade", "dataCadastro");
+		BeanUtils.copyProperties(dto, escolaTermoColaboracao, "idEscolaTermoColaboracao","anexo","idEscola", "dataCadastro");
 		escolaTermoColaboracao.setAnexo(Base64.decodeBase64(dto.getAnexo()));
 		return escolaTermoColaboracao;
 		
