@@ -50,6 +50,11 @@ public class EscolaTermoColaboracaoService {
 	}
 	
 	@Transactional
+	public void remover(Long id) {
+		repository.deleteById(id);
+	}
+	
+	@Transactional
 	public EscolaTermoColaboracaoDTO atualizar(CadastroEscolaTermoColaboracaoDTO dto) {
 		EscolaTermoColaboracao escolaTermoColaboracao = repository.getReferenceById(dto.getIdEscolaTermoColaboracao());
 		atualizaDados(escolaTermoColaboracao, dto);
