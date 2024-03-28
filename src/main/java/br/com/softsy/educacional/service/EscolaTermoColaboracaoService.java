@@ -73,9 +73,11 @@ public class EscolaTermoColaboracaoService {
 	}
 	
 	private void atualizaDados(EscolaTermoColaboracao destino, CadastroEscolaTermoColaboracaoDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "idEscolaTermoColaboracao","dataCadastro", "anexo","idEscola");
+		BeanUtils.copyProperties(origem, destino, "idEscolaTermoColaboracao","dataCadastro", "anexo", "idEscola");
 		
 		destino.setAnexo(Base64.decodeBase64(origem.getAnexo()));
+		destino.setEscola(escolaRepository.findById(origem.getEscolaId())
+				.orElseThrow(()-> new IllegalArgumentException("Escola não encontrada")));
 	}
 	
 	@Transactional(readOnly = true)
