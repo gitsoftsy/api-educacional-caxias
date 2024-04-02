@@ -64,6 +64,9 @@ public class MunicipioService {
 
 	private void atualizaDados(Municipio destino, CadastroMunicipioDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idMunicipio", "idUf");
+		
+		destino.setUf(ufRepository.findById(origem.getUfId())
+				.orElseThrow(() -> new IllegalArgumentException("Uf não encontrado")));
 
 	}
 

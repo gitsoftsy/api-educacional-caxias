@@ -20,7 +20,6 @@ import br.com.softsy.educacional.dto.CadastroEscolaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
 import br.com.softsy.educacional.service.EscolaService;
 
-
 @RestController
 @RequestMapping("/escolas")
 public class EscolaController {
