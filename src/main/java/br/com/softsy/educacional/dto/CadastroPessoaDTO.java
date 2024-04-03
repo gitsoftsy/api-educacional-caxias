@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import br.com.softsy.educacional.model.Pessoa;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,7 @@ public class CadastroPessoaDTO {
     private String nome;
 
     @NotNull
+    @CPF
     private String cpf;
 
     @NotNull
