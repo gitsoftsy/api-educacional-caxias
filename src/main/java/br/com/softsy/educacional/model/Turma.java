@@ -1,5 +1,9 @@
 package br.com.softsy.educacional.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -64,5 +69,6 @@ public class Turma {
 	@Column(name = "VAGAS", nullable = false)
 	private Integer vagas;
 	
-	
+	@OneToMany(mappedBy = "turma", cascade = CascadeType.ALL)
+	private Set<TurmaProfessor> turmaProfessor = new HashSet<>();
 }
