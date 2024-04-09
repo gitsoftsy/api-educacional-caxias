@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.DestinacaoLixoDTO;
 import br.com.softsy.educacional.dto.LocalizacaoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.DestinacaoLixo;
 import br.com.softsy.educacional.model.Localizacao;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.LocalizacaoRepository;
 
 @Service
@@ -21,6 +23,9 @@ public class LocalizacaoService {
 
 	@Autowired
 	private LocalizacaoRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 	
 	public List<Localizacao> listarTudo(){
 		return repository.findAll();
@@ -33,7 +38,6 @@ public class LocalizacaoService {
 	
 	@Transactional
 	public LocalizacaoDTO salvar(LocalizacaoDTO dto) {
-		validarLocalizacao(dto.getLocalizacao());
 		
 		Localizacao localizacao = criarLocalizacaoAPartirDTO(dto);
 		
@@ -43,7 +47,10 @@ public class LocalizacaoService {
 	
 	private Localizacao criarLocalizacaoAPartirDTO(LocalizacaoDTO dto) {
 		Localizacao localizacao = new Localizacao();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, localizacao, "idLocalizacao", "ativo", "dataCadastro");
+		localizacao.setDependenciaAdm(dependenciaAdm);
 		localizacao.setAtivo('S');
 		localizacao.setDataCadastro(LocalDateTime.now());
 		return localizacao;
@@ -62,14 +69,11 @@ public class LocalizacaoService {
 		localizacao.setAtivo(status);
 	}
 	
-	private void validarLocalizacao(String localizacao) {
-		Optional<Localizacao> localizacaoExistente = repository.findByLocalizacao(localizacao).stream().findFirst();
-		if(localizacaoExistente.isPresent()) {
-			throw new UniqueException("Essa localização já existe.");
-		}
-	}
 	
 	private void atualizaDados(Localizacao destino, LocalizacaoDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idLocalizacao", "ativo", "dataCadastro");
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setDependenciaAdm(dependenciaAdm);
 	}
 }

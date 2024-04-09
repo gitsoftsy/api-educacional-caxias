@@ -15,6 +15,9 @@ public class PeriodicidadeDTO {
 	private Long idPeriodicidade;
 	
 	@NotNull
+	private Long dependenciaAdmId;
+	
+	@NotNull
 	private String periodicidade;
 	
 	private LocalDateTime dataCadastro;
@@ -26,5 +29,6 @@ public class PeriodicidadeDTO {
 		this.periodicidade = periodicidade.getPeriodicidade();
 		this.dataCadastro = periodicidade.getDataCadastro();
 		this.ativo = periodicidade.getAtivo();
+		this.dependenciaAdmId = periodicidade.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 }

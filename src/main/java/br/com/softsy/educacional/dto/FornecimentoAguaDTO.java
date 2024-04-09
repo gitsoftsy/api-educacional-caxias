@@ -15,6 +15,9 @@ public class FornecimentoAguaDTO {
 	private Long idFornecimentoAgua;
 	
 	@NotNull
+	private Long dependenciaAdmId;
+	
+	@NotNull
 	private String fornecimentoAgua;
 	
 	private LocalDateTime dataCadastro;
@@ -26,6 +29,7 @@ public class FornecimentoAguaDTO {
 		this.fornecimentoAgua = fornecimento.getFornecimentoAgua();
 		this.dataCadastro = fornecimento.getDataCadastro();
 		this.ativo = fornecimento.getAtivo();
+		this.dependenciaAdmId = fornecimento.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 	
 }

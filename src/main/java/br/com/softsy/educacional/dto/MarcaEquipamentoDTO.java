@@ -14,6 +14,9 @@ public class MarcaEquipamentoDTO {
 
     private Long idMarcaEquipamento;
 
+	@NotNull
+	private Long dependenciaAdmId;
+	
     @NotNull
     private String marcaEquipamento;
     private LocalDateTime dataCadastro;
@@ -25,5 +28,6 @@ public class MarcaEquipamentoDTO {
         this.idMarcaEquipamento = marcaEquipamento.getIdMarcaEquipamento();
         this.dataCadastro = marcaEquipamento.getDataCadastro();
         this.ativo = marcaEquipamento.getAtivo();
+        this.dependenciaAdmId = marcaEquipamento.getDependenciaAdm().getIdDependenciaAdministrativa();
     }
 }

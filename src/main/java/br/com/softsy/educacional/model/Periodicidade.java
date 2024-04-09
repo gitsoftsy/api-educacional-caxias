@@ -10,13 +10,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "TBL_PERIODICIDADE")
+@Table(name = "TBL_PERIODICIDADE", 
+	uniqueConstraints = { 
+		@UniqueConstraint(name = "UQ_PERIODICIDADE", columnNames = { "PERIODICIDADE", "ID_DEPENDENCIA_ADMINISTRATIVA" })
+})
 @Data
 public class Periodicidade {
 
@@ -24,6 +30,10 @@ public class Periodicidade {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_PERIODICIDADE")
 	private Long idPeriodicidade;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
+	private DependenciaAdministrativa dependenciaAdm;
 	
 	@Column(name = "PERIODICIDADE", nullable = false, unique = true)
 	private String periodicidade;

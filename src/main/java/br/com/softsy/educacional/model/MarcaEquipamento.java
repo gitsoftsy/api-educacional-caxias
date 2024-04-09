@@ -7,12 +7,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "TBL_MARCA_EQUIPAMENTO")
+@Table(name = "TBL_MARCA_EQUIPAMENTO", 
+	uniqueConstraints = { 
+			@UniqueConstraint(name = "UQ_MARCA_EQUIPAMENTO", columnNames = { "MARCA_EQUIPAMENTO", "ID_DEPENDENCIA_ADMINISTRATIVA" })
+		})
 @Data
 public class MarcaEquipamento {
 
@@ -21,6 +27,10 @@ public class MarcaEquipamento {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_MARCA_EQUIPAMENTO")
 	private Long idMarcaEquipamento;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
+	private DependenciaAdministrativa dependenciaAdm;
 	
 	@Column(name = "MARCA_EQUIPAMENTO", nullable = false, unique = true)
 	private String marcaEquipamento;

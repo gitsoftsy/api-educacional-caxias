@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.MarcaEquipamentoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.MarcaEquipamento;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.MarcaEquipamentoRepository;
 
 @Service
@@ -19,6 +21,9 @@ public class MarcaEquipamentoService {
 
     @Autowired
     private MarcaEquipamentoRepository repository;
+    
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
     public List<MarcaEquipamento> listarTudo() {
         return repository.findAll();
@@ -31,7 +36,6 @@ public class MarcaEquipamentoService {
 
     @Transactional
     public MarcaEquipamentoDTO salvar(MarcaEquipamentoDTO dto) {
-        validarMarcaEquipamento(dto.getMarcaEquipamento());
 
         MarcaEquipamento marcaEquipamento = criarMarcaEquipamentoAPartirDTO(dto);
 
@@ -39,16 +43,13 @@ public class MarcaEquipamentoService {
         return new MarcaEquipamentoDTO(marcaEquipamento);
     }
 
-    private void validarMarcaEquipamento(String marcaEquipamento) {
-        Optional<MarcaEquipamento> marcaEquipamentoExistente = repository.findByMarcaEquipamento(marcaEquipamento).stream().findFirst();
-        if (marcaEquipamentoExistente.isPresent()) {
-            throw new UniqueException("Essa marca de equipamento já existe.");
-        }
-    }
 
     private MarcaEquipamento criarMarcaEquipamentoAPartirDTO(MarcaEquipamentoDTO dto) {
         MarcaEquipamento marcaEquipamento = new MarcaEquipamento();
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
         BeanUtils.copyProperties(dto, marcaEquipamento, "idMarcaEquipamento", "ativo", "dataCadastro");
+        marcaEquipamento.setDependenciaAdm(dependenciaAdm);
         marcaEquipamento.setDataCadastro(LocalDateTime.now());
         marcaEquipamento.setAtivo('S');
         return marcaEquipamento;
@@ -69,5 +70,8 @@ public class MarcaEquipamentoService {
 
     private void atualizarDados(MarcaEquipamento destino, MarcaEquipamentoDTO origem) {
         BeanUtils.copyProperties(origem, destino, "idMarcaEquipamento", "ativo", "dataCadastro");
+    	DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+    	destino.setDependenciaAdm(dependenciaAdm);
     }
 }

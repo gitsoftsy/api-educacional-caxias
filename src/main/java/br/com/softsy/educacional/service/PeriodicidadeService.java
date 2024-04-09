@@ -12,13 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.PeriodicidadeDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.Periodicidade;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.PeriodicidadeRepository;
 
 @Service
 public class PeriodicidadeService {
 
 	@Autowired PeriodicidadeRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 	
 	public List<PeriodicidadeDTO> listarTudo(){
 		return repository.findAll().stream().map(PeriodicidadeDTO::new).collect(Collectors.toList());
@@ -31,8 +36,7 @@ public class PeriodicidadeService {
 	
 	@Transactional
 	public PeriodicidadeDTO salvar(PeriodicidadeDTO dto) {
-		validarPeriodicidade(dto.getPeriodicidade());
-		
+
 		Periodicidade periodicidade = criarPeriodicidadeAPartirDTO(dto);
 		
 		periodicidade = repository.save(periodicidade);
@@ -41,7 +45,10 @@ public class PeriodicidadeService {
 	
 	private Periodicidade criarPeriodicidadeAPartirDTO(PeriodicidadeDTO dto) {
 		Periodicidade periodicidade = new Periodicidade();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, periodicidade, "idPeriodicidade", "ativo", "dataCadastro");
+		periodicidade.setDependenciaAdm(dependenciaAdm);
 		periodicidade.setAtivo('S');
 		periodicidade.setDataCadastro(LocalDateTime.now());
 		return periodicidade;
@@ -60,15 +67,12 @@ public class PeriodicidadeService {
 		periodicidade.setAtivo(status);
 	}
 	
-	private void validarPeriodicidade(String periodicidade) {
-		Optional<Periodicidade> periodicidadeExistente = repository.findByPeriodicidade(periodicidade).stream().findFirst();
-		if(periodicidadeExistente.isPresent()) {
-			throw new UniqueException("Essa destinação já existe.");
-		}
-	}
 	
 	private void atualizaDados(Periodicidade destino, PeriodicidadeDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idPeriodicidade", "ativo", "dataCadastro");
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setDependenciaAdm(dependenciaAdm);
 		
 	}
 }

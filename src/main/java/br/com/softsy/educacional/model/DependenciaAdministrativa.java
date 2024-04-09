@@ -24,6 +24,36 @@ public class DependenciaAdministrativa {
 	@Column(name = "DEPENDENCIA_ADMINISTRATIVA", nullable = false, unique = true)
 	private String dependenciaAdministrativa;
 	
+	@Column(name = "TIPO_DEPENDENCIA", nullable = false, length = 2)
+	private String tipoDependencia;
+	
+	@Column(name = "CNPJ", unique = true, length = 14)
+	private String cnpj;
+	
+	@Column(name = "CEP", unique = true, length = 8)
+	private String cep;
+	
+	@Column(name = "ENDERECO", nullable = false)
+	private String endereco;
+	
+	@Column(name = "NUMERO", nullable = false)
+	private String numero;
+	
+	@Column(name = "COMPLEMENTO")
+	private String complemento;
+	
+	@Column(name = "BAIRRO")
+	private String bairro;
+	
+	@Column(name = "MUNICIPIO", nullable = false)
+	private String municipio;
+	
+	@Column(name = "DISTRITO")
+	private String distrito;
+	
+	@Column(name = "UF", nullable = false, length = 2)
+	private String uf;
+	
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
 	

@@ -19,6 +19,8 @@ public class LocalizacaoDTO {
 	@NotNull
 	private String localizacao;
 	
+	@NotNull
+	private Long dependenciaAdmId;
 
 	private LocalDateTime dataCadastro;
 	
@@ -30,5 +32,6 @@ public class LocalizacaoDTO {
 		this.localizacao = localizacao.getLocalizacao();
 		this.dataCadastro = localizacao.getDataCadastro();
 		this.ativo = localizacao.getAtivo();
+		this.dependenciaAdmId = localizacao.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 }

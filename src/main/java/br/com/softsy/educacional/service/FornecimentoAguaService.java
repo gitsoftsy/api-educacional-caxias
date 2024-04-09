@@ -9,19 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.softsy.educacional.dto.DestinacaoLixoDTO;
 import br.com.softsy.educacional.dto.FornecimentoAguaDTO;
-import br.com.softsy.educacional.dto.LocalizacaoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
-import br.com.softsy.educacional.model.DestinacaoLixo;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.FornecimentoAgua;
-import br.com.softsy.educacional.model.Localizacao;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.FornecimentoAguaRepository;
 
 @Service
 public class FornecimentoAguaService {
 
-	@Autowired FornecimentoAguaRepository repository;
+	@Autowired 
+	private FornecimentoAguaRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 	
 	public List<FornecimentoAgua> listarTudo(){
 		return repository.findAll();
@@ -34,7 +36,6 @@ public class FornecimentoAguaService {
 	
 	@Transactional
 	public FornecimentoAguaDTO salvar(FornecimentoAguaDTO dto) {
-		validarFornecimento(dto.getFornecimentoAgua());
 		
 		FornecimentoAgua fornecimento = criarFornecimentoAPartirDTO(dto);
 		
@@ -44,7 +45,10 @@ public class FornecimentoAguaService {
 	
 	private FornecimentoAgua criarFornecimentoAPartirDTO(FornecimentoAguaDTO dto) {
 		FornecimentoAgua fornecimento = new FornecimentoAgua();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+	                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, fornecimento, "idFornecimentoAgua", "ativo", "dataCadastro");
+		fornecimento.setDependenciaAdm(dependenciaAdm);
 		fornecimento.setAtivo('S');
 		fornecimento.setDataCadastro(LocalDateTime.now());
 		return fornecimento;
@@ -63,16 +67,11 @@ public class FornecimentoAguaService {
 		fornecimento.setAtivo(status);
 	}
 	
-	
-	private void validarFornecimento(String fornecimentoAgua) {
-		Optional<FornecimentoAgua> fornecimentoExistente = repository.findByFornecimentoAgua(fornecimentoAgua).stream().findFirst();
-		if(fornecimentoExistente.isPresent()) {
-			throw new UniqueException("Essa destinação já existe.");
-		}
-	}
-	
 	private void atualizaDados(FornecimentoAgua destino, FornecimentoAguaDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idFornecimentoAgua", "ativo", "dataCadastro");
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setDependenciaAdm(dependenciaAdm);
 		
 	}
 }
