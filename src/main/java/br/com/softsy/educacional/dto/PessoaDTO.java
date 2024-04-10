@@ -3,6 +3,8 @@ package br.com.softsy.educacional.dto;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import br.com.softsy.educacional.model.Pessoa;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class PessoaDTO {
 
     private Long idPessoa;
+	private DependenciaAdministrativaDTO dependenciaAdm;
     private String nome;
     private String cpf;
     private Date dtNascimento;
@@ -59,5 +62,6 @@ public class PessoaDTO {
         this.ufNascimento = new UfDTO(pessoa.getUfNascimento());
         this.municipioNascimento = new MunicipioDTO(pessoa.getMunicipioNascimento());
         this.paisResidencia = new PaisDTO(pessoa.getPaisResidencia());
+        this.dependenciaAdm = new DependenciaAdministrativaDTO(pessoa.getDependenciaAdm());
     }
 }

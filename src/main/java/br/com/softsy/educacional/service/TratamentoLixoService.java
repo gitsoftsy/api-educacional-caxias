@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.TratamentoLixoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.TratamentoLixo;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.TratamentoLixoRepository;
 
 @Service
@@ -19,6 +21,8 @@ public class TratamentoLixoService {
 	
 	@Autowired
 	private TratamentoLixoRepository repository;
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 	
 	public List<TratamentoLixo> listarTudo(){
 		return repository.findAll();
@@ -31,24 +35,20 @@ public class TratamentoLixoService {
 	
 	@Transactional
 	public TratamentoLixoDTO salvar(TratamentoLixoDTO dto) {
-		validarTratamentoLixo(dto.getTratamentoLixo());
-		
+
 		TratamentoLixo tratamentoLixo = criarTratamentoLixoAPartirDTO(dto);
 		
 		tratamentoLixo = repository.save(tratamentoLixo);
 		return new TratamentoLixoDTO(tratamentoLixo);
 	}
-	
-	private void validarTratamentoLixo(String tratamentoLixo) {
-		Optional<TratamentoLixo> TratamentoLixoExistente = repository.findByTratamentoLixo(tratamentoLixo).stream().findFirst();
-		if(TratamentoLixoExistente.isPresent()) {
-			throw new UniqueException("Essa forma já existe.");
-		}
-	}
+
 	
 	private TratamentoLixo criarTratamentoLixoAPartirDTO(TratamentoLixoDTO dto) {
 		TratamentoLixo tratamentoLixo = new TratamentoLixo();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, tratamentoLixo, "idTratamentoLixo", "ativo", "dataCadastro");
+		tratamentoLixo.setDependenciaAdm(dependenciaAdm);
 		tratamentoLixo.setDataCadastro(LocalDateTime.now());
 		tratamentoLixo.setAtivo('S');
 		return tratamentoLixo;
@@ -69,6 +69,9 @@ public class TratamentoLixoService {
 	
 	private void atualizaDados(TratamentoLixo destino, TratamentoLixoDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idTratamentoLixo", "ativo", "dataCadastro");
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setDependenciaAdm(dependenciaAdm);
 		
 	}
 

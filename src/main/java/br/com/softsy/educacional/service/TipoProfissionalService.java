@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.TipoProfissionalDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.TipoProfissional;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.TipoProfissionalRepository;
 
 @Service
@@ -20,12 +22,13 @@ public class TipoProfissionalService {
 
     @Autowired
     private TipoProfissionalRepository repository;
+    
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
-    public List<TipoProfissionalDTO> listarTodos() {
-        List<TipoProfissional> tiposProfissionais = repository.findAll();
-        return tiposProfissionais.stream()
-                .map(TipoProfissionalDTO::new)
-                .collect(Collectors.toList());
+    public List<TipoProfissional> listarTodos() {
+    	 return repository.findAll();
+       
     }
 
     @Transactional(readOnly = true)
@@ -36,7 +39,6 @@ public class TipoProfissionalService {
 
     @Transactional
     public TipoProfissionalDTO salvar(TipoProfissionalDTO dto) {
-        validarTipoProfissional(dto.getTipoProfissional());
 
         TipoProfissional tipoProfissional = criarTipoProfissionalAPartirDTO(dto);
 
@@ -44,16 +46,13 @@ public class TipoProfissionalService {
         return new TipoProfissionalDTO(tipoProfissional);
     }
 
-    private void validarTipoProfissional(String tipoProfissional) {
-        Optional<TipoProfissional> tipoProfissionalExistente = repository.findByTipoProfissional(tipoProfissional).stream().findFirst();
-        if (tipoProfissionalExistente.isPresent()) {
-            throw new UniqueException("Esse tipo de profissional já existe.");
-        }
-    }
 
     private TipoProfissional criarTipoProfissionalAPartirDTO(TipoProfissionalDTO dto) {
         TipoProfissional tipoProfissional = new TipoProfissional();
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
         BeanUtils.copyProperties(dto, tipoProfissional, "idTipoProfissional", "ativo", "dataCadastro");
+        tipoProfissional.setDependenciaAdm(dependenciaAdm);
         tipoProfissional.setDataCadastro(LocalDateTime.now());
         tipoProfissional.setAtivo('S');
         return tipoProfissional;
@@ -74,5 +73,8 @@ public class TipoProfissionalService {
 
     private void atualizarDados(TipoProfissional destino, TipoProfissionalDTO origem) {
         BeanUtils.copyProperties(origem, destino, "idTipoProfissional", "ativo", "dataCadastro");
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        destino.setDependenciaAdm(dependenciaAdm);
     }
 }

@@ -11,15 +11,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.ModalidadeEscolaDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.ModalidadeEscola;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.ModalidadeEscolaRepository;
 
 @Service
 public class ModalidadeEscolaService {
 
-	
 	@Autowired
 	private ModalidadeEscolaRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 	
 	public List<ModalidadeEscola> listarTudo(){
 		return repository.findAll();
@@ -32,7 +36,6 @@ public class ModalidadeEscolaService {
 	
 	@Transactional
 	public ModalidadeEscolaDTO salvar(ModalidadeEscolaDTO dto) {
-		validarModalidadeEscola(dto.getModalidadeEscola());
 		
 		ModalidadeEscola modalidadeEscola = criarModalidadeEscolaAPartirDTO(dto);
 		
@@ -40,16 +43,13 @@ public class ModalidadeEscolaService {
 		return new ModalidadeEscolaDTO(modalidadeEscola);
 	}
 	
-	private void validarModalidadeEscola(String modalidadeEscola) {
-		Optional<ModalidadeEscola> ModalidadeEscolaExistente = repository.findByModalidadeEscola(modalidadeEscola).stream().findFirst();
-		if(ModalidadeEscolaExistente.isPresent()) {
-			throw new UniqueException("Essa forma já existe.");
-		}
-	}
 	
 	private ModalidadeEscola criarModalidadeEscolaAPartirDTO(ModalidadeEscolaDTO dto) {
 		ModalidadeEscola modalidadeEscola = new ModalidadeEscola();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, modalidadeEscola, "idModalidadeEscola", "ativo", "dataCadastro");
+		modalidadeEscola.setDependenciaAdm(dependenciaAdm);
 		modalidadeEscola.setAtivo('S');
 		modalidadeEscola.setDataCadastro(LocalDateTime.now());
 		return modalidadeEscola;
@@ -70,6 +70,9 @@ public class ModalidadeEscolaService {
 	
 	private void atualizaDados(ModalidadeEscola destino, ModalidadeEscolaDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idModalidadeEscola", "ativo", "dataCadastro");
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setDependenciaAdm(dependenciaAdm);
 		
 	}	
 }

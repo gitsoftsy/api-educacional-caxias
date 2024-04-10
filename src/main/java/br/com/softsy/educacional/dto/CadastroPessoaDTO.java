@@ -16,9 +16,13 @@ import lombok.NoArgsConstructor;
 public class CadastroPessoaDTO {
 
     private Long idPessoa;
+    
+	@NotNull
+	private Long dependenciaAdmId;
 
     @NotNull
     private String nome;
+    
 
     @NotNull
     @CPF
@@ -92,5 +96,6 @@ public class CadastroPessoaDTO {
         this.uf = pessoa.getUf();
         this.dataCadastro = pessoa.getDataCadastro();
         this.ativo = pessoa.getAtivo();
+        this.dependenciaAdmId = pessoa.getDependenciaAdm().getIdDependenciaAdministrativa();
     }
 }

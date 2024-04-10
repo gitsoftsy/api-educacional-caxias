@@ -15,6 +15,9 @@ public class TipoDependenciaDTO {
 	private Long idTipoDependencia;
 	
 	@NotNull
+	private Long dependenciaAdmId;
+	
+	@NotNull
 	private String tipoDependencia;
 	private LocalDateTime dataCadastro;
 	
@@ -25,6 +28,7 @@ public class TipoDependenciaDTO {
 		this.idTipoDependencia = tipoDependencia.getIdTipoDependencia();
 		this.dataCadastro = tipoDependencia.getDataCadastro();
 		this.ativo = tipoDependencia.getAtivo();
+		this.dependenciaAdmId = tipoDependencia.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 
 

@@ -15,6 +15,9 @@ public class EntidadeSuperiorDTO {
 	private Long idEntidadeSuperior;
 	
 	@NotNull
+	private Long dependenciaAdmId;
+	
+	@NotNull
 	private String entidadeSuperior;
 	private LocalDateTime dataCadastro;
 	
@@ -25,5 +28,6 @@ public class EntidadeSuperiorDTO {
 		this.idEntidadeSuperior = entidadeSuperior.getIdEntidadeSuperior();
 		this.dataCadastro = entidadeSuperior.getDataCadastro();
 		this.ativo = entidadeSuperior.getAtivo();
+		this.dependenciaAdmId = entidadeSuperior.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 }

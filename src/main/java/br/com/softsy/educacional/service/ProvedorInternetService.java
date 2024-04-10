@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.ProvedorInternetDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.ProvedorInternet;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.ProvedorInternetRepository;
 
 @Service
@@ -19,6 +21,9 @@ public class ProvedorInternetService {
 
     @Autowired
     private ProvedorInternetRepository repository;
+    
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
     public List<ProvedorInternet> listarTudo() {
         return repository.findAll();
@@ -31,24 +36,19 @@ public class ProvedorInternetService {
 
     @Transactional
     public ProvedorInternetDTO salvar(ProvedorInternetDTO dto) {
-        validarProvedorInternet(dto.getProvedorInternet());
-
         ProvedorInternet provedorInternet = criarProvedorInternetAPartirDTO(dto);
 
         provedorInternet = repository.save(provedorInternet);
         return new ProvedorInternetDTO(provedorInternet);
     }
 
-    private void validarProvedorInternet(String provedorInternet) {
-        Optional<ProvedorInternet> provedorInternetExistente = repository.findByProvedorInternet(provedorInternet).stream().findFirst();
-        if (provedorInternetExistente.isPresent()) {
-            throw new UniqueException("Esse provedor de internet já existe.");
-        }
-    }
 
     private ProvedorInternet criarProvedorInternetAPartirDTO(ProvedorInternetDTO dto) {
         ProvedorInternet provedorInternet = new ProvedorInternet();
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
         BeanUtils.copyProperties(dto, provedorInternet, "idProvedorInternet", "ativo", "dataCadastro");
+        provedorInternet.setDependenciaAdm(dependenciaAdm);
         provedorInternet.setDataCadastro(LocalDateTime.now());
         provedorInternet.setAtivo('S');
         return provedorInternet;
@@ -69,5 +69,8 @@ public class ProvedorInternetService {
 
     private void atualizaDados(ProvedorInternet destino, ProvedorInternetDTO origem) {
         BeanUtils.copyProperties(origem, destino, "idProvedorInternet", "ativo", "dataCadastro");
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        destino.setDependenciaAdm(dependenciaAdm);
     }
 }

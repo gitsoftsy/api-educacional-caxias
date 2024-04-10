@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.NivelEscolaridadeDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.NivelEscolaridade;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.NivelEscolaridadeRepository;
 
 @Service
@@ -19,6 +21,9 @@ public class NivelEscolaridadeService {
 
 	@Autowired
 	private NivelEscolaridadeRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
 	public List<NivelEscolaridade> listarTudo() {
 		return repository.findAll();
@@ -31,7 +36,6 @@ public class NivelEscolaridadeService {
 
 	@Transactional
 	public NivelEscolaridadeDTO salvar(NivelEscolaridadeDTO dto) {
-		validarNivelEscolaridade(dto.getNivelEscolaridade());
 
 		NivelEscolaridade nivelEscolaridade = criarNivelEscolaridadeAPartirDTO(dto);
 
@@ -41,7 +45,10 @@ public class NivelEscolaridadeService {
 
 	private NivelEscolaridade criarNivelEscolaridadeAPartirDTO(NivelEscolaridadeDTO dto) {
 		NivelEscolaridade nivelEscolaridade = new NivelEscolaridade();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, nivelEscolaridade, "idNivelEscolaridade", "ativo", "dataCadastro");
+		nivelEscolaridade.setDependenciaAdm(dependenciaAdm);
 		nivelEscolaridade.setAtivo('S');
 		nivelEscolaridade.setDataCadastro(LocalDateTime.now());
 		return nivelEscolaridade;
@@ -60,16 +67,12 @@ public class NivelEscolaridadeService {
 		nivelEscolaridade.setAtivo(status);
 	}
 
-	private void validarNivelEscolaridade(String nivelEscolaridade) {
-		Optional<NivelEscolaridade> nivelEscolaridadeExistente = repository.findByNivelEscolaridade(nivelEscolaridade)
-				.stream().findFirst();
-		if (nivelEscolaridadeExistente.isPresent()) {
-			throw new UniqueException("Essa destinação já existe.");
-		}
-	}
 
 	private void atualizaDados(NivelEscolaridade destino, NivelEscolaridadeDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "IdNivelEscolaridade", "ativo", "dataCadastro");
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setDependenciaAdm(dependenciaAdm);
 
 	}
 

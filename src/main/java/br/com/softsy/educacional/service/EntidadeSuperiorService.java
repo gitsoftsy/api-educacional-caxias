@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.EntidadeSuperiorDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.EntidadeSuperior;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.EntidadeSuperiorRepository;
 
 @Service
@@ -19,6 +21,9 @@ public class EntidadeSuperiorService {
 	
 	@Autowired
 	private EntidadeSuperiorRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 	
 	public List<EntidadeSuperior> listarTudo() {
 		return repository.findAll();
@@ -31,24 +36,19 @@ public class EntidadeSuperiorService {
 	
 	@Transactional
 	public EntidadeSuperiorDTO salvar(EntidadeSuperiorDTO dto) {
-		validarEntidadeSuperior(dto.getEntidadeSuperior());
-		
 		EntidadeSuperior entidadeSuperior = criarEntidadeSuperiorAPartirDTO(dto);
 		
 		entidadeSuperior = repository.save(entidadeSuperior);
 		return new EntidadeSuperiorDTO(entidadeSuperior);
 	}
 	
-	private void validarEntidadeSuperior(String entidadeSuperior) {
-		Optional<EntidadeSuperior> entidadeSuperiorExistente = repository.findByEntidadeSuperior(entidadeSuperior).stream().findFirst();
-		if (entidadeSuperiorExistente.isPresent()) {
-			throw new UniqueException("Essa entidade superior já existe.");
-		}
-	}
 	
 	private EntidadeSuperior criarEntidadeSuperiorAPartirDTO(EntidadeSuperiorDTO dto) {
 		EntidadeSuperior entidadeSuperior = new EntidadeSuperior();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, entidadeSuperior, "idEntidadeSuperior", "ativo", "dataCadastro");
+		entidadeSuperior.setDependenciaAdm(dependenciaAdm);
 		entidadeSuperior.setDataCadastro(LocalDateTime.now());
 		entidadeSuperior.setAtivo('S');
 		return entidadeSuperior;
@@ -69,5 +69,8 @@ public class EntidadeSuperiorService {
 	
 	private void atualizaDados(EntidadeSuperior destino, EntidadeSuperiorDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idEntidadeSuperior", "ativo", "dataCadastro");
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setDependenciaAdm(dependenciaAdm);
 	}
 }

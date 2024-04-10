@@ -2,6 +2,8 @@ package br.com.softsy.educacional.dto;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotNull;
+
 import br.com.softsy.educacional.model.TurnoProfessor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class TurnoProfessorDTO {
 
 	private Long idTurnoProfessor;
+	
+	@NotNull
+	private Long dependenciaAdmId;
 
 	private String turnoProfessor;
 
@@ -23,5 +28,6 @@ public class TurnoProfessorDTO {
 		this.turnoProfessor = turnoProfessor.getTurnoProfessor();
 		this.dataCadastro = turnoProfessor.getDataCadastro();
 		this.ativo = turnoProfessor.getAtivo();
+		this.dependenciaAdmId = turnoProfessor.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 }

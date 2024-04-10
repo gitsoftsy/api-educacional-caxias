@@ -13,11 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.CadastroPessoaDTO;
 import br.com.softsy.educacional.dto.PessoaDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.Municipio;
 import br.com.softsy.educacional.model.Pais;
 import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.model.Raca;
 import br.com.softsy.educacional.model.Uf;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.MunicipioRepository;
 import br.com.softsy.educacional.repository.PaisRepository;
 import br.com.softsy.educacional.repository.PessoaRepository;
@@ -41,6 +43,9 @@ public class PessoaService {
 
     @Autowired
     private MunicipioRepository municipioRepository;
+    
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
     public List<PessoaDTO> listarTudo() {
         List<Pessoa> pessoas = repository.findAll();
@@ -56,7 +61,6 @@ public class PessoaService {
     @Transactional
     public CadastroPessoaDTO salvar(CadastroPessoaDTO dto) {
     	
-    	validarCpf(dto.getCpf());
         Pessoa pessoa = criarPessoaAPartirDTO(dto);
 
         pessoa = repository.save(pessoa);
@@ -88,10 +92,13 @@ public class PessoaService {
                 .orElseThrow(() -> new IllegalArgumentException("Município de nascimento não encontrado"));
         Pais paisResidencia = paisRepository.findById(dto.getPaisResidenciaId())
                 .orElseThrow(() -> new IllegalArgumentException("País de residência não encontrado"));
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 
         BeanUtils.copyProperties(dto, pessoa, "ativo", "dataCadastro", "idPessoa", "racaId", "paisNascimentoId", "ufNascimentoId",
                 "municipioNascimentoId", "paisResidenciaId");
 
+        pessoa.setDependenciaAdm(dependenciaAdm);
         pessoa.setRaca(raca);
         pessoa.setPaisNascimento(paisNascimento);
         pessoa.setUfNascimento(ufNascimento);
@@ -103,15 +110,29 @@ public class PessoaService {
         return pessoa;
     }
     
-	private void validarCpf(String cpf) {
-		Optional<Pessoa> cpfExistente = repository.findByCpf(cpf).stream().findFirst();
-		if(cpfExistente.isPresent()) {
-			throw new UniqueException("Já existe uma pessoa com o CPF fornecido.");
-		}
-	}
 
-    private void atualizaDados(Pessoa destino, CadastroPessoaDTO origem) {
-        BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro", "idPessoa", "racaId", "paisNascimentoId", "ufNascimentoId",
+    private void atualizaDados(Pessoa pessoa, CadastroPessoaDTO dto) {
+        Raca raca = racaRepository.findById(dto.getRacaId())
+                .orElseThrow(() -> new IllegalArgumentException("Raça não encontrada"));
+        Pais paisNascimento = paisRepository.findById(dto.getPaisNascimentoId())
+                .orElseThrow(() -> new IllegalArgumentException("País de nascimento não encontrado"));
+        Uf ufNascimento = ufRepository.findById(dto.getUfNascimentoId())
+                .orElseThrow(() -> new IllegalArgumentException("UF de nascimento não encontrado"));
+        Municipio municipioNascimento = municipioRepository.findById(dto.getMunicipioNascimentoId())
+                .orElseThrow(() -> new IllegalArgumentException("Município de nascimento não encontrado"));
+        Pais paisResidencia = paisRepository.findById(dto.getPaisResidenciaId())
+                .orElseThrow(() -> new IllegalArgumentException("País de residência não encontrado"));
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+
+        BeanUtils.copyProperties(dto, pessoa, "ativo", "dataCadastro", "idPessoa", "racaId", "paisNascimentoId", "ufNascimentoId",
                 "municipioNascimentoId", "paisResidenciaId");
+
+        pessoa.setDependenciaAdm(dependenciaAdm);
+        pessoa.setRaca(raca);
+        pessoa.setPaisNascimento(paisNascimento);
+        pessoa.setUfNascimento(ufNascimento);
+        pessoa.setMunicipioNascimento(municipioNascimento);
+        pessoa.setPaisResidencia(paisResidencia);
     }
 }

@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.TipoDependenciaDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.TipoDependencia;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.TipoDependenciaRepository;
 
 @Service
@@ -19,6 +21,9 @@ public class TipoDependenciaService {
 	
 	@Autowired
 	private TipoDependenciaRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 	
 	public List<TipoDependencia> listarTudo(){
 		return repository.findAll();
@@ -31,7 +36,6 @@ public class TipoDependenciaService {
 	
 	@Transactional
 	public TipoDependenciaDTO salvar(TipoDependenciaDTO dto) {
-		validarTipoDependencia(dto.getTipoDependencia());
 		
 		TipoDependencia tipoDependencia = criarTipoDependenciaAPartirDTO(dto);
 		
@@ -39,12 +43,6 @@ public class TipoDependenciaService {
 		return new TipoDependenciaDTO(tipoDependencia);
 	}
 	
-	private void validarTipoDependencia(String tipoDependencia) {
-		Optional<TipoDependencia> TipoDependenciaExistente = repository.findByTipoDependencia(tipoDependencia).stream().findFirst();
-		if(TipoDependenciaExistente.isPresent()) {
-			throw new UniqueException("Essa forma já existe.");
-		}
-	}
 	
 	@Transactional
 	public void ativaDesativa(char status, Long idTipoDependencia) {
@@ -54,7 +52,10 @@ public class TipoDependenciaService {
 	
 	private TipoDependencia criarTipoDependenciaAPartirDTO(TipoDependenciaDTO dto) {
 		TipoDependencia tipoDependencia = new TipoDependencia();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, tipoDependencia, "idTipoDependencia", "ativo", "dataCadastro");
+		tipoDependencia.setDependenciaAdm(dependenciaAdm);
 		tipoDependencia.setAtivo('S');
 		tipoDependencia.setDataCadastro(LocalDateTime.now());
 		return tipoDependencia;
@@ -69,6 +70,9 @@ public class TipoDependenciaService {
 	
 	private void atualizaDados(TipoDependencia destino, TipoDependenciaDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idTipoDependencia", "ativo", "dataCadastro");
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setDependenciaAdm(dependenciaAdm);
 		
 	}
 

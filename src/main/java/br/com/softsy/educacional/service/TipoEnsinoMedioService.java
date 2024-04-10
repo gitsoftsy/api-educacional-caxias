@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.TipoEnsinoMedioDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.TipoEnsinoMedio;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.TipoEnsinoMedioRepository;
 
 @Service
@@ -19,6 +21,9 @@ public class TipoEnsinoMedioService {
 
 	@Autowired
 	private TipoEnsinoMedioRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
 	public List<TipoEnsinoMedio> listarTudo() {
 		return repository.findAll();
@@ -31,7 +36,6 @@ public class TipoEnsinoMedioService {
 
 	@Transactional
 	public TipoEnsinoMedioDTO salvar(TipoEnsinoMedioDTO dto) {
-		validarTipoEnsinoMedio(dto.getTipoEnsinoMedio());
 
 		TipoEnsinoMedio tipoEnsinoMedio = criarTipoEnsinoMedioAPartirDTO(dto);
 
@@ -41,7 +45,10 @@ public class TipoEnsinoMedioService {
 
 	private TipoEnsinoMedio criarTipoEnsinoMedioAPartirDTO(TipoEnsinoMedioDTO dto) {
 		TipoEnsinoMedio tipoEnsinoMedio = new TipoEnsinoMedio();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, tipoEnsinoMedio, "idDestinacaoLixo", "ativo", "dataCadastro");
+		tipoEnsinoMedio.setDependenciaAdm(dependenciaAdm);
 		tipoEnsinoMedio.setAtivo('S');
 		tipoEnsinoMedio.setDataCadastro(LocalDateTime.now());
 		return tipoEnsinoMedio;
@@ -54,17 +61,11 @@ public class TipoEnsinoMedioService {
 		return new TipoEnsinoMedioDTO(tipoEnsinoMedio);
 	}
 
-	private void validarTipoEnsinoMedio(String tipoEnsinoMedio) {
-		Optional<TipoEnsinoMedio> tipoEnsinoMedioExistente = repository.findByTipoEnsinoMedio(tipoEnsinoMedio).stream()
-				.findFirst();
-		if (tipoEnsinoMedioExistente.isPresent()) {
-			throw new UniqueException("Essa destinação já existe.");
-		}
-
-	}
-
 	private void atualizaDados(TipoEnsinoMedio destino, TipoEnsinoMedioDTO origem) {
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(origem, destino, "idTipoEnsinoMedio", "ativo", "dataCadastro");
+		destino.setDependenciaAdm(dependenciaAdm);
 
 	}
 

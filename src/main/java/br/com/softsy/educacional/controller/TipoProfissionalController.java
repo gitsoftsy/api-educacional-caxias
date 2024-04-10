@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.TipoProfissionalDTO;
+import br.com.softsy.educacional.model.TipoProfissional;
 import br.com.softsy.educacional.service.TipoProfissionalService;
 
 @RestController
@@ -27,7 +28,7 @@ public class TipoProfissionalController {
     private TipoProfissionalService tipoProfissionalService;
 
     @GetMapping
-    public ResponseEntity<List<TipoProfissionalDTO>> listar() {
+    public ResponseEntity<List<TipoProfissional>> listar() {
         return ResponseEntity.ok(tipoProfissionalService.listarTodos());
     }
 

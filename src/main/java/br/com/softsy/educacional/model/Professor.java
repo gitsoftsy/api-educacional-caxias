@@ -13,11 +13,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "TBL_PROFESSOR")
+@Table(name = "TBL_PROFESSOR", 
+	uniqueConstraints = { 
+		@UniqueConstraint(name = "UQ_PROFESSOR_INEP", columnNames = { "CODIGO_INEP", "ID_DEPENDENCIA_ADMINISTRATIVA" }),
+		@UniqueConstraint(name = "UQ_PROFESSOR_MATRICULA", columnNames = {"MATRICULA", "ID_DEPENDENCIA_ADMINISTRATIVA"})
+		})
 @Data
 public class Professor {
 
@@ -25,6 +30,10 @@ public class Professor {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_PROFESSOR")
 	private Long idProfessor;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
+	private DependenciaAdministrativa dependenciaAdm;
 	
 	@ManyToOne
 	@JoinColumn(name = "ID_PESSOA", nullable = false)

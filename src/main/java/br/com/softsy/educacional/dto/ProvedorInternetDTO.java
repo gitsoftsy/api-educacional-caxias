@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class ProvedorInternetDTO {
 
     private Long idProvedorInternet;
+    
+	@NotNull
+	private Long dependenciaAdmId;
 
     @NotNull
     private String provedorInternet;
@@ -26,5 +29,6 @@ public class ProvedorInternetDTO {
         this.telefoneProvedor = provedorInternet.getTelefoneProvedor();
         this.dataCadastro = provedorInternet.getDataCadastro();
         this.ativo = provedorInternet.getAtivo();
+        this.dependenciaAdmId = provedorInternet.getDependenciaAdm().getIdDependenciaAdministrativa();
     }
 }

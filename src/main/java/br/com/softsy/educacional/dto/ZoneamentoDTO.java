@@ -15,6 +15,9 @@ public class ZoneamentoDTO {
 	private Long idZoneamento;
 	
 	@NotNull
+	private Long dependenciaAdmId;
+	
+	@NotNull
 	private String zoneamento;
 	private LocalDateTime dataCadastro;
 	
@@ -25,5 +28,6 @@ public class ZoneamentoDTO {
 		this.idZoneamento = zoneamento.getIdZoneamento();
 		this.dataCadastro = zoneamento.getDataCadastro();
 		this.ativo = zoneamento.getAtivo();
+		this.dependenciaAdmId = zoneamento.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 }

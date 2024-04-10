@@ -12,8 +12,10 @@ import br.com.softsy.educacional.model.AtoRegulatorio;
 @NoArgsConstructor
 public class AtoRegulatorioDTO {
 
-	
 	private Long idAtoRegulatorio;
+	
+	@NotNull
+	private Long dependenciaAdmId;
 	
 	@NotNull
 	private String AtoRegulatorio;
@@ -27,6 +29,7 @@ public class AtoRegulatorioDTO {
 		this.AtoRegulatorio = atoRegulatorio.getAtoRegulatorio();
 		this.dataCadastro = atoRegulatorio.getDataCadastro();
 		this.ativo = atoRegulatorio.getAtivo();
+		this.dependenciaAdmId = atoRegulatorio.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 	
 }

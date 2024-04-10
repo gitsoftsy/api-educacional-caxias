@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroEquipamentoDTO;
 import br.com.softsy.educacional.dto.EquipamentoDTO;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.Equipamento;
 import br.com.softsy.educacional.model.MarcaEquipamento;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.EquipamentoRepository;
 import br.com.softsy.educacional.repository.MarcaEquipamentoRepository;
 
@@ -24,6 +26,9 @@ public class EquipamentoService {
     
     @Autowired
     private MarcaEquipamentoRepository marcaRepository;
+    
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
     public List<EquipamentoDTO> listarTodos() {
         List<Equipamento> equipamentos = repository.findAll();
@@ -60,9 +65,12 @@ public class EquipamentoService {
 
     private Equipamento criarEquipamentoAPartirDTO(CadastroEquipamentoDTO dto) {
         Equipamento equipamento = new Equipamento();
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
         MarcaEquipamento marcaEquipamento = marcaRepository.findById(dto.getMarcaEquipamentoId())
         		.orElseThrow(() -> new IllegalArgumentException("Marca não encontrada"));
         BeanUtils.copyProperties(dto, equipamento, "idEquipamento", "dataCadastro");
+        equipamento.setDependenciaAdm(dependenciaAdm);
         equipamento.setDataCadastro(LocalDateTime.now());
         equipamento.setAtivo('S');
         equipamento.setMarcaEquipamento(marcaEquipamento);
@@ -72,6 +80,9 @@ public class EquipamentoService {
     private void atualizarDadosEquipamento(Equipamento destino, CadastroEquipamentoDTO origem) {
     	destino.setMarcaEquipamento(marcaRepository.findById(origem.getMarcaEquipamentoId())
     			.orElseThrow(() -> new IllegalArgumentException("Marca não encontrada")));
+    	DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
         BeanUtils.copyProperties(origem, destino, "idEquipamento", "dataCadastro", "ativo");
+        destino.setDependenciaAdm(dependenciaAdm);
     }
 }

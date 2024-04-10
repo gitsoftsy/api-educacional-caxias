@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class TipoProfissionalDTO {
 
     private Long idTipoProfissional;
+    
+	@NotNull
+	private Long dependenciaAdmId;
 
     @NotNull
     private String tipoProfissional;
@@ -24,5 +27,6 @@ public class TipoProfissionalDTO {
         this.idTipoProfissional = tipoProfissional.getIdTipoProfissional();
         this.dataCadastro = tipoProfissional.getDataCadastro();
         this.ativo = tipoProfissional.getAtivo();
+        this.dependenciaAdmId = tipoProfissional.getDependenciaAdm().getIdDependenciaAdministrativa();
     }
 }

@@ -2,6 +2,8 @@ package br.com.softsy.educacional.dto;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotNull;
+
 import br.com.softsy.educacional.model.Equipamento;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,9 @@ public class CadastroEquipamentoDTO {
 
     private Long idEquipamento;
 
+	@NotNull
+	private Long dependenciaAdmId;
+	
     private String equipamento;
 
     private Long marcaEquipamentoId;
@@ -26,5 +31,6 @@ public class CadastroEquipamentoDTO {
         this.marcaEquipamentoId = equipamento.getMarcaEquipamento().getIdMarcaEquipamento();
         this.dataCadastro = equipamento.getDataCadastro();
         this.ativo = equipamento.getAtivo();
+        this.dependenciaAdmId = equipamento.getDependenciaAdm().getIdDependenciaAdministrativa();
     }
 }

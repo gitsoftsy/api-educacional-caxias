@@ -12,12 +12,17 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.AtoRegulatorioDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.AtoRegulatorio;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.repository.AtoRegulatorioRepository;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 
 @Service
 public class AtoRegulatorioService {
 	
 	@Autowired AtoRegulatorioRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 	
 	public List<AtoRegulatorio> listarTudo(){
 		return repository.findAll();
@@ -30,7 +35,6 @@ public class AtoRegulatorioService {
 	
 	@Transactional
 	public AtoRegulatorioDTO salvar(AtoRegulatorioDTO dto) {
-		validarAtoRegulatorio(dto.getAtoRegulatorio());
 		
 		AtoRegulatorio atoRegulatorio = criarAtoAPartirDTO(dto);
 		
@@ -40,7 +44,10 @@ public class AtoRegulatorioService {
 	
 	private AtoRegulatorio criarAtoAPartirDTO(AtoRegulatorioDTO dto) {
 		AtoRegulatorio atoRegulatorio = new AtoRegulatorio();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, atoRegulatorio, "idAtoRegulatorio", "ativo", "dataCadastro");
+		atoRegulatorio.setDependenciaAdm(dependenciaAdm);
 		atoRegulatorio.setAtivo('S');
 		atoRegulatorio.setDataCadastro(LocalDateTime.now());
 		return atoRegulatorio;
@@ -59,12 +66,6 @@ public class AtoRegulatorioService {
 		atoRegulatorio.setAtivo(status);
 	}
 	
-	private void validarAtoRegulatorio(String atoRegulatorio) {
-		Optional<AtoRegulatorio> atoExistente = repository.findByAtoRegulatorio(atoRegulatorio).stream().findFirst();
-		if(atoExistente.isPresent()) {
-			throw new UniqueException("Essa destinação já existe.");
-		}
-	}
 	
 	private void atualizaDados(AtoRegulatorio destino, AtoRegulatorioDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idAtoRegulatorio", "ativo", "dataCadastro");

@@ -15,11 +15,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "TBL_PESSOA")
+@Table(name = "TBL_PESSOA", 
+	uniqueConstraints = { 
+		@UniqueConstraint(name = "UQ_PESSOA", columnNames = { "CPF", "ID_DEPENDENCIA_ADMINISTRATIVA" })
+		})
 @Data
 public class Pessoa {
 	
@@ -27,6 +31,10 @@ public class Pessoa {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_PESSOA")
 	private Long idPessoa;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
+	private DependenciaAdministrativa dependenciaAdm;
 	
 	@Column(name = "NOME", nullable = false)
 	private String nome;

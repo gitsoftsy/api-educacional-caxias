@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.SituacaoProfessorDTO;
+import br.com.softsy.educacional.model.SituacaoProfessor;
 import br.com.softsy.educacional.service.SituacaoProfessorService;
 
 @RestController
@@ -27,7 +28,7 @@ public class SituacaoProfessorController {
     private SituacaoProfessorService service;
 
     @GetMapping
-    public ResponseEntity<List<SituacaoProfessorDTO>> listar() {
+    public ResponseEntity<List<SituacaoProfessor>> listar() {
         return ResponseEntity.ok(service.listarTudo());
     }
 

@@ -15,6 +15,9 @@ public class CategoriaEscolaPrivadaDTO {
 	private Long idCategoriaEscolaPrivada;
 	
 	@NotNull
+	private Long dependenciaAdmId;
+	
+	@NotNull
 	private String categoriaEscolaPrivada;
 	
 	private LocalDateTime dataCadastro;
@@ -26,5 +29,6 @@ public class CategoriaEscolaPrivadaDTO {
 		this.categoriaEscolaPrivada = categoriaEscolaPrivada.getCategoriaEscolaPrivada();
 		this.dataCadastro = categoriaEscolaPrivada.getDataCadastro();
 		this.ativo = categoriaEscolaPrivada.getAtivo();
+		this.dependenciaAdmId = categoriaEscolaPrivada.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 }

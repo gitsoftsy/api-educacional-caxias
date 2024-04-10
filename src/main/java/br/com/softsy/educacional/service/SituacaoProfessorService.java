@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.SituacaoProfessorDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.SituacaoProfessor;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.SituacaoProfessorRepository;
 
 @Service
@@ -20,12 +22,12 @@ public class SituacaoProfessorService {
 
     @Autowired
     private SituacaoProfessorRepository repository;
+    
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
-    public List<SituacaoProfessorDTO> listarTudo() {
-        List<SituacaoProfessor> situacoes = repository.findAll();
-        return situacoes.stream()
-                .map(SituacaoProfessorDTO::new)
-                .collect(Collectors.toList());
+    public List<SituacaoProfessor> listarTudo() {
+    	 return repository.findAll();
     }
 
     @Transactional(readOnly = true)
@@ -36,7 +38,6 @@ public class SituacaoProfessorService {
 
     @Transactional
     public SituacaoProfessorDTO salvar(SituacaoProfessorDTO dto) {
-        validarSituacaoProfessor(dto.getSituacaoProfessor());
 
         SituacaoProfessor situacaoProfessor = criarSituacaoProfessorAPartirDTO(dto);
 
@@ -46,6 +47,9 @@ public class SituacaoProfessorService {
 
     private SituacaoProfessor criarSituacaoProfessorAPartirDTO(SituacaoProfessorDTO dto) {
         SituacaoProfessor situacaoProfessor = new SituacaoProfessor();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		situacaoProfessor.setDependenciaAdm(dependenciaAdm);
         situacaoProfessor.setSituacaoProfessor(dto.getSituacaoProfessor());
         situacaoProfessor.setDataCadastro(LocalDateTime.now());
         situacaoProfessor.setAtivo('S');
@@ -65,14 +69,11 @@ public class SituacaoProfessorService {
         situacaoProfessor.setAtivo(status);
     }
 
-    private void validarSituacaoProfessor(String situacaoProfessor) {
-        Optional<SituacaoProfessor> situacaoExistente = repository.findBySituacaoProfessor(situacaoProfessor).stream().findFirst();
-        if (situacaoExistente.isPresent()) {
-            throw new UniqueException("Essa situação de professor já existe.");
-        }
-    }
 
     private void atualizaDados(SituacaoProfessor destino, SituacaoProfessorDTO origem) {
     	BeanUtils.copyProperties(origem, destino, "idSituacaoProfessor", "dataCadastro", "ativo");
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setDependenciaAdm(dependenciaAdm);
     }
 }

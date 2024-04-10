@@ -11,15 +11,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.LinguaEnsinoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.LinguaEnsino;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.LinguaEnsinoRepository;
 
 @Service
 public class LinguaEnsinoService {
 	
-	
 	@Autowired
 	private LinguaEnsinoRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 	
 	public List<LinguaEnsino> listarTudo(){
 		return repository.findAll();
@@ -32,24 +36,20 @@ public class LinguaEnsinoService {
 	
 	@Transactional
 	public LinguaEnsinoDTO salvar(LinguaEnsinoDTO dto) {
-		validarLinguaEnsino(dto.getLinguaEnsino());
 		
 		LinguaEnsino linguaEnsino = criarLinguaEnsinoAPartirDTO(dto);
 		
 		linguaEnsino = repository.save(linguaEnsino);
 		return new LinguaEnsinoDTO(linguaEnsino);
 	}
-	
-	private void validarLinguaEnsino(String linguaEnsino) {
-		Optional<LinguaEnsino> LinguaEnsinoExistente = repository.findByLinguaEnsino(linguaEnsino).stream().findFirst();
-		if(LinguaEnsinoExistente.isPresent()) {
-			throw new UniqueException("Essa forma já existe.");
-		}
-	}
+
 	
 	private LinguaEnsino criarLinguaEnsinoAPartirDTO(LinguaEnsinoDTO dto) {
 		LinguaEnsino linguaEnsino = new LinguaEnsino();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, linguaEnsino, "idLinguaEnsino", "ativo", "dataCadastro");
+		linguaEnsino.setDependenciaAdm(dependenciaAdm);
 		linguaEnsino.setAtivo('S');
 		linguaEnsino.setDataCadastro(LocalDateTime.now());
 		return linguaEnsino;
@@ -64,6 +64,9 @@ public class LinguaEnsinoService {
 	
 	private void atualizaDados(LinguaEnsino destino, LinguaEnsinoDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idLinguaEnsino", "ativo", "dataCadastro");
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setDependenciaAdm(dependenciaAdm);
 		
 	}	
 	

@@ -2,6 +2,8 @@ package br.com.softsy.educacional.dto;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotNull;
+
 import br.com.softsy.educacional.model.TipoEnsinoMedio;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class TipoEnsinoMedioDTO {
 
 	private Long idTipoEnsinoMedio;
+	
+	@NotNull
+	private Long dependenciaAdmId;
 
 	private String tipoEnsinoMedio;
 
@@ -23,5 +28,6 @@ public class TipoEnsinoMedioDTO {
 		this.tipoEnsinoMedio = tipoEnsinoMedioDTO.getTipoEnsinoMedio();
 		this.dataCadastro = tipoEnsinoMedioDTO.getDataCadastro();
 		this.ativo = tipoEnsinoMedioDTO.getAtivo();
+		this.dependenciaAdmId = tipoEnsinoMedioDTO.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 }

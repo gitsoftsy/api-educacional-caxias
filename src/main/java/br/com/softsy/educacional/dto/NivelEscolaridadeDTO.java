@@ -2,6 +2,8 @@ package br.com.softsy.educacional.dto;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotNull;
+
 import br.com.softsy.educacional.model.NivelEscolaridade;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class NivelEscolaridadeDTO {
 
 	private Long idNivelEscolaridade;
+	
+	@NotNull
+	private Long dependenciaAdmId;
 
 	private String nivelEscolaridade;
 
@@ -23,6 +28,7 @@ public class NivelEscolaridadeDTO {
 		this.nivelEscolaridade = nivelEscolaridade.getNivelEscolaridade();
 		this.dataCadastro = nivelEscolaridade.getDataCadastro();
 		this.ativo = nivelEscolaridade.getAtivo();
+		this.dependenciaAdmId = nivelEscolaridade.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 
 }

@@ -15,6 +15,9 @@ public class DestinacaoLixoDTO {
 	private Long idDestinacaoLixo;
 	
 	@NotNull
+	private Long dependenciaAdmId;
+	
+	@NotNull
 	private String destinacaoLixo;
 	
 	private LocalDateTime dataCadastro;
@@ -26,5 +29,6 @@ public class DestinacaoLixoDTO {
 		this.destinacaoLixo = destinacaoLixo.getDestinacaoLixo();
 		this.dataCadastro = destinacaoLixo.getDataCadastro();
 		this.ativo = destinacaoLixo.getAtivo();
+		this.dependenciaAdmId = destinacaoLixo.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 }

@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 public class SituacaoProfessorDTO {
 
     private Long idSituacaoProfessor;
+	@NotNull
+	private Long dependenciaAdmId;
 
     @NotNull
     private String situacaoProfessor;
@@ -26,5 +28,6 @@ public class SituacaoProfessorDTO {
         this.situacaoProfessor = situacaoProfessor.getSituacaoProfessor();
         this.dataCadastro = situacaoProfessor.getDataCadastro();
         this.ativo = situacaoProfessor.getAtivo();
+        this.dependenciaAdmId = situacaoProfessor.getDependenciaAdm().getIdDependenciaAdministrativa();
     }
 }

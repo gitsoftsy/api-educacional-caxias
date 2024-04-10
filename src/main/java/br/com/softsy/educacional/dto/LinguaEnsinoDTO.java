@@ -15,6 +15,9 @@ public class LinguaEnsinoDTO {
 	private Long idLinguaEnsino;
 	
 	@NotNull
+	private Long dependenciaAdmId;
+	
+	@NotNull
 	private String linguaEnsino;
 	private String linguaIndigena;
 	private LocalDateTime dataCadastro;
@@ -27,6 +30,7 @@ public class LinguaEnsinoDTO {
 		this.idLinguaEnsino = linguaEnsino.getIdLinguaEnsino();
 		this.dataCadastro = linguaEnsino.getDataCadastro();
 		this.ativo = linguaEnsino.getAtivo();
+		this.dependenciaAdmId = linguaEnsino.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 
 }

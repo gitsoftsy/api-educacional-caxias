@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.OrgaoPublicoDTO;
+import br.com.softsy.educacional.model.OrgaoPublico;
 import br.com.softsy.educacional.service.OrgaoPublicoService;
 
 @RestController
@@ -28,11 +29,8 @@ public class OrgaoPublicoController {
     private OrgaoPublicoService service;
 
     @GetMapping
-    public ResponseEntity<List<OrgaoPublicoDTO>> listar() {
-        List<OrgaoPublicoDTO> orgaosPublicos = service.listarTudo().stream()
-                .map(OrgaoPublicoDTO::new)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(orgaosPublicos);
+    public ResponseEntity<List<OrgaoPublico>> listar() {
+        return ResponseEntity.ok(service.listarTudo());
     }
 
     @GetMapping("/{idOrgaoPublico}")

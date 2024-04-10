@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.InstrPedagogicoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.InstrPedagogico;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.InstrPedagogicoRepository;
 
 @Service
@@ -20,6 +22,9 @@ public class InstrPedagogicoService {
 
     @Autowired
     private InstrPedagogicoRepository repository;
+    
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
     public List<InstrPedagogicoDTO> listarTodos() {
         List<InstrPedagogico> instrucoes = repository.findAll();
@@ -36,7 +41,6 @@ public class InstrPedagogicoService {
 
     @Transactional
     public InstrPedagogicoDTO salvar(InstrPedagogicoDTO dto) {
-        validarInstrucaoPedagogica(dto.getInstrPedagogico());
 
         InstrPedagogico instrucao = criarInstrucaoPedagogicaAPartirDTO(dto);
 
@@ -44,16 +48,13 @@ public class InstrPedagogicoService {
         return new InstrPedagogicoDTO(instrucao);
     }
 
-    private void validarInstrucaoPedagogica(String instrucao) {
-        Optional<InstrPedagogico> instrucaoExistente = repository.findByInstrPedagogico(instrucao).stream().findFirst();
-        if (instrucaoExistente.isPresent()) {
-            throw new UniqueException("Essa instrução pedagógica já existe.");
-        }
-    }
 
     private InstrPedagogico criarInstrucaoPedagogicaAPartirDTO(InstrPedagogicoDTO dto) {
         InstrPedagogico instrucao = new InstrPedagogico();
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
         BeanUtils.copyProperties(dto, instrucao, "idInstrPedagogico", "ativo", "dataCadastro");
+        instrucao.setDependenciaAdm(dependenciaAdm);
         instrucao.setDataCadastro(LocalDateTime.now());
         instrucao.setAtivo('S');
         return instrucao;
@@ -74,5 +75,8 @@ public class InstrPedagogicoService {
 
     private void atualizarDados(InstrPedagogico destino, InstrPedagogicoDTO origem) {
         BeanUtils.copyProperties(origem, destino, "idInstrPedagogico", "ativo", "dataCadastro");
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        destino.setDependenciaAdm(dependenciaAdm);
     }
 }

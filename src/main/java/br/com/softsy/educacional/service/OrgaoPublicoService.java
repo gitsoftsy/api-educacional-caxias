@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.OrgaoPublicoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.OrgaoPublico;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.OrgaoPublicoRepository;
 
 @Service
@@ -19,6 +21,9 @@ public class OrgaoPublicoService {
 	
 	@Autowired
 	private OrgaoPublicoRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 	
 	public List<OrgaoPublico> listarTudo() {
 		return repository.findAll();
@@ -31,8 +36,6 @@ public class OrgaoPublicoService {
 	
 	@Transactional
 	public OrgaoPublicoDTO salvar(OrgaoPublicoDTO dto) {
-		validarSigla(dto.getSigla());
-		validarOrgaoPublico(dto.getOrgaoPublico());
 		
 		OrgaoPublico orgaoPublico = criarOrgaoPublicoAPartirDTO(dto);
 		
@@ -40,23 +43,13 @@ public class OrgaoPublicoService {
 		return new OrgaoPublicoDTO(orgaoPublico);
 	}
 	
-	private void validarSigla(String sigla) {
-		Optional<OrgaoPublico> orgaoPublicoExistente = repository.findBySigla(sigla).stream().findFirst();
-		if (orgaoPublicoExistente.isPresent()) {
-			throw new UniqueException("Essa sigla já está em uso.");
-		}
-	}
-	
-	private void validarOrgaoPublico(String orgaoPublico) {
-		Optional<OrgaoPublico> orgaoPublicoExistente = repository.findByOrgaoPublico(orgaoPublico).stream().findFirst();
-		if (orgaoPublicoExistente.isPresent()) {
-			throw new UniqueException("Esse órgão público já existe.");
-		}
-	}
 	
 	private OrgaoPublico criarOrgaoPublicoAPartirDTO(OrgaoPublicoDTO dto) {
 		OrgaoPublico orgaoPublico = new OrgaoPublico();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, orgaoPublico, "idOrgaoPublico", "dataCadastro", "ativo");
+		orgaoPublico.setDependenciaAdm(dependenciaAdm);
 		orgaoPublico.setDataCadastro(LocalDateTime.now());
 		orgaoPublico.setAtivo('S');
 		return orgaoPublico;
@@ -77,5 +70,8 @@ public class OrgaoPublicoService {
 	
 	private void atualizarDados(OrgaoPublico destino, OrgaoPublicoDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idOrgaoPublico", "dataCadastro", "ativo");
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setDependenciaAdm(dependenciaAdm);
 	}
 }

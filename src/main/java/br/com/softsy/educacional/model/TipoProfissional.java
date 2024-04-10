@@ -10,13 +10,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "TBL_TIPO_PROFISSIONAL")
+@Table(name = "TBL_TIPO_PROFISSIONAL", 
+	uniqueConstraints = { 
+		@UniqueConstraint(name = "UQ_TIPO_PROFISSIONAL", columnNames = { "TIPO_PROFISSIONAL", "ID_DEPENDENCIA_ADMINISTRATIVA" })
+		})
 @Data
 public class TipoProfissional {
 
@@ -24,6 +32,10 @@ public class TipoProfissional {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_TIPO_PROFISSIONAL")
 	private Long idTipoProfissional;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
+	private DependenciaAdministrativa dependenciaAdm;
 	
 	@Column(name = "TIPO_PROFISSIONAL", nullable = false, unique = true)
 	private String tipoProfissional;
@@ -34,6 +46,7 @@ public class TipoProfissional {
 	@Column(name = "ATIVO", nullable = false)
 	private Character ativo;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "tipoProfissional", cascade = CascadeType.ALL)
 	private Set<EscolaProfissional> profissional = new HashSet<>();
 	

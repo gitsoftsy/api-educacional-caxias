@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import br.com.softsy.educacional.dto.DestinacaoLixoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.DestinacaoLixo;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.DestinacaoLixoRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,9 @@ public class DestinacaoLixoService {
 
 	@Autowired
 	private DestinacaoLixoRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 	
 	public List<DestinacaoLixo> listarTudo(){
 		return repository.findAll();
@@ -32,7 +37,6 @@ public class DestinacaoLixoService {
 	
 	@Transactional
 	public DestinacaoLixoDTO salvar(DestinacaoLixoDTO dto) {
-		validarDestinacaoLixo(dto.getDestinacaoLixo());
 		
 		DestinacaoLixo destinacao = criarDestinacaoAPartirDTO(dto);
 		
@@ -42,7 +46,10 @@ public class DestinacaoLixoService {
 	
 	private DestinacaoLixo criarDestinacaoAPartirDTO(DestinacaoLixoDTO dto) {
 		DestinacaoLixo destinacao = new DestinacaoLixo();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, destinacao, "idDestinacaoLixo", "ativo", "dataCadastro");
+		destinacao.setDependenciaAdm(dependenciaAdm);
 		destinacao.setAtivo('S');
 		destinacao.setDataCadastro(LocalDateTime.now());
 		return destinacao;
@@ -60,17 +67,13 @@ public class DestinacaoLixoService {
 		DestinacaoLixo destinacao = repository.getReferenceById(idDestinacaoLixo);
 		destinacao.setAtivo(status);
 	}
-	
-	
-	private void validarDestinacaoLixo(String destinacaoLixo) {
-		Optional<DestinacaoLixo> destinacaoExistente = repository.findByDestinacaoLixo(destinacaoLixo).stream().findFirst();
-		if(destinacaoExistente.isPresent()) {
-			throw new UniqueException("Essa destinação já existe.");
-		}
-	}
+
 	
 	private void atualizaDados(DestinacaoLixo destino, DestinacaoLixoDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idDestinacaoLixo", "ativo", "dataCadastro");
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setDependenciaAdm(dependenciaAdm);
 		
 	}
 }

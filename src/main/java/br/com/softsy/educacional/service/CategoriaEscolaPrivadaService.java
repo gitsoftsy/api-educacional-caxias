@@ -12,13 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.CategoriaEscolaPrivadaDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.CategoriaEscolaPrivada;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.repository.CategoriaEscolaPrivadaRepository;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 
 @Service
 public class CategoriaEscolaPrivadaService {
 	
 	@Autowired
 	private CategoriaEscolaPrivadaRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 	
 	public List<CategoriaEscolaPrivada> listarTudo() {
 		return repository.findAll();
@@ -31,7 +36,6 @@ public class CategoriaEscolaPrivadaService {
 	
 	@Transactional
 	public CategoriaEscolaPrivadaDTO salvar(CategoriaEscolaPrivadaDTO dto) {
-		validarCategoria(dto.getCategoriaEscolaPrivada());
 		
 		CategoriaEscolaPrivada categoria = criarCategoriaAPartirDTO(dto);
 		
@@ -39,16 +43,13 @@ public class CategoriaEscolaPrivadaService {
 		return new CategoriaEscolaPrivadaDTO(categoria);
 	}
 	
-	private void validarCategoria(String categoria) {
-		Optional<CategoriaEscolaPrivada> categoriaExistente = repository.findByCategoriaEscolaPrivada(categoria).stream().findFirst();
-		if (categoriaExistente.isPresent()) {
-			throw new UniqueException("Essa categoria de escola privada já existe.");
-		}
-	}
 	
 	private CategoriaEscolaPrivada criarCategoriaAPartirDTO(CategoriaEscolaPrivadaDTO dto) {
 		CategoriaEscolaPrivada categoria = new CategoriaEscolaPrivada();
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, categoria, "idCategoriaEscolaPrivada", "ativo", "dataCadastro");
+		categoria.setDependenciaAdm(dependenciaAdm);
 		categoria.setDataCadastro(LocalDateTime.now());
 		categoria.setAtivo('S');
 		return categoria;
@@ -69,5 +70,8 @@ public class CategoriaEscolaPrivadaService {
 	
 	private void atualizaDados(CategoriaEscolaPrivada destino, CategoriaEscolaPrivadaDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idCategoriaEscolaPrivada", "ativo", "dataCadastro");
+		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setDependenciaAdm(dependenciaAdm);
 	}
 }

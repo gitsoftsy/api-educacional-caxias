@@ -7,12 +7,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "TBL_PROVEDOR_INTERNET")
+@Table(name = "TBL_PROVEDOR_INTERNET", 
+	uniqueConstraints = { 
+		@UniqueConstraint(name = "UQ_PROVEDOR_INTERNET", columnNames = { "PROVEDOR_INTERNET", "ID_DEPENDENCIA_ADMINISTRATIVA" })
+		})
 @Data
 public class ProvedorInternet {
 	
@@ -20,6 +26,10 @@ public class ProvedorInternet {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_PROVEDOR_INTERNET")
 	private Long idProvedorInternet;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
+	private DependenciaAdministrativa dependenciaAdm;
 	
 	@Column(name = "PROVEDOR_INTERNET", nullable = false, unique = true)
 	private String provedorInternet;
