@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.TipoAtendimentoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.TipoAtendimento;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.TipoAtendimentoRepository;
 
 @Service
@@ -19,6 +21,9 @@ public class TipoAtendimentoService {
 
     @Autowired
     private TipoAtendimentoRepository repository;
+    
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
     public List<TipoAtendimento> listarTudo() {
         return repository.findAll();
@@ -41,6 +46,9 @@ public class TipoAtendimentoService {
 
     private TipoAtendimento criarTipoAtendimentoAPartirDTO(TipoAtendimentoDTO dto) {
         TipoAtendimento tipoAtendimento = new TipoAtendimento();
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        tipoAtendimento.setDependenciaAdm(dependenciaAdm);
         tipoAtendimento.setTipoAtendimento(dto.getTipoAtendimento());
         tipoAtendimento.setDataCadastro(LocalDateTime.now());
         return tipoAtendimento;
@@ -69,6 +77,9 @@ public class TipoAtendimentoService {
 
     private void atualizaDados(TipoAtendimento destino, TipoAtendimentoDTO origem) {
        BeanUtils.copyProperties(origem, destino, "dataCadastro", "idTipoAtendimento");
+       DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+               .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+       destino.setDependenciaAdm(dependenciaAdm);
     }
 
 }

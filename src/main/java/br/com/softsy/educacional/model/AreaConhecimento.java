@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -20,6 +22,10 @@ public class AreaConhecimento {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_AREA_CONHECIMENTO")
 	private Long idAreaConhecimento;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
+	private DependenciaAdministrativa dependenciaAdm;
 	
 	@Column(name = "AREA_CONHECIMENTO", nullable = false, unique = true)
 	private String areaConhecimento;

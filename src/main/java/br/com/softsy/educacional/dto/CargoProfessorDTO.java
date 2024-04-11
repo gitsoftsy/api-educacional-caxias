@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class CargoProfessorDTO {
 
     private Long idCargoProfessor;
+    
+	@NotNull
+	private Long dependenciaAdmId;
 
     @NotNull
     private String cargoProfessor;
@@ -26,5 +29,6 @@ public class CargoProfessorDTO {
         this.cargoProfessor = cargoProfessor.getCargoProfessor();
         this.dataCadastro = cargoProfessor.getDataCadastro();
         this.ativo = cargoProfessor.getAtivo();
+        this.dependenciaAdmId = cargoProfessor.getDependenciaAdm().getIdDependenciaAdministrativa();
     }
 }

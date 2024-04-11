@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -20,6 +22,10 @@ public class TipoDeMedicao {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_TIPO_DE_MEDICAO")
 	private Long idTipoMedicao;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
+	private DependenciaAdministrativa dependenciaAdm;
 	
 	@Column(name = "TIPO_DE_MEDICAO", nullable = false, unique = true)
 	private String tipoMedicao;

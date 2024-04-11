@@ -15,28 +15,47 @@ import javax.persistence.UniqueConstraint;
 import lombok.Data;
 
 @Entity
-@Table(name = "TBL_CARGO_PROFESSOR", 
+@Table(name = "TBL_CURRICULO", 
 	uniqueConstraints = { 
-		@UniqueConstraint(name = "UQ_CARGO_PROFESSOR", columnNames = { "CARGO_PROFESSOR", "ID_DEPENDENCIA_ADMINISTRATIVA" })
+		@UniqueConstraint(name = "UQ_CURRICULO", columnNames = { "CURRICULO", "ID_CURSO" })
 		})
 @Data
-public class CargoProfessor {
-
+public class Curriculo {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_CARGO_PROFESSOR")
-	private Long idCargoProfessor;
+	@Column(name = "ID_CURRICULO")
+	private Long idCurriculo;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
-	private DependenciaAdministrativa dependenciaAdm;
+	@JoinColumn(name = "ID_CURSO", nullable = false)
+	private Curso curso;
 	
-	@Column(name = "CARGO_PROFESSOR", nullable = false, unique = true)
-	private String cargoProfessor;
+	@Column(name = "CURRICULO", nullable = false)
+	private String curriculo;
+	
+	@Column(name = "DT_HOMOLOGACAO")
+	private LocalDateTime dtHomologacao;
+	
+	@Column(name = "DT_EXTINCAO")
+	private LocalDateTime dtExtincao;
+	
+	@Column(name = "PRAZO_IDEAL")
+	private Integer prazoIdeal;
+	
+	@Column(name = "PRAZO_MAX")
+	private Integer prazoMax;
+	
+	@Column(name = "CREDITOS")
+	private Double creditos;
+	
+	@Column(name = "AULAS_PREVISTAS")
+	private Integer aulasPrevistas;
 	
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
 	
 	@Column(name = "ATIVO", nullable = false)
 	private Character ativo;
+
 }

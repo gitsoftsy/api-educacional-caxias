@@ -30,9 +30,6 @@ public class Turma {
 	@JoinColumn(name = "ID_ESCOLA", nullable = true)
 	private Escola escola;
 	
-	@Column(name = "ANO_VIGENTE", nullable = false, length = 11)
-	private Integer anoVigente;
-	
 	@ManyToOne
 	@JoinColumn(name = "ID_ANO_ESCOLAR", nullable = true)
 	private AnoEscolar anoEscolar;
@@ -66,8 +63,6 @@ public class Turma {
 	@Column(name = "LIBRAS", nullable = false)
 	private Character libras;
 	
-	@Column(name = "VAGAS", nullable = false)
-	private Integer vagas;
 	
 	@OneToMany(mappedBy = "turma", cascade = CascadeType.ALL)
 	private Set<TurmaProfessor> turmaProfessor = new HashSet<>();

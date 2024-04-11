@@ -10,11 +10,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "TBL_CURSO")
+@Table(name = "TBL_CURSO", 
+	uniqueConstraints = { 
+		@UniqueConstraint(name = "UQ_CURSO", columnNames = { "COD_CURSO", "ID_DEPENDENCIA_ADMINISTRATIVA" }),
+		@UniqueConstraint(name = "UQ_CURSO_INEP", columnNames = { "COD_CURSO_INEP", "ID_DEPENDENCIA_ADMINISTRATIVA" })
+		})
 @Data
 public class Curso {
 	
@@ -37,7 +42,7 @@ public class Curso {
 	@Column(name = "NOME", nullable = false)
 	private String nome;
 	
-	@Column(name = "COD_CURSO_INPE", nullable = false, unique = true)
+	@Column(name = "COD_CURSO_INEP", nullable = false, unique = true)
 	private String codCursoInpe;
 
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")

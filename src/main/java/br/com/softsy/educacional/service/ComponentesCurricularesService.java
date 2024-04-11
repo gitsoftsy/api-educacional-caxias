@@ -11,13 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.ComponentesCurricularesDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.ComponentesCurriculares;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.repository.ComponentesCurricularesRepository;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 
 @Service
 public class ComponentesCurricularesService {
 
     @Autowired
     private ComponentesCurricularesRepository repository;
+    
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
     public List<ComponentesCurriculares> listarTudo() {
         return repository.findAll();
@@ -52,6 +57,9 @@ public class ComponentesCurricularesService {
 
     private ComponentesCurriculares criarComponentesCurricularesAPartirDTO(ComponentesCurricularesDTO dto) {
         ComponentesCurriculares componentesCurriculares = new ComponentesCurriculares();
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        componentesCurriculares.setDependenciaAdm(dependenciaAdm);
         componentesCurriculares.setComponentesCurriculares(dto.getComponentesCurriculares());
         componentesCurriculares.setDataCadastro(LocalDateTime.now());
         return componentesCurriculares;
@@ -67,5 +75,8 @@ public class ComponentesCurricularesService {
 
     private void atualizarDados(ComponentesCurriculares destino, ComponentesCurricularesDTO origem) {
         destino.setComponentesCurriculares(origem.getComponentesCurriculares());
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        destino.setDependenciaAdm(dependenciaAdm);
     }
 }

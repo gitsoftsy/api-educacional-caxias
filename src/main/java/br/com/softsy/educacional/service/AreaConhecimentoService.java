@@ -12,13 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.AreaConhecimentoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.AreaConhecimento;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.repository.AreaConhecimentoRepository;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 
 @Service
 public class AreaConhecimentoService {
 
     @Autowired
     private AreaConhecimentoRepository repository;
+    
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
     public List<AreaConhecimentoDTO> listarTudo() {
         List<AreaConhecimento> areaConhecimentoList = repository.findAll();
@@ -61,6 +66,9 @@ public class AreaConhecimentoService {
 
     private AreaConhecimento criarAreaConhecimentoAPartirDTO(AreaConhecimentoDTO dto) {
         AreaConhecimento areaConhecimento = new AreaConhecimento();
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        areaConhecimento.setDependenciaAdm(dependenciaAdm);
         areaConhecimento.setAreaConhecimento(dto.getAreaConhecimento());
         areaConhecimento.setDataCadastro(LocalDateTime.now());
         return areaConhecimento;
@@ -75,5 +83,8 @@ public class AreaConhecimentoService {
 
     private void atualizarDados(AreaConhecimento destino, AreaConhecimentoDTO origem) {
         destino.setAreaConhecimento(origem.getAreaConhecimento());
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        destino.setDependenciaAdm(dependenciaAdm);
     }
 }

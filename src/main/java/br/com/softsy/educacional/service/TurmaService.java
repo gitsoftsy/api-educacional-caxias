@@ -105,7 +105,6 @@ public class TurmaService {
                 .orElseThrow(() -> new IllegalArgumentException("Modalidade de escola não encontrada"));
 
         turma.setEscola(escola);
-        turma.setAnoVigente(dto.getAnoVigente());
         turma.setAnoEscolar(anoEscolar);
         turma.setNumTurma(dto.getNumTurma());
         turma.setCodTurmaInep(dto.getCodTurmaInep());
@@ -115,8 +114,6 @@ public class TurmaService {
         turma.setTipoAtendimento(tipoAtendimento);
         turma.setModalidadeEscola(modalidadeEscola);
         turma.setLibras(dto.getLibras());
-        turma.setVagas(dto.getVagas());
-
         return turma;
     }
 
@@ -137,7 +134,6 @@ public class TurmaService {
                 .orElseThrow(() -> new IllegalArgumentException("Modalidade de escola não encontrada"));
 
         destino.setEscola(escola);
-        destino.setAnoVigente(origem.getAnoVigente());
         destino.setAnoEscolar(anoEscolar);
         destino.setNumTurma(origem.getNumTurma());
         destino.setCodTurmaInep(origem.getCodTurmaInep());
@@ -147,6 +143,5 @@ public class TurmaService {
         destino.setTipoAtendimento(tipoAtendimento);
         destino.setModalidadeEscola(modalidadeEscola);
         destino.setLibras(origem.getLibras());
-        destino.setVagas(origem.getVagas());
     }
 }

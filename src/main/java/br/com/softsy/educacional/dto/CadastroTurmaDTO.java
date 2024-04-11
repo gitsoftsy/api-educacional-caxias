@@ -14,8 +14,6 @@ public class CadastroTurmaDTO {
     @NotNull
     private Long escolaId;
     @NotNull
-    private Integer anoVigente;
-    @NotNull
     private Long anoEscolarId;
     @NotNull
     private String numTurma;
@@ -33,13 +31,11 @@ public class CadastroTurmaDTO {
     private Long modalidadeEscolaId;
     @NotNull
     private Character libras;
-    @NotNull
-    private Integer vagas;
+
 
     public CadastroTurmaDTO(Turma turma) {
         this.idTurma = turma.getIdTurma();
         this.escolaId = turma.getEscola().getIdEscola();
-        this.anoVigente = turma.getAnoVigente();
         this.anoEscolarId = turma.getAnoEscolar().getIdAnoEscolar();
         this.numTurma = turma.getNumTurma();
         this.codTurmaInep = turma.getCodTurmaInep();
@@ -49,6 +45,5 @@ public class CadastroTurmaDTO {
         this.tipoAtendimentoId = turma.getTipoAtendimento().getIdTipoAtendimento();
         this.modalidadeEscolaId = turma.getModalidadeEscola().getIdModalidadeEscola();
         this.libras = turma.getLibras();
-        this.vagas = turma.getVagas();
     }
 }

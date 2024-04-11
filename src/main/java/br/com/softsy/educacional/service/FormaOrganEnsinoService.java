@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.FormaOrganEnsinoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.FormaOrganEnsino;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.FormaOrganEnsinoRepository;
 
 @Service
@@ -19,6 +21,8 @@ public class FormaOrganEnsinoService {
 
 	@Autowired
 	private FormaOrganEnsinoRepository repository;
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
 	public List<FormaOrganEnsino> listarTudo() {
 		return repository.findAll();
@@ -41,7 +45,10 @@ public class FormaOrganEnsinoService {
 
 	private FormaOrganEnsino criarFormaAPartirDTO(FormaOrganEnsinoDTO dto) {
 		FormaOrganEnsino formaOrganEnsino = new FormaOrganEnsino();
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, formaOrganEnsino, "idFormaOrganEnsino", "dataCadastro");
+		formaOrganEnsino.setDependenciaAdm(dependenciaAdm);
 		formaOrganEnsino.setDataCadastro(LocalDateTime.now());
 		return formaOrganEnsino;
 	}
@@ -62,7 +69,10 @@ public class FormaOrganEnsinoService {
 	}
 
 	private void atualizaDados(FormaOrganEnsino destino, FormaOrganEnsinoDTO origem) {
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(origem, destino, "idDestinacaoLixo", "dataCadastro");
+		destino.setDependenciaAdm(dependenciaAdm);
 
 	}
 

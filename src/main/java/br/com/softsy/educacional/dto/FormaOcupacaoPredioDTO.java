@@ -17,6 +17,9 @@ public class FormaOcupacaoPredioDTO {
 	private Long idFormaOcupacaoPredio;
 	
 	@NotNull
+	private Long dependenciaAdmId;
+	
+	@NotNull
 	private String formaOcupacaoPredio;
 
 	private LocalDateTime dataCadastro;
@@ -28,6 +31,7 @@ public class FormaOcupacaoPredioDTO {
 		this.idFormaOcupacaoPredio = formaOcupacao.getIdFormaOcupacaoPredio();
 		this.dataCadastro = formaOcupacao.getDataCadastro();
 		this.ativo = formaOcupacao.getAtivo();
+		this.dependenciaAdmId = formaOcupacao.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 	
 }

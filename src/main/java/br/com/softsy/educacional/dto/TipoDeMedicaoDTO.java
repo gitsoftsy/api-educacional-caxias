@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class TipoDeMedicaoDTO {
 	
 	private Long idTipoMedicao;
+	
+	@NotNull
+	private Long dependenciaAdmId;
 
 	@NotNull
 	private String tipoMedicao;
@@ -24,6 +27,7 @@ public class TipoDeMedicaoDTO {
 	        this.idTipoMedicao = tipoMedicao.getIdTipoMedicao();
 	        this.tipoMedicao = tipoMedicao.getTipoMedicao();
 	        this.dataCadastro = tipoMedicao.getDataCadastro();
+	        this.dependenciaAdmId = tipoMedicao.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 
 }

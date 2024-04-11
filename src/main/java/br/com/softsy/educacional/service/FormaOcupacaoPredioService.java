@@ -11,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.FormaOcupacaoPredioDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.DestinacaoLixo;
 import br.com.softsy.educacional.model.FormaOcupacaoPredio;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.FormaOcupacaoPredioRepository;
 
 @Service
@@ -20,6 +22,9 @@ public class FormaOcupacaoPredioService {
 
 	@Autowired
 	private FormaOcupacaoPredioRepository repository;
+	
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 	
 	public List<FormaOcupacaoPredio> listarTudo(){
 		return repository.findAll();
@@ -49,7 +54,10 @@ public class FormaOcupacaoPredioService {
 	
 	private FormaOcupacaoPredio criarFormaOcupacaoAPartirDTO(FormaOcupacaoPredioDTO dto) {
 		FormaOcupacaoPredio formaOcupacao = new FormaOcupacaoPredio();
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, formaOcupacao, "idFormaOcupacaoPredio", "ativo", "dataCadastro");
+		formaOcupacao.setDependenciaAdm(dependenciaAdm);
 		formaOcupacao.setAtivo('S');
 		formaOcupacao.setDataCadastro(LocalDateTime.now());
 		return formaOcupacao;
@@ -70,6 +78,9 @@ public class FormaOcupacaoPredioService {
 	
 	private void atualizaDados(FormaOcupacaoPredio destino, FormaOcupacaoPredioDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idFormaOcupacaoPredio", "ativo", "dataCadastro");
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        destino.setDependenciaAdm(dependenciaAdm);
 		
 	}
 }

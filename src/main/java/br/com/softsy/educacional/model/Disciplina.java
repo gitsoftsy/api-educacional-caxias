@@ -10,11 +10,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "TBL_DISCIPLINA")
+@Table(name = "TBL_DISCIPLINA", 
+	uniqueConstraints = { 
+		@UniqueConstraint(name = "UQ_DISCIPLINA", columnNames = { "DISCIPLINA", "ID_DEPENDENCIA_ADMINISTRATIVA" })
+		})
 @Data
 public class Disciplina {
 

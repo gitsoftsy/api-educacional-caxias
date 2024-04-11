@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class TipoAtendimentoDTO {
 
     private Long idTipoAtendimento;
+    
+	@NotNull
+	private Long dependenciaAdmId;
 
     @NotNull
     private String tipoAtendimento;
@@ -24,5 +27,6 @@ public class TipoAtendimentoDTO {
         this.idTipoAtendimento = tipoAtendimento.getIdTipoAtendimento();
         this.tipoAtendimento = tipoAtendimento.getTipoAtendimento();
         this.dataCadastro = tipoAtendimento.getDataCadastro();
+        this.dependenciaAdmId = tipoAtendimento.getDependenciaAdm().getIdDependenciaAdministrativa();
     }
 }

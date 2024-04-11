@@ -13,8 +13,6 @@ public class TurmaDTO {
     private Long idTurma;
     private Long escolaId;
     @NotNull
-    private Integer anoVigente;
-    @NotNull
     private AnoEscolarDTO anoEscolar;
     @NotNull
     private String numTurma;
@@ -32,14 +30,11 @@ public class TurmaDTO {
     private ModalidadeEscolaDTO modalidadeEscola;
     @NotNull
     private Character libras;
-    @NotNull
-    private Integer vagas;
 
     public TurmaDTO(Turma turma) {
     	
         this.idTurma = turma.getIdTurma();
         this.escolaId = turma.getEscola().getIdEscola();     
-        this.anoVigente = turma.getAnoVigente();
         this.anoEscolar = new AnoEscolarDTO(turma.getAnoEscolar());
         this.numTurma = turma.getNumTurma();
         this.codTurmaInep = turma.getCodTurmaInep();
@@ -49,6 +44,5 @@ public class TurmaDTO {
         this.tipoAtendimento = new TipoAtendimentoDTO(turma.getTipoAtendimento());
         this.modalidadeEscola = new ModalidadeEscolaDTO(turma.getModalidadeEscola());
         this.libras = turma.getLibras();
-        this.vagas = turma.getVagas();
     }
 }

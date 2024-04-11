@@ -11,13 +11,18 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.CargoProfessorDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.CargoProfessor;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.repository.CargoProfessorRepository;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 
 @Service
 public class CargoProfessorService {
 
     @Autowired
     private CargoProfessorRepository repository;
+    
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
 
     public List<CargoProfessor> listarTudo() {
         return repository.findAll();
@@ -30,8 +35,6 @@ public class CargoProfessorService {
 
     @Transactional
     public CargoProfessorDTO salvar(CargoProfessorDTO dto) {
-        validarCargoProfessor(dto.getCargoProfessor());
-
         CargoProfessor cargo = criarCargoAPartirDTO(dto);
 
         cargo = repository.save(cargo);
@@ -40,6 +43,9 @@ public class CargoProfessorService {
 
     private CargoProfessor criarCargoAPartirDTO(CargoProfessorDTO dto) {
         CargoProfessor cargo = new CargoProfessor();
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        cargo.setDependenciaAdm(dependenciaAdm);
         cargo.setCargoProfessor(dto.getCargoProfessor());
         cargo.setDataCadastro(LocalDateTime.now());
         cargo.setAtivo('S');
@@ -59,14 +65,11 @@ public class CargoProfessorService {
         cargo.setAtivo(status);
     }
 
-    private void validarCargoProfessor(String cargoProfessor) {
-        Optional<CargoProfessor> cargoExistente = repository.findByCargoProfessor(cargoProfessor).stream().findFirst();
-        if (cargoExistente.isPresent()) {
-            throw new UniqueException("Esse cargo já existe.");
-        }
-    }
 
     private void atualizaDados(CargoProfessor destino, CargoProfessorDTO origem) {
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        destino.setDependenciaAdm(dependenciaAdm);
         destino.setCargoProfessor(origem.getCargoProfessor());
     }
 }

@@ -3,6 +3,8 @@ package br.com.softsy.educacional.dto;
 import java.sql.Time;
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotNull;
+
 import br.com.softsy.educacional.model.Turno;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,9 @@ import lombok.NoArgsConstructor;
 public class TurnoDTO {
 
     private Long idTurno;
+    
+	@NotNull
+	private Long dependenciaAdmId;
 
     private String mnemonico;
 
@@ -30,5 +35,6 @@ public class TurnoDTO {
         this.horaInicio = turno.getHoraInicio();
         this.horaFim = turno.getHoraFim();
         this.dataCadastro = turno.getDataCadastro();
+        this.dependenciaAdmId = turno.getDependenciaAdm().getIdDependenciaAdministrativa();
     }
 }

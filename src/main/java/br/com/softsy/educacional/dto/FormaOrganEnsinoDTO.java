@@ -2,6 +2,8 @@ package br.com.softsy.educacional.dto;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotNull;
+
 import br.com.softsy.educacional.model.FormaOrganEnsino;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +13,9 @@ import lombok.NoArgsConstructor;
 public class FormaOrganEnsinoDTO {
 
 	private Long idFormaOrganEnsino;
+	
+	@NotNull
+	private Long dependenciaAdmId;
 
 	private String formaOrganEnsino;
 
@@ -20,6 +25,7 @@ public class FormaOrganEnsinoDTO {
 		this.idFormaOrganEnsino = formaOrganEnsino.getIdFormaOrganEnsino();
 		this.formaOrganEnsino = formaOrganEnsino.getFormaOrganEnsino();
 		this.dataCadastro = formaOrganEnsino.getDataCadastro();
+		this.dependenciaAdmId = formaOrganEnsino.getDependenciaAdm().getIdDependenciaAdministrativa();
 
 	}
 }

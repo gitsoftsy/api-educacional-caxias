@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -21,6 +23,10 @@ public class Turno {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_TURNO")
 	private Long idTurno;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
+	private DependenciaAdministrativa dependenciaAdm;
 	
 	@Column(name = "MNEMONICO", nullable = false, unique = true, length = 2)
 	private String mnemonico;

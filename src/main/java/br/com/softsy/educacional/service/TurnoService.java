@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.TurnoDTO;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.Turno;
+import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.TurnoRepository;
 
 @Service
@@ -18,7 +20,9 @@ public class TurnoService {
 
     @Autowired
     private TurnoRepository repository;
-
+    
+	@Autowired 
+	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
     public List<TurnoDTO> listarTudo() {
         List<Turno> turnos = repository.findAll();
         return turnos.stream()
@@ -53,12 +57,18 @@ public class TurnoService {
 
     private Turno criarTurnoAPartirDTO(TurnoDTO dto) {
         Turno turno = new Turno();
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
         BeanUtils.copyProperties(dto, turno, "idTurno", "dataCadastro");
+        turno.setDependenciaAdm(dependenciaAdm);
         turno.setDataCadastro(LocalDateTime.now());
         return turno;
     }
 
     private void atualizarDados(Turno destino, TurnoDTO origem) {
         BeanUtils.copyProperties(origem, destino, "idTurno", "dataCadastro");
+        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        destino.setDependenciaAdm(dependenciaAdm);
     }
 }
