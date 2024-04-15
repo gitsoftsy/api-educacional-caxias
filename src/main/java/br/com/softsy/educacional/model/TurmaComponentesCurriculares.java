@@ -25,8 +25,8 @@ public class TurmaComponentesCurriculares {
 	private Long idTurmaComponentesCurriculares;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_TURMA", nullable = false)
-	private Turma turma;
+	@JoinColumn(name = "ID_TURMA_DISCIPLINA", nullable = false)
+	private TurmaDisciplina turmaDisciplina;
 	
 	@ManyToOne
 	@JoinColumn(name = "ID_COMPONENTES_CURRICULARES", nullable = false)

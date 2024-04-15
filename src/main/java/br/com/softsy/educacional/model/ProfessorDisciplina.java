@@ -10,35 +10,35 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
 
 @Entity
-@Table(name = "TBL_TURMA_PROFESSOR")
+@Table(name = "TBL_PROFESSOR_DISCIPLINA", 
+	uniqueConstraints = { 
+		@UniqueConstraint(name = "UQ_PROFESSOR_DISCIPLINA", columnNames = { "ID_PROFESSOR", "ID_DISCIPLINA"})
+		})
 @Data
-public class TurmaProfessor {
+public class ProfessorDisciplina {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_TURMA_PROFESSOR")
-	private Long idTurmaProfessor;
-	
-	@ManyToOne
-	@JoinColumn(name = "ID_TURMA_DISCIPLINA", nullable = false)
-	private TurmaDisciplina turmaDisciplina;
+	@Column(name = "ID_PROFESSOR_DISCIPLINA")
+	private Long idProfessorDisciplina;
 	
 	@ManyToOne
 	@JoinColumn(name = "ID_PROFESSOR", nullable = false)
 	private Professor professor;
 	
-	@Column(name = "TIPO_PROFESSOR", length = 1)
-	private Character tipoProfessor;
-	
-	@Column(name = "TIPO_VAGA", length = 1)
-	private Character tipoVaga;
+	@ManyToOne
+	@JoinColumn(name = "ID_DISCIPLINA", nullable = false)
+	private Disciplina disciplina;
 	
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
-
+	
+	@Column(name = "ATIVO", nullable = false)
+	private Character ativo;
 
 }

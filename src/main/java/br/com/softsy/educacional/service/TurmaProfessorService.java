@@ -12,8 +12,10 @@ import br.com.softsy.educacional.dto.CadastroTurmaProfessorDTO;
 import br.com.softsy.educacional.dto.TurmaProfessorDTO;
 import br.com.softsy.educacional.model.Professor;
 import br.com.softsy.educacional.model.Turma;
+import br.com.softsy.educacional.model.TurmaDisciplina;
 import br.com.softsy.educacional.model.TurmaProfessor;
 import br.com.softsy.educacional.repository.ProfessorRepository;
+import br.com.softsy.educacional.repository.TurmaDisciplinaRepository;
 import br.com.softsy.educacional.repository.TurmaProfessorRepository;
 import br.com.softsy.educacional.repository.TurmaRepository;
 
@@ -24,7 +26,7 @@ public class TurmaProfessorService {
     private TurmaProfessorRepository repository;
 
     @Autowired
-    private TurmaRepository turmaRepository;
+    private TurmaDisciplinaRepository turmaRepository;
 
     @Autowired
     private ProfessorRepository professorRepository;
@@ -67,11 +69,11 @@ public class TurmaProfessorService {
 
     private TurmaProfessor criarTurmaProfessorAPartirDTO(CadastroTurmaProfessorDTO dto) {
         TurmaProfessor turmaProfessor = new TurmaProfessor();
-        Turma turma = turmaRepository.findById(dto.getTurmaId())
+        TurmaDisciplina turma = turmaRepository.findById(dto.getTurmaDisciplinaId())
                 .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada"));
         Professor professor = professorRepository.findById(dto.getProfessorId())
                 .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado"));
-        turmaProfessor.setTurma(turma);
+        turmaProfessor.setTurmaDisciplina(turma);
         turmaProfessor.setProfessor(professor);
         turmaProfessor.setTipoProfessor(dto.getTipoProfessor());
         turmaProfessor.setTipoVaga(dto.getTipoVaga());
@@ -80,7 +82,7 @@ public class TurmaProfessorService {
     }
 
     private void atualizaDados(TurmaProfessor destino, CadastroTurmaProfessorDTO origem) {
-        destino.setTurma(turmaRepository.findById(origem.getTurmaId())
+        destino.setTurmaDisciplina(turmaRepository.findById(origem.getTurmaDisciplinaId())
                 .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada")));
         destino.setProfessor(professorRepository.findById(origem.getProfessorId())
                 .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado")));

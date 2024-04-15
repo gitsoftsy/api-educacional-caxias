@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 public class TurmaComponentesCurricularesDTO {
 
     private Long idTurmaComponentesCurriculares;
-    private Long turmaId;
+    private Long turmaDisciplinaId;
     private ComponentesCurricularesDTO componentesCurriculares;
     private LocalDateTime dataCadastro;
 
     public TurmaComponentesCurricularesDTO(TurmaComponentesCurriculares turmaComponentesCurriculares) {
         this.idTurmaComponentesCurriculares = turmaComponentesCurriculares.getIdTurmaComponentesCurriculares();
-        this.turmaId = turmaComponentesCurriculares.getTurma().getIdTurma();
+        this.turmaDisciplinaId = turmaComponentesCurriculares.getTurmaDisciplina().getIdTurmaDisciplina();
         this.componentesCurriculares = new ComponentesCurricularesDTO(turmaComponentesCurriculares.getComponentesCurriculares());
         this.dataCadastro = turmaComponentesCurriculares.getDataCadastro();
     }

@@ -64,6 +64,4 @@ public class Turma {
 	private Character libras;
 	
 	
-	@OneToMany(mappedBy = "turma", cascade = CascadeType.ALL)
-	private Set<TurmaProfessor> turmaProfessor = new HashSet<>();
 }

@@ -14,14 +14,14 @@ public class CadastroTurmaAreaConhecimentoDTO {
 
     private Long idTurmaAreaConhecimento;
     @NotNull
-    private Long turmaId;
+    private Long turmaDisciplinaId;
     @NotNull
     private Long areaConhecimentoId;
     private LocalDateTime dataCadastro;
 
     public CadastroTurmaAreaConhecimentoDTO(TurmaAreaConhecimento turmaAreaConhecimento) {
         this.idTurmaAreaConhecimento = turmaAreaConhecimento.getIdTurmaAreaConhecimento();
-        this.turmaId = turmaAreaConhecimento.getTurma().getIdTurma();
+        this.turmaDisciplinaId = turmaAreaConhecimento.getTurmaDisciplina().getIdTurmaDisciplina();
         this.areaConhecimentoId = turmaAreaConhecimento.getAreaConhecimento().getIdAreaConhecimento();
         this.dataCadastro = turmaAreaConhecimento.getDataCadastro();
     }

@@ -14,8 +14,10 @@ import br.com.softsy.educacional.dto.TurmaAreaConhecimentoDTO;
 import br.com.softsy.educacional.model.AreaConhecimento;
 import br.com.softsy.educacional.model.Turma;
 import br.com.softsy.educacional.model.TurmaAreaConhecimento;
+import br.com.softsy.educacional.model.TurmaDisciplina;
 import br.com.softsy.educacional.repository.AreaConhecimentoRepository;
 import br.com.softsy.educacional.repository.TurmaAreaConhecimentoRepository;
+import br.com.softsy.educacional.repository.TurmaDisciplinaRepository;
 import br.com.softsy.educacional.repository.TurmaRepository;
 
 @Service
@@ -25,7 +27,7 @@ public class TurmaAreaConhecimentoService {
     private TurmaAreaConhecimentoRepository repository;
 
     @Autowired
-    private TurmaRepository turmaRepository;
+    private TurmaDisciplinaRepository turmaRepository;
 
     @Autowired
     private AreaConhecimentoRepository areaConhecimentoRepository;
@@ -64,18 +66,18 @@ public class TurmaAreaConhecimentoService {
 
     private TurmaAreaConhecimento criarTurmaAreaConhecimentoAPartirDTO(CadastroTurmaAreaConhecimentoDTO dto) {
         TurmaAreaConhecimento turmaAreaConhecimento = new TurmaAreaConhecimento();
-        Turma turma = turmaRepository.findById(dto.getTurmaId())
+        TurmaDisciplina turma = turmaRepository.findById(dto.getTurmaDisciplinaId())
                 .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada"));
         AreaConhecimento areaConhecimento = areaConhecimentoRepository.findById(dto.getAreaConhecimentoId())
                 .orElseThrow(() -> new IllegalArgumentException("Área de conhecimento não encontrada"));
-        turmaAreaConhecimento.setTurma(turma);
+        turmaAreaConhecimento.setTurmaDisciplina(turma);
         turmaAreaConhecimento.setAreaConhecimento(areaConhecimento);
         turmaAreaConhecimento.setDataCadastro(LocalDateTime.now());
         return turmaAreaConhecimento;
     }
 
     private void atualizaDados(TurmaAreaConhecimento destino, CadastroTurmaAreaConhecimentoDTO origem) {
-        destino.setTurma(turmaRepository.findById(origem.getTurmaId())
+        destino.setTurmaDisciplina(turmaRepository.findById(origem.getTurmaDisciplinaId())
                 .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada")));
         destino.setAreaConhecimento(areaConhecimentoRepository.findById(origem.getAreaConhecimentoId())
                 .orElseThrow(() -> new IllegalArgumentException("Área de conhecimento não encontrada")));

@@ -14,8 +14,10 @@ import br.com.softsy.educacional.dto.TurmaComponentesCurricularesDTO;
 import br.com.softsy.educacional.model.ComponentesCurriculares;
 import br.com.softsy.educacional.model.Turma;
 import br.com.softsy.educacional.model.TurmaComponentesCurriculares;
+import br.com.softsy.educacional.model.TurmaDisciplina;
 import br.com.softsy.educacional.repository.ComponentesCurricularesRepository;
 import br.com.softsy.educacional.repository.TurmaComponentesCurricularesRepository;
+import br.com.softsy.educacional.repository.TurmaDisciplinaRepository;
 import br.com.softsy.educacional.repository.TurmaRepository;
 
 @Service
@@ -25,7 +27,7 @@ public class TurmaComponentesCurricularesService {
     private TurmaComponentesCurricularesRepository repository;
 
     @Autowired
-    private TurmaRepository turmaRepository;
+    private TurmaDisciplinaRepository turmaRepository;
 
     @Autowired
     private ComponentesCurricularesRepository componentesCurricularesRepository;
@@ -64,18 +66,18 @@ public class TurmaComponentesCurricularesService {
 
     private TurmaComponentesCurriculares criarTurmaComponentesCurricularesAPartirDTO(CadastroTurmaComponentesCurricularesDTO dto) {
         TurmaComponentesCurriculares turmaComponentesCurriculares = new TurmaComponentesCurriculares();
-        Turma turma = turmaRepository.findById(dto.getTurmaId())
+        TurmaDisciplina turma = turmaRepository.findById(dto.getTurmaDisciplinaId())
                 .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada"));
         ComponentesCurriculares componentesCurriculares = componentesCurricularesRepository.findById(dto.getComponentesCurricularesId())
                 .orElseThrow(() -> new IllegalArgumentException("Componentes curriculares não encontrados"));
-        turmaComponentesCurriculares.setTurma(turma);
+        turmaComponentesCurriculares.setTurmaDisciplina(turma);
         turmaComponentesCurriculares.setComponentesCurriculares(componentesCurriculares);
         turmaComponentesCurriculares.setDataCadastro(LocalDateTime.now());
         return turmaComponentesCurriculares;
     }
 
     private void atualizaDados(TurmaComponentesCurriculares destino, CadastroTurmaComponentesCurricularesDTO origem) {
-        destino.setTurma(turmaRepository.findById(origem.getTurmaId())
+        destino.setTurmaDisciplina(turmaRepository.findById(origem.getTurmaDisciplinaId())
                 .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada")));
         destino.setComponentesCurriculares(componentesCurricularesRepository.findById(origem.getComponentesCurricularesId())
                 .orElseThrow(() -> new IllegalArgumentException("Componentes curriculares não encontrados")));

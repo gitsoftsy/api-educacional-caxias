@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class CadastroTurmaProfessorDTO {
 
     private Long idTurmaProfessor;
-    private Long turmaId;
+    private Long turmaDisciplinaId;
     private Long professorId;
     private Character tipoProfessor;
     private Character tipoVaga;
@@ -19,7 +19,7 @@ public class CadastroTurmaProfessorDTO {
 
     public CadastroTurmaProfessorDTO(TurmaProfessor turmaProfessor) {
         this.idTurmaProfessor = turmaProfessor.getIdTurmaProfessor();
-        this.turmaId = turmaProfessor.getTurma().getIdTurma();
+        this.turmaDisciplinaId = turmaProfessor.getTurmaDisciplina().getIdTurmaDisciplina();
         this.professorId = turmaProfessor.getProfessor().getIdProfessor();
         this.tipoProfessor = turmaProfessor.getTipoProfessor();
         this.tipoVaga = turmaProfessor.getTipoVaga();

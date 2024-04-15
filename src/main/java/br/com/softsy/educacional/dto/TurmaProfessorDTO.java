@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class TurmaProfessorDTO {
 
     private Long idTurmaProfessor;
-    private TurmaDTO turma;
+    private TurmaDisciplinaDTO turmaDisciplina;
     private Long professorId;
     private Character tipoProfessor;
     private Character tipoVaga;
@@ -19,7 +19,7 @@ public class TurmaProfessorDTO {
 
     public TurmaProfessorDTO(TurmaProfessor turmaProfessor) {
         this.idTurmaProfessor = turmaProfessor.getIdTurmaProfessor();
-        this.turma = new TurmaDTO(turmaProfessor.getTurma());
+        this.turmaDisciplina = new TurmaDisciplinaDTO(turmaProfessor.getTurmaDisciplina());
         this.professorId = turmaProfessor.getProfessor().getIdProfessor();
         this.tipoProfessor = turmaProfessor.getTipoProfessor();
         this.tipoVaga = turmaProfessor.getTipoVaga();

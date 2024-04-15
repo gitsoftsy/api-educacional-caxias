@@ -13,20 +13,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TurmaDiaSemanaDTO {
     private Long idTurmaDiaSemana;
-    private Long turmaId;
+    
+    @NotNull
+    private Long turmaProfessorId;
+    
+    private Long escolaDependenciaId;
     @NotNull
     private Integer diaSemana;
-    @NotNull
     private Time horaInicio;
     @NotNull
+    private Character permiteChoqueHorario;
     private Time horaFim;
     private LocalDateTime dataCadastro;
 
     public TurmaDiaSemanaDTO(TurmaDiaSemana turmaDiaSemana) {
         this.idTurmaDiaSemana = turmaDiaSemana.getIdTurmaDiaSemana();
-        this.turmaId = turmaDiaSemana.getTurma().getIdTurma();
+        this.escolaDependenciaId = turmaDiaSemana.getEscolaDependencia().getIdEscolaDependencia();
+        this.turmaProfessorId = turmaDiaSemana.getTurmaProfessor().getIdTurmaProfessor();
         this.diaSemana = turmaDiaSemana.getDiaSemana();
         this.horaInicio = turmaDiaSemana.getHoraInicio();
+        this.permiteChoqueHorario = turmaDiaSemana.getPermiteChoqueHorario();
         this.horaFim = turmaDiaSemana.getHoraFim();
         this.dataCadastro = turmaDiaSemana.getDataCadastro();
     }

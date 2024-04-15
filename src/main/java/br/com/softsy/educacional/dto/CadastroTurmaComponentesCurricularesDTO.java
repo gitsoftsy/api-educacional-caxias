@@ -12,13 +12,13 @@ public class CadastroTurmaComponentesCurricularesDTO {
 
     private Long idTurmaComponentesCurriculares;
     @NotNull
-    private Long turmaId;
+    private Long turmaDisciplinaId;
     @NotNull
     private Long componentesCurricularesId;
 
     public CadastroTurmaComponentesCurricularesDTO(TurmaComponentesCurriculares turmaComponentesCurriculares) {
         this.idTurmaComponentesCurriculares = turmaComponentesCurriculares.getIdTurmaComponentesCurriculares();
-        this.turmaId = turmaComponentesCurriculares.getTurma().getIdTurma();
+        this.turmaDisciplinaId = turmaComponentesCurriculares.getTurmaDisciplina().getIdTurmaDisciplina();
         this.componentesCurricularesId = turmaComponentesCurriculares.getComponentesCurriculares().getIdComponentesCurriculares();
     }
 }

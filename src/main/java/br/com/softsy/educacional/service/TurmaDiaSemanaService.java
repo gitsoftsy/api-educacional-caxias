@@ -10,9 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.TurmaDiaSemanaDTO;
+import br.com.softsy.educacional.model.EscolaDependencia;
 import br.com.softsy.educacional.model.Turma;
 import br.com.softsy.educacional.model.TurmaDiaSemana;
+import br.com.softsy.educacional.model.TurmaDisciplina;
+import br.com.softsy.educacional.model.TurmaProfessor;
+import br.com.softsy.educacional.repository.EscolaDependenciaRepository;
 import br.com.softsy.educacional.repository.TurmaDiaSemanaRepository;
+import br.com.softsy.educacional.repository.TurmaDisciplinaRepository;
+import br.com.softsy.educacional.repository.TurmaProfessorRepository;
 import br.com.softsy.educacional.repository.TurmaRepository;
 
 @Service
@@ -22,7 +28,10 @@ public class TurmaDiaSemanaService {
     private TurmaDiaSemanaRepository repository;
 
     @Autowired
-    private TurmaRepository turmaRepository;
+    private TurmaProfessorRepository turmaRepository;
+    
+    @Autowired
+    private EscolaDependenciaRepository escolaRepository;
 
     @Transactional(readOnly = true)
     public List<TurmaDiaSemanaDTO> listarTudo() {
@@ -54,18 +63,24 @@ public class TurmaDiaSemanaService {
 
     private TurmaDiaSemana criarTurmaDiaSemanaAPartirDTO(TurmaDiaSemanaDTO dto) {
         TurmaDiaSemana turmaDiaSemana = new TurmaDiaSemana();
-        Turma turma = turmaRepository.findById(dto.getTurmaId())
+        TurmaProfessor turma = turmaRepository.findById(dto.getTurmaProfessorId())
                 .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada"));
-        BeanUtils.copyProperties(dto, turmaDiaSemana, "idTurmaDiaSemana", "dataCadastro", "turmaId");
-        turmaDiaSemana.setTurma(turma);
+        EscolaDependencia escolaDependencia = escolaRepository.findById(dto.getEscolaDependenciaId())
+        		.orElseThrow(() -> new IllegalArgumentException("Dependência da escola não encontrada"));
+        BeanUtils.copyProperties(dto, turmaDiaSemana, "idTurmaDiaSemana", "dataCadastro");
+        turmaDiaSemana.setEscolaDependencia(escolaDependencia);
+        turmaDiaSemana.setTurmaProfessor(turma);
         turmaDiaSemana.setDataCadastro(LocalDateTime.now());
         return turmaDiaSemana;
     }
 
     private void atualizaDados(TurmaDiaSemana destino, TurmaDiaSemanaDTO origem) {
-        destino.setTurma(turmaRepository.findById(origem.getTurmaId())
+        destino.setTurmaProfessor(turmaRepository.findById(origem.getTurmaProfessorId())
                 .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada")));
-        BeanUtils.copyProperties(origem, destino, "idTurmaDiaSemana", "dataCadastro", "turmaId");
+        EscolaDependencia escolaDependencia = escolaRepository.findById(origem.getEscolaDependenciaId())
+        		.orElseThrow(() -> new IllegalArgumentException("Dependência da escola não encontrada"));
+        BeanUtils.copyProperties(origem, destino, "idTurmaDiaSemana", "dataCadastro");
+        destino.setEscolaDependencia(escolaDependencia);;
     }
     
 	@Transactional

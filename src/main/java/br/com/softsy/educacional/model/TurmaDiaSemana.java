@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -25,8 +26,12 @@ public class TurmaDiaSemana {
 	private Long idTurmaDiaSemana;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_TURMA", nullable = false)
-	private Turma turma;
+	@JoinColumn(name = "ID_ESCOLA_DEPENDENCIA", nullable = false)
+	private EscolaDependencia escolaDependencia;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_TURMA_PROFESSOR", nullable = false)
+	private TurmaProfessor turmaProfessor;
 	
 	@Column(name = "DIA_SEMANA", nullable = false)
 	private Integer diaSemana;
@@ -36,6 +41,9 @@ public class TurmaDiaSemana {
 	
 	@Column(name = "HORA_FIM", nullable = false)
 	private Time horaFim;
+	
+	@Column(name = "PERMITE_CHOQUE_HORARIO", nullable = false)
+	private Character permiteChoqueHorario;
 	
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
