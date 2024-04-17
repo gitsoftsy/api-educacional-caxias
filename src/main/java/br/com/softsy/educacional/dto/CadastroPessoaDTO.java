@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -29,7 +30,7 @@ public class CadastroPessoaDTO {
     private String cpf;
 
     @NotNull
-    private Date dtNascimento;
+    private LocalDate dtNascimento;
 
     @NotNull
     private Character sexo;

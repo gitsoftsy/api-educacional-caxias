@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
@@ -43,7 +44,7 @@ public class Pessoa {
 	private String cpf;
 	
 	@Column(name = "DT_NASCIMENTO", nullable = false)
-	private Date dtNascimento;
+	private LocalDate dtNascimento;
 	
 	@Column(name = "SEXO", nullable = false)
 	private Character sexo;

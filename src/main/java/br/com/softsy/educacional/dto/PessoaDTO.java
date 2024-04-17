@@ -1,9 +1,7 @@
 package br.com.softsy.educacional.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-
-import javax.validation.constraints.NotNull;
 
 import br.com.softsy.educacional.model.Pessoa;
 import lombok.Data;
@@ -17,7 +15,7 @@ public class PessoaDTO {
 	private DependenciaAdministrativaDTO dependenciaAdm;
     private String nome;
     private String cpf;
-    private Date dtNascimento;
+    private LocalDate dtNascimento;
     private Character sexo;
     private String nomePai;
     private String nomeMae;
