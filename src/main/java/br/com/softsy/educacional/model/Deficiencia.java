@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Entity
@@ -37,6 +39,7 @@ public class Deficiencia {
 	@Column(name = "ATIVO", nullable = false)
 	private Character ativo;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "deficiencia", cascade = CascadeType.ALL)
 	private Set<ProfessorDeficiencia> professor = new HashSet<>();
 
