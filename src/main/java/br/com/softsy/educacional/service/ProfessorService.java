@@ -89,7 +89,7 @@ public class ProfessorService {
                 .orElseThrow(() -> new IllegalArgumentException("Tipo de ensino médio não encontrado"));
 
         BeanUtils.copyProperties(dto, professor, "idProfessor", "pessoaId", "situacaoProfessorId", "nivelEscolaridadeId",
-                "tipoEnsinoMedioId");
+                "tipoEnsinoMedioId", "ativo");
 
         professor.setPessoa(pessoa);
         professor.setSituacaoProfessor(situacaoProfessor);
@@ -117,6 +117,6 @@ public class ProfessorService {
 
     private void atualizaDados(Professor destino, CadastroProfessorDTO origem) {
         BeanUtils.copyProperties(origem, destino, "idProfessor", "pessoaId", "situacaoProfessorId", "nivelEscolaridadeId",
-                "tipoEnsinoMedioId");
+                "tipoEnsinoMedioId", "ativo");
     }
 }
