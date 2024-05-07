@@ -2,7 +2,7 @@ package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.FornecimentoAguaDTO;
-import br.com.softsy.educacional.infra.exception.UniqueException;
-import br.com.softsy.educacional.model.DependenciaAdministrativa;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.FornecimentoAgua;
-import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.FornecimentoAguaRepository;
 
 @Service
@@ -23,10 +22,15 @@ public class FornecimentoAguaService {
 	private FornecimentoAguaRepository repository;
 	
 	@Autowired 
-	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
+	private ContaRepository contaRepository;
 	
-	public List<FornecimentoAgua> listarTudo(){
-		return repository.findAll();
+	@Transactional(readOnly = true)
+	public List<FornecimentoAguaDTO> buscarPorIdConta(Long id) {
+		List<FornecimentoAgua> fornecimentoAgua = repository.findByConta_IdConta(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar fornecimentoAgua por id de conta"));
+		return fornecimentoAgua.stream()
+				.map(FornecimentoAguaDTO::new)
+				.collect(Collectors.toList());
 	}
 	
 	@Transactional(readOnly = true)
@@ -45,10 +49,10 @@ public class FornecimentoAguaService {
 	
 	private FornecimentoAgua criarFornecimentoAPartirDTO(FornecimentoAguaDTO dto) {
 		FornecimentoAgua fornecimento = new FornecimentoAgua();
-		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
-	                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		Conta conta = contaRepository.findById(dto.getContaId())
+	                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 		BeanUtils.copyProperties(dto, fornecimento, "idFornecimentoAgua", "ativo", "dataCadastro");
-		fornecimento.setDependenciaAdm(dependenciaAdm);
+		fornecimento.setConta(conta);
 		fornecimento.setAtivo('S');
 		fornecimento.setDataCadastro(LocalDateTime.now());
 		return fornecimento;
@@ -69,9 +73,9 @@ public class FornecimentoAguaService {
 	
 	private void atualizaDados(FornecimentoAgua destino, FornecimentoAguaDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idFornecimentoAgua", "ativo", "dataCadastro");
-		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-		destino.setDependenciaAdm(dependenciaAdm);
+		Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+		destino.setConta(conta);
 		
 	}
 }

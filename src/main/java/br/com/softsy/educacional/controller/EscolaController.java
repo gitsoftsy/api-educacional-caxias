@@ -28,11 +28,11 @@ public class EscolaController {
 	private EscolaService service;
 	
 	
-	@GetMapping
-	public ResponseEntity<List<EscolaDTO>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<EscolaDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<EscolaDTO> escola = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(escola);
 	}
-	
 	@PostMapping
 	public ResponseEntity<CadastroEscolaDTO> cadastrar(@RequestBody @Valid CadastroEscolaDTO dto){
 		CadastroEscolaDTO cadastroDTO = service.salvar(dto);

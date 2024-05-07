@@ -26,9 +26,10 @@ public class EsgotamentoSanitarioController {
 
 	@Autowired EsgotamentoSanitarioService service;
 	
-	@GetMapping
-	public ResponseEntity<List<EsgotamentoSanitario>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<EsgotamentoSanitarioDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<EsgotamentoSanitarioDTO> esgotamentoSanitario = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(esgotamentoSanitario);
 	}
 	
 	@GetMapping("/{idEsgotamentoSanitario}")

@@ -17,6 +17,10 @@ public class EsgotamentoSanitarioDTO {
 	@NotNull
 	private String esgotamentoSanitario;
 	
+	@NotNull
+	private Long contaId;
+	
+	
 	private LocalDateTime dataCadastro;
 	
 	private Character ativo;
@@ -27,6 +31,7 @@ public class EsgotamentoSanitarioDTO {
 		this.esgotamentoSanitario = esgotamentoSanitario.getEsgotamentoSanitario();
 		this.dataCadastro = esgotamentoSanitario.getDataCadastro();
 		this.ativo = esgotamentoSanitario.getAtivo();
+		this.contaId = esgotamentoSanitario.getConta().getIdConta();
 		
 	}
 }

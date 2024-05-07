@@ -27,9 +27,10 @@ public class FornecimentoAguaController {
 	
 	@Autowired FornecimentoAguaService service;
 	
-	@GetMapping
-	public ResponseEntity<List<FornecimentoAgua>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List< FornecimentoAguaDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List< FornecimentoAguaDTO> fornecimentoAgua = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(fornecimentoAgua);
 	}
 	
 	@GetMapping("/{idFornecimentoAgua}")

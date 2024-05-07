@@ -2,7 +2,6 @@ package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -11,10 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.InstrPedagogicoDTO;
-import br.com.softsy.educacional.infra.exception.UniqueException;
-import br.com.softsy.educacional.model.DependenciaAdministrativa;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.InstrPedagogico;
-import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
+import br.com.softsy.educacional.model.Zoneamento;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.InstrPedagogicoRepository;
 
 @Service
@@ -24,14 +24,16 @@ public class InstrPedagogicoService {
     private InstrPedagogicoRepository repository;
     
 	@Autowired 
-	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
+	private ContaRepository contaRepository;
 
-    public List<InstrPedagogicoDTO> listarTodos() {
-        List<InstrPedagogico> instrucoes = repository.findAll();
-        return instrucoes.stream()
-                .map(InstrPedagogicoDTO::new)
-                .collect(Collectors.toList());
-    }
+	@Transactional(readOnly = true)
+	public List<InstrPedagogicoDTO> buscarPorIdConta(Long id) {
+		List<InstrPedagogico> instrPedagogico = repository.findByConta_IdConta(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar instrPedagogico por id de conta"));
+		return instrPedagogico.stream()
+				.map(InstrPedagogicoDTO::new)
+				.collect(Collectors.toList());
+	}
 
     @Transactional(readOnly = true)
     public InstrPedagogicoDTO buscarPorId(Long id) {
@@ -51,10 +53,10 @@ public class InstrPedagogicoService {
 
     private InstrPedagogico criarInstrucaoPedagogicaAPartirDTO(InstrPedagogicoDTO dto) {
         InstrPedagogico instrucao = new InstrPedagogico();
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
         BeanUtils.copyProperties(dto, instrucao, "idInstrPedagogico", "ativo", "dataCadastro");
-        instrucao.setDependenciaAdm(dependenciaAdm);
+        instrucao.setConta(conta);
         instrucao.setDataCadastro(LocalDateTime.now());
         instrucao.setAtivo('S');
         return instrucao;
@@ -75,8 +77,8 @@ public class InstrPedagogicoService {
 
     private void atualizarDados(InstrPedagogico destino, InstrPedagogicoDTO origem) {
         BeanUtils.copyProperties(origem, destino, "idInstrPedagogico", "ativo", "dataCadastro");
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-        destino.setDependenciaAdm(dependenciaAdm);
+        Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+        destino.setConta(conta);
     }
 }

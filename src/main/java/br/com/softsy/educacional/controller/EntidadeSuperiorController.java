@@ -27,10 +27,11 @@ public class EntidadeSuperiorController {
 	@Autowired
 	private EntidadeSuperiorService service;
 	
-	@GetMapping
-	public ResponseEntity<List<EntidadeSuperior>> listar() {
-		return ResponseEntity.ok(service.listarTudo());
-	}
+	@GetMapping("/conta/{idConta}")
+		public ResponseEntity<List<EntidadeSuperiorDTO>> buscarPorIdConta(@PathVariable Long idConta){
+			List<EntidadeSuperiorDTO> entidadeSuperior = service.buscarPorIdConta(idConta);
+			return ResponseEntity.ok(entidadeSuperior);
+		}
 	
 	@GetMapping("/{idEntidadeSuperior}")
 	public ResponseEntity<EntidadeSuperiorDTO> buscarPorId(@PathVariable Long idEntidadeSuperior) {

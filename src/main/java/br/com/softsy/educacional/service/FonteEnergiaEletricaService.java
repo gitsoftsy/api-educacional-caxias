@@ -3,6 +3,7 @@ package br.com.softsy.educacional.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.FonteEnergiaEletricaDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.FonteEnergiaEletrica;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.FonteEnergiaEletricaRepository;
 
 @Service
@@ -20,9 +23,17 @@ public class FonteEnergiaEletricaService {
 	@Autowired
 	private FonteEnergiaEletricaRepository repository;
 	
-	public List<FonteEnergiaEletrica> listarTudo(){
-		return repository.findAll();
+	@Transactional(readOnly = true)
+	public List<FonteEnergiaEletricaDTO> buscarPorIdConta(Long id) {
+		List<FonteEnergiaEletrica> fonteEnergiaEletrica = repository.findByConta_IdConta(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar fonteEnergiaEletrica por id de conta"));
+		return fonteEnergiaEletrica.stream()
+				.map(FonteEnergiaEletricaDTO::new)
+				.collect(Collectors.toList());
 	}
+	
+	@Autowired 
+	private ContaRepository contaRepository;
 	
 	@Transactional(readOnly = true)
 	public FonteEnergiaEletricaDTO buscarPorId(Long id){
@@ -42,6 +53,9 @@ public class FonteEnergiaEletricaService {
 	private FonteEnergiaEletrica criarEnergiaAPartirDTO(FonteEnergiaEletricaDTO dto) {
 		FonteEnergiaEletrica fonteEnergia = new FonteEnergiaEletrica();
 		BeanUtils.copyProperties(dto, fonteEnergia, "idFonteEnergiaEletrica", "ativo", "dataCadastro");
+		Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+		fonteEnergia.setConta(conta);
 		fonteEnergia.setAtivo('S');
 		fonteEnergia.setDataCadastro(LocalDateTime.now());
 		return fonteEnergia;
@@ -69,6 +83,9 @@ public class FonteEnergiaEletricaService {
 	
 	private void atualizaDados(FonteEnergiaEletrica destino, FonteEnergiaEletricaDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idFonteEnergiaEletrica", "ativo", "dataCadastro");
+		Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+		destino.setConta(conta);
 		
 	}
 	

@@ -27,10 +27,11 @@ public class CategoriaEscolaPrivadaController {
 	@Autowired
 	private CategoriaEscolaPrivadaService service;
 	
-	@GetMapping
-	public ResponseEntity<List<CategoriaEscolaPrivada>> listar() {
-		return ResponseEntity.ok(service.listarTudo());
-	}
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<CategoriaEscolaPrivadaDTO>> buscarPorIdConta(@PathVariable Long idConta){
+			List<CategoriaEscolaPrivadaDTO> zoneamento = service.buscarPorIdConta(idConta);
+			return ResponseEntity.ok(zoneamento);
+		}
 	
 	@GetMapping("/{idCategoriaEscolaPrivada}")
 	public ResponseEntity<CategoriaEscolaPrivadaDTO> buscarPorId(@PathVariable Long idCategoriaEscolaPrivada) {

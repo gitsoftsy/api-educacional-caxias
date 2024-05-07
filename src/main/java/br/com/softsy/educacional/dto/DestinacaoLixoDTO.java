@@ -15,7 +15,7 @@ public class DestinacaoLixoDTO {
 	private Long idDestinacaoLixo;
 	
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 	
 	@NotNull
 	private String destinacaoLixo;
@@ -29,6 +29,6 @@ public class DestinacaoLixoDTO {
 		this.destinacaoLixo = destinacaoLixo.getDestinacaoLixo();
 		this.dataCadastro = destinacaoLixo.getDataCadastro();
 		this.ativo = destinacaoLixo.getAtivo();
-		this.dependenciaAdmId = destinacaoLixo.getDependenciaAdm().getIdDependenciaAdministrativa();
+		this.contaId = destinacaoLixo.getConta().getIdConta();
 	}
 }

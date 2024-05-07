@@ -15,6 +15,9 @@ public class FonteEnergiaEletricaDTO {
 	private Long idFonteEnergiaEletrica;
 	
 	@NotNull
+	private Long contaId;
+	
+	@NotNull
 	private String fonteEnergiaEletrica;
 	
 	private LocalDateTime dataCadastro;
@@ -26,5 +29,6 @@ public class FonteEnergiaEletricaDTO {
 		this.fonteEnergiaEletrica = energiaEletrica.getFonteEnergiaEletrica();
 		this.dataCadastro = energiaEletrica.getDataCadastro();
 		this.ativo = energiaEletrica.getAtivo();
+		this.contaId = energiaEletrica.getConta().getIdConta();
 	}
 }

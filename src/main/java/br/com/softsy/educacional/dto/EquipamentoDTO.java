@@ -14,7 +14,8 @@ public class EquipamentoDTO {
 
     private Long idEquipamento;
 
-	private DependenciaAdministrativaDTO dependenciaAdm;
+	private ContaDTO conta;
+	
     private String equipamento;
 
     private MarcaEquipamentoDTO marcaEquipamentoId;
@@ -29,6 +30,6 @@ public class EquipamentoDTO {
         this.marcaEquipamentoId = new MarcaEquipamentoDTO(equipamento.getMarcaEquipamento());
         this.dataCadastro = equipamento.getDataCadastro();
         this.ativo = equipamento.getAtivo();
-        this.dependenciaAdm = new DependenciaAdministrativaDTO(equipamento.getDependenciaAdm());
+        this.conta = new ContaDTO(equipamento.getConta());
     }
 }

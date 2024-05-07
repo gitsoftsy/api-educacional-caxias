@@ -27,11 +27,11 @@ public class EquipamentoController {
     @Autowired
     private EquipamentoService service;
 
-    @GetMapping
-    public ResponseEntity<List<EquipamentoDTO>> listar() {
-        List<EquipamentoDTO> equipamentos = service.listarTodos();
-        return ResponseEntity.ok(equipamentos);
-    }
+   @GetMapping("/conta/{idConta}")
+   	public ResponseEntity<List<EquipamentoDTO>> buscarPorIdConta(@PathVariable Long idConta){
+   		List<EquipamentoDTO> equipamento = service.buscarPorIdConta(idConta);
+   		return ResponseEntity.ok(equipamento);
+   	}
 
     @GetMapping("/{idEquipamento}")
     public ResponseEntity<EquipamentoDTO> buscarPorId(@PathVariable Long idEquipamento) {

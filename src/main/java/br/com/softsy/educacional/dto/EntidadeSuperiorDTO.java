@@ -15,7 +15,7 @@ public class EntidadeSuperiorDTO {
 	private Long idEntidadeSuperior;
 	
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 	
 	@NotNull
 	private String entidadeSuperior;
@@ -28,6 +28,6 @@ public class EntidadeSuperiorDTO {
 		this.idEntidadeSuperior = entidadeSuperior.getIdEntidadeSuperior();
 		this.dataCadastro = entidadeSuperior.getDataCadastro();
 		this.ativo = entidadeSuperior.getAtivo();
-		this.dependenciaAdmId = entidadeSuperior.getDependenciaAdm().getIdDependenciaAdministrativa();
+		this.contaId = entidadeSuperior.getConta().getIdConta();
 	}
 }

@@ -26,10 +26,11 @@ public class InstrPedagogicoController {
     @Autowired
     private InstrPedagogicoService service;
 
-    @GetMapping
-    public ResponseEntity<List<InstrPedagogicoDTO>> listar() {
-        return ResponseEntity.ok(service.listarTodos());
-    }
+   @GetMapping("/conta/{idConta}")
+   	public ResponseEntity<List<InstrPedagogicoDTO>> buscarPorIdConta(@PathVariable Long idConta){
+   		List<InstrPedagogicoDTO> instrPedagogico = service.buscarPorIdConta(idConta);
+   		return ResponseEntity.ok(instrPedagogico);
+   	}
 
     @GetMapping("/{idInstrPedagogico}")
     public ResponseEntity<InstrPedagogicoDTO> buscarPorId(@PathVariable Long idInstrPedagogico) {

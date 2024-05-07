@@ -15,7 +15,7 @@ public class AtoRegulatorioDTO {
 	private Long idAtoRegulatorio;
 	
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 	
 	@NotNull
 	private String AtoRegulatorio;
@@ -29,7 +29,7 @@ public class AtoRegulatorioDTO {
 		this.AtoRegulatorio = atoRegulatorio.getAtoRegulatorio();
 		this.dataCadastro = atoRegulatorio.getDataCadastro();
 		this.ativo = atoRegulatorio.getAtivo();
-		this.dependenciaAdmId = atoRegulatorio.getDependenciaAdm().getIdDependenciaAdministrativa();
+		this.contaId = atoRegulatorio.getConta().getIdConta();
 	}
 	
 }

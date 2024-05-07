@@ -15,7 +15,7 @@ public class CategoriaEscolaPrivadaDTO {
 	private Long idCategoriaEscolaPrivada;
 	
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 	
 	@NotNull
 	private String categoriaEscolaPrivada;
@@ -29,6 +29,7 @@ public class CategoriaEscolaPrivadaDTO {
 		this.categoriaEscolaPrivada = categoriaEscolaPrivada.getCategoriaEscolaPrivada();
 		this.dataCadastro = categoriaEscolaPrivada.getDataCadastro();
 		this.ativo = categoriaEscolaPrivada.getAtivo();
-		this.dependenciaAdmId = categoriaEscolaPrivada.getDependenciaAdm().getIdDependenciaAdministrativa();
+		this.contaId = categoriaEscolaPrivada.getConta().getIdConta();
+
 	}
 }

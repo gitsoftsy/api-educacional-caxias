@@ -2,20 +2,22 @@ package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import br.com.softsy.educacional.dto.DestinacaoLixoDTO;
-import br.com.softsy.educacional.infra.exception.UniqueException;
-import br.com.softsy.educacional.model.DependenciaAdministrativa;
-import br.com.softsy.educacional.model.DestinacaoLixo;
-import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
-import br.com.softsy.educacional.repository.DestinacaoLixoRepository;
 import org.springframework.transaction.annotation.Transactional;
+
+import br.com.softsy.educacional.dto.CategoriaEscolaPrivadaDTO;
+import br.com.softsy.educacional.dto.DestinacaoLixoDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
+import br.com.softsy.educacional.model.CategoriaEscolaPrivada;
+import br.com.softsy.educacional.model.Conta;
+import br.com.softsy.educacional.model.DestinacaoLixo;
+import br.com.softsy.educacional.model.Zoneamento;
+import br.com.softsy.educacional.repository.ContaRepository;
+import br.com.softsy.educacional.repository.DestinacaoLixoRepository;
 
 @Service
 public class DestinacaoLixoService {
@@ -24,11 +26,15 @@ public class DestinacaoLixoService {
 	private DestinacaoLixoRepository repository;
 	
 	@Autowired 
-	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
+	private ContaRepository contaRepository;
 	
-	public List<DestinacaoLixo> listarTudo(){
-		return repository.findAll();
+	@Transactional(readOnly = true)
+	public List< DestinacaoLixoDTO> buscarPorIdConta(Long id) {
+		List< DestinacaoLixo> destinacaoLixo = repository.findByConta_IdConta(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar destinacaoLixo por id de conta"));
+		return destinacaoLixo.stream().map(DestinacaoLixoDTO::new).collect(Collectors.toList());
 	}
+
 	
 	@Transactional(readOnly = true)
 	public DestinacaoLixoDTO buscarPorId(Long id){
@@ -46,10 +52,10 @@ public class DestinacaoLixoService {
 	
 	private DestinacaoLixo criarDestinacaoAPartirDTO(DestinacaoLixoDTO dto) {
 		DestinacaoLixo destinacao = new DestinacaoLixo();
-		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 		BeanUtils.copyProperties(dto, destinacao, "idDestinacaoLixo", "ativo", "dataCadastro");
-		destinacao.setDependenciaAdm(dependenciaAdm);
+		destinacao.setConta(conta);
 		destinacao.setAtivo('S');
 		destinacao.setDataCadastro(LocalDateTime.now());
 		return destinacao;
@@ -71,9 +77,9 @@ public class DestinacaoLixoService {
 	
 	private void atualizaDados(DestinacaoLixo destino, DestinacaoLixoDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idDestinacaoLixo", "ativo", "dataCadastro");
-		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-		destino.setDependenciaAdm(dependenciaAdm);
+		Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+		destino.setConta(conta);
 		
 	}
 }

@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.softsy.educacional.dto.DestinacaoLixoDTO;
 import br.com.softsy.educacional.dto.FormaOcupacaoPredioDTO;
-import br.com.softsy.educacional.model.DestinacaoLixo;
-import br.com.softsy.educacional.model.FormaOcupacaoPredio;
 import br.com.softsy.educacional.service.FormaOcupacaoPredioService;
 
 @RestController
@@ -29,10 +26,11 @@ public class FormaOcupacaoPredioController {
 	
 	@Autowired FormaOcupacaoPredioService service;
 	
-	@GetMapping
-	public ResponseEntity<List<FormaOcupacaoPredio>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
-	}
+	@GetMapping("/conta/{idConta}")
+		public ResponseEntity<List<FormaOcupacaoPredioDTO>> buscarPorIdConta(@PathVariable Long idConta){
+			List<FormaOcupacaoPredioDTO> formaOcupacaoPredio = service.buscarPorIdConta(idConta);
+			return ResponseEntity.ok(formaOcupacaoPredio);
+		}
 
 	
 	@GetMapping("/{idFormaOcupacaoPredio}")

@@ -29,6 +29,9 @@ public class EscolaDTO {
 	private String nomeEscola;
 	
 	@NotNull
+	private ContaDTO conta;
+	
+	@NotNull
 	private String logoEscola;
 	
 	@NotNull
@@ -166,6 +169,8 @@ public class EscolaDTO {
 		this.entidadeSuperior = new EntidadeSuperiorDTO(escola.getEntidadeSuperior());
 		
 		this.orgaoPublico = new OrgaoPublicoDTO(escola.getOrgaoPublico());
+		
+		this.conta = new ContaDTO(escola.getConta());
 	}
 	
 }

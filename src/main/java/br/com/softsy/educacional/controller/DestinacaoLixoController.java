@@ -26,10 +26,11 @@ public class DestinacaoLixoController {
 
 	@Autowired DestinacaoLixoService service;
 	
-	@GetMapping
-	public ResponseEntity<List<DestinacaoLixo>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
-	}
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<DestinacaoLixoDTO>> buscarPorIdConta(@PathVariable Long idConta){
+			List<DestinacaoLixoDTO> destinacaoLixo = service.buscarPorIdConta(idConta);
+			return ResponseEntity.ok(destinacaoLixo);
+		}
 	
 	@GetMapping("/{idDestinacaoLixo}")
 	public ResponseEntity<DestinacaoLixoDTO> buscarPorId(@PathVariable Long idDestinacaoLixo){

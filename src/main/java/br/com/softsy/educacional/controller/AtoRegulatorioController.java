@@ -28,10 +28,11 @@ public class AtoRegulatorioController {
 
 	@Autowired AtoRegulatorioService service;
 	
-	@GetMapping
-	public ResponseEntity<List<AtoRegulatorio>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
-	}
+	@GetMapping("/conta/{idConta}")
+		public ResponseEntity<List<AtoRegulatorioDTO>> buscarPorIdConta(@PathVariable Long idConta){
+			List<AtoRegulatorioDTO> atoRegulatorio = service.buscarPorIdConta(idConta);
+			return ResponseEntity.ok(atoRegulatorio);
+		}
 	
 	@GetMapping("/{idAtoRegulatorio}")
 	public ResponseEntity<AtoRegulatorioDTO> buscarPorId(@PathVariable Long idAtoRegulatorio){

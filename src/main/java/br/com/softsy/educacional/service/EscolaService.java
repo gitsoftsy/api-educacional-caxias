@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.CadastroEscolaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
 import br.com.softsy.educacional.model.CategoriaEscolaPrivada;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.EntidadeSuperior;
 import br.com.softsy.educacional.model.Escola;
@@ -21,6 +22,7 @@ import br.com.softsy.educacional.model.OrgaoPublico;
 import br.com.softsy.educacional.model.SituacaoFuncionamento;
 import br.com.softsy.educacional.model.Zoneamento;
 import br.com.softsy.educacional.repository.CategoriaEscolaPrivadaRepository;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.EntidadeSuperiorRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
@@ -42,6 +44,9 @@ public class EscolaService {
 	private DependenciaAdministrativaRepository dependenciaRepository;
 	
 	@Autowired 
+	private ContaRepository contaRepository;
+	
+	@Autowired 
 	private SituacaoFuncionamentoRepository situacaoRepository;
 	
 	@Autowired 
@@ -60,11 +65,14 @@ public class EscolaService {
 	private OrgaoPublicoRepository orgaoRepository;
 	
 	
-	public List<EscolaDTO> listarTudo(){
-		List<Escola> escolas = repository.findAll();
-		
-		return escolas.stream().map(EscolaDTO::new).collect(Collectors.toList());
-	}
+	@Transactional(readOnly = true)
+		public List<EscolaDTO> buscarPorIdConta(Long id) {
+			List<Escola> escola = repository.findByConta_IdConta(id)
+					.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar escola por id de conta"));
+			return escola.stream()
+					.map(EscolaDTO::new)
+					.collect(Collectors.toList());
+		}
 
 	
 	@Transactional(readOnly = true)
@@ -106,6 +114,8 @@ public class EscolaService {
 				.orElseThrow(() -> new IllegalArgumentException("Localizacao não encontrada"));
 		DependenciaAdministrativa dependenciaAdm = dependenciaRepository.findById(dto.getDependenciaAdmId())
 				.orElseThrow(() -> new IllegalArgumentException("Dependencia não encontrada"));
+		Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 		SituacaoFuncionamento situacaoFuncionamento = situacaoRepository.findById(dto.getSituacaoFuncionamentoId())
 				.orElseThrow(() -> new IllegalArgumentException("Situação não encontrada"));
 		FormaOcupacaoPredio formaOcupacao = formaRepository.findById(dto.getFormaOcupacaoPredioId())
@@ -135,5 +145,8 @@ public class EscolaService {
 	
 	private void atualizaDados(Escola destino, CadastroEscolaDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro", "idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
+		Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+		destino.setConta(conta);
 	}
 }

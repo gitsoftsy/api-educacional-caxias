@@ -3,6 +3,7 @@ package br.com.softsy.educacional.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.EsgotamentoSanitarioDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.EsgotamentoSanitario;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.EsgotamentoSanitarioRepository;
 
 @Service
@@ -20,8 +23,16 @@ public class EsgotamentoSanitarioService {
 	@Autowired
 	private EsgotamentoSanitarioRepository repository;
 	
-	public List<EsgotamentoSanitario> listarTudo(){
-		return repository.findAll();
+	@Autowired 
+	private ContaRepository contaRepository;
+	
+	@Transactional(readOnly = true)
+	public List<EsgotamentoSanitarioDTO> buscarPorIdConta(Long id) {
+		List<EsgotamentoSanitario> esgotamentoSanitario = repository.findByConta_IdConta(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar esgotamentoSanitario por id de conta"));
+		return esgotamentoSanitario.stream()
+				.map(EsgotamentoSanitarioDTO::new)
+				.collect(Collectors.toList());
 	}
 	
 	@Transactional(readOnly = true)
@@ -42,6 +53,9 @@ public class EsgotamentoSanitarioService {
 	private EsgotamentoSanitario criarEsgotamentoAPartirDTO(EsgotamentoSanitarioDTO dto) {
 		EsgotamentoSanitario esgotamento = new EsgotamentoSanitario();
 		BeanUtils.copyProperties(dto, esgotamento, "idEsgotamentoSanitario", "ativo", "dataCadastro");
+		Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+		esgotamento.setConta(conta);
 		esgotamento.setAtivo('S');
 		esgotamento.setDataCadastro(LocalDateTime.now());
 		return esgotamento;
@@ -68,7 +82,10 @@ public class EsgotamentoSanitarioService {
 	}
 	
 	private void atualizaDados(EsgotamentoSanitario destino, EsgotamentoSanitarioDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "idEsgotamentoSanitario", "ativo", "dataCadastro");
+		BeanUtils.copyProperties(origem, destino, "idEsgotamentoSanitario", "ativo", "dataCadastro", "");
+		Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+		destino.setConta(conta);
 		
 	}
 }

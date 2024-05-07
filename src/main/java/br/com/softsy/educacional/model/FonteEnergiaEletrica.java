@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -21,6 +23,10 @@ public class FonteEnergiaEletrica {
 	@Column(name = "ID_FONTE_ENERGIA_ELETRICA")
 	private Long idFonteEnergiaEletrica;
 	
+	@ManyToOne
+	@JoinColumn(name = "ID_CONTA", nullable = false)
+	private Conta conta;
+
 	@Column(name = "FONTE_ENERGIA_ELETRICA", nullable = false, unique = true)
 	private String fonteEnergiaEletrica;
 	

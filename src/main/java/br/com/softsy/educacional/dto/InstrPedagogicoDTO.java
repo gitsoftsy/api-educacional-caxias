@@ -15,7 +15,7 @@ public class InstrPedagogicoDTO {
     private Long idInstrPedagogico;
     
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 
     @NotNull
     private String instrPedagogico;
@@ -27,7 +27,7 @@ public class InstrPedagogicoDTO {
         this.idInstrPedagogico = instrPedagogico.getIdInstrPedagogica();
         this.dataCadastro = instrPedagogico.getDataCadastro();
         this.ativo = instrPedagogico.getAtivo();
-        this.dependenciaAdmId = instrPedagogico.getDependenciaAdm().getIdDependenciaAdministrativa();
+        this.contaId = instrPedagogico.getConta().getIdConta();
     }
     
 }

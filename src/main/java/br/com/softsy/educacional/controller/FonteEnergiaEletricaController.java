@@ -28,10 +28,11 @@ public class FonteEnergiaEletricaController {
 	
 	@Autowired FonteEnergiaEletricaService service;
 	
-	@GetMapping
-	public ResponseEntity<List<FonteEnergiaEletrica>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
-	}
+	@GetMapping("/conta/{idConta}")
+		public ResponseEntity<List<FonteEnergiaEletricaDTO>> buscarPorIdConta(@PathVariable Long idConta){
+			List<FonteEnergiaEletricaDTO> fonteEnergiaEletrica = service.buscarPorIdConta(idConta);
+			return ResponseEntity.ok(fonteEnergiaEletrica);
+		}
 	
 	@GetMapping("/{idFonteEnergiaEletrica}")
 	public ResponseEntity<FonteEnergiaEletricaDTO> buscarPorId(@PathVariable Long idFonteEnergiaEletrica){

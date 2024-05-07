@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -29,4 +31,9 @@ public class EsgotamentoSanitario {
 	
 	@Column(name = "ATIVO", nullable = false)
 	private Character ativo;
+	
+	@ManyToOne
+	@JoinColumn(name = "ID_CONTA", nullable = false)
+	private Conta conta;
+
 }

@@ -11,9 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroEquipamentoDTO;
 import br.com.softsy.educacional.dto.EquipamentoDTO;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.Equipamento;
 import br.com.softsy.educacional.model.MarcaEquipamento;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.EquipamentoRepository;
 import br.com.softsy.educacional.repository.MarcaEquipamentoRepository;
@@ -28,14 +30,16 @@ public class EquipamentoService {
     private MarcaEquipamentoRepository marcaRepository;
     
 	@Autowired 
-	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
+	private ContaRepository contaRepository;
 
-    public List<EquipamentoDTO> listarTodos() {
-        List<Equipamento> equipamentos = repository.findAll();
-        return equipamentos.stream()
-                .map(EquipamentoDTO::new)
-                .collect(Collectors.toList());
-    }
+	@Transactional(readOnly = true)
+	public List<EquipamentoDTO> buscarPorIdConta(Long id) {
+		List<Equipamento> equipamento = repository.findByConta_IdConta(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar equipamento por id de conta"));
+		return equipamento.stream()
+				.map(EquipamentoDTO::new)
+				.collect(Collectors.toList());
+	}
 
     @Transactional(readOnly = true)
     public EquipamentoDTO buscarPorId(Long id) {
@@ -65,12 +69,12 @@ public class EquipamentoService {
 
     private Equipamento criarEquipamentoAPartirDTO(CadastroEquipamentoDTO dto) {
         Equipamento equipamento = new Equipamento();
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
         MarcaEquipamento marcaEquipamento = marcaRepository.findById(dto.getMarcaEquipamentoId())
         		.orElseThrow(() -> new IllegalArgumentException("Marca não encontrada"));
         BeanUtils.copyProperties(dto, equipamento, "idEquipamento", "dataCadastro");
-        equipamento.setDependenciaAdm(dependenciaAdm);
+        equipamento.setConta(conta);
         equipamento.setDataCadastro(LocalDateTime.now());
         equipamento.setAtivo('S');
         equipamento.setMarcaEquipamento(marcaEquipamento);
@@ -80,9 +84,9 @@ public class EquipamentoService {
     private void atualizarDadosEquipamento(Equipamento destino, CadastroEquipamentoDTO origem) {
     	destino.setMarcaEquipamento(marcaRepository.findById(origem.getMarcaEquipamentoId())
     			.orElseThrow(() -> new IllegalArgumentException("Marca não encontrada")));
-    	DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+    	Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
         BeanUtils.copyProperties(origem, destino, "idEquipamento", "dataCadastro", "ativo");
-        destino.setDependenciaAdm(dependenciaAdm);
+        destino.setConta(conta);
     }
 }
