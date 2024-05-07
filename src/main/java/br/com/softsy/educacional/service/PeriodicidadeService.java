@@ -11,9 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.PeriodicidadeDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.Periodicidade;
+import br.com.softsy.educacional.model.Zoneamento;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.PeriodicidadeRepository;
 
@@ -23,10 +27,15 @@ public class PeriodicidadeService {
 	@Autowired PeriodicidadeRepository repository;
 	
 	@Autowired 
-	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
+	private ContaRepository contaRepository;
 	
-	public List<PeriodicidadeDTO> listarTudo(){
-		return repository.findAll().stream().map(PeriodicidadeDTO::new).collect(Collectors.toList());
+	@Transactional(readOnly = true)
+	public List<PeriodicidadeDTO> buscarPorIdConta(Long id) {
+		List<Periodicidade> periodicidade = repository.findByConta_IdConta(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar periodicidade por id de conta"));
+		return periodicidade.stream()
+				.map(PeriodicidadeDTO::new)
+				.collect(Collectors.toList());
 	}
 	
 	@Transactional(readOnly = true)
@@ -45,10 +54,10 @@ public class PeriodicidadeService {
 	
 	private Periodicidade criarPeriodicidadeAPartirDTO(PeriodicidadeDTO dto) {
 		Periodicidade periodicidade = new Periodicidade();
-		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 		BeanUtils.copyProperties(dto, periodicidade, "idPeriodicidade", "ativo", "dataCadastro");
-		periodicidade.setDependenciaAdm(dependenciaAdm);
+		periodicidade.setConta(conta);
 		periodicidade.setAtivo('S');
 		periodicidade.setDataCadastro(LocalDateTime.now());
 		return periodicidade;
@@ -70,9 +79,9 @@ public class PeriodicidadeService {
 	
 	private void atualizaDados(Periodicidade destino, PeriodicidadeDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idPeriodicidade", "ativo", "dataCadastro");
-		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-		destino.setDependenciaAdm(dependenciaAdm);
+		Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+		destino.setConta(conta);
 		
 	}
 }

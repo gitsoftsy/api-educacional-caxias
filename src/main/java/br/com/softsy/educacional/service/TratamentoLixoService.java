@@ -3,6 +3,7 @@ package br.com.softsy.educacional.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.TratamentoLixoDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.TratamentoLixo;
+import br.com.softsy.educacional.model.Zoneamento;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.TratamentoLixoRepository;
 
@@ -22,10 +27,15 @@ public class TratamentoLixoService {
 	@Autowired
 	private TratamentoLixoRepository repository;
 	@Autowired 
-	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
+	private ContaRepository contaRepository;
 	
-	public List<TratamentoLixo> listarTudo(){
-		return repository.findAll();
+	@Transactional(readOnly = true)
+	public List<TratamentoLixoDTO> buscarPorIdConta(Long id) {
+		List<TratamentoLixo> tratamentoLixo = repository.findByConta_IdConta(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar tratamentoLixo por id de conta"));
+		return tratamentoLixo.stream()
+				.map(TratamentoLixoDTO::new)
+				.collect(Collectors.toList());
 	}
 	
 	@Transactional(readOnly = true)
@@ -45,10 +55,10 @@ public class TratamentoLixoService {
 	
 	private TratamentoLixo criarTratamentoLixoAPartirDTO(TratamentoLixoDTO dto) {
 		TratamentoLixo tratamentoLixo = new TratamentoLixo();
-		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 		BeanUtils.copyProperties(dto, tratamentoLixo, "idTratamentoLixo", "ativo", "dataCadastro");
-		tratamentoLixo.setDependenciaAdm(dependenciaAdm);
+		tratamentoLixo.setConta(conta);
 		tratamentoLixo.setDataCadastro(LocalDateTime.now());
 		tratamentoLixo.setAtivo('S');
 		return tratamentoLixo;
@@ -69,9 +79,9 @@ public class TratamentoLixoService {
 	
 	private void atualizaDados(TratamentoLixo destino, TratamentoLixoDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idTratamentoLixo", "ativo", "dataCadastro");
-		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-		destino.setDependenciaAdm(dependenciaAdm);
+		Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+		destino.setConta(conta);;
 		
 	}
 

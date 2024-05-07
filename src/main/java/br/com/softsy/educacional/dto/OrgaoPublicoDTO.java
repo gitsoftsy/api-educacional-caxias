@@ -15,7 +15,7 @@ public class OrgaoPublicoDTO {
 	private Long idOrgaoPublico;
 	
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 	
 	@NotNull
 	private String sigla;
@@ -33,6 +33,6 @@ public class OrgaoPublicoDTO {
 		this.orgaoPublico = orgaoPublico.getOrgaoPublico();
 		this.dataCadastro = orgaoPublico.getDataCadastro();
 		this.ativo = orgaoPublico.getAtivo();
-		this.dependenciaAdmId = orgaoPublico.getDependenciaAdm().getIdDependenciaAdministrativa();
+		this.contaId = orgaoPublico.getConta().getIdConta();
 	}
 }

@@ -17,11 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.ContaDTO;
-import br.com.softsy.educacional.dto.DependenciaAdministrativaDTO;
 import br.com.softsy.educacional.model.Conta;
-import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.service.ContaService;
-import br.com.softsy.educacional.service.DependenciaAdministrativaService;
 
 @RestController
 @RequestMapping("/conta")

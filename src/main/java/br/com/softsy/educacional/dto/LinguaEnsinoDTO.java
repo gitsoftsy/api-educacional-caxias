@@ -15,7 +15,7 @@ public class LinguaEnsinoDTO {
 	private Long idLinguaEnsino;
 	
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 	
 	@NotNull
 	private String linguaEnsino;
@@ -30,7 +30,7 @@ public class LinguaEnsinoDTO {
 		this.idLinguaEnsino = linguaEnsino.getIdLinguaEnsino();
 		this.dataCadastro = linguaEnsino.getDataCadastro();
 		this.ativo = linguaEnsino.getAtivo();
-		this.dependenciaAdmId = linguaEnsino.getDependenciaAdm().getIdDependenciaAdministrativa();
+		this.contaId = linguaEnsino.getConta().getIdConta();
 	}
 
 }

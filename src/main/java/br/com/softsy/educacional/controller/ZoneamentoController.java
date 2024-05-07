@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.softsy.educacional.dto.EscolaDestinacaoLixoDTO;
 import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.model.Zoneamento;
 import br.com.softsy.educacional.service.ZoneamentoService;
@@ -27,9 +28,10 @@ public class ZoneamentoController {
 	@Autowired
 	private ZoneamentoService service;
 	
-	@GetMapping
-	public ResponseEntity<List<Zoneamento>> listar() {
-		return ResponseEntity.ok(service.listarTudo());
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<ZoneamentoDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<ZoneamentoDTO> zoneamento = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(zoneamento);
 	}
 	
 	@GetMapping("/{idZoneamento}")

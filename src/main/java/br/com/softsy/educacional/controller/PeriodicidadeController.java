@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.DestinacaoLixoDTO;
 import br.com.softsy.educacional.dto.PeriodicidadeDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.model.DestinacaoLixo;
 import br.com.softsy.educacional.model.Periodicidade;
 import br.com.softsy.educacional.service.PeriodicidadeService;
@@ -28,9 +29,10 @@ public class PeriodicidadeController {
 	
 	@Autowired PeriodicidadeService service;
 	
-	@GetMapping
-	public ResponseEntity<List<PeriodicidadeDTO>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<PeriodicidadeDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<PeriodicidadeDTO> periodicidade = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(periodicidade);
 	}
 	
 	@GetMapping("/{idPeriodicidade}")

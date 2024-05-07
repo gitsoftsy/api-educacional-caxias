@@ -15,7 +15,7 @@ public class ProvedorInternetDTO {
     private Long idProvedorInternet;
     
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 
     @NotNull
     private String provedorInternet;
@@ -29,6 +29,6 @@ public class ProvedorInternetDTO {
         this.telefoneProvedor = provedorInternet.getTelefoneProvedor();
         this.dataCadastro = provedorInternet.getDataCadastro();
         this.ativo = provedorInternet.getAtivo();
-        this.dependenciaAdmId = provedorInternet.getDependenciaAdm().getIdDependenciaAdministrativa();
+        this.contaId = provedorInternet.getConta().getIdConta();
     }
 }

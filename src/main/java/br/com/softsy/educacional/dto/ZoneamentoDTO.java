@@ -15,7 +15,7 @@ public class ZoneamentoDTO {
 	private Long idZoneamento;
 	
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 	
 	@NotNull
 	private String zoneamento;
@@ -28,6 +28,6 @@ public class ZoneamentoDTO {
 		this.idZoneamento = zoneamento.getIdZoneamento();
 		this.dataCadastro = zoneamento.getDataCadastro();
 		this.ativo = zoneamento.getAtivo();
-		this.dependenciaAdmId = zoneamento.getDependenciaAdm().getIdDependenciaAdministrativa();
+		this.contaId = zoneamento.getConta().getIdConta();
 	}
 }

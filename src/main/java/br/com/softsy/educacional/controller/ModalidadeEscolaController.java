@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.ModalidadeEscolaDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.model.ModalidadeEscola;
 import br.com.softsy.educacional.service.ModalidadeEscolaService;
 
@@ -27,11 +28,11 @@ public class ModalidadeEscolaController {
 	
 	@Autowired ModalidadeEscolaService service;
 	
-	@GetMapping
-	public ResponseEntity<List<ModalidadeEscola>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<ModalidadeEscolaDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<ModalidadeEscolaDTO> modalidadeEscola = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(modalidadeEscola);
 	}
-
 	
 	@GetMapping("/{idModalidadeEscola}")
 	public ResponseEntity<ModalidadeEscolaDTO> buscarPorId(@PathVariable Long idModalidadeEscola){

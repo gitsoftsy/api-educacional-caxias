@@ -20,7 +20,7 @@ public class LocalizacaoDTO {
 	private String localizacao;
 	
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 
 	private LocalDateTime dataCadastro;
 	
@@ -32,6 +32,7 @@ public class LocalizacaoDTO {
 		this.localizacao = localizacao.getLocalizacao();
 		this.dataCadastro = localizacao.getDataCadastro();
 		this.ativo = localizacao.getAtivo();
-		this.dependenciaAdmId = localizacao.getDependenciaAdm().getIdDependenciaAdministrativa();
+		this.contaId = localizacao.getConta().getIdConta();
+		
 	}
 }

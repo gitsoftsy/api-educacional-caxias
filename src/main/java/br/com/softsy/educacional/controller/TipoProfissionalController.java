@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.TipoProfissionalDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.model.TipoProfissional;
 import br.com.softsy.educacional.service.TipoProfissionalService;
 
@@ -27,10 +28,11 @@ public class TipoProfissionalController {
     @Autowired
     private TipoProfissionalService tipoProfissionalService;
 
-    @GetMapping
-    public ResponseEntity<List<TipoProfissional>> listar() {
-        return ResponseEntity.ok(tipoProfissionalService.listarTodos());
-    }
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<TipoProfissionalDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<TipoProfissionalDTO> tipoProfissinal = tipoProfissionalService.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(tipoProfissinal);
+	}
 
     @GetMapping("/{idInstrPedagogico}")
     public ResponseEntity<TipoProfissionalDTO> buscarPorId(@PathVariable Long idInstrPedagogico) {

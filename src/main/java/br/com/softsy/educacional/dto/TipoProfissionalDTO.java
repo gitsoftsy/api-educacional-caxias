@@ -15,7 +15,7 @@ public class TipoProfissionalDTO {
     private Long idTipoProfissional;
     
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 
     @NotNull
     private String tipoProfissional;
@@ -27,6 +27,6 @@ public class TipoProfissionalDTO {
         this.idTipoProfissional = tipoProfissional.getIdTipoProfissional();
         this.dataCadastro = tipoProfissional.getDataCadastro();
         this.ativo = tipoProfissional.getAtivo();
-        this.dependenciaAdmId = tipoProfissional.getDependenciaAdm().getIdDependenciaAdministrativa();
+        this.contaId = tipoProfissional.getConta().getIdConta();
     }
 }

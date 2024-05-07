@@ -15,7 +15,7 @@ public class ModalidadeEscolaDTO {
 	private Long idModalidadeEscola;
 	
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 	
 	@NotNull
 	private String modalidadeEscola;
@@ -28,7 +28,7 @@ public class ModalidadeEscolaDTO {
 		this.idModalidadeEscola = modalidadeEscola.getIdModalidadeEscola();
 		this.dataCadastro = modalidadeEscola.getDataCadastro();
 		this.ativo = modalidadeEscola.getAtivo();
-		this.dependenciaAdmId = modalidadeEscola.getDependenciaAdm().getIdDependenciaAdministrativa();
+		this.contaId = modalidadeEscola.getConta().getIdConta();
 	}
 
 }

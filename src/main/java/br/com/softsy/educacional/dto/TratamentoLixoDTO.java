@@ -16,7 +16,7 @@ public class TratamentoLixoDTO {
 	private Long idTratamentoLixo;
 	
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 	
 	@NotNull
 	private String tratamentoLixo;
@@ -29,7 +29,7 @@ public class TratamentoLixoDTO {
 		this.idTratamentoLixo = tratamentoLixo.getIdTratamentoLixo();
 		this.dataCadastro = tratamentoLixo.getDataCadastro();
 		this.ativo = tratamentoLixo.getAtivo();
-		this.dependenciaAdmId = tratamentoLixo.getDependenciaAdm().getIdDependenciaAdministrativa();
+		this.contaId = tratamentoLixo.getConta().getIdConta();
 	}
 
 

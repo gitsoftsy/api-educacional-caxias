@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.OrgaoPublicoDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.model.OrgaoPublico;
 import br.com.softsy.educacional.service.OrgaoPublicoService;
 
@@ -28,10 +29,11 @@ public class OrgaoPublicoController {
     @Autowired
     private OrgaoPublicoService service;
 
-    @GetMapping
-    public ResponseEntity<List<OrgaoPublico>> listar() {
-        return ResponseEntity.ok(service.listarTudo());
-    }
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<OrgaoPublicoDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<OrgaoPublicoDTO> orgaoPublico = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(orgaoPublico);
+	}
 
     @GetMapping("/{idOrgaoPublico}")
     public ResponseEntity<OrgaoPublicoDTO> buscarPorId(@PathVariable Long idOrgaoPublico) {

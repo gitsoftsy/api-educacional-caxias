@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.DestinacaoLixoDTO;
 import br.com.softsy.educacional.dto.TipoAtoRegulatorioDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.model.TipoAtoRegulatorio;
 import br.com.softsy.educacional.service.TipoAtoRegulatorioService;
 
@@ -27,9 +28,10 @@ public class TipoAtoRegulatorioController {
 	
 	@Autowired TipoAtoRegulatorioService service;
 	
-	@GetMapping
-	public ResponseEntity<List<TipoAtoRegulatorio>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<TipoAtoRegulatorioDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<TipoAtoRegulatorioDTO> tipoAtoRegulatorio = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(tipoAtoRegulatorio);
 	}
 	
 	@GetMapping("/{idTipoAtoRegulatorio}")

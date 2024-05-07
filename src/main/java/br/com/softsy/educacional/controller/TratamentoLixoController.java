@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.TratamentoLixoDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.model.TratamentoLixo;
 import br.com.softsy.educacional.service.TratamentoLixoService;
 
@@ -27,9 +28,10 @@ public class TratamentoLixoController {
 	
 	@Autowired  TratamentoLixoService service;
 	
-	@GetMapping
-	public ResponseEntity<List< TratamentoLixo>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<TratamentoLixoDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<TratamentoLixoDTO> tratamentoLixo = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(tratamentoLixo);
 	}
 
 	

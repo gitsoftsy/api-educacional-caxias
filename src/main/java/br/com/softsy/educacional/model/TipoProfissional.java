@@ -23,7 +23,7 @@ import lombok.Data;
 @Entity
 @Table(name = "TBL_TIPO_PROFISSIONAL", 
 	uniqueConstraints = { 
-		@UniqueConstraint(name = "UQ_TIPO_PROFISSIONAL", columnNames = { "TIPO_PROFISSIONAL", "ID_DEPENDENCIA_ADMINISTRATIVA" })
+		@UniqueConstraint(name = "UQ_TIPO_PROFISSIONAL", columnNames = { "TIPO_PROFISSIONAL", "ID_CONTA" })
 		})
 @Data
 public class TipoProfissional {
@@ -34,8 +34,8 @@ public class TipoProfissional {
 	private Long idTipoProfissional;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
-	private DependenciaAdministrativa dependenciaAdm;
+	@JoinColumn(name = "ID_CONTA", nullable = false)
+	private Conta conta;
 	
 	@Column(name = "TIPO_PROFISSIONAL", nullable = false, unique = true)
 	private String tipoProfissional;

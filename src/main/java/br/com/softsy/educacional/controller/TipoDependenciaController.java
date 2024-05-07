@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.TipoDependenciaDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.model.TipoDependencia;
 import br.com.softsy.educacional.service.TipoDependenciaService;
 
@@ -27,11 +28,11 @@ public class TipoDependenciaController {
 
 	@Autowired TipoDependenciaService service;
 	
-	@GetMapping
-	public ResponseEntity<List<TipoDependencia>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<TipoDependenciaDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<TipoDependenciaDTO> tipoDependencia = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(tipoDependencia);
 	}
-
 	
 	@GetMapping("/{idTipoDependencia}")
 	public ResponseEntity<TipoDependenciaDTO> buscarPorId(@PathVariable Long idTipoDependencia){

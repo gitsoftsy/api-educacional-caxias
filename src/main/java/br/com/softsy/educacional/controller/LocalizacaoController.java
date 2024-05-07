@@ -18,6 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.DestinacaoLixoDTO;
 import br.com.softsy.educacional.dto.LocalizacaoDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.model.DestinacaoLixo;
 import br.com.softsy.educacional.model.Localizacao;
 import br.com.softsy.educacional.service.LocalizacaoService;
@@ -28,9 +29,10 @@ public class LocalizacaoController {
 	
 	@Autowired LocalizacaoService service;
 	
-	@GetMapping
-	public ResponseEntity<List<Localizacao>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<LocalizacaoDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<LocalizacaoDTO> localizacao = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(localizacao);
 	}
 	
 	@GetMapping("/{idLocalizacao}")

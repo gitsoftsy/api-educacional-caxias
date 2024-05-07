@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.ProvedorInternetDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.model.ProvedorInternet;
 import br.com.softsy.educacional.service.ProvedorInternetService;
 
@@ -27,10 +28,11 @@ public class ProvedorInternetController {
     @Autowired
     private ProvedorInternetService service;
 
-    @GetMapping
-    public ResponseEntity<List<ProvedorInternet>> listar() {
-        return ResponseEntity.ok(service.listarTudo());
-    }
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<ProvedorInternetDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<ProvedorInternetDTO> provedor = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(provedor);
+	}
 
     @GetMapping("/{idProvedorInternet}")
     public ResponseEntity<ProvedorInternetDTO> buscarPorId(@PathVariable Long idProvedorInternet) {

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.MarcaEquipamentoDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.model.MarcaEquipamento;
 import br.com.softsy.educacional.service.MarcaEquipamentoService;
 
@@ -27,10 +28,11 @@ public class MarcaEquipamentoController {
     @Autowired
     private MarcaEquipamentoService service;
 
-    @GetMapping
-    public ResponseEntity<List<MarcaEquipamento>> listar() {
-        return ResponseEntity.ok(service.listarTudo());
-    }
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<MarcaEquipamentoDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<MarcaEquipamentoDTO> marcaEquipamento = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(marcaEquipamento);
+	}
 
     @GetMapping("/{idMarcaEquipamento}")
     public ResponseEntity<MarcaEquipamentoDTO> buscarPorId(@PathVariable Long idMarcaEquipamento) {

@@ -11,9 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.TipoProfissionalDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.TipoProfissional;
+import br.com.softsy.educacional.model.Zoneamento;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.TipoProfissionalRepository;
 
@@ -24,12 +28,16 @@ public class TipoProfissionalService {
     private TipoProfissionalRepository repository;
     
 	@Autowired 
-	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
+	private ContaRepository contaRepository;
 
-    public List<TipoProfissional> listarTodos() {
-    	 return repository.findAll();
-       
-    }
+	@Transactional(readOnly = true)
+	public List<TipoProfissionalDTO> buscarPorIdConta(Long id) {
+		List<TipoProfissional> zoenamento = repository.findByConta_IdConta(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar tipoProfissional por id de conta"));
+		return zoenamento.stream()
+				.map(TipoProfissionalDTO::new)
+				.collect(Collectors.toList());
+	}
 
     @Transactional(readOnly = true)
     public TipoProfissionalDTO buscarPorId(Long id) {
@@ -49,10 +57,10 @@ public class TipoProfissionalService {
 
     private TipoProfissional criarTipoProfissionalAPartirDTO(TipoProfissionalDTO dto) {
         TipoProfissional tipoProfissional = new TipoProfissional();
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
         BeanUtils.copyProperties(dto, tipoProfissional, "idTipoProfissional", "ativo", "dataCadastro");
-        tipoProfissional.setDependenciaAdm(dependenciaAdm);
+        tipoProfissional.setConta(conta);
         tipoProfissional.setDataCadastro(LocalDateTime.now());
         tipoProfissional.setAtivo('S');
         return tipoProfissional;
@@ -73,8 +81,8 @@ public class TipoProfissionalService {
 
     private void atualizarDados(TipoProfissional destino, TipoProfissionalDTO origem) {
         BeanUtils.copyProperties(origem, destino, "idTipoProfissional", "ativo", "dataCadastro");
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-        destino.setDependenciaAdm(dependenciaAdm);
+		Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+        destino.setConta(conta);
     }
 }

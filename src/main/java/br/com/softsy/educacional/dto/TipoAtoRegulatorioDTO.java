@@ -15,7 +15,7 @@ public class TipoAtoRegulatorioDTO {
 	private Long idTipoAtoRegulatorio;
 	
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 	
 	@NotNull
 	private String tipoAtoRegulatorio;
@@ -29,6 +29,6 @@ public class TipoAtoRegulatorioDTO {
 		this.tipoAtoRegulatorio = tipoAtoRegulatorio.getTipoAtoRegulatorio();
 		this.dataCadastro = tipoAtoRegulatorio.getDataCadastro();
 		this.ativo = tipoAtoRegulatorio.getAtivo();
-		this.dependenciaAdmId = tipoAtoRegulatorio.getDependenciaAdm().getIdDependenciaAdministrativa();
+		this.contaId = tipoAtoRegulatorio.getConta().getIdConta();
 	}
 }

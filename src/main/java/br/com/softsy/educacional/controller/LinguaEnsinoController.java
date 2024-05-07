@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.LinguaEnsinoDTO;
+import br.com.softsy.educacional.dto.ZoneamentoDTO;
 import br.com.softsy.educacional.model.LinguaEnsino;
 import br.com.softsy.educacional.service.LinguaEnsinoService;
 
@@ -26,11 +27,11 @@ public class LinguaEnsinoController {
 	
 	@Autowired LinguaEnsinoService service;
 	
-	@GetMapping
-	public ResponseEntity<List<LinguaEnsino>> listar(){
-		return ResponseEntity.ok(service.listarTudo());
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<LinguaEnsinoDTO>> buscarPorIdConta(@PathVariable Long idConta){
+		List<LinguaEnsinoDTO> linguaEnsino = service.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(linguaEnsino);
 	}
-
 	
 	@GetMapping("/{idLinguaEnsino}")
 	public ResponseEntity<LinguaEnsinoDTO> buscarPorId(@PathVariable Long idLinguaEnsino){
@@ -39,10 +40,10 @@ public class LinguaEnsinoController {
 	
 	@PostMapping
 	public ResponseEntity<LinguaEnsinoDTO> cadastrar(@RequestBody @Valid LinguaEnsinoDTO dto){
-		LinguaEnsinoDTO FormaDTO = service.salvar(dto);
+		LinguaEnsinoDTO linguaEnsino = service.salvar(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(FormaDTO.getIdLinguaEnsino()).toUri();
-		return ResponseEntity.created(uri).body(FormaDTO);
+				.buildAndExpand(linguaEnsino.getIdLinguaEnsino()).toUri();
+		return ResponseEntity.created(uri).body(linguaEnsino);
 	}
 	
 	@PutMapping
