@@ -37,7 +37,7 @@ public class Escola {
 	private String nomeEscola;
 
 	@Column(name = "LOGO_ESCOLA", nullable = false)
-	private String logoEscola;
+	private byte[] logoEscola;
 
 	@Column(name = "TIPO_ESCOLA", nullable = false, length = 2)
 	private String tipoEscola;

@@ -23,7 +23,7 @@ public class CadastroEscolaDTO {
 	private String nomeEscola;
 	
 	@NotNull
-	private String logoEscola;
+	private byte[] logoEscola;
 	
 	@NotNull
 	private String tipoEscola;

@@ -32,7 +32,7 @@ public class EscolaDTO {
 	private ContaDTO conta;
 	
 	@NotNull
-	private String logoEscola;
+	private byte[] logoEscola;
 	
 	@NotNull
 	private String tipoEscola;
