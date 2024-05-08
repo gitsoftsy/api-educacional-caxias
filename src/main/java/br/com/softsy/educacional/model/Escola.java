@@ -119,13 +119,12 @@ public class Escola {
 	private Localizacao localizacao;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
+	@JoinColumn(name = "ID_DEPENDENCIA_ADIMINISTRATIVA", nullable = false)
 	private DependenciaAdministrativa dependenciaAdm;
 	
 	@ManyToOne
 	@JoinColumn(name = "ID_CONTA", nullable = false)
 	private Conta conta;
-
 
 	@ManyToOne
 	@JoinColumn(name = "ID_SITUACAO_FUNCIONAMENTO", nullable = false)

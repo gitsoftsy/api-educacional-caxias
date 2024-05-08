@@ -21,33 +21,6 @@ public class DependenciaAdministrativaDTO {
 	@NotNull
 	private String dependenciaAdministrativa;
 	
-	@NotNull
-	private String tipoDependencia;
-	
-	@NotNull
-	@CNPJ
-	private String cnpj;
-	
-	@NotNull
-	private String cep;
-	
-	@NotNull
-	private String endereco;
-	@NotNull
-	private String numero;
-	
-	private String complemento;
-	
-	private String bairro;
-	
-	@NotNull
-	private String municipio;
-	
-	private String distrito;
-	
-	@NotNull
-	private String uf;
-	
 	private LocalDateTime dataCadastro;
 	
 	private Character ativo;
@@ -55,16 +28,6 @@ public class DependenciaAdministrativaDTO {
 	public DependenciaAdministrativaDTO(DependenciaAdministrativa dependenciaAdm) {
 		this.idDependenciaAdministrativa = dependenciaAdm.getIdDependenciaAdministrativa();
 		this.dependenciaAdministrativa = dependenciaAdm.getDependenciaAdministrativa();
-		this.tipoDependencia = dependenciaAdm.getTipoDependencia();
-		this.cnpj = dependenciaAdm.getCnpj();
-		this.cep = dependenciaAdm.getCep();
-		this.endereco = dependenciaAdm.getEndereco();
-		this.numero = dependenciaAdm.getNumero();
-		this.complemento = dependenciaAdm.getComplemento();
-		this.bairro = dependenciaAdm.getBairro();
-		this.municipio = dependenciaAdm.getMunicipio();
-		this.distrito = dependenciaAdm.getDistrito();
-		this.uf = dependenciaAdm.getUf();
 		this.ativo = dependenciaAdm.getAtivo();
 		this.dataCadastro = dependenciaAdm.getDataCadastro();
 	}

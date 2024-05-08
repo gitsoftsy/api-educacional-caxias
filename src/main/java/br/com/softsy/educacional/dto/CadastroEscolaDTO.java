@@ -115,7 +115,7 @@ public class CadastroEscolaDTO {
 	private Long orgaoPublicoId;
 	
 	@NotNull
-	private Long ContaId;
+	private Long contaId;
 	
 	public CadastroEscolaDTO(Escola escola) {
 		this.idEscola = escola.getIdEscola();
@@ -154,7 +154,7 @@ public class CadastroEscolaDTO {
 		this.categoriaEscolaPrivadaId = escola.getCategoriaEscolaPrivada().getIdCategoriaEscolaPrivada();
 		this.entidadeSuperiorId = escola.getEntidadeSuperior().getIdEntidadeSuperior();
 		this.orgaoPublicoId = escola.getOrgaoPublico().getIdOrgaoPublico();
-		this.ContaId = escola.getConta().getIdConta();
+		this.contaId = escola.getConta().getIdConta();
 	}
 
 }

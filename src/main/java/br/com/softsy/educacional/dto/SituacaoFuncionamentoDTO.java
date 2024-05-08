@@ -17,9 +17,6 @@ public class SituacaoFuncionamentoDTO {
 	private Long idSituacaoFuncionamento;
 	
 	@NotNull
-	private Long dependenciaAdmId;
-	
-	@NotNull
 	private String situacaoFuncionamento;
 
 	private LocalDateTime dataCadastro;
@@ -31,7 +28,6 @@ public class SituacaoFuncionamentoDTO {
 		this.idSituacaoFuncionamento = situacaoFuncionamento.getIdSituacaoFuncionamento();
 		this.dataCadastro = situacaoFuncionamento.getDataCadastro();
 		this.ativo = situacaoFuncionamento.getAtivo();
-		this.dependenciaAdmId = situacaoFuncionamento.getDependenciaAdm().getIdDependenciaAdministrativa();
 	}
 
 }

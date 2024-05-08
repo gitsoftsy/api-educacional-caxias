@@ -47,10 +47,7 @@ public class SituacaoFuncionamentoService {
 	
 	private SituacaoFuncionamento criarSituacaoFuncionamentoAPartirDTO(SituacaoFuncionamentoDTO dto) {
 		SituacaoFuncionamento situacaoFuncionamento = new SituacaoFuncionamento();
-		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
 		BeanUtils.copyProperties(dto, situacaoFuncionamento, "idSituacaoFuncionamento", "ativo", "dataCadastro");
-		situacaoFuncionamento.setDependenciaAdm(dependenciaAdm);
 		situacaoFuncionamento.setAtivo('S');
 		situacaoFuncionamento.setDataCadastro(LocalDateTime.now());
 		return situacaoFuncionamento;
@@ -71,9 +68,6 @@ public class SituacaoFuncionamentoService {
 	
 	private void atualizaDados(SituacaoFuncionamento destino, SituacaoFuncionamentoDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idSituacaoFuncionamento", "ativo", "dataCadastro");
-		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-		destino.setDependenciaAdm(dependenciaAdm);
 		
 	}	
 

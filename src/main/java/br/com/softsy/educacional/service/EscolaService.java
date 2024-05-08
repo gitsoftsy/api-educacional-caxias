@@ -137,6 +137,7 @@ public class EscolaService {
 		escola.setCategoriaEscolaPrivada(categoriaEscolaPrivada);
 		escola.setEntidadeSuperior(entidadeSuperior);
 		escola.setOrgaoPublico(orgaoPublico);
+		escola.setConta(conta);		
 		escola.setAtivo('S');
 		escola.setDataCadastro(LocalDateTime.now());
 		return escola;
