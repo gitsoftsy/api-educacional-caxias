@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.codec.binary.Base64;
 import org.hibernate.validator.constraints.br.CNPJ;
 
 import br.com.softsy.educacional.model.Escola;
@@ -122,7 +123,7 @@ public class CadastroEscolaDTO {
 		this.dataCadastro = escola.getDataCadastro();
 		this.ativo = escola.getAtivo();
 		this.nomeEscola = escola.getNomeEscola();
-		this.logoEscola = escola.getLogoEscola();
+		this.logoEscola = Base64.encodeBase64(escola.getLogoEscola());
 		this.tipoEscola = escola.getTipoEscola();
 		this.cnpj = escola.getCnpj();
 		this.codigoInep = escola.getCodigoInep();

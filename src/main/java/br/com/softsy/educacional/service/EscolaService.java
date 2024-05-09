@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,6 +131,7 @@ public class EscolaService {
 				.orElseThrow(() -> new IllegalArgumentException("Orgao público não encontrado"));
 		BeanUtils.copyProperties(dto, escola, "ativo", "dataCadastro", "idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
 		escola.setLocalizacao(localizacao);
+		escola.setLogoEscola(Base64.encodeBase64(escola.getLogoEscola()));
 		escola.setDependenciaAdm(dependenciaAdm);
 		escola.setSituacaoFuncionamento(situacaoFuncionamento);
 		escola.setFormaOcupacaoPredio(formaOcupacao);
@@ -149,5 +151,6 @@ public class EscolaService {
 		Conta conta = contaRepository.findById(origem.getContaId())
                 .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 		destino.setConta(conta);
+		destino.setLogoEscola(Base64.encodeBase64(origem.getLogoEscola()));
 	}
 }
