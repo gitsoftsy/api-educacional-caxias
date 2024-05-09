@@ -38,7 +38,6 @@ public class EscolaDTO {
 	@NotNull
 	private String tipoEscola;
 	
-	@NotNull
 	@CNPJ
 	private String cnpj;
 	

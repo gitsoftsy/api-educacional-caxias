@@ -44,10 +44,10 @@ public class Escola {
 	@Column(name = "TIPO_ESCOLA", nullable = false, length = 2)
 	private String tipoEscola;
 
-	@Column(name = "CNPJ", nullable = false)
+	@Column(name = "CNPJ", unique = true)
 	private String cnpj;
 
-	@Column(name = "CODIGO_INEP")
+	@Column(name = "CODIGO_INEP", unique = true)
 	private String codigoInep;
 
 	@Column(name = "CEP", nullable = false, length = 8)

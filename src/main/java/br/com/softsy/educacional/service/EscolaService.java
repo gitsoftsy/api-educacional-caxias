@@ -2,6 +2,7 @@ package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.Base64;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroEscolaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
+import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.CategoriaEscolaPrivada;
 import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.DependenciaAdministrativa;
@@ -32,6 +34,7 @@ import br.com.softsy.educacional.repository.LocalizacaoRepository;
 import br.com.softsy.educacional.repository.OrgaoPublicoRepository;
 import br.com.softsy.educacional.repository.SituacaoFuncionamentoRepository;
 import br.com.softsy.educacional.repository.ZoneamentoRepository;
+
 @Service
 public class EscolaService {
 	
@@ -90,6 +93,9 @@ public class EscolaService {
 	@Transactional
 	public CadastroEscolaDTO salvar(CadastroEscolaDTO dto) {
 		
+		validarCnpjUnico(dto.getCnpj());
+		validarCodigoInepUnico(dto.getCodigoInep());
+		
 		Escola escola = criarEscolaAPartirDTO(dto);
 		
 		escola = repository.save(escola);
@@ -144,6 +150,22 @@ public class EscolaService {
 		escola.setDataCadastro(LocalDateTime.now());
 		return escola;
 		
+	}
+	
+	@Transactional
+	private void validarCnpjUnico(String cnpj) {
+		Optional<Escola> cnpjExistente = repository.findEscolaByCnpj(cnpj).stream().findFirst();
+		if(cnpjExistente.isPresent()) {
+			throw new UniqueException("Já existe uma escola com esse CNPJ");
+		}
+	}
+	
+	@Transactional
+	private void validarCodigoInepUnico(String codigoInep) {
+		Optional<Escola> codInepExistente = repository.findEscolaByCodigoInep(codigoInep).stream().findFirst();
+		if(codInepExistente.isPresent()) {
+			throw new UniqueException("Já existe uma escola com esse código de Inep");
+		}
 	}
 	
 	private void atualizaDados(Escola destino, CadastroEscolaDTO origem) {
