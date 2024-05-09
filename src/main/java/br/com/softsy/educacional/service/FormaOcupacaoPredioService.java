@@ -42,20 +42,12 @@ public class FormaOcupacaoPredioService {
 	
 	@Transactional
 	public FormaOcupacaoPredioDTO salvar(FormaOcupacaoPredioDTO dto) {
-		validarFormaOcupacao(dto.getFormaOcupacaoPredio());
-		
 		FormaOcupacaoPredio formaOcupacao = criarFormaOcupacaoAPartirDTO(dto);
 		
 		formaOcupacao = repository.save(formaOcupacao);
 		return new FormaOcupacaoPredioDTO(formaOcupacao);
 	}
 	
-	private void validarFormaOcupacao(String formaOcupacaoPredio) {
-		Optional<FormaOcupacaoPredio> formaOcupacaoExistente = repository.findByFormaOcupacaoPredio(formaOcupacaoPredio).stream().findFirst();
-		if(formaOcupacaoExistente.isPresent()) {
-			throw new UniqueException("Essa forma já existe.");
-		}
-	}
 	
 	private FormaOcupacaoPredio criarFormaOcupacaoAPartirDTO(FormaOcupacaoPredioDTO dto) {
 		FormaOcupacaoPredio formaOcupacao = new FormaOcupacaoPredio();

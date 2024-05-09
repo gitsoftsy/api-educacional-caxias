@@ -23,7 +23,6 @@ public class CadastroEscolaDTO {
 	@NotNull
 	private String nomeEscola;
 	
-	@NotNull
 	private String logoEscola;
 	
 	@NotNull
@@ -43,7 +42,6 @@ public class CadastroEscolaDTO {
 	@NotNull
 	private String numero;
 	
-	@NotNull
 	private String bairro;
 	
 	@NotNull
