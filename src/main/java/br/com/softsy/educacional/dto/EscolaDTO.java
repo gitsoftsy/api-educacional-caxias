@@ -33,7 +33,7 @@ public class EscolaDTO {
 	private ContaDTO conta;
 	
 	@NotNull
-	private byte[] logoEscola;
+	private String logoEscola;
 	
 	@NotNull
 	private String tipoEscola;
@@ -130,7 +130,7 @@ public class EscolaDTO {
 		this.dataCadastro = escola.getDataCadastro();
 		this.ativo = escola.getAtivo();
 		this.nomeEscola = escola.getNomeEscola();
-		this.logoEscola = Base64.encodeBase64(escola.getLogoEscola());
+		this.logoEscola = Base64.encodeBase64String(escola.getLogoEscola());
 		this.tipoEscola = escola.getTipoEscola();
 		this.cnpj = escola.getCnpj();
 		this.codigoInep = escola.getCodigoInep();

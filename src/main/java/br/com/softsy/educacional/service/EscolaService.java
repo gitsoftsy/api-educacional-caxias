@@ -129,9 +129,9 @@ public class EscolaService {
 				.orElseThrow(()-> new IllegalArgumentException("Entidade superior não encontrada"));
 		OrgaoPublico orgaoPublico = orgaoRepository.findById(dto.getOrgaoPublicoId())
 				.orElseThrow(() -> new IllegalArgumentException("Orgao público não encontrado"));
-		BeanUtils.copyProperties(dto, escola, "ativo", "dataCadastro", "idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
+		BeanUtils.copyProperties(dto, escola, "ativo", "dataCadastro", "logoEscola" ,"idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
 		escola.setLocalizacao(localizacao);
-		escola.setLogoEscola(Base64.encodeBase64(escola.getLogoEscola()));
+		escola.setLogoEscola(Base64.decodeBase64(dto.getLogoEscola()));
 		escola.setDependenciaAdm(dependenciaAdm);
 		escola.setSituacaoFuncionamento(situacaoFuncionamento);
 		escola.setFormaOcupacaoPredio(formaOcupacao);
@@ -147,10 +147,10 @@ public class EscolaService {
 	}
 	
 	private void atualizaDados(Escola destino, CadastroEscolaDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro", "idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
+		BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro", "idEscola", "logoEscola","localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
 		Conta conta = contaRepository.findById(origem.getContaId())
                 .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 		destino.setConta(conta);
-		destino.setLogoEscola(Base64.encodeBase64(origem.getLogoEscola()));
+		destino.setLogoEscola(Base64.decodeBase64(origem.getLogoEscola()));
 	}
 }
