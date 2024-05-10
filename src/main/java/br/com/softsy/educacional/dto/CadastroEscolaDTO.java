@@ -88,19 +88,14 @@ public class CadastroEscolaDTO {
 	@NotNull
 	private Character internetBandaLarga;
 	
-	@NotNull
 	private Long localizacaoId;
 	
-	@NotNull
 	private Long dependenciaAdmId;
 	
-	@NotNull
 	private Long situacaoFuncionamentoId;
 	
-	@NotNull
 	private Long formaOcupacaoPredioId;
 	
-	@NotNull
 	private Long zoneamentoId;
 	
 	@NotNull

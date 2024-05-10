@@ -2,6 +2,7 @@ package br.com.softsy.educacional.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -16,10 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.softsy.educacional.dto.DestinacaoLixoDTO;
 import br.com.softsy.educacional.dto.TipoAtoRegulatorioDTO;
-import br.com.softsy.educacional.dto.ZoneamentoDTO;
-import br.com.softsy.educacional.model.TipoAtoRegulatorio;
 import br.com.softsy.educacional.service.TipoAtoRegulatorioService;
 
 @RestController
@@ -28,10 +26,9 @@ public class TipoAtoRegulatorioController {
 	
 	@Autowired TipoAtoRegulatorioService service;
 	
-	@GetMapping("/conta/{idConta}")
-	public ResponseEntity<List<TipoAtoRegulatorioDTO>> buscarPorIdConta(@PathVariable Long idConta){
-		List<TipoAtoRegulatorioDTO> tipoAtoRegulatorio = service.buscarPorIdConta(idConta);
-		return ResponseEntity.ok(tipoAtoRegulatorio);
+	@GetMapping
+	public ResponseEntity<List<TipoAtoRegulatorioDTO>> listarTudo(){
+		return ResponseEntity.ok(service.listarTudo().stream().map(TipoAtoRegulatorioDTO::new).collect(Collectors.toList()));
 	}
 	
 	@GetMapping("/{idTipoAtoRegulatorio}")

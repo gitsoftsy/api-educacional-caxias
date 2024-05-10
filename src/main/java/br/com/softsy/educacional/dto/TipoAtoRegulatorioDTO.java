@@ -15,9 +15,6 @@ public class TipoAtoRegulatorioDTO {
 	private Long idTipoAtoRegulatorio;
 	
 	@NotNull
-	private Long contaId;
-	
-	@NotNull
 	private String tipoAtoRegulatorio;
 	
 	private LocalDateTime dataCadastro;
@@ -29,6 +26,5 @@ public class TipoAtoRegulatorioDTO {
 		this.tipoAtoRegulatorio = tipoAtoRegulatorio.getTipoAtoRegulatorio();
 		this.dataCadastro = tipoAtoRegulatorio.getDataCadastro();
 		this.ativo = tipoAtoRegulatorio.getAtivo();
-		this.contaId = tipoAtoRegulatorio.getConta().getIdConta();
 	}
 }
