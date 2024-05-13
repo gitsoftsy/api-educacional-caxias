@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroEscolaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
+import br.com.softsy.educacional.dto.ImagemEscolaDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.CategoriaEscolaPrivada;
 import br.com.softsy.educacional.model.Conta;
@@ -30,6 +31,7 @@ import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.EntidadeSuperiorRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
 import br.com.softsy.educacional.repository.FormaOcupacaoPredioRepository;
+import br.com.softsy.educacional.repository.ImagemEscolaRepository;
 import br.com.softsy.educacional.repository.LocalizacaoRepository;
 import br.com.softsy.educacional.repository.OrgaoPublicoRepository;
 import br.com.softsy.educacional.repository.SituacaoFuncionamentoRepository;
@@ -40,6 +42,9 @@ public class EscolaService {
 	
 	@Autowired 
 	private EscolaRepository repository;
+	
+	@Autowired
+	private ImagemEscolaRepository imagemRepository;
 
 	@Autowired 
 	private LocalizacaoRepository localizacaoRepository;
@@ -84,6 +89,16 @@ public class EscolaService {
 		return new EscolaDTO(repository.getReferenceById(id));
 	}
 	
+	public byte[] getLogoById(Long idEscola) {
+        Optional<Escola> escolaOptional = repository.findById(idEscola);
+
+      if (escolaOptional.isPresent()) {
+            Escola escola = escolaOptional.get();
+            return escola.getLogoEscola();
+        } else {
+            return null;
+        }
+    }
 	
 	@Transactional(readOnly = true)
 	public List<EscolaDTO> listarAtivos(){

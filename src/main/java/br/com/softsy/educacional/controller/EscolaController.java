@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroEscolaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
+import br.com.softsy.educacional.model.LogoResponse;
 import br.com.softsy.educacional.service.EscolaService;
 
 @RestController
@@ -33,8 +35,23 @@ public class EscolaController {
 		List<EscolaDTO> escola = service.buscarPorIdConta(idConta);
 		return ResponseEntity.ok(escola);
 	}
+	
+	@GetMapping("/{id}/logo")
+    public ResponseEntity<LogoResponse> getLogoById(@PathVariable("id") Long id) {
+        byte[] logo = service.getLogoById(id);
+
+        if (logo != null) {
+            LogoResponse response = new LogoResponse(logo);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+	
 	@PostMapping
 	public ResponseEntity<CadastroEscolaDTO> cadastrar(@RequestBody @Valid CadastroEscolaDTO dto){
+		System.out.println("***************************************** Teste post *****************************************");
+		System.out.println(dto);
 		CadastroEscolaDTO cadastroDTO = service.salvar(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(cadastroDTO.getIdEscola()).toUri();

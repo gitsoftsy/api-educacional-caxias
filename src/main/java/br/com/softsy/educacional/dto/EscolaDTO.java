@@ -9,11 +9,8 @@ import org.hibernate.validator.constraints.br.CNPJ;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.Escola;
-import br.com.softsy.educacional.model.FormaOcupacaoPredio;
-import br.com.softsy.educacional.model.Localizacao;
-import br.com.softsy.educacional.model.SituacaoFuncionamento;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -130,6 +127,8 @@ public class EscolaDTO {
 		this.ativo = escola.getAtivo();
 		this.nomeEscola = escola.getNomeEscola();
 		this.logoEscola = Base64.encodeBase64String(escola.getLogoEscola());
+		System.out.println(logoEscola);
+		System.out.println(escola.getLogoEscola());
 		this.tipoEscola = escola.getTipoEscola();
 		this.cnpj = escola.getCnpj();
 		this.codigoInep = escola.getCodigoInep();
