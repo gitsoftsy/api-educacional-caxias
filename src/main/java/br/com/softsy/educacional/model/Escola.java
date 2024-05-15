@@ -37,9 +37,8 @@ public class Escola {
 	@Column(name = "NOME_ESCOLA", nullable = false)
 	private String nomeEscola;
 
-	@Lob
 	@Column(name = "LOGO_ESCOLA", nullable = false)
-	private byte[] logoEscola;
+	private String logoEscola;
 
 	@Column(name = "TIPO_ESCOLA", nullable = false, length = 2)
 	private String tipoEscola;

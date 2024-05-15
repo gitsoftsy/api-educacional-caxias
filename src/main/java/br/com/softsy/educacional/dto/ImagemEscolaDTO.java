@@ -15,7 +15,7 @@ public class ImagemEscolaDTO extends EscolaDTO{
 	
 	public ImagemEscolaDTO(Escola imagemEscola) {
 		this.idEscola = imagemEscola.getIdEscola();
-		this.logoEscola = Base64.encodeBase64String(imagemEscola.getLogoEscola());
+		this.logoEscola = imagemEscola.getLogoEscola();
 	}
 
 }

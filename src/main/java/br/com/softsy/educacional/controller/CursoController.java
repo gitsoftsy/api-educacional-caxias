@@ -34,11 +34,11 @@ public class CursoController {
         return ResponseEntity.ok(cursos);
     }
 
-    @GetMapping("/escola/{idEscola}")
-    public ResponseEntity<List<CursoDTO>> buscarPorIdEscola(@PathVariable Long idEscola) {
-        List<CursoDTO> cursos = cursoService.buscarPorIdEscola(idEscola);
-        return ResponseEntity.ok(cursos);
-    }
+//    @GetMapping("/escola/{idEscola}")
+//    public ResponseEntity<List<CursoDTO>> buscarPorIdEscola(@PathVariable Long idEscola) {
+//        List<CursoDTO> cursos = cursoService.buscarPorIdEscola(idEscola);
+//        return ResponseEntity.ok(cursos);
+//    }
 
     @PostMapping
     public ResponseEntity<CursoDTO> cadastrar(@RequestBody @Valid CadastroCursoDTO dto) {

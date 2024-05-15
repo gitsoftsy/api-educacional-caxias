@@ -126,7 +126,7 @@ public class EscolaDTO {
 		this.dataCadastro = escola.getDataCadastro();
 		this.ativo = escola.getAtivo();
 		this.nomeEscola = escola.getNomeEscola();
-		this.logoEscola = Base64.encodeBase64String(escola.getLogoEscola());
+		this.logoEscola = escola.getLogoEscola();
 		System.out.println(logoEscola);
 		System.out.println(escola.getLogoEscola());
 		this.tipoEscola = escola.getTipoEscola();

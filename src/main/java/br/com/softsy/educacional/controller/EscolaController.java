@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.controller;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -19,6 +20,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroEscolaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
+import br.com.softsy.educacional.model.CaminhoImagemRequest;
+import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.model.LogoResponse;
 import br.com.softsy.educacional.service.EscolaService;
 
@@ -37,15 +40,11 @@ public class EscolaController {
 	}
 	
 	@GetMapping("/{id}/logo")
-    public ResponseEntity<LogoResponse> getLogoById(@PathVariable("id") Long id) {
-        byte[] logo = service.getLogoById(id);
+    public ResponseEntity<String> getLogoById(@PathVariable("id") Long id, @RequestBody CaminhoImagemRequest request) throws IOException {
+        String caminho = request.getCaminho();
+		String logo = service.getLogoById(id, caminho);
 
-        if (logo != null) {
-            LogoResponse response = new LogoResponse(logo);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+       return ResponseEntity.ok(logo);
     }
 	
 	@PostMapping

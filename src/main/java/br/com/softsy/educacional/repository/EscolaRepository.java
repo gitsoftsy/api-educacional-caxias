@@ -3,6 +3,7 @@ package br.com.softsy.educacional.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +22,6 @@ public interface EscolaRepository extends JpaRepository<Escola, Long>{
 	
 	@Query("select escola from Escola escola join escola.conta conta where conta.idConta = :idConta")
     Optional<List<Escola>> findByConta_IdConta(@Param("idConta") Long idConta);
+
+
 }

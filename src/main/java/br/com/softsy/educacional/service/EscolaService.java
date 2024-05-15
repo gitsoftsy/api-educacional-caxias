@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,7 @@ import br.com.softsy.educacional.repository.LocalizacaoRepository;
 import br.com.softsy.educacional.repository.OrgaoPublicoRepository;
 import br.com.softsy.educacional.repository.SituacaoFuncionamentoRepository;
 import br.com.softsy.educacional.repository.ZoneamentoRepository;
+import br.com.softsy.educacional.utils.ImageManager;
 
 @Service
 public class EscolaService {
@@ -89,16 +91,19 @@ public class EscolaService {
 		return new EscolaDTO(repository.getReferenceById(id));
 	}
 	
-	public byte[] getLogoById(Long idEscola) {
+	public String getLogoById(Long idEscola, String caminho) throws IOException {
         Optional<Escola> escolaOptional = repository.findById(idEscola);
+        
+        String imagemCarregada;
+        imagemCarregada = ImageManager.buscaImagem(caminho);
 
       if (escolaOptional.isPresent()) {
-            Escola escola = escolaOptional.get();
-            return escola.getLogoEscola();
+            return imagemCarregada;
         } else {
             return null;
         }
     }
+	
 	
 	@Transactional(readOnly = true)
 	public List<EscolaDTO> listarAtivos(){
@@ -107,14 +112,32 @@ public class EscolaService {
 	
 	@Transactional
 	public CadastroEscolaDTO salvar(CadastroEscolaDTO dto) {
-		
-		validarCnpjUnico(dto.getCnpj());
-		validarCodigoInepUnico(dto.getCodigoInep());
-		
-		Escola escola = criarEscolaAPartirDTO(dto);
-		
-		escola = repository.save(escola);
-		return new CadastroEscolaDTO(escola);
+	    validarCnpjUnico(dto.getCnpj());
+	    validarCodigoInepUnico(dto.getCodigoInep());
+
+	    String base64 = "";
+	    Escola escola = criarEscolaAPartirDTO(dto);
+	    
+	    base64 = escola.getLogoEscola();
+	    
+	    escola.setLogoEscola(null);
+	    // Salvando a escola no banco de dados após tratar a imagem
+	    escola = repository.save(escola);
+
+	    // Manipulando a imagem e obtendo o caminho
+	    String caminhoIMG = ImageManager.salvaImagemEscola(base64, escola.getIdEscola(), "logoEscola" + dto.getNomeEscola());
+
+	    // Setando a imagem diretamente no objeto escola
+	    escola.setLogoEscola(caminhoIMG); // ou talvez escola.setLogoEscola(caminhoIMG) dependendo da necessidade
+	    dto.setLogoEscola(caminhoIMG);
+	    dto.setIdEscola(escola.getIdEscola());
+	    
+	    atualizaDados(escola, dto);
+	    
+	    // Criando o DTO com os dados atualizados da escola
+	    CadastroEscolaDTO escolaCriada = new CadastroEscolaDTO(escola);
+
+	    return escolaCriada;
 	}
 	
 	@Transactional
@@ -150,9 +173,8 @@ public class EscolaService {
 				.orElseThrow(()-> new IllegalArgumentException("Entidade superior não encontrada"));
 		OrgaoPublico orgaoPublico = orgaoRepository.findById(dto.getOrgaoPublicoId())
 				.orElseThrow(() -> new IllegalArgumentException("Orgao público não encontrado"));
-		BeanUtils.copyProperties(dto, escola, "ativo", "dataCadastro", "logoEscola" ,"idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
+		BeanUtils.copyProperties(dto, escola, "ativo","dataCadastro","idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
 		escola.setLocalizacao(localizacao);
-		escola.setLogoEscola(Base64.decodeBase64(dto.getLogoEscola()));
 		escola.setDependenciaAdm(dependenciaAdm);
 		escola.setSituacaoFuncionamento(situacaoFuncionamento);
 		escola.setFormaOcupacaoPredio(formaOcupacao);
@@ -183,11 +205,24 @@ public class EscolaService {
 		}
 	}
 	
-	private void atualizaDados(Escola destino, CadastroEscolaDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro", "idEscola", "logoEscola","localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
+	public void atualizaDados(Escola destino, CadastroEscolaDTO origem) {
+		BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro", "idEscola","localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
 		Conta conta = contaRepository.findById(origem.getContaId())
                 .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 		destino.setConta(conta);
-		destino.setLogoEscola(Base64.decodeBase64(origem.getLogoEscola()));
+		destino.setLogoEscola(origem.getLogoEscola());
 	}
+	
+//	public void atualizaLogoEscola(Escola imagemAntiga, CadastroEscolaDTO novoLogoEscola) {
+//		BeanUtils.copyProperties(imagemAntiga, novoLogoEscola, "idEscola", "dataCadastro", "ativo", "tipoEscola", "cnpj", "codigoInep", 
+//                "cep", "endereco", "numero", "complemento", "bairro", "municipio", "distrito", "uf", 
+//                "numCME", "numParecerCME", "latitude", "longitude", "email", "educacaoIndigena", 
+//                "exameSelecao", "compartilhaEspaco", "usaEspacoEntornoEscolar", "pppAtualizado12Meses", 
+//                "acessivel", "possuiAguaPotavel", "internetBandaLarga", "merendaEscolar", "localizacao", 
+//                "dependenciaAdm", "conta", "situacaoFuncionamento", "formaOcupacaoPredio", "zoneamento", 
+//                "categoriaEscolaPrivada", "entidadeSuperior", "orgaoPublico");;
+//	    Escola school = repository.findById(imagemAntiga.getIdEscola()).orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
+//	    school.setLogoEscola(novoLogoEscola.getLogoEscola());
+//	    
+//	}
 }
