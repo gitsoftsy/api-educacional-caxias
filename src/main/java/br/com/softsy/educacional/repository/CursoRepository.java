@@ -14,7 +14,7 @@ public interface CursoRepository extends JpaRepository<Curso, Long>{
 	List<Curso> findByCodCurso(String codCurso);
 	List<Curso> findByCodCursoInpe(String codCursoInpe);
 	
-//	@Query("select curso from Curso curso join curso.escola escola where escola.idEscola = :idEscola")
-//    Optional<List<Curso>> findByEscola_IdEscola(@Param("idEscola") Long idEscola);
+	@Query("select curso from Curso curso join curso.escola escola where escola.idEscola = :idEscola")
+    Optional<List<Curso>> findByEscola_IdEscola(@Param("idEscola") Long idEscola);
 
 }

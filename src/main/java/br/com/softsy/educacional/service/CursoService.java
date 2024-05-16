@@ -39,14 +39,14 @@ public class CursoService {
                 .collect(Collectors.toList());
     }
 
-//    @Transactional(readOnly = true)
-//    public List<CursoDTO> buscarPorIdEscola(Long id) {
-//        List<Curso> cursos = cursoRepository.findByEscola_IdEscola(id)
-//                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar cursos por id de escola"));
-//        return cursos.stream()
-//                .map(CursoDTO::new)
-//                .collect(Collectors.toList());
-//    }
+    @Transactional(readOnly = true)
+    public List<CursoDTO> buscarPorIdEscola(Long id) {
+        List<Curso> cursos = cursoRepository.findByEscola_IdEscola(id)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar cursos por id de escola"));
+        return cursos.stream()
+                .map(CursoDTO::new)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public CursoDTO salvar(CadastroCursoDTO dto) {

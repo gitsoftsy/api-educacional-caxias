@@ -96,6 +96,25 @@ public class ImageManager {
 		}
 		return "\\escola\\"+idEscola.toString();
 	}
+	
+    public static String atualizaImagemEscola(Long idEscola, String imagemBase64) {
+        // Caminho do diretório onde a imagem está localizada
+        String directoryPath = ImageProperties.getImagePath() + "\\escola\\" + idEscola.toString();
+
+        // Caminho completo da imagem
+        String imagePath = directoryPath + "\\escolaLogo.png";
+
+        try {
+            byte[] imagemBytes = Base64.getDecoder().decode(imagemBase64);
+            Files.write(Paths.get(imagePath), imagemBytes);
+            System.out.println("Imagem atualizada com sucesso!");
+        } catch (IOException e) {
+            System.out.println("Falha ao atualizar a imagem.");
+            e.printStackTrace();
+        }
+        
+        return "\\escola\\" + idEscola.toString() + "\\escolaLogo.png";
+    }
 
 	
 }

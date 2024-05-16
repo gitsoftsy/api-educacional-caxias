@@ -128,7 +128,7 @@ public class EscolaService {
 	    String caminhoIMG = ImageManager.salvaImagemEscola(base64, escola.getIdEscola(), "logoEscola" + dto.getNomeEscola());
 
 	    // Setando a imagem diretamente no objeto escola
-	    escola.setLogoEscola(caminhoIMG); // ou talvez escola.setLogoEscola(caminhoIMG) dependendo da necessidade
+	    escola.setLogoEscola(caminhoIMG); 
 	    dto.setLogoEscola(caminhoIMG);
 	    dto.setIdEscola(escola.getIdEscola());
 	    
@@ -143,6 +143,18 @@ public class EscolaService {
 	@Transactional
 	public EscolaDTO atualizar(CadastroEscolaDTO dto) {
 		Escola escola = repository.getReferenceById(dto.getIdEscola());
+	      
+	    escola = repository.save(escola);
+
+	    // Manipulando a imagem e obtendo o caminho
+	    String caminhoIMG = ImageManager.atualizaImagemEscola(dto.getIdEscola(), dto.getLogoEscola());
+
+	    // Setando a imagem diretamente no objeto escola
+	    escola.setLogoEscola(caminhoIMG); 
+	    dto.setLogoEscola(caminhoIMG);
+	    dto.setIdEscola(escola.getIdEscola());
+		
+		
 		atualizaDados(escola, dto);
 		return new EscolaDTO(escola);
 	}
@@ -213,16 +225,4 @@ public class EscolaService {
 		destino.setLogoEscola(origem.getLogoEscola());
 	}
 	
-//	public void atualizaLogoEscola(Escola imagemAntiga, CadastroEscolaDTO novoLogoEscola) {
-//		BeanUtils.copyProperties(imagemAntiga, novoLogoEscola, "idEscola", "dataCadastro", "ativo", "tipoEscola", "cnpj", "codigoInep", 
-//                "cep", "endereco", "numero", "complemento", "bairro", "municipio", "distrito", "uf", 
-//                "numCME", "numParecerCME", "latitude", "longitude", "email", "educacaoIndigena", 
-//                "exameSelecao", "compartilhaEspaco", "usaEspacoEntornoEscolar", "pppAtualizado12Meses", 
-//                "acessivel", "possuiAguaPotavel", "internetBandaLarga", "merendaEscolar", "localizacao", 
-//                "dependenciaAdm", "conta", "situacaoFuncionamento", "formaOcupacaoPredio", "zoneamento", 
-//                "categoriaEscolaPrivada", "entidadeSuperior", "orgaoPublico");;
-//	    Escola school = repository.findById(imagemAntiga.getIdEscola()).orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
-//	    school.setLogoEscola(novoLogoEscola.getLogoEscola());
-//	    
-//	}
 }
