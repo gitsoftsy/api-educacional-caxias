@@ -86,18 +86,6 @@ public class EscolaDTO {
 	private Character pppAtualizado12Meses;
 	
 	@NotNull
-	private Character acessivel;
-	
-	@NotNull
-	private Character merendaEscolar;
-	
-	@NotNull
-	private Character possuiAguaPotavel;
-	
-	@NotNull
-	private Character internetBandaLarga;
-	
-	@NotNull
 	private LocalizacaoDTO localizacao;
 	
 	@NotNull
@@ -149,10 +137,6 @@ public class EscolaDTO {
 		this.compartilhaEspaco = escola.getCompartilhaEspaco();
 		this.usaEspacoEntornoEscolar = escola.getUsaEspacoEntornoEscolar();
 		this.pppAtualizado12Meses = escola.getPppAtualizado12Meses();
-		this.acessivel = escola.getAcessivel();
-		this.merendaEscolar = escola.getMerendaEscolar();
-		this.internetBandaLarga = escola.getInternetBandaLarga();
-		this.possuiAguaPotavel = escola.getPossuiAguaPotavel();
 		
 		this.localizacao = new LocalizacaoDTO(escola.getLocalizacao());
 	    

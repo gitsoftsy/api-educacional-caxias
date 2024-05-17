@@ -28,9 +28,11 @@ public class CadastroEscolaDTO {
 	@NotNull
 	private String tipoEscola;
 	
+	@NotNull
 	@CNPJ
 	private String cnpj;
 	
+	@NotNull
 	private String codigoInep;
 	
 	@NotNull
@@ -75,19 +77,6 @@ public class CadastroEscolaDTO {
 	
 	@NotNull
 	private Character pppAtualizado12Meses;
-	
-	@NotNull
-	private Character acessivel;
-	
-	@NotNull
-	private Character merendaEscolar;
-	
-	@NotNull
-	private Character possuiAguaPotavel;
-	
-	@NotNull
-	private Character internetBandaLarga;
-	
 	private Long localizacaoId;
 	
 	private Long dependenciaAdmId;
@@ -135,10 +124,6 @@ public class CadastroEscolaDTO {
 		this.compartilhaEspaco = escola.getCompartilhaEspaco();
 		this.usaEspacoEntornoEscolar = escola.getUsaEspacoEntornoEscolar();
 		this.pppAtualizado12Meses = escola.getPppAtualizado12Meses();
-		this.acessivel = escola.getAcessivel();
-		this.merendaEscolar = escola.getMerendaEscolar();
-		this.internetBandaLarga = escola.getInternetBandaLarga();
-		this.possuiAguaPotavel = escola.getPossuiAguaPotavel();
 		this.localizacaoId = escola.getLocalizacao().getIdLocalizacao();
 		this.dependenciaAdmId = escola.getDependenciaAdm().getIdDependenciaAdministrativa();
 		this.situacaoFuncionamentoId = escola.getSituacaoFuncionamento().getIdSituacaoFuncionamento();

@@ -103,18 +103,6 @@ public class Escola {
 	@Column(name = "PPP_ATUALIZADO_12_MESES", nullable = false)
 	private Character pppAtualizado12Meses;
 
-	@Column(name = "ACESSIVEL", nullable = false)
-	private Character acessivel;
-	
-	@Column(name = "POSSUI_AGUA_POTAVEL", nullable = false)
-	private Character possuiAguaPotavel;
-	
-	@Column(name = "INTERNET_BANDA_LARGA", nullable = false)
-	private Character internetBandaLarga;
-	
-	@Column(name = "MERENDA_ESCOLAR", nullable = false)
-	private Character merendaEscolar;
-
 	@ManyToOne
 	@JoinColumn(name = "ID_LOCALIZACAO", nullable = true)
 	private Localizacao localizacao;
@@ -162,5 +150,8 @@ public class Escola {
 	
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)
 	private Set<Turma> turma = new HashSet<>();
+	
+	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)
+	private Set<EscolaAgua> escolaAgua = new HashSet<>();
 
 }

@@ -49,8 +49,6 @@ public class EscolaController {
 	
 	@PostMapping
 	public ResponseEntity<CadastroEscolaDTO> cadastrar(@RequestBody @Valid CadastroEscolaDTO dto){
-		System.out.println("***************************************** Teste post *****************************************");
-		System.out.println(dto);
 		CadastroEscolaDTO cadastroDTO = service.salvar(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(cadastroDTO.getIdEscola()).toUri();
