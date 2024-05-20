@@ -1,11 +1,16 @@
 package br.com.softsy.educacional.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.softsy.educacional.dto.EscolaInfraestruturaDTO;
 import br.com.softsy.educacional.dto.EscolaLixoDTO;
 import br.com.softsy.educacional.model.Escola;
+import br.com.softsy.educacional.model.EscolaInfraestrutura;
 import br.com.softsy.educacional.model.EscolaLixo;
 import br.com.softsy.educacional.repository.EscolaLixoRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
@@ -19,6 +24,15 @@ public class EscolaLixoService {
     @Autowired
     private EscolaRepository escolaRepository;
 
+	@Transactional(readOnly = true)
+	public List<EscolaLixoDTO> buscarPorIdEscola(Long id) {
+		List<EscolaLixo> escolaLixo = repository.findByEscola_IdEscola(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar lixo por id de escola"));
+		return escolaLixo.stream()
+				.map(EscolaLixoDTO::new)
+				.collect(Collectors.toList());
+	}
+    
     @Transactional
     public EscolaLixoDTO salvar(EscolaLixoDTO dto) {
         EscolaLixo escolaLixo = criarEscolaLixoAPartirDTO(dto);

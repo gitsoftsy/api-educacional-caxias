@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.EscolaAguaDTO;
+import br.com.softsy.educacional.dto.EscolaInfraestruturaDTO;
 import br.com.softsy.educacional.service.EscolaAguaService;
 
 @RestController
@@ -34,6 +35,12 @@ public class EscolaAguaController {
                 .buildAndExpand(escolaAguaDTO.getIdEscolaAgua()).toUri();
         return ResponseEntity.created(uri).body(escolaAguaDTO);
     }
+    
+	@GetMapping("/escola/{idEscola}")
+	public ResponseEntity<List<EscolaAguaDTO>> buscarPorIdEscola(@PathVariable Long idEscola){
+		List<EscolaAguaDTO> escolaAgua = escolaAguaService.buscarPorIdEscola(idEscola);
+		return ResponseEntity.ok(escolaAgua);
+	}
 
     @PutMapping
     public ResponseEntity<EscolaAguaDTO> atualizar(@RequestBody @Valid EscolaAguaDTO dto) {

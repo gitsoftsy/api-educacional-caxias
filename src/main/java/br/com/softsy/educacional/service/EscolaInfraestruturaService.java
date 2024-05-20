@@ -1,11 +1,16 @@
 package br.com.softsy.educacional.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.softsy.educacional.dto.EscolaDestinacaoLixoDTO;
 import br.com.softsy.educacional.dto.EscolaInfraestruturaDTO;
 import br.com.softsy.educacional.model.Escola;
+import br.com.softsy.educacional.model.EscolaDestinacaoLixo;
 import br.com.softsy.educacional.model.EscolaInfraestrutura;
 import br.com.softsy.educacional.repository.EscolaInfraestruturaRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
@@ -18,6 +23,15 @@ public class EscolaInfraestruturaService {
 
     @Autowired
     private EscolaRepository escolaRepository;
+    
+	@Transactional(readOnly = true)
+	public List<EscolaInfraestruturaDTO> buscarPorIdEscola(Long id) {
+		List<EscolaInfraestrutura> escolasDestinacaoLixo = repository.findByEscola_IdEscola(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar infraestrutura por id de escola"));
+		return escolasDestinacaoLixo.stream()
+				.map(EscolaInfraestruturaDTO::new)
+				.collect(Collectors.toList());
+	}
 
     @Transactional
     public EscolaInfraestruturaDTO salvar(EscolaInfraestruturaDTO dto) {

@@ -1,12 +1,17 @@
 package br.com.softsy.educacional.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.EscolaEnergiaEletricaDTO;
+import br.com.softsy.educacional.dto.EscolaInfraestruturaDTO;
 import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.model.EscolaEnergiaEletrica;
+import br.com.softsy.educacional.model.EscolaInfraestrutura;
 import br.com.softsy.educacional.repository.EscolaEnergiaEletricaRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
 
@@ -18,6 +23,16 @@ public class EscolaEnergiaEletricaService {
 
     @Autowired
     private EscolaRepository escolaRepository;
+    
+    
+	@Transactional(readOnly = true)
+	public List<EscolaEnergiaEletricaDTO> buscarPorIdEscola(Long id) {
+		List<EscolaEnergiaEletrica> escolasDestinacaoLixo = repository.findByEscola_IdEscola(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar energia elétrica por id de escola"));
+		return escolasDestinacaoLixo.stream()
+				.map(EscolaEnergiaEletricaDTO::new)
+				.collect(Collectors.toList());
+	}
 
     @Transactional
     public EscolaEnergiaEletricaDTO salvar(EscolaEnergiaEletricaDTO dto) {
