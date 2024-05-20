@@ -6,16 +6,13 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.br.CNPJ;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import br.com.softsy.educacional.model.Conta;
-import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ContaDTO {
+public class CadastroContaDTO {
 	
 	private Long idConta;
 	
@@ -53,10 +50,9 @@ public class ContaDTO {
 	
 	private Character ativo;
 
-	@NotNull
 	private String logoConta;
 	
-	public ContaDTO(Conta conta) {
+	public CadastroContaDTO(Conta conta) {
 		this.idConta = conta.getIdConta();
 		this.conta = conta.getConta();
 		this.tipoConta = conta.getTipoConta();

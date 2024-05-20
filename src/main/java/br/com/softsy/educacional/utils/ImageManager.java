@@ -12,11 +12,8 @@ import br.com.softsy.educacional.dto.CadastroEscolaDTO;
 import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.service.EscolaService;
 
-
-
 public class ImageManager {
 	
-
 
 	public static void saveImage(byte[] imageBytes, String imageName) throws IOException {
 		Path imagePath = Paths.get(ImageProperties.getImagePath(), imageName);
@@ -43,7 +40,6 @@ public class ImageManager {
 	}
 	
 	public static String salvaImagemEscola(String base64, Long escola, String nomeArquivo) {
-		EscolaService escolaService;
 		
 		String diretorio = "";
 		try {
@@ -114,6 +110,67 @@ public class ImageManager {
         }
         
         return "\\escola\\" + idEscola.toString() + "\\escolaLogo.png";
+    }
+    
+    
+    /////////// CONTA //////////////
+    
+	private static String criaDiretorioConta(Long idConta) {
+		// Caminho do diretório a ser criado
+		String directoryPath = ImageProperties.getImagePath() +"\\conta\\"+idConta.toString();
+
+		// Criação do objeto Path com o caminho do diretório
+		Path directory = Paths.get(directoryPath);
+
+		// Verifica se o diretório não existe e cria se necessário
+		if (!Files.exists(directory)) {
+			try {
+				Files.createDirectories(directory);
+				System.out.println("Diretório criado com sucesso!");
+			} catch (IOException e) {
+				System.out.println("Falha ao criar o diretório.");
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("O diretório já existe.");
+		}
+		return "\\conta\\"+idConta.toString();
+	}
+	
+	public static String salvaImagemConta(String base64, Long conta, String nomeArquivo) {
+
+		String diretorio = "";
+		try {
+			// cria o diretorio para salvar o logo
+			diretorio = criaDiretorioConta(conta);
+			
+			//salva a imagem
+		
+			saveImage(base64ToByte(base64), diretorio+"\\"+nomeArquivo+".jpg");;
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}		
+		return diretorio+"\\"+nomeArquivo+".jpg";
+	}
+	
+    public static String atualizaImagemConta(Long idConta, String imagemBase64) {
+        // Caminho do diretório onde a imagem está localizada
+        String directoryPath = ImageProperties.getImagePath() + "\\conta\\" + idConta.toString();
+
+        // Caminho completo da imagem
+        String imagePath = directoryPath + "\\contaLogo.png";
+
+        try {
+            byte[] imagemBytes = Base64.getDecoder().decode(imagemBase64);
+            Files.write(Paths.get(imagePath), imagemBytes);
+            System.out.println("Imagem atualizada com sucesso!");
+        } catch (IOException e) {
+            System.out.println("Falha ao atualizar a imagem.");
+            e.printStackTrace();
+        }
+        
+        return "\\conta\\" + idConta.toString() + "\\contaLogo.png";
     }
 
 	

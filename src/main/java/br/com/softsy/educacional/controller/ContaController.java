@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.controller;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.softsy.educacional.dto.CadastroContaDTO;
 import br.com.softsy.educacional.dto.ContaDTO;
+import br.com.softsy.educacional.model.CaminhoImagemRequest;
 import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.service.ContaService;
 
@@ -36,16 +39,24 @@ public class ContaController {
 		return ResponseEntity.ok(service.buscarPorId(idConta));
 	}
 	
+	@GetMapping("/{id}/logo")
+    public ResponseEntity<String> getLogoById(@PathVariable("id") Long id, @RequestBody CaminhoImagemRequest request) throws IOException {
+        String caminho = request.getCaminho();
+		String logo = service.getLogoById(id, caminho);
+
+       return ResponseEntity.ok(logo);
+    }
+	
 	@PostMapping
-	public ResponseEntity<ContaDTO> cadastrar(@RequestBody @Valid ContaDTO dto){
-		ContaDTO contaDTO = service.salvar(dto);
+	public ResponseEntity<CadastroContaDTO> cadastrar(@RequestBody @Valid CadastroContaDTO dto){
+		CadastroContaDTO contaDTO = service.salvar(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(contaDTO.getIdConta()).toUri();
 		return ResponseEntity.created(uri).body(contaDTO);
 	}
 	
 	@PutMapping
-	public ResponseEntity<?> atualizar(@RequestBody @Valid ContaDTO dto){
+	public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroContaDTO dto){
 		return ResponseEntity.ok(service.atualizar(dto));
 	}
 	
