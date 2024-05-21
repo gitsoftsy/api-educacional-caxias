@@ -118,4 +118,6 @@ public class ContaService {
 	private void atualizaDados(Conta destino, CadastroContaDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idConta", "ativo", "dataCadastro");
 	}
+	
+
 }
