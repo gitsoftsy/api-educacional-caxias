@@ -87,13 +87,10 @@ public class CadastroEscolaDTO {
 	
 	private Long zoneamentoId;
 	
-	@NotNull
 	private Long categoriaEscolaPrivadaId;
 	
-	@NotNull
 	private Long entidadeSuperiorId;
-	
-	@NotNull
+
 	private Long orgaoPublicoId;
 	
 	@NotNull
