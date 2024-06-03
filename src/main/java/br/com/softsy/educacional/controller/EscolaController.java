@@ -7,7 +7,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,8 +20,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.softsy.educacional.dto.CadastroEscolaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
 import br.com.softsy.educacional.model.CaminhoImagemRequest;
-import br.com.softsy.educacional.model.Escola;
-import br.com.softsy.educacional.model.LogoResponse;
 import br.com.softsy.educacional.service.EscolaService;
 
 @RestController

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroEscolaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
-import br.com.softsy.educacional.dto.ImagemEscolaDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.CategoriaEscolaPrivada;
 import br.com.softsy.educacional.model.Conta;
@@ -32,7 +30,6 @@ import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.EntidadeSuperiorRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
 import br.com.softsy.educacional.repository.FormaOcupacaoPredioRepository;
-import br.com.softsy.educacional.repository.ImagemEscolaRepository;
 import br.com.softsy.educacional.repository.LocalizacaoRepository;
 import br.com.softsy.educacional.repository.OrgaoPublicoRepository;
 import br.com.softsy.educacional.repository.SituacaoFuncionamentoRepository;
@@ -44,9 +41,6 @@ public class EscolaService {
 	
 	@Autowired 
 	private EscolaRepository repository;
-	
-	@Autowired
-	private ImagemEscolaRepository imagemRepository;
 
 	@Autowired 
 	private LocalizacaoRepository localizacaoRepository;

@@ -3,6 +3,7 @@ package br.com.softsy.educacional.dto;
 import java.sql.Time;
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
 import br.com.softsy.educacional.model.EscolaHorarioFuncionamento;
@@ -13,6 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EscolaHorarioFuncionamentoDTO {
     private Long idEscolaHorarioFuncionamento;
+	
+	private String descricao;
     private Long escolaId;
     @NotNull
     private Integer diaSemana;
@@ -32,5 +35,6 @@ public class EscolaHorarioFuncionamentoDTO {
         this.horaFim = horarioFuncionamento.getHoraFim();
         this.dataCadastro = horarioFuncionamento.getDataCadastro();
         this.ativo = horarioFuncionamento.getAtivo();
+        this.descricao = horarioFuncionamento.getDescricao();
     }
 }

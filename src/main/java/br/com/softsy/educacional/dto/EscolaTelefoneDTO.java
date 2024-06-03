@@ -15,6 +15,8 @@ public class EscolaTelefoneDTO {
 	
 	private TipoTelefoneDTO tipoTelefone;
 	
+	private String descricao;
+	
 	
 	
 	public EscolaTelefoneDTO(EscolaTelefone escolaTelefone) {
@@ -22,6 +24,7 @@ public class EscolaTelefoneDTO {
 		this.idTelefoneEscola = escolaTelefone.getIdTelefoneEscola();
 		this.escolaId = escolaTelefone.getEscola().getIdEscola();
 		this.tipoTelefone = new TipoTelefoneDTO(escolaTelefone.getTipoTelefone());
+		this.descricao = escolaTelefone.getDescricao();
 		
 	}
 }

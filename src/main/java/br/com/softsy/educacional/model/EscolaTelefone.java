@@ -32,5 +32,8 @@ public class EscolaTelefone {
 	
 	@Column(name = "TELEFONE")
 	private String telefone;
+	
+	@Column(name = "DESCRICAO", length = 55)
+	private String descricao;
 
 }

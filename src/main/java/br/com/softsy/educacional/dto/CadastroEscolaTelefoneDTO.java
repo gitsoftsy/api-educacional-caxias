@@ -17,10 +17,13 @@ private Long idTelefoneEscola;
 	
 	private String telefone;
 	
+	private String descricao;
+	
 	public CadastroEscolaTelefoneDTO(EscolaTelefone escolaTelefone) {
 		this.idTelefoneEscola = escolaTelefone.getIdTelefoneEscola();
 		this.escolaId = escolaTelefone.getEscola().getIdEscola();
 		this.tipoTelefoneId = escolaTelefone.getTipoTelefone().getIdTipoTelefone();
 		this.telefone = escolaTelefone.getTelefone();
+		this.descricao = escolaTelefone.getDescricao();
 	}
 }

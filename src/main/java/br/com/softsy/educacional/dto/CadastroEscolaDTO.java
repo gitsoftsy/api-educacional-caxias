@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.codec.binary.Base64;
 import org.hibernate.validator.constraints.br.CNPJ;
 
 import br.com.softsy.educacional.model.Escola;
@@ -77,6 +76,7 @@ public class CadastroEscolaDTO {
 	
 	@NotNull
 	private Character pppAtualizado12Meses;
+	
 	private Long localizacaoId;
 	
 	private Long dependenciaAdmId;

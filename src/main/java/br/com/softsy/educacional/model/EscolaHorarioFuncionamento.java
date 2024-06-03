@@ -24,6 +24,9 @@ public class EscolaHorarioFuncionamento {
 	@Column(name = "ID_ESCOLA_HORARIO_FUNCIONAMENTO")
 	private Long idEscolaHorarioFuncionamento;
 	
+	@Column(name = "DESCRICAO", length = 55)
+	private String descricao;
+	
 	@ManyToOne
 	@JoinColumn(name = "ID_ESCOLA", nullable = false)
 	private Escola escola;
