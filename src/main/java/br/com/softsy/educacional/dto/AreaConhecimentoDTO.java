@@ -15,7 +15,7 @@ public class AreaConhecimentoDTO {
 	private Long idAreaConhecimento;
 	
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 
 	private String areaConhecimento;
 
@@ -25,7 +25,7 @@ public class AreaConhecimentoDTO {
         this.idAreaConhecimento = areaConhecimento.getIdAreaConhecimento();
         this.areaConhecimento = areaConhecimento.getAreaConhecimento();
         this.dataCadastro = areaConhecimento.getDataCadastro();
-        this.dependenciaAdmId = areaConhecimento.getDependenciaAdm().getIdDependenciaAdministrativa();
+        this.contaId = areaConhecimento.getConta().getIdConta();
     }
 
 }

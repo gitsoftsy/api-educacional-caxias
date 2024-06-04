@@ -12,11 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.CadastroCursoDTO;
 import br.com.softsy.educacional.dto.CursoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.Curso;
-import br.com.softsy.educacional.model.DependenciaAdministrativa;
-import br.com.softsy.educacional.model.Escola;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.CursoRepository;
-import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
 
 @Service
@@ -26,10 +25,7 @@ public class CursoService {
     private CursoRepository cursoRepository;
 
     @Autowired
-    private EscolaRepository escolaRepository;
-
-    @Autowired
-    private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
+    private ContaRepository contaRepository;
 
     @Transactional(readOnly = true)
     public List<CursoDTO> listarTudo() {
@@ -40,10 +36,10 @@ public class CursoService {
     }
 
     @Transactional(readOnly = true)
-    public List<CursoDTO> buscarPorIdEscola(Long id) {
-        List<Curso> cursos = cursoRepository.findByEscola_IdEscola(id)
-                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar cursos por id de escola"));
-        return cursos.stream()
+    public List<CursoDTO> buscarPorIdConta(Long idConta) {
+        List<Curso> curso = cursoRepository.findByConta_IdConta(idConta)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar curso por ID da conta"));
+        return curso.stream()
                 .map(CursoDTO::new)
                 .collect(Collectors.toList());
     }
@@ -70,17 +66,14 @@ public class CursoService {
 
     private Curso criarCursoAPartirDTO(CadastroCursoDTO dto) {
         Curso curso = new Curso();
-        Escola escola = escolaRepository.findById(dto.getEscolaId())
-                .orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-        curso.setEscola(escola);
+        Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
         curso.setCodCurso(dto.getCodCurso());
         curso.setNome(dto.getNome());
         curso.setCodCursoInpe(dto.getCodCursoInpe());
         curso.setDataCadastro(LocalDateTime.now());
         curso.setAtivo('S');
-        curso.setDependenciaAdm(dependenciaAdm);
+        curso.setConta(conta);
         return curso;
     }
     
@@ -106,14 +99,11 @@ public class CursoService {
 	
     
     private void atualizarDados(Curso destino, CadastroCursoDTO origem) {
-        Escola escola = escolaRepository.findById(origem.getEscolaId())
-                .orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-        destino.setEscola(escola);
+        Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
         destino.setCodCurso(origem.getCodCurso());
         destino.setNome(origem.getNome());
         destino.setCodCursoInpe(origem.getCodCursoInpe());
-        destino.setDependenciaAdm(dependenciaAdm);
+        destino.setConta(conta);
     }
 }

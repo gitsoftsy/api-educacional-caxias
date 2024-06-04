@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.AreaConhecimentoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.AreaConhecimento;
-import br.com.softsy.educacional.model.DependenciaAdministrativa;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.repository.AreaConhecimentoRepository;
-import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
+import br.com.softsy.educacional.repository.ContaRepository;
 
 @Service
 public class AreaConhecimentoService {
@@ -23,7 +23,7 @@ public class AreaConhecimentoService {
     private AreaConhecimentoRepository repository;
     
 	@Autowired 
-	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
+	private ContaRepository contaRepository;
 
     public List<AreaConhecimentoDTO> listarTudo() {
         List<AreaConhecimento> areaConhecimentoList = repository.findAll();
@@ -40,6 +40,15 @@ public class AreaConhecimentoService {
             return new AreaConhecimentoDTO(areaConhecimento);
         }
         return null;
+    }
+    
+    @Transactional(readOnly = true)
+    public List<AreaConhecimentoDTO> buscarPorIdConta(Long idConta) {
+        List<AreaConhecimento> areaConhecimento = repository.findByConta_IdConta(idConta)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar área de conhecimento por ID da conta"));
+        return areaConhecimento.stream()
+                .map(AreaConhecimentoDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -66,9 +75,9 @@ public class AreaConhecimentoService {
 
     private AreaConhecimento criarAreaConhecimentoAPartirDTO(AreaConhecimentoDTO dto) {
         AreaConhecimento areaConhecimento = new AreaConhecimento();
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
+        Conta conta = contaRepository.findById(dto.getContaId())
                 .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-        areaConhecimento.setDependenciaAdm(dependenciaAdm);
+        areaConhecimento.setConta(conta);
         areaConhecimento.setAreaConhecimento(dto.getAreaConhecimento());
         areaConhecimento.setDataCadastro(LocalDateTime.now());
         return areaConhecimento;
@@ -83,8 +92,8 @@ public class AreaConhecimentoService {
 
     private void atualizarDados(AreaConhecimento destino, AreaConhecimentoDTO origem) {
         destino.setAreaConhecimento(origem.getAreaConhecimento());
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
+        Conta conta = contaRepository.findById(origem.getContaId())
                 .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-        destino.setDependenciaAdm(dependenciaAdm);
+        destino.setConta(conta);
     }
 }

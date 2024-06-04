@@ -106,7 +106,7 @@ public class EscolaService {
 	
 	@Transactional
 	public CadastroEscolaDTO salvar(CadastroEscolaDTO dto) {
-	    validarCnpjUnico(dto.getCnpj());
+//	    validarCnpjUnico(dto.getCnpj());
 	    validarCodigoInepUnico(dto.getCodigoInep());
 
 	    String base64 = "";
@@ -179,7 +179,7 @@ public class EscolaService {
 				.orElseThrow(()-> new IllegalArgumentException("Entidade superior não encontrada"));
 		OrgaoPublico orgaoPublico = orgaoRepository.findById(dto.getOrgaoPublicoId())
 				.orElseThrow(() -> new IllegalArgumentException("Orgao público não encontrado"));
-		BeanUtils.copyProperties(dto, escola, "ativo","dataCadastro","idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
+		BeanUtils.copyProperties(dto, escola, "ativo","dataCadastro","idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId", "cnpj");
 		escola.setLocalizacao(localizacao);
 		escola.setDependenciaAdm(dependenciaAdm);
 		escola.setSituacaoFuncionamento(situacaoFuncionamento);
@@ -195,13 +195,13 @@ public class EscolaService {
 		
 	}
 	
-	@Transactional
-	private void validarCnpjUnico(String cnpj) {
-		Optional<Escola> cnpjExistente = repository.findEscolaByCnpj(cnpj).stream().findFirst();
-		if(cnpjExistente.isPresent()) {
-			throw new UniqueException("Já existe uma escola com esse CNPJ");
-		}
-	}
+//	@Transactional
+//	private void validarCnpjUnico(String cnpj) {
+//		Optional<Escola> cnpjExistente = repository.findEscolaByCnpj(cnpj).stream().findFirst();
+//		if(cnpjExistente.isPresent()) {
+//			throw new UniqueException("Já existe uma escola com esse CNPJ");
+//		}
+//	}
 	
 	@Transactional
 	private void validarCodigoInepUnico(String codigoInep) {

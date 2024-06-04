@@ -16,7 +16,7 @@ import lombok.Data;
 
 @Entity
 @Table(name = "TBL_DISCIPLINA", uniqueConstraints = {
-		@UniqueConstraint(name = "UQ_DISCIPLINA", columnNames = { "DISCIPLINA", "ID_DEPENDENCIA_ADMINISTRATIVA" }) })
+		@UniqueConstraint(name = "UQ_DISCIPLINA", columnNames = { "COD_DISCIP", "ID_CONTA" }) })
 @Data
 public class Disciplina {
 
@@ -26,15 +26,15 @@ public class Disciplina {
 	private Long idDisciplina;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
-	private DependenciaAdministrativa dependenciaAdm;
+	@JoinColumn(name = "ID_CONTA", nullable = false)
+	private Conta conta;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_ESCOLA")
-	private Escola escola;
+	@JoinColumn(name = "ID_AREA_CONHECIMENTO")
+	private AreaConhecimento areaConhecimento;
 
-	@Column(name = "DISCIPLINA", nullable = false, unique = true, length = 15)
-	private String disciplina;
+	@Column(name = "COD_DISCIP", nullable = false, unique = true, length = 15)
+	private String codDiscip;
 
 	@Column(name = "NOME", nullable = false)
 	private String nome;
@@ -53,6 +53,12 @@ public class Disciplina {
 
 	@Column(name = "HORAS_LAB")
 	private Double horasLab;
+	
+	@Column(name = "HORAS_ANO")
+	private Double horasAno;
+	
+	@Column(name = "HORAS_SEMANAL")
+	private Double horasSemanal;
 
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;

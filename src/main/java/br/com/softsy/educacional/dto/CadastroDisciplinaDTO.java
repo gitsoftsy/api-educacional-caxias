@@ -14,12 +14,12 @@ public class CadastroDisciplinaDTO {
 	private Long idDisciplina;
 
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 
-	private Long escolaId;
+	private Long areaConhecimentoId;
 
 	@NotNull
-	private String disciplina;
+	private String codDiscip;
 
 	@NotNull
 	private String nome;
@@ -33,6 +33,10 @@ public class CadastroDisciplinaDTO {
 	private Double horasAtiv;
 
 	private Double horasLab;
+	
+	private Double horasAno;
+	
+	private Double horasSemanal;
 
 	private LocalDateTime dataCadastro;
 
@@ -40,15 +44,16 @@ public class CadastroDisciplinaDTO {
 
 	public CadastroDisciplinaDTO(Disciplina disciplina) {
 		this.idDisciplina = disciplina.getIdDisciplina();
-		this.dependenciaAdmId = disciplina.getDependenciaAdm().getIdDependenciaAdministrativa();
-		this.escolaId = disciplina.getEscola().getIdEscola();
-		this.disciplina = disciplina.getDisciplina();
+		this.areaConhecimentoId = disciplina.getAreaConhecimento().getIdAreaConhecimento();
+		this.codDiscip = disciplina.getCodDiscip();
 		this.nome = disciplina.getNome();
 		this.creditos = disciplina.getCreditos();
 		this.horasAula = disciplina.getHorasAula();
 		this.horasEstagio = disciplina.getHorasEstagio();
 		this.horasAtiv = disciplina.getHorasAtiv();
 		this.horasLab = disciplina.getHorasLab();
+		this.horasAno = disciplina.getHorasAno();
+		this.horasSemanal = disciplina.getHorasSemanal();
 		this.dataCadastro = disciplina.getDataCadastro();
 		this.ativo = disciplina.getAtivo();
 	}

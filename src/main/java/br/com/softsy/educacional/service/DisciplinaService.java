@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.CadastroDisciplinaDTO;
 import br.com.softsy.educacional.dto.DisciplinaDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
-import br.com.softsy.educacional.model.DependenciaAdministrativa;
+import br.com.softsy.educacional.model.AreaConhecimento;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.Disciplina;
-import br.com.softsy.educacional.model.Escola;
-import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
+import br.com.softsy.educacional.repository.AreaConhecimentoRepository;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.DisciplinaRepository;
-import br.com.softsy.educacional.repository.EscolaRepository;
 
 @Service
 public class DisciplinaService {
@@ -26,10 +26,10 @@ public class DisciplinaService {
 	private DisciplinaRepository disciplinaRepository;
 
 	@Autowired
-	private EscolaRepository escolaRepository;
+	private AreaConhecimentoRepository areaConhecimentoRepository;
 
 	@Autowired
-	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
+	private ContaRepository contaRepository;
 
 	@Transactional(readOnly = true)
 	public List<DisciplinaDTO> listarTudo() {
@@ -38,16 +38,16 @@ public class DisciplinaService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<DisciplinaDTO> buscarPorIdEscola(Long id) {
-		List<Disciplina> disciplinas = disciplinaRepository.findByEscola_IdEscola(id)
-				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar disciplinas por id de escola"));
+	public List<DisciplinaDTO> buscarPorIdConta(Long id) {
+		List<Disciplina> disciplinas = disciplinaRepository.findByConta_IdConta(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar disciplinas por id de conta"));
 		return disciplinas.stream().map(DisciplinaDTO::new).collect(Collectors.toList());
 	}
 
 	@Transactional
 	public DisciplinaDTO salvar(CadastroDisciplinaDTO dto) {
 
-		validarDisciplina(dto.getDisciplina());
+		validarDisciplina(dto.getCodDiscip());
 
 		Disciplina disciplina = criarDisciplinaAPartirDTO(dto);
 		disciplina = disciplinaRepository.save(disciplina);
@@ -64,13 +64,14 @@ public class DisciplinaService {
 
 	private Disciplina criarDisciplinaAPartirDTO(CadastroDisciplinaDTO dto) {
 		Disciplina disciplina = new Disciplina();
-		Escola escola = escolaRepository.findById(dto.getEscolaId())
-				.orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
-		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository
-				.findById(dto.getDependenciaAdmId())
-				.orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-		disciplina.setEscola(escola);
-		disciplina.setDisciplina(dto.getDisciplina());
+		Conta conta = contaRepository
+				.findById(dto.getContaId())
+				.orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+		AreaConhecimento areaConhecimento = areaConhecimentoRepository
+				.findById(dto.getAreaConhecimentoId())
+				.orElseThrow(() -> new IllegalArgumentException("Area conhecimento não encontrada"));
+		disciplina.setAreaConhecimento(areaConhecimento);
+		disciplina.setCodDiscip(dto.getCodDiscip());
 		disciplina.setNome(dto.getNome());
 		disciplina.setCreditos(dto.getCreditos());
 		disciplina.setHorasAula(dto.getHorasAula());
@@ -79,7 +80,7 @@ public class DisciplinaService {
 		disciplina.setHorasLab(dto.getHorasLab());
 		disciplina.setDataCadastro(LocalDateTime.now());
 		disciplina.setAtivo('S');
-		disciplina.setDependenciaAdm(dependenciaAdm);
+		disciplina.setConta(conta);
 		return disciplina;
 	}
 
@@ -89,8 +90,8 @@ public class DisciplinaService {
 		disciplina.setAtivo(status);
 	}
 
-	private void validarDisciplina(String disciplina) {
-		Optional<Disciplina> disciplinaExistente = disciplinaRepository.findByDisciplina(disciplina).stream()
+	private void validarDisciplina(String codDisciplina) {
+		Optional<Disciplina> disciplinaExistente = disciplinaRepository.findByCodDiscip(codDisciplina).stream()
 				.findFirst();
 		if (disciplinaExistente.isPresent()) {
 			throw new UniqueException("Essa disciplina já existe.");
@@ -98,19 +99,20 @@ public class DisciplinaService {
 	}
 
 	private void atualizarDados(Disciplina destino, CadastroDisciplinaDTO origem) {
-		Escola escola = escolaRepository.findById(origem.getEscolaId())
-				.orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
-		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository
-				.findById(origem.getDependenciaAdmId())
-				.orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-		destino.setEscola(escola);
-		destino.setDisciplina(origem.getDisciplina());
+		AreaConhecimento areaConhecimento = areaConhecimentoRepository
+				.findById(origem.getAreaConhecimentoId())
+				.orElseThrow(() -> new IllegalArgumentException("Area conhecimento não encontrada"));
+		Conta conta = contaRepository
+				.findById(origem.getContaId())
+				.orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+		destino.setAreaConhecimento(areaConhecimento);
+		destino.setCodDiscip(origem.getCodDiscip());
 		destino.setNome(origem.getNome());
 		destino.setCreditos(origem.getCreditos());
 		destino.setHorasAula(origem.getHorasAula());
 		destino.setHorasEstagio(origem.getHorasEstagio());
 		destino.setHorasAtiv(origem.getHorasAtiv());
 		destino.setHorasLab(origem.getHorasLab());
-		destino.setDependenciaAdm(dependenciaAdm);
+		destino.setConta(conta);
 	}
 }

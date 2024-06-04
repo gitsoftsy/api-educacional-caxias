@@ -26,6 +26,13 @@ public class AreaConhecimentoController {
 
     @Autowired
     private AreaConhecimentoService service;
+    
+    
+    @GetMapping("/conta/{idConta}")
+    public ResponseEntity<List<AreaConhecimentoDTO>> buscarPorIdConta(@PathVariable Long idConta) {
+        List<AreaConhecimentoDTO> areaConhecimento = service.buscarPorIdConta(idConta);
+        return ResponseEntity.ok(areaConhecimento);
+    }
 
     @GetMapping
     public ResponseEntity<List<AreaConhecimentoDTO>> listar() {

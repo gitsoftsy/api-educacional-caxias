@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 public class DisciplinaDTO {
 	private Long idDisciplina;
 
-	private DependenciaAdministrativaDTO dependenciaAdmId;
+	private ContaDTO conta;
 
-	private Long escolaId;
+	private Long areaConhecimentoId;
 
-	private String disciplina;
+	private String codDiscip;
 	private String nome;
 
 	private Double creditos;
@@ -33,9 +33,9 @@ public class DisciplinaDTO {
 
 	public DisciplinaDTO(Disciplina disciplina) {
 		this.idDisciplina = disciplina.getIdDisciplina();
-		this.dependenciaAdmId = new DependenciaAdministrativaDTO(disciplina.getDependenciaAdm());
-		this.escolaId = disciplina.getEscola().getIdEscola();
-		this.disciplina = disciplina.getDisciplina();
+		this.conta = new ContaDTO(disciplina.getConta());
+		this.areaConhecimentoId = disciplina.getAreaConhecimento().getIdAreaConhecimento();
+		this.codDiscip = disciplina.getCodDiscip();
 		this.nome = disciplina.getNome();
 		this.creditos = disciplina.getCreditos();
 		this.horasAula = disciplina.getHorasAula();

@@ -27,8 +27,7 @@ public class CadastroEscolaDTO {
 	@NotNull
 	private String tipoEscola;
 	
-	@NotNull
-	@CNPJ
+	
 	private String cnpj;
 	
 	@NotNull

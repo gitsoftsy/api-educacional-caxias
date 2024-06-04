@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,10 +33,10 @@ public class CursoController {
         return ResponseEntity.ok(cursos);
     }
 
-    @GetMapping("/escola/{idEscola}")
-    public ResponseEntity<List<CursoDTO>> buscarPorIdEscola(@PathVariable Long idEscola) {
-        List<CursoDTO> cursos = cursoService.buscarPorIdEscola(idEscola);
-        return ResponseEntity.ok(cursos);
+    @GetMapping("/conta/{idConta}")
+    public ResponseEntity<List<CursoDTO>> buscarPorIdConta(@PathVariable Long idConta) {
+        List<CursoDTO> curso = cursoService.buscarPorIdConta(idConta);
+        return ResponseEntity.ok(curso);
     }
 
     @PostMapping

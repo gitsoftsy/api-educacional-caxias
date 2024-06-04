@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class CadastroCursoDTO {
     private Long idCurso;
     
-    private Long escolaId;
     
     @NotNull
     private String codCurso;
@@ -29,16 +28,15 @@ public class CadastroCursoDTO {
     private Character ativo;
     
     @NotNull
-    private Long dependenciaAdmId;
+    private Long contaId;
     
     public CadastroCursoDTO(Curso curso) {
         this.idCurso = curso.getIdCurso();
-        this.escolaId = curso.getEscola().getIdEscola();
         this.codCurso = curso.getCodCurso();
         this.nome = curso.getNome();
         this.codCursoInpe = curso.getCodCursoInpe();
         this.dataCadastro = curso.getDataCadastro();
         this.ativo = curso.getAtivo();
-        this.dependenciaAdmId = curso.getDependenciaAdm().getIdDependenciaAdministrativa();
+        this.contaId = curso.getConta().getIdConta();
     }
 }

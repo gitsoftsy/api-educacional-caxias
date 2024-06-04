@@ -11,9 +11,9 @@ import br.com.softsy.educacional.model.Disciplina;
 
 public interface DisciplinaRepository extends JpaRepository<Disciplina, Long> {
 
-	List<Disciplina> findByDisciplina(String disciplina);
+	List<Disciplina> findByCodDiscip(String codDiscip);
 
-	@Query("select disciplina from Disciplina disciplina join disciplina.escola escola where escola.idEscola = :idEscola")
-	Optional<List<Disciplina>> findByEscola_IdEscola(@Param("idEscola") Long idEscola);
+	@Query("select disciplina from Disciplina disciplina join disciplina.conta conta where conta.idConta = :idConta")
+    Optional<List<Disciplina>> findByConta_IdConta(@Param("idConta") Long idConta);
 
 }
