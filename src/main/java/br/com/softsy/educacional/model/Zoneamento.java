@@ -33,7 +33,7 @@ public class Zoneamento {
 	@JoinColumn(name = "ID_CONTA", nullable = false)
 	private Conta conta;
 	
-	@Column(name = "ZONEAMENTO", nullable = false, unique = true)
+	@Column(name = "ZONEAMENTO", unique = true)
 	private String zoneamento;
 	
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")

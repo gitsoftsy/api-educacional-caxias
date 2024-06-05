@@ -17,7 +17,6 @@ public class ZoneamentoDTO {
 	@NotNull
 	private Long contaId;
 	
-	@NotNull
 	private String zoneamento;
 	private LocalDateTime dataCadastro;
 	

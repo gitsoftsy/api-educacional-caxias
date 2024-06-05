@@ -104,11 +104,11 @@ public class Escola {
 	private Character pppAtualizado12Meses;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_LOCALIZACAO", nullable = true)
+	@JoinColumn(name = "ID_LOCALIZACAO")
 	private Localizacao localizacao;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_DEPENDENCIA_ADIMINISTRATIVA", nullable = false)
+	@JoinColumn(name = "ID_DEPENDENCIA_ADIMINISTRATIVA")
 	private DependenciaAdministrativa dependenciaAdm;
 	
 	@ManyToOne
@@ -116,27 +116,27 @@ public class Escola {
 	private Conta conta;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_SITUACAO_FUNCIONAMENTO", nullable = false)
+	@JoinColumn(name = "ID_SITUACAO_FUNCIONAMENTO")
 	private SituacaoFuncionamento situacaoFuncionamento;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_FORMA_OCUPACAO_PREDIO", nullable = false)
+	@JoinColumn(name = "ID_FORMA_OCUPACAO_PREDIO")
 	private FormaOcupacaoPredio formaOcupacaoPredio;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_ZONEAMENTO", nullable = false)
+	@JoinColumn(name = "ID_ZONEAMENTO", nullable = true)
 	private Zoneamento zoneamento;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_CATEGORIA_ESCOLA_PRIVADA", nullable = false)
+	@JoinColumn(name = "ID_CATEGORIA_ESCOLA_PRIVADA")
 	private CategoriaEscolaPrivada categoriaEscolaPrivada;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_ENTIDADE_SUPERIOR", nullable = false)
+	@JoinColumn(name = "ID_ENTIDADE_SUPERIOR")
 	private EntidadeSuperior entidadeSuperior;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_ORGAO_PUBLICO", nullable =  false)
+	@JoinColumn(name = "ID_ORGAO_PUBLICO")
 	private OrgaoPublico orgaoPublico;
 
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)

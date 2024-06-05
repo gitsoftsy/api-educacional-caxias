@@ -19,105 +19,94 @@ import lombok.NoArgsConstructor;
 public class EscolaDTO {
 
 	private Long idEscola;
-	
+
 	private LocalDateTime dataCadastro;
 	private Character ativo;
-	
+
 	@NotNull
 	private String nomeEscola;
-	
+
 	@NotNull
 	private ContaDTO conta;
-	
+
 	@NotNull
 	@JsonIgnore
 	private String logoEscola;
-	
+
 	@NotNull
 	private String tipoEscola;
-	
+
 	@CNPJ
 	private String cnpj;
-	
+
 	private String codigoInep;
-	
+
 	@NotNull
 	private String cep;
-	
+
 	@NotNull
 	private String endereco;
-	
+
 	@NotNull
 	private String numero;
-	
+
 	@NotNull
 	private String bairro;
-	
+
 	@NotNull
 	private String municipio;
-	
+
 	@NotNull
 	private String uf;
-	
+
 	private String numCME;
-	
+
 	private String numParecerCME;
-	
+
 	private String latitude;
-	
+
 	private String longitude;
-	
+
 	@NotNull
 	private String email;
-	
+
 	@NotNull
 	private Character educacaoIndigena;
-	
+
 	@NotNull
 	private Character exameSelecao;
-	
+
 	@NotNull
 	private Character compartilhaEspaco;
-	
+
 	@NotNull
 	private Character usaEspacoEntornoEscolar;
-	
+
 	@NotNull
 	private Character pppAtualizado12Meses;
-	
-	@NotNull
+
 	private LocalizacaoDTO localizacao;
-	
-	@NotNull
+
 	private DependenciaAdministrativaDTO dependenciaAdm;
-	
-	@NotNull
+
 	private SituacaoFuncionamentoDTO situacaoFuncionamento;
-	
-	@NotNull
+
 	private FormaOcupacaoPredioDTO formaOcupacaoPredio;
-	
-	@NotNull
+
 	private ZoneamentoDTO zoneamento;
-	
-	@NotNull
+
 	private EntidadeSuperiorDTO entidadeSuperior;
-	
-	@NotNull
+
 	private CategoriaEscolaPrivadaDTO categoriaEscolaPrivada;
-	
-	@NotNull 
+
 	private OrgaoPublicoDTO orgaoPublico;
-	
-	
+
 	public EscolaDTO(Escola escola) {
 		this.idEscola = escola.getIdEscola();
 		this.dataCadastro = escola.getDataCadastro();
 		this.ativo = escola.getAtivo();
 		this.nomeEscola = escola.getNomeEscola();
 		this.logoEscola = escola.getLogoEscola();
-		System.out.println(logoEscola);
-		System.out.println(escola.getLogoEscola());
 		this.tipoEscola = escola.getTipoEscola();
 		this.cnpj = escola.getCnpj();
 		this.codigoInep = escola.getCodigoInep();
@@ -137,24 +126,56 @@ public class EscolaDTO {
 		this.compartilhaEspaco = escola.getCompartilhaEspaco();
 		this.usaEspacoEntornoEscolar = escola.getUsaEspacoEntornoEscolar();
 		this.pppAtualizado12Meses = escola.getPppAtualizado12Meses();
-		
-		this.localizacao = new LocalizacaoDTO(escola.getLocalizacao());
-	    
-		this.dependenciaAdm = new DependenciaAdministrativaDTO(escola.getDependenciaAdm());
-		
-		this.situacaoFuncionamento = new SituacaoFuncionamentoDTO(escola.getSituacaoFuncionamento());
-		
-		this.formaOcupacaoPredio = new FormaOcupacaoPredioDTO(escola.getFormaOcupacaoPredio());
-		
-		this.zoneamento = new ZoneamentoDTO(escola.getZoneamento());
-		
-		this.categoriaEscolaPrivada = new CategoriaEscolaPrivadaDTO(escola.getCategoriaEscolaPrivada());
-		
-		this.entidadeSuperior = new EntidadeSuperiorDTO(escola.getEntidadeSuperior());
-		
-		this.orgaoPublico = new OrgaoPublicoDTO(escola.getOrgaoPublico());
-		
+
+		if (escola.getLocalizacao() != null) {
+			this.localizacao = new LocalizacaoDTO(escola.getLocalizacao());
+		} else {
+			this.localizacao = null;
+		}
+
+		if (escola.getDependenciaAdm() != null) {
+			this.dependenciaAdm = new DependenciaAdministrativaDTO(escola.getDependenciaAdm());
+		} else {
+			this.dependenciaAdm = null;
+		}
+
+		if (escola.getSituacaoFuncionamento() != null) {
+			this.situacaoFuncionamento = new SituacaoFuncionamentoDTO(escola.getSituacaoFuncionamento());
+		} else {
+			this.situacaoFuncionamento = null;
+		}
+
+		if (escola.getFormaOcupacaoPredio() != null) {
+			this.formaOcupacaoPredio = new FormaOcupacaoPredioDTO(escola.getFormaOcupacaoPredio());
+		} else {
+			this.formaOcupacaoPredio = null;
+		}
+
+		if (escola.getZoneamento() != null) {
+			this.zoneamento = new ZoneamentoDTO(escola.getZoneamento());
+		} else {
+			this.zoneamento = null;
+		}
+
+		if (escola.getCategoriaEscolaPrivada() != null) {
+			this.categoriaEscolaPrivada = new CategoriaEscolaPrivadaDTO(escola.getCategoriaEscolaPrivada());
+		} else {
+			this.categoriaEscolaPrivada = null;
+		}
+
+		if (escola.getEntidadeSuperior() != null) {
+			this.entidadeSuperior = new EntidadeSuperiorDTO(escola.getEntidadeSuperior());
+		} else {
+			this.entidadeSuperior = null;
+		}
+
+		if (escola.getOrgaoPublico() != null) {
+			this.orgaoPublico = new OrgaoPublicoDTO(escola.getOrgaoPublico());
+		} else {
+			this.orgaoPublico = null;
+		}
+
 		this.conta = new ContaDTO(escola.getConta());
 	}
-	
+
 }
