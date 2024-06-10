@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.softsy.educacional.dto.AreaConhecimentoDTO;
 import br.com.softsy.educacional.dto.CadastroPeriodoLetivoDTO;
 import br.com.softsy.educacional.dto.CargoProfessorDTO;
 import br.com.softsy.educacional.dto.PeriodoLetivoDTO;
@@ -32,6 +33,12 @@ public class PeriodoLetivoController {
     public ResponseEntity<List<PeriodoLetivoDTO>> listar() {
         List<PeriodoLetivoDTO> periodosLetivos = periodoLetivoService.listarTudo();
         return ResponseEntity.ok(periodosLetivos);
+    }
+    
+    @GetMapping("/conta/{idConta}")
+    public ResponseEntity<List<PeriodoLetivoDTO>> buscarPorIdConta(@PathVariable Long idConta) {
+        List<PeriodoLetivoDTO> periodoLetivo = periodoLetivoService.buscarPorIdConta(idConta);
+        return ResponseEntity.ok(periodoLetivo);
     }
     
     @GetMapping("/{idPeriodoLetivo}")

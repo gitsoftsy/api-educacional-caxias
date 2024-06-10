@@ -18,7 +18,8 @@ import lombok.Data;
 @Entity
 @Table(name = "TBL_PERIODO_LETIVO", 
 	uniqueConstraints = { 
-		@UniqueConstraint(name = "UQ_PERIODO_LETIVO", columnNames = { "ANO", "ID_DEPENDENCIA_ADMINISTRATIVA", "PERIODO", "DESCRICAO", "TIPO_PERIODICIDADE" })
+		@UniqueConstraint(name = "UQ_PERIODO_LETIVO", columnNames = { "ANO", "ID_CONTA", "PERIODO", "DESCRICAO", "TIPO_PERIODICIDADE" }),
+		@UniqueConstraint(name = "UQ_PERIODO_LETIVO_DESCRICAO", columnNames = {"ID_CONTA", "DESCRICAO"})
 		})
 @Data
 public class PeriodoLetivo {
@@ -29,8 +30,8 @@ public class PeriodoLetivo {
 	private Long idPeriodoLetivo;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_DEPENDENCIA_ADMINISTRATIVA", nullable = false)
-	private DependenciaAdministrativa dependenciaAdm;
+	@JoinColumn(name = "ID_CONTA", nullable = false)
+	private Conta conta;
 	
 	@Column(name = "ANO", nullable = false, length = 11)
 	private Integer ano;

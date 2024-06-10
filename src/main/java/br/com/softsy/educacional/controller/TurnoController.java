@@ -53,9 +53,16 @@ public class TurnoController {
         return ResponseEntity.ok(turnoDTO);
     }
 
-    @DeleteMapping("/{idTurno}")
-    public ResponseEntity<Void> excluir(@PathVariable Long idTurno) {
-        service.excluir(idTurno);
-        return ResponseEntity.ok().build();
-    }
+	@PutMapping("/{idTurno}/ativar")
+	public ResponseEntity<?> ativar(@PathVariable Long idTurno){
+		service.ativarDesativar('S', idTurno);
+		return ResponseEntity.ok().build();	
+	}
+	
+	
+	@PutMapping("/{idTurno}/desativar")
+	public ResponseEntity<?> desatviar(@PathVariable Long idTurno){
+		service.ativarDesativar('N', idTurno);
+		return ResponseEntity.ok().build();
+	}
 }

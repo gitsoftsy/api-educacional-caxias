@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class PeriodoLetivoDTO {
     private Long idPeriodoLetivo;
     
-    private DependenciaAdministrativaDTO dependenciaAdm;
+    private ContaDTO conta;
     
     private Integer ano;
     
@@ -32,7 +32,7 @@ public class PeriodoLetivoDTO {
     
     public PeriodoLetivoDTO(PeriodoLetivo periodoLetivo) {
         this.idPeriodoLetivo = periodoLetivo.getIdPeriodoLetivo();
-        this.dependenciaAdm = new DependenciaAdministrativaDTO(periodoLetivo.getDependenciaAdm());
+        this.conta = new ContaDTO(periodoLetivo.getConta());
         this.ano = periodoLetivo.getAno();
         this.periodo = periodoLetivo.getPeriodo();
         this.dtInicio = periodoLetivo.getDtInicio();

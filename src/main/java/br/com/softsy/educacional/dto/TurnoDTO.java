@@ -16,7 +16,7 @@ public class TurnoDTO {
     private Long idTurno;
     
 	@NotNull
-	private Long dependenciaAdmId;
+	private Long contaId;
 
     private String mnemonico;
 
@@ -27,6 +27,8 @@ public class TurnoDTO {
     private Time horaFim;
 
     private LocalDateTime dataCadastro;
+    
+    private Character ativo;
 
     public TurnoDTO(Turno turno) {
         this.idTurno = turno.getIdTurno();
@@ -35,6 +37,7 @@ public class TurnoDTO {
         this.horaInicio = turno.getHoraInicio();
         this.horaFim = turno.getHoraFim();
         this.dataCadastro = turno.getDataCadastro();
-        this.dependenciaAdmId = turno.getDependenciaAdm().getIdDependenciaAdministrativa();
+        this.contaId = turno.getConta().getIdConta();
+        this.ativo = turno.getAtivo();
     }
 }

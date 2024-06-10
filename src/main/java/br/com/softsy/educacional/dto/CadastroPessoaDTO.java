@@ -18,16 +18,60 @@ public class CadastroPessoaDTO {
 
     private Long idPessoa;
     
-	@NotNull
-	private Long dependenciaAdmId;
+    @NotNull
+    private Long contaId;
 
     @NotNull
-    private String nome;
-    
+    private String nomeCompleto;
 
-    @NotNull
+    private String nomeSocial;
+
     @CPF
     private String cpf;
+
+    private String rgNumero;
+
+    private String rgOrgaoExpedidor;
+
+    private Long rgUfEmissorId;
+
+    private LocalDate rgDataExpedicao;
+
+    private String rneNumero;
+
+    private String rneOrgaoExpedidor;
+
+    private Long rneUfEmissorId;
+
+    private LocalDate rneDataExpedicao;
+
+    private String certidaoNascimentoNumero;
+
+    private String certidaoNascimentoCartorio;
+
+    private Long certidaoNascimentoUfCartorioId;
+
+    private LocalDate certidaoNascimentoDataEmissao;
+
+    private String certidaoNascimentoFolha;
+
+    private String certidaoNascimentoLivro;
+
+    private String certidaoNascimentoOrdem;
+
+    private String certidaoCasamentoNumero;
+
+    private String certidaoCasamentoCartorio;
+
+    private Long certidaoCasamentoUfCartorioId;
+
+    private LocalDate certidaoCasamentoDataEmissao;
+
+    private String certidaoCasamentoFolha;
+
+    private String certidaoCasamentoLivro;
+
+    private String certidaoCasamentoOrdem;
 
     @NotNull
     private LocalDate dtNascimento;
@@ -41,50 +85,96 @@ public class CadastroPessoaDTO {
 
     private Long ufNascimentoId;
 
+    private Long nacionalidadeId;
+
     private Long municipioNascimentoId;
 
     private Long paisResidenciaId;
+
+    private String nacionalidade;
 
     private String nomePai;
 
     private String nomeMae;
 
-    @NotNull
+    
     private String cep;
 
-    @NotNull
+    
     private String endereco;
 
-    @NotNull
+    
     private String numero;
 
     private String complemento;
 
     private String bairro;
 
-    @NotNull
+   
     private String municipio;
 
     private String distrito;
 
-    @NotNull
+    
     private String uf;
 
     private LocalDateTime dataCadastro;
+
+    private String telefone;
+
+    private String celular;
+
+    private String email;
+
+    private String empresa;
+
+    private String ocupacao;
+
+    private String telefoneComercial;
+
+    private String usuario;
+
+    private String senha;
 
     private Character ativo;
 
     public CadastroPessoaDTO(Pessoa pessoa) {
         this.idPessoa = pessoa.getIdPessoa();
-        this.nome = pessoa.getNome();
+        this.contaId = pessoa.getConta().getIdConta();
+        this.nomeCompleto = pessoa.getNomeCompleto();
+        this.nomeSocial = pessoa.getNomeSocial();
         this.cpf = pessoa.getCpf();
+        this.rgNumero = pessoa.getRgNumero();
+        this.rgOrgaoExpedidor = pessoa.getRgOrgaoExpedidor();
+        this.rgUfEmissorId = pessoa.getRgUfEmissor().getIdUf();
+        this.rgDataExpedicao = pessoa.getRgDataExpedicao();
+        this.rneNumero = pessoa.getRneNumero();
+        this.rneOrgaoExpedidor = pessoa.getRneOrgaoExpedidor();
+        this.rneUfEmissorId = pessoa.getRneUfEmissor().getIdUf();
+        this.rneDataExpedicao = pessoa.getRneDataExpedicao();
+        this.certidaoNascimentoNumero = pessoa.getCertidaoNascimentoNumero();
+        this.certidaoNascimentoCartorio = pessoa.getCertidaoNascimentoCartorio();
+        this.certidaoNascimentoUfCartorioId = pessoa.getCertidaoNascimentoUfCartorio().getIdUf();
+        this.certidaoNascimentoDataEmissao = pessoa.getCertidaoNascimentoDataEmissao();
+        this.certidaoNascimentoFolha = pessoa.getCertidaoNascimentoFolha();
+        this.certidaoNascimentoLivro = pessoa.getCertidaoNascimentoLivro();
+        this.certidaoNascimentoOrdem = pessoa.getCertidaoNascimentoOrdem();
+        this.certidaoCasamentoNumero = pessoa.getCertidaoCasamentoNumero();
+        this.certidaoCasamentoCartorio = pessoa.getCertidaoCasamentoCartorio();
+        this.certidaoCasamentoUfCartorioId = pessoa.getCertidaoCasamentoUfCartorio().getIdUf();
+        this.certidaoCasamentoDataEmissao = pessoa.getCertidaoCasamentoDataEmissao();
+        this.certidaoCasamentoFolha = pessoa.getCertidaoCasamentoFolha();
+        this.certidaoCasamentoLivro = pessoa.getCertidaoCasamentoLivro();
+        this.certidaoCasamentoOrdem = pessoa.getCertidaoCasamentoOrdem();
         this.dtNascimento = pessoa.getDtNascimento();
         this.sexo = pessoa.getSexo();
         this.racaId = pessoa.getRaca().getIdRaca();
         this.paisNascimentoId = pessoa.getPaisNascimento().getIdPais();
         this.ufNascimentoId = pessoa.getUfNascimento().getIdUf();
+        this.nacionalidadeId = pessoa.getNacionalidadeId().getIdNacionalidade();
         this.municipioNascimentoId = pessoa.getMunicipioNascimento().getIdMunicipio();
         this.paisResidenciaId = pessoa.getPaisResidencia().getIdPais();
+        this.nacionalidade = pessoa.getNacionalidade();
         this.nomePai = pessoa.getNomePai();
         this.nomeMae = pessoa.getNomeMae();
         this.cep = pessoa.getCep();
@@ -96,7 +186,13 @@ public class CadastroPessoaDTO {
         this.distrito = pessoa.getDistrito();
         this.uf = pessoa.getUf();
         this.dataCadastro = pessoa.getDataCadastro();
-        this.ativo = pessoa.getAtivo();
-        this.dependenciaAdmId = pessoa.getDependenciaAdm().getIdDependenciaAdministrativa();
-    }
+        this.telefone = pessoa.getTelefone();
+        this.celular = pessoa.getCelular();
+        this.email = pessoa.getEmail();
+        this.empresa = pessoa.getEmpresa();
+        this.ocupacao = pessoa.getOcupacao();
+        this.telefoneComercial = pessoa.getTelefoneComercial();
+        this.usuario = pessoa.getUsuario();
+        this.senha = pessoa.getSenha();
+        this.ativo = pessoa.getAtivo();    }
 }

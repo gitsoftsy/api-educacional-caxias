@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroCursoDTO;
+import br.com.softsy.educacional.dto.CurriculoDTO;
 import br.com.softsy.educacional.dto.CursoDTO;
 import br.com.softsy.educacional.service.CursoService;
 
@@ -31,6 +32,12 @@ public class CursoController {
     public ResponseEntity<List<CursoDTO>> listar() {
         List<CursoDTO> cursos = cursoService.listarTudo();
         return ResponseEntity.ok(cursos);
+    }
+    
+    @GetMapping("/{idCurso}")
+    public ResponseEntity<CursoDTO> buscarPorId(@PathVariable Long idCurso) {
+        CursoDTO cursoDto = cursoService.buscarPorId(idCurso);
+        return ResponseEntity.ok(cursoDto);
     }
 
     @GetMapping("/conta/{idConta}")

@@ -9,13 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.softsy.educacional.dto.AreaConhecimentoDTO;
 import br.com.softsy.educacional.dto.CadastroPeriodoLetivoDTO;
 import br.com.softsy.educacional.dto.CargoProfessorDTO;
 import br.com.softsy.educacional.dto.PeriodoLetivoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.AreaConhecimento;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.Disciplina;
 import br.com.softsy.educacional.model.PeriodoLetivo;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.PeriodoLetivoRepository;
 
@@ -26,7 +30,7 @@ public class PeriodoLetivoService {
     private PeriodoLetivoRepository periodoLetivoRepository;
 
     @Autowired
-    private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
+    private ContaRepository contaRepository;
 
     @Transactional(readOnly = true)
     public List<PeriodoLetivoDTO> listarTudo() {
@@ -39,6 +43,16 @@ public class PeriodoLetivoService {
     @Transactional(readOnly = true)
     public PeriodoLetivoDTO buscarPorId(Long id) {
         return new PeriodoLetivoDTO(periodoLetivoRepository.getReferenceById(id));
+    }
+    
+    
+    @Transactional(readOnly = true)
+    public List<PeriodoLetivoDTO> buscarPorIdConta(Long idConta) {
+        List<PeriodoLetivo> areaConhecimento = periodoLetivoRepository.findByConta_IdConta(idConta)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar periodo letivo por ID da conta"));
+        return areaConhecimento.stream()
+                .map(PeriodoLetivoDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -60,9 +74,9 @@ public class PeriodoLetivoService {
 
     private PeriodoLetivo criarPeriodoLetivoAPartirDTO(CadastroPeriodoLetivoDTO dto) {
         PeriodoLetivo periodoLetivo = new PeriodoLetivo();
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-        periodoLetivo.setDependenciaAdm(dependenciaAdm);
+        Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+        periodoLetivo.setConta(conta);
         periodoLetivo.setAno(dto.getAno());
         periodoLetivo.setPeriodo(dto.getPeriodo());
         periodoLetivo.setDtInicio(dto.getDtInicio());
@@ -88,9 +102,9 @@ public class PeriodoLetivoService {
 	}
 
     private void atualizarDados(PeriodoLetivo destino, CadastroPeriodoLetivoDTO origem) {
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-        destino.setDependenciaAdm(dependenciaAdm);
+        Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+        destino.setConta(conta);
         destino.setAno(origem.getAno());
         destino.setPeriodo(origem.getPeriodo());
         destino.setDtInicio(origem.getDtInicio());

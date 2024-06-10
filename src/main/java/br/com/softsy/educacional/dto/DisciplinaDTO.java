@@ -27,6 +27,10 @@ public class DisciplinaDTO {
 	private Double horasAtiv;
 
 	private Double horasLab;
+	
+	private Double horasAno;
+	
+	private Double horasSemanal;
 
 	private LocalDateTime dataCadastro;
 	private Character ativo;
@@ -42,6 +46,8 @@ public class DisciplinaDTO {
 		this.horasEstagio = disciplina.getHorasEstagio();
 		this.horasAtiv = disciplina.getHorasAtiv();
 		this.horasLab = disciplina.getHorasLab();
+		this.horasAno = disciplina.getHorasAno();
+		this.horasSemanal = disciplina.getHorasSemanal();
 		this.dataCadastro = disciplina.getDataCadastro();
 		this.ativo = disciplina.getAtivo();
 	}

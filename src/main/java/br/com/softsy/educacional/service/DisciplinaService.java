@@ -79,6 +79,8 @@ public class DisciplinaService {
 		disciplina.setHorasAtiv(dto.getHorasAtiv());
 		disciplina.setHorasLab(dto.getHorasLab());
 		disciplina.setDataCadastro(LocalDateTime.now());
+		disciplina.setHorasAno(dto.getHorasAno());
+		disciplina.setHorasSemanal(dto.getHorasSemanal());
 		disciplina.setAtivo('S');
 		disciplina.setConta(conta);
 		return disciplina;
@@ -113,6 +115,8 @@ public class DisciplinaService {
 		destino.setHorasEstagio(origem.getHorasEstagio());
 		destino.setHorasAtiv(origem.getHorasAtiv());
 		destino.setHorasLab(origem.getHorasLab());
+		destino.setHorasAno(origem.getHorasAno());
+		destino.setHorasSemanal(origem.getHorasSemanal());
 		destino.setConta(conta);
 	}
 }

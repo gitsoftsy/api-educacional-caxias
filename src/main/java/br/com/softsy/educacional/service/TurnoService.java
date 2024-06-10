@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.TurnoDTO;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.DependenciaAdministrativa;
+import br.com.softsy.educacional.model.Equipamento;
 import br.com.softsy.educacional.model.Turno;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.TurnoRepository;
 
@@ -22,7 +25,7 @@ public class TurnoService {
     private TurnoRepository repository;
     
 	@Autowired 
-	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
+	private ContaRepository contaRepository;
     public List<TurnoDTO> listarTudo() {
         List<Turno> turnos = repository.findAll();
         return turnos.stream()
@@ -49,26 +52,28 @@ public class TurnoService {
         atualizarDados(turno, dto);
         return new TurnoDTO(turno);
     }
-
+    
     @Transactional
-    public void excluir(Long id) {
-        repository.deleteById(id);
+    public void ativarDesativar(char status, Long idTurno) {
+        Turno turno = repository.getReferenceById(idTurno);
+        turno.setAtivo(status);
     }
 
     private Turno criarTurnoAPartirDTO(TurnoDTO dto) {
         Turno turno = new Turno();
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-        BeanUtils.copyProperties(dto, turno, "idTurno", "dataCadastro");
-        turno.setDependenciaAdm(dependenciaAdm);
+        Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+        BeanUtils.copyProperties(dto, turno, "idTurno", "dataCadastro", "ativo");
+        turno.setConta(conta);
         turno.setDataCadastro(LocalDateTime.now());
+        turno.setAtivo('S');
         return turno;
     }
 
     private void atualizarDados(Turno destino, TurnoDTO origem) {
-        BeanUtils.copyProperties(origem, destino, "idTurno", "dataCadastro");
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(origem.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-        destino.setDependenciaAdm(dependenciaAdm);
+        BeanUtils.copyProperties(origem, destino, "idTurno", "dataCadastro", "ativo");
+        Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+        destino.setConta(conta);
     }
 }

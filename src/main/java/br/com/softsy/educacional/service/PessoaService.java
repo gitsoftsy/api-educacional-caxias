@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -12,20 +13,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroPessoaDTO;
 import br.com.softsy.educacional.dto.PessoaDTO;
+import br.com.softsy.educacional.infra.config.PasswordEncrypt;
+import br.com.softsy.educacional.infra.exception.NegocioException;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.Municipio;
+import br.com.softsy.educacional.model.Nacionalidade;
 import br.com.softsy.educacional.model.Pais;
 import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.model.Raca;
 import br.com.softsy.educacional.model.Uf;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.MunicipioRepository;
+import br.com.softsy.educacional.repository.NacionalidadeRepository;
 import br.com.softsy.educacional.repository.PaisRepository;
 import br.com.softsy.educacional.repository.PessoaRepository;
 import br.com.softsy.educacional.repository.RacaRepository;
 import br.com.softsy.educacional.repository.UfRepository;
-
 @Service
 public class PessoaService {
 
@@ -45,7 +51,13 @@ public class PessoaService {
     private MunicipioRepository municipioRepository;
     
 	@Autowired 
-	private DependenciaAdministrativaRepository dependenciaAdministrativaRepository;
+	private ContaRepository contaRepository;
+	
+	@Autowired
+	private NacionalidadeRepository nacionalidadeRepository;
+	
+	@Autowired
+	private PasswordEncrypt encrypt;
 
     public List<PessoaDTO> listarTudo() {
         List<Pessoa> pessoas = repository.findAll();
@@ -61,8 +73,10 @@ public class PessoaService {
     @Transactional
     public CadastroPessoaDTO salvar(CadastroPessoaDTO dto) {
     	
+    	validarSenha(dto.getSenha());
         Pessoa pessoa = criarPessoaAPartirDTO(dto);
 
+        pessoa.setSenha(encrypt.hashPassword(dto.getSenha()));
         pessoa = repository.save(pessoa);
         return new CadastroPessoaDTO(pessoa);
     }
@@ -82,6 +96,8 @@ public class PessoaService {
 
     private Pessoa criarPessoaAPartirDTO(CadastroPessoaDTO dto) {
         Pessoa pessoa = new Pessoa();
+
+        // Buscar objetos relacionados nos repositórios
         Raca raca = racaRepository.findById(dto.getRacaId())
                 .orElseThrow(() -> new IllegalArgumentException("Raça não encontrada"));
         Pais paisNascimento = paisRepository.findById(dto.getPaisNascimentoId())
@@ -92,26 +108,88 @@ public class PessoaService {
                 .orElseThrow(() -> new IllegalArgumentException("Município de nascimento não encontrado"));
         Pais paisResidencia = paisRepository.findById(dto.getPaisResidenciaId())
                 .orElseThrow(() -> new IllegalArgumentException("País de residência não encontrado"));
-		DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        Nacionalidade nacionalidade = nacionalidadeRepository.findById(dto.getNacionalidadeId())
+                .orElseThrow(() -> new IllegalArgumentException("Nacionalidade não encontrada"));
+        Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 
-        BeanUtils.copyProperties(dto, pessoa, "ativo", "dataCadastro", "idPessoa", "racaId", "paisNascimentoId", "ufNascimentoId",
-                "municipioNascimentoId", "paisResidenciaId");
+        // Copiar propriedades do DTO para o objeto Pessoa, excluindo os campos mencionados
+        BeanUtils.copyProperties(dto, pessoa, "dataCadastro", "idPessoa", "racaId", "paisNascimentoId", "ufNascimentoId",
+                "municipioNascimentoId", "paisResidenciaId", "rgNumero", "rgOrgaoExpedidor",
+                "rgDataExpedicao", "rneNumero", "rneOrgaoExpedidor", "rneDataExpedicao",
+                "certidaoNascimentoDataEmissao", "certidaoNascimentoFolha", "certidaoNascimentoLivro",
+                "certidaoNascimentoOrdem", "certidaoCasamentoNumero", "certidaoCasamentoCartorio", "certidaoCasamentoFolha",
+                "certidaoCasamentoLivro", "certidaoCasamentoOrdem", "nomePai", "nomeMae", "cep", "endereco", "numero",
+                "complemento", "bairro", "contaId","municipio", "distrito", "uf", "telefone", "celular", "email", "empresa", "ocupacao", "telefoneComercial", "senha", "ativo");
 
-        pessoa.setDependenciaAdm(dependenciaAdm);
+        // Mapear os novos campos do DTO para o objeto Pessoa
+        pessoa.setConta(conta);
         pessoa.setRaca(raca);
+        pessoa.setNacionalidadeId(nacionalidade);
+        pessoa.setRgUfEmissor(ufRepository.findById(dto.getRgUfEmissorId()).orElse(null));
+        pessoa.setRneUfEmissor(ufRepository.findById(dto.getRneUfEmissorId()).orElse(null));
+        pessoa.setSexo(dto.getSexo());
+        pessoa.setNacionalidade(dto.getNacionalidade());
         pessoa.setPaisNascimento(paisNascimento);
         pessoa.setUfNascimento(ufNascimento);
         pessoa.setMunicipioNascimento(municipioNascimento);
+        pessoa.setCertidaoNascimentoUfCartorio(ufRepository.findById(dto.getCertidaoNascimentoUfCartorioId()).orElse(null));
+        pessoa.setCertidaoCasamentoUfCartorio(ufRepository.findById(dto.getCertidaoCasamentoUfCartorioId()).orElse(null));
+        pessoa.setUsuario(dto.getUsuario());
         pessoa.setPaisResidencia(paisResidencia);
+        pessoa.setDtNascimento(dto.getDtNascimento());
         pessoa.setAtivo('S');
         pessoa.setDataCadastro(LocalDateTime.now());
+
+        // Configurar campos adicionais
+        pessoa.setRgNumero(dto.getRgNumero());
+        pessoa.setRgOrgaoExpedidor(dto.getRgOrgaoExpedidor());
+        pessoa.setRgDataExpedicao(dto.getRgDataExpedicao());
+        pessoa.setRneNumero(dto.getRneNumero());
+        pessoa.setRneOrgaoExpedidor(dto.getRneOrgaoExpedidor());
+        pessoa.setRneDataExpedicao(dto.getRneDataExpedicao());
+        pessoa.setCertidaoNascimentoNumero(dto.getCertidaoNascimentoNumero());
+        pessoa.setCertidaoNascimentoCartorio(dto.getCertidaoNascimentoCartorio());
+        pessoa.setCertidaoNascimentoDataEmissao(dto.getCertidaoNascimentoDataEmissao());
+        pessoa.setCertidaoNascimentoFolha(dto.getCertidaoNascimentoFolha());
+        pessoa.setCertidaoNascimentoLivro(dto.getCertidaoNascimentoLivro());
+        pessoa.setCertidaoNascimentoOrdem(dto.getCertidaoNascimentoOrdem());
+        pessoa.setCertidaoCasamentoNumero(dto.getCertidaoCasamentoNumero());
+        pessoa.setCertidaoCasamentoCartorio(dto.getCertidaoCasamentoCartorio());
+        pessoa.setCertidaoCasamentoDataEmissao(dto.getCertidaoCasamentoDataEmissao());
+        pessoa.setCertidaoCasamentoFolha(dto.getCertidaoCasamentoFolha());
+        pessoa.setCertidaoCasamentoLivro(dto.getCertidaoCasamentoLivro());
+        pessoa.setCertidaoCasamentoOrdem(dto.getCertidaoCasamentoOrdem());
+        pessoa.setNomePai(dto.getNomePai());
+        pessoa.setNomeMae(dto.getNomeMae());
+        pessoa.setCep(dto.getCep());
+        pessoa.setEndereco(dto.getEndereco());
+        pessoa.setNumero(dto.getNumero());
+        pessoa.setComplemento(dto.getComplemento());
+        pessoa.setBairro(dto.getBairro());
+        pessoa.setMunicipio(dto.getMunicipio());
+        pessoa.setDistrito(dto.getDistrito());
+        pessoa.setUf(dto.getUf());
+        pessoa.setTelefone(dto.getTelefone());
+        pessoa.setCelular(dto.getCelular());
+        pessoa.setEmail(dto.getEmail());
+        pessoa.setEmpresa(dto.getEmpresa());
+        pessoa.setOcupacao(dto.getOcupacao());
+        pessoa.setTelefoneComercial(dto.getTelefoneComercial());
+        pessoa.setSenha(dto.getSenha());
 
         return pessoa;
     }
     
+	private void validarSenha(String senha) {
+		if (senha == null) {
+			throw new NegocioException("A senha precisa ser informada!");
+		}
+	}
+    
 
     private void atualizaDados(Pessoa pessoa, CadastroPessoaDTO dto) {
+    	// Buscar objetos relacionados nos repositórios
         Raca raca = racaRepository.findById(dto.getRacaId())
                 .orElseThrow(() -> new IllegalArgumentException("Raça não encontrada"));
         Pais paisNascimento = paisRepository.findById(dto.getPaisNascimentoId())
@@ -122,17 +200,74 @@ public class PessoaService {
                 .orElseThrow(() -> new IllegalArgumentException("Município de nascimento não encontrado"));
         Pais paisResidencia = paisRepository.findById(dto.getPaisResidenciaId())
                 .orElseThrow(() -> new IllegalArgumentException("País de residência não encontrado"));
-        DependenciaAdministrativa dependenciaAdm = dependenciaAdministrativaRepository.findById(dto.getDependenciaAdmId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        Nacionalidade nacionalidade = nacionalidadeRepository.findById(dto.getNacionalidadeId())
+                .orElseThrow(() -> new IllegalArgumentException("Nacionalidade não encontrada"));
+        Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 
-        BeanUtils.copyProperties(dto, pessoa, "ativo", "dataCadastro", "idPessoa", "racaId", "paisNascimentoId", "ufNascimentoId",
-                "municipioNascimentoId", "paisResidenciaId");
+        // Copiar propriedades do DTO para o objeto Pessoa, excluindo os campos mencionados
+        BeanUtils.copyProperties(dto, pessoa, "dataCadastro", "idPessoa", "racaId", "paisNascimentoId", "ufNascimentoId",
+                "municipioNascimentoId", "paisResidenciaId", "rgNumero", "rgOrgaoExpedidor",
+                "rgDataExpedicao", "rneNumero", "rneOrgaoExpedidor", "rneDataExpedicao",
+                "certidaoNascimentoDataEmissao", "certidaoNascimentoFolha", "certidaoNascimentoLivro",
+                "certidaoNascimentoOrdem", "certidaoCasamentoNumero", "certidaoCasamentoCartorio", "certidaoCasamentoFolha",
+                "certidaoCasamentoLivro", "certidaoCasamentoOrdem", "nomePai", "nomeMae", "cep", "endereco", "numero",
+                "complemento", "bairro", "municipio", "distrito", "uf", "telefone", "celular", "email", "empresa", "ocupacao", "telefoneComercial", "senha", "ativo");
 
-        pessoa.setDependenciaAdm(dependenciaAdm);
+        // Mapear os novos campos do DTO para o objeto Pessoa
+        pessoa.setConta(conta);
         pessoa.setRaca(raca);
+        pessoa.setNacionalidadeId(nacionalidade);
+        pessoa.setRgUfEmissor(ufRepository.findById(dto.getRgUfEmissorId()).orElse(null));
+        pessoa.setRneUfEmissor(ufRepository.findById(dto.getRneUfEmissorId()).orElse(null));
+        pessoa.setSexo(dto.getSexo());
+        pessoa.setNacionalidade(dto.getNacionalidade());
         pessoa.setPaisNascimento(paisNascimento);
         pessoa.setUfNascimento(ufNascimento);
         pessoa.setMunicipioNascimento(municipioNascimento);
+        pessoa.setCertidaoNascimentoUfCartorio(ufRepository.findById(dto.getCertidaoNascimentoUfCartorioId()).orElse(null));
+        pessoa.setCertidaoCasamentoUfCartorio(ufRepository.findById(dto.getCertidaoCasamentoUfCartorioId()).orElse(null));
+        pessoa.setUsuario(dto.getUsuario());
         pessoa.setPaisResidencia(paisResidencia);
+        pessoa.setDtNascimento(dto.getDtNascimento());
+        pessoa.setAtivo('S');
+        pessoa.setDataCadastro(LocalDateTime.now());
+
+        // Configurar campos adicionais
+        pessoa.setRgNumero(dto.getRgNumero());
+        pessoa.setRgOrgaoExpedidor(dto.getRgOrgaoExpedidor());
+        pessoa.setRgDataExpedicao(dto.getRgDataExpedicao());
+        pessoa.setRneNumero(dto.getRneNumero());
+        pessoa.setRneOrgaoExpedidor(dto.getRneOrgaoExpedidor());
+        pessoa.setRneDataExpedicao(dto.getRneDataExpedicao());
+        pessoa.setCertidaoNascimentoNumero(dto.getCertidaoNascimentoNumero());
+        pessoa.setCertidaoNascimentoCartorio(dto.getCertidaoNascimentoCartorio());
+        pessoa.setCertidaoNascimentoDataEmissao(dto.getCertidaoNascimentoDataEmissao());
+        pessoa.setCertidaoNascimentoFolha(dto.getCertidaoNascimentoFolha());
+        pessoa.setCertidaoNascimentoLivro(dto.getCertidaoNascimentoLivro());
+        pessoa.setCertidaoNascimentoOrdem(dto.getCertidaoNascimentoOrdem());
+        pessoa.setCertidaoCasamentoNumero(dto.getCertidaoCasamentoNumero());
+        pessoa.setCertidaoCasamentoCartorio(dto.getCertidaoCasamentoCartorio());
+        pessoa.setCertidaoCasamentoDataEmissao(dto.getCertidaoCasamentoDataEmissao());
+        pessoa.setCertidaoCasamentoFolha(dto.getCertidaoCasamentoFolha());
+        pessoa.setCertidaoCasamentoLivro(dto.getCertidaoCasamentoLivro());
+        pessoa.setCertidaoCasamentoOrdem(dto.getCertidaoCasamentoOrdem());
+        pessoa.setNomePai(dto.getNomePai());
+        pessoa.setNomeMae(dto.getNomeMae());
+        pessoa.setCep(dto.getCep());
+        pessoa.setEndereco(dto.getEndereco());
+        pessoa.setNumero(dto.getNumero());
+        pessoa.setComplemento(dto.getComplemento());
+        pessoa.setBairro(dto.getBairro());
+        pessoa.setMunicipio(dto.getMunicipio());
+        pessoa.setDistrito(dto.getDistrito());
+        pessoa.setUf(dto.getUf());
+        pessoa.setTelefone(dto.getTelefone());
+        pessoa.setCelular(dto.getCelular());
+        pessoa.setEmail(dto.getEmail());
+        pessoa.setEmpresa(dto.getEmpresa());
+        pessoa.setOcupacao(dto.getOcupacao());
+        pessoa.setTelefoneComercial(dto.getTelefoneComercial());
+        pessoa.setSenha(dto.getSenha());
     }
 }

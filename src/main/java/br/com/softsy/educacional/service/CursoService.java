@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroCursoDTO;
+import br.com.softsy.educacional.dto.CurriculoDTO;
 import br.com.softsy.educacional.dto.CursoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.Conta;
+import br.com.softsy.educacional.model.Curriculo;
 import br.com.softsy.educacional.model.Curso;
 import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.CursoRepository;
@@ -43,6 +45,12 @@ public class CursoService {
                 .map(CursoDTO::new)
                 .collect(Collectors.toList());
     }
+    
+	@Transactional(readOnly = true)
+	public CursoDTO buscarPorId(Long id) {
+		Curso curso = cursoRepository.getReferenceById(id);
+		return new CursoDTO(curso);
+	}
 
     @Transactional
     public CursoDTO salvar(CadastroCursoDTO dto) {
