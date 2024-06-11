@@ -40,7 +40,7 @@ public class OfertaConcursoController {
     }
 
     @GetMapping("/concurso/{idConcurso}")
-    public ResponseEntity<List<OfertaConcursoDTO>> buscarPorIdConta(@PathVariable Long idConcurso) {
+    public ResponseEntity<List<OfertaConcursoDTO>> buscarPorIdConcurso(@PathVariable Long idConcurso) {
         List<OfertaConcursoDTO> ofertas = ofertaConcursoService.buscarPorIdConcurso(idConcurso);
         return ResponseEntity.ok(ofertas);
     }

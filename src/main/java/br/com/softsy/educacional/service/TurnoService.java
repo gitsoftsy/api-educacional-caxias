@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.softsy.educacional.dto.OfertaConcursoDTO;
 import br.com.softsy.educacional.dto.TurnoDTO;
 import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.Equipamento;
+import br.com.softsy.educacional.model.OfertaConcurso;
 import br.com.softsy.educacional.model.Turno;
 import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
@@ -37,6 +39,15 @@ public class TurnoService {
     public TurnoDTO buscarPorId(Long id) {
         Turno turno = repository.getReferenceById(id);
         return new TurnoDTO(turno);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<TurnoDTO> buscarPorIdConta(Long idConta) {
+        List<Turno> turno = repository.findByConta_idConta(idConta)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar turno por ID da conta"));
+        return turno.stream()
+                .map(TurnoDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional
