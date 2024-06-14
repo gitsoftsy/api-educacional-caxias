@@ -7,7 +7,11 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,17 +29,17 @@ public class CandidatoController {
     @Autowired
     private CandidatoService candidatoService;
 
-//    @GetMapping
-//    public ResponseEntity<List<CandidatoDTO>> listar() {
-//        List<CandidatoDTO> candidatos = candidatoService.listarTudo();
-//        return ResponseEntity.ok(candidatos);
-//    }
-//
-//    @GetMapping("/{idCandidato}")
-//    public ResponseEntity<CandidatoDTO> buscarPorId(@PathVariable Long idCandidato) {
-//        CandidatoDTO candidatoDto = candidatoService.buscarPorId(idCandidato);
-//        return ResponseEntity.ok(candidatoDto);
-//    }
+    @GetMapping
+    public ResponseEntity<List<CandidatoDTO>> listar() {
+        List<CandidatoDTO> candidatos = candidatoService.listarTudo();
+        return ResponseEntity.ok(candidatos);
+    }
+
+    @GetMapping("/{idCandidato}")
+    public ResponseEntity<CandidatoDTO> buscarPorId(@PathVariable Long idCandidato) {
+        CandidatoDTO candidatoDto = candidatoService.buscarPorId(idCandidato);
+        return ResponseEntity.ok(candidatoDto);
+    }
 
     @PostMapping
     public ResponseEntity<CandidatoDTO> cadastrar(@RequestBody @Valid CadastroCandidatoDTO dto) {
@@ -45,13 +49,17 @@ public class CandidatoController {
         return ResponseEntity.created(uri).body(candidatoDTO);
     }
 
-//    @PutMapping("/{idCandidato}")
-//    public ResponseEntity<CandidatoDTO> atualizar(@PathVariable Long idCandidato, @RequestBody @Valid CadastroCandidatoDTO dto) {
-//        CandidatoDTO candidatoDTO = candidatoService.atualizar(idCandidato, dto);
-//        return ResponseEntity.ok(candidatoDTO);
-//    }
 
-    // Adicione outros métodos conforme necessário
-
+    @PutMapping
+    public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroCandidatoDTO dto) {
+        return ResponseEntity.ok(candidatoService.atualizar(dto));
+    }
 	
+    
+    @DeleteMapping("/{idCandidato}")
+    public ResponseEntity<?> excluir(@PathVariable Long idCandidato) {
+    	candidatoService.remover(idCandidato);
+        return ResponseEntity.ok().build();
+    }
+    
 }

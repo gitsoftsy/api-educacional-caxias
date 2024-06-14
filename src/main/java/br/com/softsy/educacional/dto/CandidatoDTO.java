@@ -13,27 +13,27 @@ import lombok.NoArgsConstructor;
 public class CandidatoDTO {
 	private Long idCandidato;
 	private ContaDTO conta;
-	private Pessoa idPessoa;
+	private PessoaDTO pessoa;
 	private String candidato;
-	private OfertaConcurso idOfertaConcurso;
-	private TipoIngresso idTipoIngresso;
+	private OfertaConcursoDTO ofertaConcurso;
+	private TipoIngressoDTO tipoIngresso;
 	private String classificacao;
-	private String idAluno;
+	private Long aluno;
 	private String aprovado;
-	private Usuario  idUsuarioAprovado;
+	private UsuarioDTO  usuarioAprovacao;
 	
 	public CandidatoDTO(Candidato candidato) {
 		
 		this.idCandidato = candidato.getIdCandidato();
 		this.conta = new ContaDTO(candidato.getConta());
-		this.idPessoa = candidato.getIdPessoa();
+		this.pessoa = new PessoaDTO(candidato.getPessoa());
 		this.candidato = candidato.getCandidato();
-		this.idOfertaConcurso = candidato.getIdOfertaConcurso();
-		this.idTipoIngresso = candidato.getIdTipoIngresso();
+		this.ofertaConcurso = new OfertaConcursoDTO (candidato.getOfertaConcurso());
+		this.tipoIngresso = new TipoIngressoDTO(candidato.getTipoIngresso());
 		this.classificacao = candidato.getClassificacao();
-		this.idAluno = candidato.getIdAluno();
+		this.aluno = candidato.getAluno();
 		this.aprovado = candidato.getAprovado();
-		this.idUsuarioAprovado = candidato.getIdUsuarioAprovado();
+		this.usuarioAprovacao = new UsuarioDTO(candidato.getUsuarioAprovacao());
 	
 		
 	}
