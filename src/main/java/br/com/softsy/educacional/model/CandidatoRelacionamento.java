@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,20 +16,17 @@ import javax.persistence.UniqueConstraint;
 import lombok.Data;
 
 @Entity
-@Table(name = "TBL_CANDIDATO_RELACIONAMENTO", 
-    uniqueConstraints = { 
-        @UniqueConstraint(name = "UQ_CANDIDATO_RELACIONAMNETO", columnNames = { "CANDIDATO_RELACIONAMENTO", "ID_CANDIDATO_RELACIONAMENTO"}),
-        })
+@Table(name = "TBL_CANDIDATO_RELACIONAMENTO") 
 @Data
 public class CandidatoRelacionamento {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @ManyToOne
-    @JoinColumn(name = "ID_CANDIDATO_RELACIONAMENTO", nullable = false)
-    private Long  candidatoRelacionamento;
+    @Column(name = "ID_CANDIDATO_RELACIONAMENTO", nullable = false)
+    private Long  idCandidatoRelacionamento;
     
-    @Column(name = "ID_CANDIDATO",  nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "ID_CANDIDATO",  nullable = false)
     private Candidato candidato;
    
     @ManyToOne
@@ -36,12 +34,12 @@ public class CandidatoRelacionamento {
     private Pessoa pessoa;
     
     @ManyToOne
-    @JoinColumn(name = "ID_PAPEL_PESSOAL", nullable = false)
-    private PapelPessoa papaelPessoa;
+    @JoinColumn(name = "ID_PAPEL_PESSOA", nullable = false)
+    private PapelPessoa papelPessoa;
     
     @Column(name = "ATIVO", nullable = false)
     private Character ativo;
 
-    @Column(name = "DT_CADASTRO")
-    private LocalDate dataCadastro;
+    @Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime dataCadastro;
 }

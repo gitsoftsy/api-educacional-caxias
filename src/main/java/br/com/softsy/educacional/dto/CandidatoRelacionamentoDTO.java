@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import br.com.softsy.educacional.model.CandidatoRelacionamento;
 import lombok.Data;
@@ -15,16 +16,17 @@ public class CandidatoRelacionamentoDTO {
     private PessoaDTO pessoa;
     private PapelPessoaDTO papelPessoa;
     private Character ativo;
-    private LocalDate dataCadastro;
+    private LocalDateTime dataCadastro;
 
     public CandidatoRelacionamentoDTO(CandidatoRelacionamento candidatoRelacionamento) {
-//
-//    	this.idCandidatoRelacionamento = ca
-//    	this.candidato = new CandidatoDTO(candidatoRelacionamento.getCandidato());
-//        this.pessoa = new PessoaDTO(candidatoRelacionamento.getPessoa());
-//        this.papelPessoa = new PapelPessoaDTO(candidatoRelacionamento.getPapaelPessoa());
-//        this.ativo = candidatoRelacionamento.getAtivo();
-//        this.dataCadastro = candidatoRelacionamento.getDataCadastro();
 
-}
+    	this.idCandidatoRelacionamento = candidatoRelacionamento.getIdCandidatoRelacionamento();
+    	this.candidato = new CandidatoDTO(candidatoRelacionamento.getCandidato());
+        this.pessoa = new PessoaDTO(candidatoRelacionamento.getPessoa());
+        this.papelPessoa = new PapelPessoaDTO(candidatoRelacionamento.getPapelPessoa());
+        this.ativo = candidatoRelacionamento.getAtivo();
+        this.dataCadastro = candidatoRelacionamento.getDataCadastro();
+
+
+    }
 }

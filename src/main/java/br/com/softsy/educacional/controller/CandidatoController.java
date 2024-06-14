@@ -40,6 +40,7 @@ public class CandidatoController {
         CandidatoDTO candidatoDto = candidatoService.buscarPorId(idCandidato);
         return ResponseEntity.ok(candidatoDto);
     }
+    
 
     @PostMapping
     public ResponseEntity<CandidatoDTO> cadastrar(@RequestBody @Valid CadastroCandidatoDTO dto) {
