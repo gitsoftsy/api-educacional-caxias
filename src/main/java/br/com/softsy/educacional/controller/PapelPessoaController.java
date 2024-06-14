@@ -1,4 +1,4 @@
-package br.com.softsy.educacional;
+package br.com.softsy.educacional.controller;
 
 import java.net.URI;
 import java.util.List;

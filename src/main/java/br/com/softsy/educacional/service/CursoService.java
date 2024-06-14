@@ -46,6 +46,7 @@ public class CursoService {
                 .collect(Collectors.toList());
     }
     
+    
 	@Transactional(readOnly = true)
 	public CursoDTO buscarPorId(Long id) {
 		Curso curso = cursoRepository.getReferenceById(id);

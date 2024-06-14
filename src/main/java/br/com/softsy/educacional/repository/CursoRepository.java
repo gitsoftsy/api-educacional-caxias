@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
+
+import br.com.softsy.educacional.dto.CursoDTO;
 import br.com.softsy.educacional.model.Curso;
 
 public interface CursoRepository extends JpaRepository<Curso, Long>{
@@ -15,5 +17,6 @@ public interface CursoRepository extends JpaRepository<Curso, Long>{
 	
 	@Query("select curso from Curso curso join curso.conta conta where conta.idConta = :idConta")
     Optional<List<Curso>> findByConta_IdConta(@Param("idConta") Long idConta);
+	
 
 }

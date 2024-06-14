@@ -1,8 +1,13 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroCursoDTO;
-import br.com.softsy.educacional.dto.CurriculoDTO;
 import br.com.softsy.educacional.dto.CursoDTO;
 import br.com.softsy.educacional.service.CursoService;
 
@@ -27,6 +32,9 @@ public class CursoController {
 
     @Autowired
     private CursoService cursoService;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @GetMapping
     public ResponseEntity<List<CursoDTO>> listar() {
@@ -38,6 +46,34 @@ public class CursoController {
     public ResponseEntity<CursoDTO> buscarPorId(@PathVariable Long idCurso) {
         CursoDTO cursoDto = cursoService.buscarPorId(idCurso);
         return ResponseEntity.ok(cursoDto);
+    }
+    
+
+    @GetMapping("/ativos/{idConta}")
+    public List<Map<String, Object>> getCursos(@PathVariable Long idConta) {
+        List<Object[]> cursos = entityManager.createQuery(
+                "SELECT DISTINCT cu.idCurso, cu.nome " +
+                        "FROM Curso cu " +
+                        "JOIN cu.ofertaConcurso oc " +
+                        "JOIN oc.concurso c " +
+                        "WHERE c.ativo = 'S' " +
+                        "AND oc.ativo = 'S' " +
+                        "AND cu.ativo = 'S' " +
+                        "AND c.conta.idConta = :idConta", Object[].class)
+                .setParameter("idConta", idConta)
+                .getResultList();
+
+        // TRANSFORMANDO EM JSON
+        List<Map<String, Object>> cursosJson = cursos.stream()
+                .map(curso -> {
+                    Map<String, Object> cursoJson = new HashMap<>();
+                    cursoJson.put("idCurso", curso[0]);
+                    cursoJson.put("nome", curso[1]);
+                    return cursoJson;
+                })
+                .collect(Collectors.toList());
+
+        return cursosJson;
     }
 
     @GetMapping("/conta/{idConta}")

@@ -146,7 +146,7 @@ public class Pessoa {
 	@JoinColumn(name = "ID_PAIS_RESIDENCIA")
 	private Pais paisResidencia;
 
-	@Column(name = "NACIONALIDADE", length = 2)
+	@Column(name = "NACIONALIDADE", length = 3)
 	private String nacionalidade;
 
 	@Column(name = "NOME_PAI", length = 255)

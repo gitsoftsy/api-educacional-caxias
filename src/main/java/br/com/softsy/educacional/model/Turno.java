@@ -2,7 +2,10 @@ package br.com.softsy.educacional.model;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,8 +13,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -50,5 +56,9 @@ public class Turno {
 	
 	@Column(name = "ATIVO", nullable = false)
 	private Character ativo;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "turno", cascade = CascadeType.ALL)
+	private Set<OfertaConcurso> ofertaConcurso = new HashSet<>();
 
 }

@@ -120,9 +120,9 @@ public class PessoaService {
                 "certidaoNascimentoDataEmissao", "certidaoNascimentoFolha", "certidaoNascimentoLivro",
                 "certidaoNascimentoOrdem", "certidaoCasamentoNumero", "certidaoCasamentoCartorio", "certidaoCasamentoFolha",
                 "certidaoCasamentoLivro", "certidaoCasamentoOrdem", "nomePai", "nomeMae", "cep", "endereco", "numero",
-                "complemento", "bairro", "contaId","municipio", "distrito", "uf", "telefone", "celular", "email", "empresa", "ocupacao", "telefoneComercial", "senha", "ativo");
+                "complemento", "bairro", "contaId","municipio", "distrito", "uf", "telefone", "celular", "email", "empresa", "cpf","ocupacao", "telefoneComercial", "senha", "ativo");
 
-        // Mapear os novos campos do DTO para o objeto Pessoa
+
         pessoa.setConta(conta);
         pessoa.setRaca(raca);
         pessoa.setNacionalidadeId(nacionalidade);

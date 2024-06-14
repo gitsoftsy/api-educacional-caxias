@@ -1,8 +1,13 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,6 +32,9 @@ public class OfertaConcursoController {
 
     @Autowired
     private OfertaConcursoService ofertaConcursoService;
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @GetMapping
     public ResponseEntity<List<CadastroOfertaConcursoDTO>> listar() {
@@ -37,6 +46,34 @@ public class OfertaConcursoController {
     public ResponseEntity<CadastroOfertaConcursoDTO> buscarPorId(@PathVariable Long idOfertaConcurso) {
         CadastroOfertaConcursoDTO ofertaDto = ofertaConcursoService.buscarPorId(idOfertaConcurso);
         return ResponseEntity.ok(ofertaDto);
+    }
+    
+    @GetMapping("/series/conta/{idConta}/curso/{idCurso}/escola/{idEscola}")
+    public List<Map<String, Object>> getSeries(@PathVariable Long idConta, @PathVariable Long idCurso, @PathVariable Long idEscola) {
+        List<Integer> series = entityManager.createQuery(
+                "SELECT DISTINCT oc.serie " +
+                        "FROM OfertaConcurso oc " +
+                        "JOIN oc.concurso c " +
+                        "WHERE c.ativo = 'S' " +
+                        "AND oc.ativo = 'S' " +
+                        "AND c.conta.idConta = :idConta " +
+                        "AND oc.curso.idCurso = :idCurso " +
+                        "AND oc.escola.idEscola = :idEscola", Integer.class)
+                .setParameter("idConta", idConta)
+                .setParameter("idCurso", idCurso)
+                .setParameter("idEscola", idEscola)
+                .getResultList();
+
+        // TRANSFORMANDO EM JSON
+        List<Map<String, Object>> seriesJson = series.stream()
+                .map(serie -> {
+                    Map<String, Object> serieJson = new HashMap<>();
+                    serieJson.put("serie", serie);
+                    return serieJson;
+                })
+                .collect(Collectors.toList());
+
+        return seriesJson;
     }
 
     @GetMapping("/concurso/{idConcurso}")

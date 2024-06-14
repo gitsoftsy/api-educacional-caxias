@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Entity
@@ -138,20 +140,29 @@ public class Escola {
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_PUBLICO")
 	private OrgaoPublico orgaoPublico;
-
+	
+	@JsonIgnore
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)
 	private Set<EscolaTelefone> telefones = new HashSet<>();
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)
 	private Set<EscolaTratamentoLixo> escolaTratamento = new HashSet<>();
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)
 	private Set<EscolaTermoColaboracao> escolaTermoColaboracao = new HashSet<>();
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)
 	private Set<Turma> turma = new HashSet<>();
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)
 	private Set<EscolaAgua> escolaAgua = new HashSet<>();
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "escola", cascade = CascadeType.ALL)
+	private Set<OfertaConcurso> ofertaConcurso = new HashSet<>();
 
 }
