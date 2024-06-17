@@ -94,10 +94,9 @@ public class PessoaService {
         pessoa.setAtivo(status);
     }
 
-    private Pessoa criarPessoaAPartirDTO(CadastroPessoaDTO dto) {
+    public Pessoa criarPessoaAPartirDTO(CadastroPessoaDTO dto) {
         Pessoa pessoa = new Pessoa();
 
-        // Buscar objetos relacionados nos repositórios
         Raca raca = racaRepository.findById(dto.getRacaId())
                 .orElseThrow(() -> new IllegalArgumentException("Raça não encontrada"));
         Pais paisNascimento = paisRepository.findById(dto.getPaisNascimentoId())
@@ -113,14 +112,13 @@ public class PessoaService {
         Conta conta = contaRepository.findById(dto.getContaId())
                 .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 
-        // Copiar propriedades do DTO para o objeto Pessoa, excluindo os campos mencionados
-        BeanUtils.copyProperties(dto, pessoa, "dataCadastro", "idPessoa", "racaId", "paisNascimentoId", "ufNascimentoId",
-                "municipioNascimentoId", "paisResidenciaId", "rgNumero", "rgOrgaoExpedidor",
+        BeanUtils.copyProperties(dto, pessoa, "dataCadastro", "idPessoa",
+                "rgNumero", "rgOrgaoExpedidor",
                 "rgDataExpedicao", "rneNumero", "rneOrgaoExpedidor", "rneDataExpedicao",
                 "certidaoNascimentoDataEmissao", "certidaoNascimentoFolha", "certidaoNascimentoLivro",
                 "certidaoNascimentoOrdem", "certidaoCasamentoNumero", "certidaoCasamentoCartorio", "certidaoCasamentoFolha",
                 "certidaoCasamentoLivro", "certidaoCasamentoOrdem", "nomePai", "nomeMae", "cep", "endereco", "numero",
-                "complemento", "bairro", "contaId","municipio", "distrito", "uf", "telefone", "celular", "email", "empresa", "cpf","ocupacao", "telefoneComercial", "senha", "ativo");
+                "complemento", "bairro","municipio", "distrito", "uf", "telefone", "celular", "email", "empresa","ocupacao", "telefoneComercial", "senha", "ativo");
 
 
         pessoa.setConta(conta);
@@ -173,6 +171,7 @@ public class PessoaService {
         pessoa.setTelefone(dto.getTelefone());
         pessoa.setCelular(dto.getCelular());
         pessoa.setEmail(dto.getEmail());
+        pessoa.setCpf(dto.getCpf());
         pessoa.setEmpresa(dto.getEmpresa());
         pessoa.setOcupacao(dto.getOcupacao());
         pessoa.setTelefoneComercial(dto.getTelefoneComercial());
@@ -182,7 +181,7 @@ public class PessoaService {
     }
     
 	private void validarSenha(String senha) {
-		if (senha == null) {
+		if (senha == "") {
 			throw new NegocioException("A senha precisa ser informada!");
 		}
 	}
@@ -264,6 +263,7 @@ public class PessoaService {
         pessoa.setUf(dto.getUf());
         pessoa.setTelefone(dto.getTelefone());
         pessoa.setCelular(dto.getCelular());
+        pessoa.setCpf(dto.getCpf());
         pessoa.setEmail(dto.getEmail());
         pessoa.setEmpresa(dto.getEmpresa());
         pessoa.setOcupacao(dto.getOcupacao());

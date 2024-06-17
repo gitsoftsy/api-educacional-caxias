@@ -75,6 +75,33 @@ public class OfertaConcursoController {
 
         return seriesJson;
     }
+    
+    @GetMapping("/curso/{idCurso}/turno/{idTurno}/serie/{serie}/escola/{idEscola}")
+    public ResponseEntity<Map<String, Object>> buscarIdOfertaConcurso(
+        @PathVariable Long idCurso,
+        @PathVariable Long idTurno,
+        @PathVariable Integer serie,
+        @PathVariable Long idEscola
+    ) {
+    	Long idOfertaConcurso = (Long) entityManager.createQuery(
+            "SELECT oc.idOfertaConcurso " +
+            "FROM OfertaConcurso oc " +
+            "WHERE oc.curso.idCurso = :idCurso " +
+            "AND oc.turno.idTurno = :idTurno " +
+            "AND oc.serie = :serie " +
+            "AND oc.escola.idEscola = :idEscola"
+        )
+        .setParameter("idCurso", idCurso)
+        .setParameter("idTurno", idTurno)
+        .setParameter("serie", serie)
+        .setParameter("idEscola", idEscola)
+        .getSingleResult();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("idOfertaCurso", idOfertaConcurso);
+
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/concurso/{idConcurso}")
     public ResponseEntity<List<OfertaConcursoDTO>> buscarPorIdConcurso(@PathVariable Long idConcurso) {

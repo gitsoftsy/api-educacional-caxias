@@ -1,7 +1,10 @@
 package br.com.softsy.educacional.service;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -34,6 +37,9 @@ public class CandidatoService {
     private ContaRepository contaRepository;
     
     @Autowired
+    private OfertaConcursoRepository ofertaConcursoRepository;
+    
+    @Autowired
     private PessoaRepository pessoaRepository;
     
     @Autowired
@@ -45,11 +51,6 @@ public class CandidatoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
     
-    
-    
-    
-
-   
     @Transactional(readOnly = true)
     public List<CandidatoDTO> listarTudo() {
         List<Candidato> concursos = candidatoRepository.findAll();
@@ -71,6 +72,25 @@ public class CandidatoService {
                 .map(CandidatoDTO::new)
                 .collect(Collectors.toList());
     }
+    
+    public Map<String, Object> updateCandidatoOfertaConcurso(Long idCandidato, Long idOfertaConcurso) {
+        Optional<Candidato> candidatoOptional = candidatoRepository.findById(idCandidato);
+        if (candidatoOptional.isPresent()) {
+            Candidato candidato = candidatoOptional.get();
+            OfertaConcurso ofertaConcurso = ofertaConcursoRepository.findById(idOfertaConcurso)
+                                            .orElseThrow(() -> new RuntimeException("Oferta de concurso não encontrada"));
+            candidato.setOfertaConcurso(ofertaConcurso);
+            Candidato savedCandidato = candidatoRepository.save(candidato);
+
+            CadastroCandidatoDTO updatedCandidatoDTO = new CadastroCandidatoDTO(savedCandidato);
+            Map<String, Object> response = new HashMap<>();
+            response.put("atualizado", true);
+            response.put("candidato", updatedCandidatoDTO);
+            return response;
+        } else {
+            throw new RuntimeException("Candidato não encontrado");
+        }
+    }
 
     @Transactional
     public CandidatoDTO salvar(CadastroCandidatoDTO dto) {
@@ -89,7 +109,7 @@ public class CandidatoService {
     }
 
 
-    private Candidato criarCandidatoAPartirDTO(CadastroCandidatoDTO dto) {
+    public Candidato criarCandidatoAPartirDTO(CadastroCandidatoDTO dto) {
         Candidato candidato = new Candidato();
 
       
@@ -98,11 +118,11 @@ public class CandidatoService {
         Pessoa pessoa = pessoaRepository.findById(dto.getPessoaId())
                 .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada"));
         OfertaConcurso ofertaConcurso = ofertaRepository.findById(dto.getOfertaConcursoId())
-                .orElse(null); 
+                .orElseThrow(() -> new IllegalArgumentException("Oferta não encontrada")); 
         TipoIngresso tipoIngresso = tipoIngressoRepository.findById(dto.getTipoIngressoId())
                 .orElseThrow(() -> new IllegalArgumentException("Tipo de Ingresso não encontrado"));
         Usuario usuarioAprovacao = usuarioRepository.findById(dto.getUsuarioAprovacaoId())
-                .orElse(null); 
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado")); 
 
  
         candidato.setConta(conta);
@@ -117,14 +137,6 @@ public class CandidatoService {
 
         return candidato;
     }
-
-
-//    @Transactional
-//    public void ativaDesativa(char status, Long idConcurso) {
-//    	Candidato candidato = candidatoRepository.getReferenceById(idConcurso);
-//    	candidato.setAtivo(status);
-//        candidatoRepository.save(candidato);
-//    }
 
     private void atualizarDados(Candidato destino, CadastroCandidatoDTO origem) {
         BeanUtils.copyProperties(origem, destino, "idCandidato", "contaId", "pessoaId", "ofertaConcursoId", "tipoIngressoId", "classificacao", "aluno", "aprovado", "usuarioAprovadoId");
