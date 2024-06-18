@@ -2,10 +2,8 @@ package br.com.softsy.educacional.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -147,11 +145,11 @@ public class CadastroPessoaDTO {
         this.cpf = pessoa.getCpf();
         this.rgNumero = pessoa.getRgNumero();
         this.rgOrgaoExpedidor = pessoa.getRgOrgaoExpedidor();
-        this.rgUfEmissorId = pessoa.getRgUfEmissor().getIdUf();
+        this.rgUfEmissorId = pessoa.getRgUfEmissor() != null ? pessoa.getRgUfEmissor().getIdUf() : null;
         this.rgDataExpedicao = pessoa.getRgDataExpedicao();
         this.rneNumero = pessoa.getRneNumero();
         this.rneOrgaoExpedidor = pessoa.getRneOrgaoExpedidor();
-        this.rneUfEmissorId = pessoa.getRneUfEmissor().getIdUf();
+        this.rneUfEmissorId = pessoa.getRneUfEmissor() != null ? pessoa.getRneUfEmissor().getIdUf() : null;
         this.rneDataExpedicao = pessoa.getRneDataExpedicao();
         this.certidaoNascimentoNumero = pessoa.getCertidaoNascimentoNumero();
         this.certidaoNascimentoCartorio = pessoa.getCertidaoNascimentoCartorio();

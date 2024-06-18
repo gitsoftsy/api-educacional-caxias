@@ -1,16 +1,15 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,27 +18,89 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroCandidatoDTO;
+import br.com.softsy.educacional.dto.CadastroCandidatoPessoaDTO;
 import br.com.softsy.educacional.dto.CandidatoDTO;
+import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.model.Candidato;
-import br.com.softsy.educacional.model.OfertaConcurso;
+import br.com.softsy.educacional.model.Pessoa;
+import br.com.softsy.educacional.repository.CandidatoRepository;
+import br.com.softsy.educacional.repository.PessoaRepository;
 import br.com.softsy.educacional.service.CandidatoService;
+import br.com.softsy.educacional.service.PessoaService;
 
 @RestController
 @RequestMapping("/candidatos")
 public class CandidatoController {
 	
-
+    @Autowired
+    private PessoaService pessoaService;
     @Autowired
     private CandidatoService candidatoService;
+    
+    @Autowired
+    private PessoaRepository pessoaRepository;
+    
+    @Autowired
+    private CandidatoRepository candidatoRepository;
+    
+	@Autowired
+	private PasswordEncrypt encrypt;
     
     @PersistenceContext
     private EntityManager entityManager;
 
+    
+    private static class CadastroResponseDTO {
+        private String candidato;
+        private Long idCandidato;
+
+        public CadastroResponseDTO(String candidato, Long idCandidato) {
+            this.candidato = candidato;
+            this.idCandidato = idCandidato;
+        }
+
+        // Getters e Setters
+        public String getCandidato() {
+            return candidato;
+        }
+
+        public void setCandidato(String candidato) {
+            this.candidato = candidato;
+        }
+
+        public Long getIdCandidato() {
+            return idCandidato;
+        }
+
+        public void setIdCandidato(Long idCandidato) {
+            this.idCandidato = idCandidato;
+        }
+    }
+    
+	 @PostMapping("/pessoa-candidato")
+	    public ResponseEntity<Object> cadastrarPessoaECandidato(@RequestBody CadastroCandidatoPessoaDTO dto) {
+	        try {
+	            Pessoa pessoa = pessoaService.criarPessoaAPartirDTO(dto.getPessoaDTO());
+	            pessoa.setSenha(encrypt.hashPassword(pessoa.getSenha()));
+	            pessoa = pessoaRepository.save(pessoa);
+
+	            dto.getCandidatoDTO().setPessoaId(pessoa.getIdPessoa());
+
+	            Candidato candidato = candidatoService.criarCandidatoAPartirDTO(dto.getCandidatoDTO());
+	            candidato = candidatoRepository.save(candidato);
+
+	            CadastroResponseDTO responseDTO = new CadastroResponseDTO(candidato.getCandidato(), pessoa.getIdPessoa());
+	            return ResponseEntity.ok(responseDTO);
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
+	        }
+	    }
+    
+    
     @GetMapping
     public ResponseEntity<List<CandidatoDTO>> listar() {
         List<CandidatoDTO> candidatos = candidatoService.listarTudo();

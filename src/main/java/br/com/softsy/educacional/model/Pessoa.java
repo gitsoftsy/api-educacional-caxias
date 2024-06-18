@@ -2,7 +2,6 @@ package br.com.softsy.educacional.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -53,7 +54,7 @@ public class Pessoa {
 	private String rgOrgaoExpedidor;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_RG_UF_EMISSOR")
+	@JoinColumn(name = "ID_RG_UF_EMISSOR", nullable = true)
 	private Uf rgUfEmissor;
 
 	@Column(name = "RG_DATA_EXP")
@@ -209,6 +210,7 @@ public class Pessoa {
 	@Column(name = "ATIVO", length = 1, nullable = false)
 	private Character ativo;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
 	private Set<PessoaNacionalidade> nacionalidades = new HashSet<>();
 

@@ -1,9 +1,7 @@
 package br.com.softsy.educacional.service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -15,9 +13,7 @@ import br.com.softsy.educacional.dto.CadastroPessoaDTO;
 import br.com.softsy.educacional.dto.PessoaDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.infra.exception.NegocioException;
-import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.Conta;
-import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.Municipio;
 import br.com.softsy.educacional.model.Nacionalidade;
 import br.com.softsy.educacional.model.Pais;
@@ -25,7 +21,6 @@ import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.model.Raca;
 import br.com.softsy.educacional.model.Uf;
 import br.com.softsy.educacional.repository.ContaRepository;
-import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.MunicipioRepository;
 import br.com.softsy.educacional.repository.NacionalidadeRepository;
 import br.com.softsy.educacional.repository.PaisRepository;
@@ -122,13 +117,13 @@ public class PessoaService {
         
         Uf ufRgEmissor = null;
         if (dto.getRgUfEmissorId() != null) {
-            ufCertidaoCasamento = ufRepository.findById(dto.getRgUfEmissorId())
+        	ufRgEmissor = ufRepository.findById(dto.getRgUfEmissorId())
                     .orElseThrow(() -> new IllegalArgumentException("UF de casamento não encontrado"));
         }
 
         Uf ufRneEmissor = null;
         if (dto.getRneUfEmissorId() != null) {
-            ufCertidaoNascimento = ufRepository.findById(dto.getRneUfEmissorId())
+        	ufRneEmissor = ufRepository.findById(dto.getRneUfEmissorId())
                     .orElseThrow(() -> new IllegalArgumentException("UF de nascimento não encontrado"));
         }
         Municipio municipioNascimento = municipioRepository.findById(dto.getMunicipioNascimentoId())

@@ -1,8 +1,18 @@
 package br.com.softsy.educacional.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,14 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.softsy.educacional.dto.CadastroResponsavelDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
-import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.model.CandidatoRelacionamento;
 import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.repository.CandidatoRelacionamentoRepository;
-import br.com.softsy.educacional.repository.CandidatoRepository;
 import br.com.softsy.educacional.repository.PessoaRepository;
 import br.com.softsy.educacional.service.CandidatoRelacionamentoService;
-import br.com.softsy.educacional.service.CandidatoService;
 import br.com.softsy.educacional.service.PessoaService;
 
 @RestController
@@ -39,6 +46,9 @@ public class ResponsavelController {
 	@Autowired
 	private PasswordEncrypt encrypt;
 	
+	@PersistenceContext
+	private EntityManager entityManager;
+	
 	 @PostMapping("/pessoa-candidato")
 	    public ResponseEntity<Object> cadastrarPessoaECandidato(@RequestBody CadastroResponsavelDTO dto) {
 	        try {
@@ -57,6 +67,36 @@ public class ResponsavelController {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
 	        }
 	    }
+	 
+	 
+	    @GetMapping("/candidato/{idCandidato}")
+	    public List<Map<String, Object>> buscarResponsaveisPorIdCandidato(
+	            @PathVariable Long idCandidato) {
+
+	        List<Object[]> resultados = entityManager.createQuery(
+	                "SELECT PP.papelPessoa, P " +
+	                        "FROM CandidatoRelacionamento CR " +
+	                        "JOIN CR.pessoa P " +
+	                        "JOIN CR.papelPessoa PP " +
+	                        "WHERE CR.candidato.id = :idCandidato", Object[].class)
+	                .setParameter("idCandidato", idCandidato)
+	                .getResultList();
+
+	        // TRANSFORMANDO EM JSON
+	        List<Map<String, Object>> responsaveisJson = resultados.stream()
+	                .map(resultado -> {
+	                    Map<String, Object> responsavelJson = new HashMap<>();
+	                    responsavelJson.put("papelPessoa", resultado[0]);
+	                    responsavelJson.put("pessoa", resultado[1]);
+	                    // Adicione mais campos conforme necessário, adaptando os índices dos resultados
+	                    return responsavelJson;
+	                })
+	                .collect(Collectors.toList());
+
+	        return responsaveisJson;
+	    }
+	 
+	 
 
 	    private static class CadastroResponseDTO {
 	        private Long idPessoa;
