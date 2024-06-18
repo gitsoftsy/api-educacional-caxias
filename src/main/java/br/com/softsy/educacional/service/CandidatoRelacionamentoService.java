@@ -66,7 +66,7 @@ public class CandidatoRelacionamentoService {
 	    }
 
 
-	    private CandidatoRelacionamento criarCandidatoRelacionamentoAPartirDTO(CadastroCandidatoRelacionamentoDTO dto) {
+	    public CandidatoRelacionamento criarCandidatoRelacionamentoAPartirDTO(CadastroCandidatoRelacionamentoDTO dto) {
 	        CandidatoRelacionamento candidatoRelacionamento = new CandidatoRelacionamento();
 
 

@@ -66,7 +66,7 @@ public class Pessoa {
 	private String rneOrgaoExpedidor;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_RNE_UF_EMISSOR")
+	@JoinColumn(name = "ID_RNE_UF_EMISSOR", nullable = true)
 	private Uf rneUfEmissor;
 
 	@Column(name = "RNE_DATA_EXP")
@@ -79,7 +79,7 @@ public class Pessoa {
 	private String certidaoNascimentoCartorio;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_CERT_NASC_UF_CARTORIO")
+	@JoinColumn(name = "ID_CERT_NASC_UF_CARTORIO", nullable = true)
 	private Uf certidaoNascimentoUfCartorio;
 
 	@Column(name = "CERT_NASC_DATA_EMISSAO")
@@ -101,7 +101,7 @@ public class Pessoa {
 	private String certidaoCasamentoCartorio;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_CERT_CASAMENTO_UF_CARTORIO")
+	@JoinColumn(name = "ID_CERT_CASAMENTO_UF_CARTORIO", nullable = true)
 	private Uf certidaoCasamentoUfCartorio;
 
 	@Column(name = "CERT_CASAMENTO_DATA_EMISSAO")
@@ -131,7 +131,7 @@ public class Pessoa {
 	private Pais paisNascimento;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_UF_NASCIMENTO")
+	@JoinColumn(name = "ID_UF_NASCIMENTO", nullable = true)
 	private Uf ufNascimento;
 
 	@ManyToOne

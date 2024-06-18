@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -154,14 +155,14 @@ public class CadastroPessoaDTO {
         this.rneDataExpedicao = pessoa.getRneDataExpedicao();
         this.certidaoNascimentoNumero = pessoa.getCertidaoNascimentoNumero();
         this.certidaoNascimentoCartorio = pessoa.getCertidaoNascimentoCartorio();
-        this.certidaoNascimentoUfCartorioId = pessoa.getCertidaoNascimentoUfCartorio().getIdUf();
+        this.certidaoNascimentoUfCartorioId = pessoa.getCertidaoNascimentoUfCartorio() != null ? pessoa.getCertidaoNascimentoUfCartorio().getIdUf() : null;
         this.certidaoNascimentoDataEmissao = pessoa.getCertidaoNascimentoDataEmissao();
         this.certidaoNascimentoFolha = pessoa.getCertidaoNascimentoFolha();
         this.certidaoNascimentoLivro = pessoa.getCertidaoNascimentoLivro();
         this.certidaoNascimentoOrdem = pessoa.getCertidaoNascimentoOrdem();
         this.certidaoCasamentoNumero = pessoa.getCertidaoCasamentoNumero();
         this.certidaoCasamentoCartorio = pessoa.getCertidaoCasamentoCartorio();
-        this.certidaoCasamentoUfCartorioId = pessoa.getCertidaoCasamentoUfCartorio().getIdUf();
+        this.certidaoCasamentoUfCartorioId = pessoa.getCertidaoCasamentoUfCartorio() != null ? pessoa.getCertidaoCasamentoUfCartorio().getIdUf() : null;
         this.certidaoCasamentoDataEmissao = pessoa.getCertidaoCasamentoDataEmissao();
         this.certidaoCasamentoFolha = pessoa.getCertidaoCasamentoFolha();
         this.certidaoCasamentoLivro = pessoa.getCertidaoCasamentoLivro();

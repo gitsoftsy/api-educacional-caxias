@@ -18,12 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.PapelPessoaDTO;
-import br.com.softsy.educacional.dto.TipoIngressoDTO;
 import br.com.softsy.educacional.service.PapelPessoaService;
 
 @RestController
 @RequestMapping("/papelPessoa")
-public class PapelPessoaController {
+public class PapelPessoasController {
 
     @Autowired
     private PapelPessoaService papelPessoaService;

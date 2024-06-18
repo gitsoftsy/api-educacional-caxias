@@ -3,7 +3,7 @@ package br.com.softsy.educacional.dto;
 public class CadastroResponsavelDTO {
 	
     private CadastroPessoaDTO pessoaDTO;
-    private CadastroCandidatoDTO candidatoDTO;
+    private CadastroCandidatoRelacionamentoDTO candidatoRelacionamentoDTO;
     
 	public CadastroPessoaDTO getPessoaDTO() {
 		return pessoaDTO;
@@ -11,11 +11,11 @@ public class CadastroResponsavelDTO {
 	public void setPessoaDTO(CadastroPessoaDTO pessoaDTO) {
 		this.pessoaDTO = pessoaDTO;
 	}
-	public CadastroCandidatoDTO getCandidatoDTO() {
-		return candidatoDTO;
+	public CadastroCandidatoRelacionamentoDTO getCandidatoRelacionamentoDTO() {
+		return candidatoRelacionamentoDTO;
 	}
-	public void setCandidatoDTO(CadastroCandidatoDTO candidatoDTO) {
-		this.candidatoDTO = candidatoDTO;
+	public void setCandidatoRelacionamentoDTO(CadastroCandidatoRelacionamentoDTO candidatoRelacionamentoDTO) {
+		this.candidatoRelacionamentoDTO = candidatoRelacionamentoDTO;
 	}
     
     

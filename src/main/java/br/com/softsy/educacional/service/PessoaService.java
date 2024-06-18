@@ -95,6 +95,11 @@ public class PessoaService {
     }
 
     public Pessoa criarPessoaAPartirDTO(CadastroPessoaDTO dto) {
+    	
+        if (dto.getCertidaoNascimentoUfCartorioId() == null && dto.getCertidaoCasamentoUfCartorioId() == null) {
+            throw new IllegalArgumentException("Pelo menos um dos campos certidaoNascimentoUfCartorioId ou certidaoCasamentoUfCartorioId deve ser preenchido");
+        }
+        
         Pessoa pessoa = new Pessoa();
 
         Raca raca = racaRepository.findById(dto.getRacaId())
@@ -103,6 +108,29 @@ public class PessoaService {
                 .orElseThrow(() -> new IllegalArgumentException("País de nascimento não encontrado"));
         Uf ufNascimento = ufRepository.findById(dto.getUfNascimentoId())
                 .orElseThrow(() -> new IllegalArgumentException("UF de nascimento não encontrado"));
+        Uf ufCertidaoCasamento = null;
+        if (dto.getCertidaoCasamentoUfCartorioId() != null) {
+            ufCertidaoCasamento = ufRepository.findById(dto.getCertidaoCasamentoUfCartorioId())
+                    .orElseThrow(() -> new IllegalArgumentException("UF de casamento não encontrado"));
+        }
+
+        Uf ufCertidaoNascimento = null;
+        if (dto.getCertidaoNascimentoUfCartorioId() != null) {
+            ufCertidaoNascimento = ufRepository.findById(dto.getCertidaoNascimentoUfCartorioId())
+                    .orElseThrow(() -> new IllegalArgumentException("UF de nascimento não encontrado"));
+        }
+        
+        Uf ufRgEmissor = null;
+        if (dto.getRgUfEmissorId() != null) {
+            ufCertidaoCasamento = ufRepository.findById(dto.getRgUfEmissorId())
+                    .orElseThrow(() -> new IllegalArgumentException("UF de casamento não encontrado"));
+        }
+
+        Uf ufRneEmissor = null;
+        if (dto.getRneUfEmissorId() != null) {
+            ufCertidaoNascimento = ufRepository.findById(dto.getRneUfEmissorId())
+                    .orElseThrow(() -> new IllegalArgumentException("UF de nascimento não encontrado"));
+        }
         Municipio municipioNascimento = municipioRepository.findById(dto.getMunicipioNascimentoId())
                 .orElseThrow(() -> new IllegalArgumentException("Município de nascimento não encontrado"));
         Pais paisResidencia = paisRepository.findById(dto.getPaisResidenciaId())
@@ -124,15 +152,15 @@ public class PessoaService {
         pessoa.setConta(conta);
         pessoa.setRaca(raca);
         pessoa.setNacionalidadeId(nacionalidade);
-        pessoa.setRgUfEmissor(ufRepository.findById(dto.getRgUfEmissorId()).orElse(null));
-        pessoa.setRneUfEmissor(ufRepository.findById(dto.getRneUfEmissorId()).orElse(null));
+        pessoa.setRgUfEmissor(ufRgEmissor);
+        pessoa.setRneUfEmissor(ufRneEmissor);
         pessoa.setSexo(dto.getSexo());
         pessoa.setNacionalidade(dto.getNacionalidade());
         pessoa.setPaisNascimento(paisNascimento);
         pessoa.setUfNascimento(ufNascimento);
         pessoa.setMunicipioNascimento(municipioNascimento);
-        pessoa.setCertidaoNascimentoUfCartorio(ufRepository.findById(dto.getCertidaoNascimentoUfCartorioId()).orElse(null));
-        pessoa.setCertidaoCasamentoUfCartorio(ufRepository.findById(dto.getCertidaoCasamentoUfCartorioId()).orElse(null));
+        pessoa.setCertidaoNascimentoUfCartorio(ufCertidaoNascimento);
+        pessoa.setCertidaoCasamentoUfCartorio(ufCertidaoCasamento);
         pessoa.setUsuario(dto.getUsuario());
         pessoa.setPaisResidencia(paisResidencia);
         pessoa.setDtNascimento(dto.getDtNascimento());
@@ -188,7 +216,6 @@ public class PessoaService {
     
 
     private void atualizaDados(Pessoa pessoa, CadastroPessoaDTO dto) {
-    	// Buscar objetos relacionados nos repositórios
         Raca raca = racaRepository.findById(dto.getRacaId())
                 .orElseThrow(() -> new IllegalArgumentException("Raça não encontrada"));
         Pais paisNascimento = paisRepository.findById(dto.getPaisNascimentoId())
@@ -204,7 +231,6 @@ public class PessoaService {
         Conta conta = contaRepository.findById(dto.getContaId())
                 .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 
-        // Copiar propriedades do DTO para o objeto Pessoa, excluindo os campos mencionados
         BeanUtils.copyProperties(dto, pessoa, "dataCadastro", "idPessoa", "racaId", "paisNascimentoId", "ufNascimentoId",
                 "municipioNascimentoId", "paisResidenciaId", "rgNumero", "rgOrgaoExpedidor",
                 "rgDataExpedicao", "rneNumero", "rneOrgaoExpedidor", "rneDataExpedicao",

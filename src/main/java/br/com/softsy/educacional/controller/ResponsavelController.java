@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.softsy.educacional.dto.CadastroResponsavelDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.model.Candidato;
+import br.com.softsy.educacional.model.CandidatoRelacionamento;
 import br.com.softsy.educacional.model.Pessoa;
+import br.com.softsy.educacional.repository.CandidatoRelacionamentoRepository;
 import br.com.softsy.educacional.repository.CandidatoRepository;
 import br.com.softsy.educacional.repository.PessoaRepository;
+import br.com.softsy.educacional.service.CandidatoRelacionamentoService;
 import br.com.softsy.educacional.service.CandidatoService;
 import br.com.softsy.educacional.service.PessoaService;
 
@@ -25,13 +28,13 @@ public class ResponsavelController {
     private PessoaService pessoaService;
 
     @Autowired
-    private CandidatoService candidatoService;
+    private CandidatoRelacionamentoService candidatoRelacionamentoService;
     
     @Autowired
     private PessoaRepository pessoaRepository;
 
     @Autowired
-    private CandidatoRepository candidatoRepository;
+    private CandidatoRelacionamentoRepository candidatoRepository;
     
 	@Autowired
 	private PasswordEncrypt encrypt;
@@ -43,12 +46,12 @@ public class ResponsavelController {
 	            pessoa.setSenha(encrypt.hashPassword(pessoa.getSenha()));
 	            pessoa = pessoaRepository.save(pessoa);
 
-	            dto.getCandidatoDTO().setPessoaId(pessoa.getIdPessoa());
+	            dto.getCandidatoRelacionamentoDTO().setPessoaId(pessoa.getIdPessoa());
 
-	            Candidato candidato = candidatoService.criarCandidatoAPartirDTO(dto.getCandidatoDTO());
+	            CandidatoRelacionamento candidato = candidatoRelacionamentoService.criarCandidatoRelacionamentoAPartirDTO(dto.getCandidatoRelacionamentoDTO());
 	            candidato = candidatoRepository.save(candidato);
 
-	            CadastroResponseDTO responseDTO = new CadastroResponseDTO(pessoa.getIdPessoa(), candidato.getIdCandidato());
+	            CadastroResponseDTO responseDTO = new CadastroResponseDTO(pessoa.getIdPessoa(), candidato.getIdCandidatoRelacionamento());
 	            return ResponseEntity.ok(responseDTO);
 	        } catch (Exception e) {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
