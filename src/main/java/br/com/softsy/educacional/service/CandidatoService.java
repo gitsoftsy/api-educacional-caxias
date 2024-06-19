@@ -1,11 +1,15 @@
 package br.com.softsy.educacional.service;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +54,9 @@ public class CandidatoService {
     
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private EntityManager entityManager;
     
     @Transactional(readOnly = true)
     public List<CandidatoDTO> listarTudo() {
@@ -112,32 +119,40 @@ public class CandidatoService {
     public Candidato criarCandidatoAPartirDTO(CadastroCandidatoDTO dto) {
         Candidato candidato = new Candidato();
 
-      
         Conta conta = contaRepository.findById(dto.getContaId())
                 .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
         Pessoa pessoa = pessoaRepository.findById(dto.getPessoaId())
                 .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada"));
-        OfertaConcurso ofertaConcurso = ofertaRepository.findById(dto.getOfertaConcursoId())
-                .orElseThrow(() -> new IllegalArgumentException("Oferta não encontrada")); 
-        TipoIngresso tipoIngresso = tipoIngressoRepository.findById(dto.getTipoIngressoId())
-                .orElseThrow(() -> new IllegalArgumentException("Tipo de Ingresso não encontrado"));
-        Usuario usuarioAprovacao = usuarioRepository.findById(dto.getUsuarioAprovacaoId())
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado")); 
 
- 
+        OfertaConcurso ofertaConcurso = null;
+        if (dto.getOfertaConcursoId() != null) {
+        	ofertaConcurso = ofertaRepository.findById(dto.getOfertaConcursoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Oferta concurso não encontrada"));
+        }
+        TipoIngresso tipoIngresso = null;
+        if (dto.getTipoIngressoId() != null) {
+        	tipoIngresso = tipoIngressoRepository.findById(dto.getTipoIngressoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Tipo ingresso não encontrado"));
+        }
+        
+        Usuario usuarioAprovacao = null;
+        if (dto.getUsuarioAprovacaoId() != null) {
+        	usuarioAprovacao = usuarioRepository.findById(dto.getUsuarioAprovacaoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Oferta concurso não encontrado"));
+        }
+
         candidato.setConta(conta);
         candidato.setPessoa(pessoa);
         candidato.setCandidato(dto.getCandidato());
-        candidato.setOfertaConcurso(ofertaConcurso);
-        candidato.setTipoIngresso(tipoIngresso);
+        candidato.setOfertaConcurso(ofertaConcurso); 
+        candidato.setTipoIngresso(tipoIngresso); 
         candidato.setClassificacao(dto.getClassificacao());
         candidato.setAluno(dto.getAluno());
         candidato.setAprovado(dto.getAprovado());
-        candidato.setUsuarioAprovacao(usuarioAprovacao);
+        candidato.setUsuarioAprovacao(usuarioAprovacao); 
 
         return candidato;
     }
-
     private void atualizarDados(Candidato destino, CadastroCandidatoDTO origem) {
         BeanUtils.copyProperties(origem, destino, "idCandidato", "contaId", "pessoaId", "ofertaConcursoId", "tipoIngressoId", "classificacao", "aluno", "aprovado", "usuarioAprovadoId");
 
@@ -167,4 +182,39 @@ public class CandidatoService {
     public void remover(Long idCandidato) {
     	candidatoRepository.deleteById(idCandidato);
     }
+    
+
+    public List<Map<String, Object>> obtemStepCandidato(Long idCandidato, String candidato, String rgNum, String cpfNum, String certNasc, String certCasamento) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_OBTEM_STEP_CANDIDATO(:pIdCandidato, :pCandidato, :pRgNum, :pCpfNum, :pCertNasc, :pCertCasamento)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        // Definir os parâmetros
+        query.setParameter("pIdCandidato", idCandidato);
+        query.setParameter("pCandidato", candidato);
+        query.setParameter("pRgNum", rgNum);
+        query.setParameter("pCpfNum", cpfNum);
+        query.setParameter("pCertNasc", certNasc);
+        query.setParameter("pCertCasamento", certCasamento);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        // Mapear os resultados para um formato de mapa
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idCandidato", result[0]);
+            resultMap.put("candidato", result[1]);
+            resultMap.put("step", result[2]);
+            resultMap.put("temRelacionamento", result[3]);
+            resultMap.put("temOfertaConcurso", result[4]);
+            resultMap.put("enviouDocumentos", result[5]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+
+    
 }

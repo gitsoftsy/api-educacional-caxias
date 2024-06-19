@@ -1,8 +1,5 @@
 package br.com.softsy.educacional.model;
 
-import java.sql.Time;
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,10 +7,27 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import lombok.Data;
+
+
+@NamedStoredProcedureQuery(
+	    name = "PROC_OBTEM_STEP_CANDIDATO",
+	    procedureName = "PROC_OBTEM_STEP_CANDIDATO",
+	    parameters = {
+	        @StoredProcedureParameter(name = "P_ID_CANDIDATO", type = Long.class, mode = ParameterMode.IN),
+	        @StoredProcedureParameter(name = "P_CANDIDATO", type = String.class, mode = ParameterMode.IN),
+	        @StoredProcedureParameter(name = "P_RG_NUM", type = String.class, mode = ParameterMode.IN),
+	        @StoredProcedureParameter(name = "P_CPF_NUM", type = String.class, mode = ParameterMode.IN),
+	        @StoredProcedureParameter(name = "P_CERT_NASC", type = String.class, mode = ParameterMode.IN),
+	        @StoredProcedureParameter(name = "P_CERT_CASAMENTO", type = String.class, mode = ParameterMode.IN),
+	    }
+	)
 
 @Entity
 @Table(name = "TBL_CANDIDATO", 
@@ -44,7 +58,7 @@ public class Candidato {
     private OfertaConcurso ofertaConcurso;
     
     @ManyToOne
-    @JoinColumn(name = "ID_TIPO_INGRESSO", nullable = false)
+    @JoinColumn(name = "ID_TIPO_INGRESSO")
     private TipoIngresso tipoIngresso;
     
     @Column(name = "CLASSIFICACAO")

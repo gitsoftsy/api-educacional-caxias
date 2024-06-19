@@ -18,12 +18,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroCandidatoDTO;
 import br.com.softsy.educacional.dto.CadastroCandidatoPessoaDTO;
 import br.com.softsy.educacional.dto.CandidatoDTO;
+import br.com.softsy.educacional.dto.StepCandidatoDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.model.Pessoa;
@@ -141,6 +143,31 @@ public class CandidatoController {
     public ResponseEntity<?> excluir(@PathVariable Long idCandidato) {
     	candidatoService.remover(idCandidato);
         return ResponseEntity.ok().build();
+    }
+    
+    @GetMapping("/step")
+    public Object obtemStepCandidato(
+            @RequestParam(value = "idCandidato", required = false) Long idCandidato,
+            @RequestParam(value = "candidato", required = false) String candidato,
+            @RequestParam(value = "rgNum", required = false) String rgNum,
+            @RequestParam(value = "cpfNum", required = false) String cpfNum,
+            @RequestParam(value = "certNasc", required = false) String certNasc,
+            @RequestParam(value = "certCasamento", required = false) String certCasamento
+    ) {
+        // Verifica se todos os parâmetros são nulos
+        if (idCandidato == null && candidato == null && rgNum == null && cpfNum == null && certNasc == null && certCasamento == null) {
+            return "Por favor, informe ao menos um parâmetro na requisição.";
+        }
+
+        // Caso tenha algum parâmetro, chama o serviço para obter os resultados
+        List<Map<String, Object>> result = candidatoService.obtemStepCandidato(idCandidato, candidato, rgNum, cpfNum, certNasc, certCasamento);
+
+        // Verifica se a lista de resultados está vazia
+        if (result.isEmpty()) {
+            return "Nenhum resultado encontrado para os parâmetros informados.";
+        }
+
+        return result;
     }
     
 }

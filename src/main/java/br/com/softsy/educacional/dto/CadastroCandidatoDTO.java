@@ -27,12 +27,12 @@ public CadastroCandidatoDTO(Candidato candidato) {
 		this.contaId = candidato.getConta().getIdConta();
 		this.pessoaId = candidato.getPessoa().getIdPessoa();
 		this.candidato = candidato.getCandidato();
-		this.ofertaConcursoId = candidato.getOfertaConcurso().getIdOfertaConcurso();
-		this.tipoIngressoId = candidato.getTipoIngresso().getIdTipoIngresso();
+		this.ofertaConcursoId = candidato.getOfertaConcurso() != null ? candidato.getOfertaConcurso().getIdOfertaConcurso() : null;
+		this.tipoIngressoId = candidato.getTipoIngresso() != null ? candidato.getTipoIngresso().getIdTipoIngresso() : null;
 		this.classificacao = candidato.getClassificacao();
 		this.aluno = candidato.getAluno();
 		this.aprovado = candidato.getAprovado();
-		this.usuarioAprovacaoId = candidato.getUsuarioAprovacao().getIdUsuario();
+		this.usuarioAprovacaoId = candidato.getUsuarioAprovacao() != null ? candidato.getUsuarioAprovacao().getIdUsuario() : null;;
 	
 		
 	}
