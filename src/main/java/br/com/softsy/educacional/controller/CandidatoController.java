@@ -95,7 +95,7 @@ public class CandidatoController {
 	            Candidato candidato = candidatoService.criarCandidatoAPartirDTO(dto.getCandidatoDTO());
 	            candidato = candidatoRepository.save(candidato);
 
-	            CadastroResponseDTO responseDTO = new CadastroResponseDTO(candidato.getCandidato(), pessoa.getIdPessoa());
+	            CadastroResponseDTO responseDTO = new CadastroResponseDTO(candidato.getCandidato(), candidato.getIdCandidato());
 	            return ResponseEntity.ok(responseDTO);
 	        } catch (Exception e) {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
@@ -159,10 +159,8 @@ public class CandidatoController {
             return "Por favor, informe ao menos um parâmetro na requisição.";
         }
 
-        // Caso tenha algum parâmetro, chama o serviço para obter os resultados
         List<Map<String, Object>> result = candidatoService.obtemStepCandidato(idCandidato, candidato, rgNum, cpfNum, certNasc, certCasamento);
 
-        // Verifica se a lista de resultados está vazia
         if (result.isEmpty()) {
             return "Nenhum resultado encontrado para os parâmetros informados.";
         }
