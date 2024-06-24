@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.CadastroCandidatoDTO;
 import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.model.Candidato;
+import br.com.softsy.educacional.model.CandidatoRelacionamento;
 import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.OfertaConcurso;
 import br.com.softsy.educacional.model.Pessoa;
@@ -179,6 +180,12 @@ public class CandidatoService {
     }
     
     @Transactional
+    public void aprovaReprova(char status, Long idCandidato) {
+        Candidato candidato = candidatoRepository.getReferenceById(idCandidato);
+        candidato.setAprovado(status);
+    }
+    
+    @Transactional
     public void remover(Long idCandidato) {
     	candidatoRepository.deleteById(idCandidato);
     }
@@ -210,6 +217,42 @@ public class CandidatoService {
             resultMap.put("temRelacionamento", result[3]);
             resultMap.put("temOfertaConcurso", result[4]);
             resultMap.put("enviouDocumentos", result[5]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
+    
+    public List<Map<String, Object>> obtemListaReservaDeVagas(Long idConta, Long idEscola) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTA_RESERVA_DE_VAGAS(:pIdConta, :pIdEscola)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        // Definir os parâmetros
+        query.setParameter("pIdConta", idConta);
+        query.setParameter("pIdEscola", idEscola);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        // Mapear os resultados para um formato de mapa
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idCandidato", result[0]);
+            resultMap.put("candidato", result[1]);
+            resultMap.put("nomeCompleto", result[2]);
+            resultMap.put("idEscola", result[3]);
+            resultMap.put("nomeEscola", result[4]);
+            resultMap.put("idTurno", result[5]);
+            resultMap.put("turno", result[6]);
+            resultMap.put("serie", result[7]);
+            resultMap.put("idTipoIngresso", result[8]);
+            resultMap.put("tipoIngresso", result[9]);
+            resultMap.put("aprovado", result[10]);
+            resultMap.put("documentos", result[11]);
+            resultMap.put("fichaMedica", result[12]);
             mappedResultList.add(resultMap);
         }
 

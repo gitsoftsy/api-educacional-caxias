@@ -19,7 +19,7 @@ public class CandidatoDTO {
 	private TipoIngressoDTO tipoIngresso;
 	private String classificacao;
 	private Long aluno;
-	private String aprovado;
+	private Character aprovado;
 	private UsuarioDTO  usuarioAprovacao;
 	
 	public CandidatoDTO(Candidato candidato) {

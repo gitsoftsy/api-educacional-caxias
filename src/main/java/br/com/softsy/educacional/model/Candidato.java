@@ -69,7 +69,7 @@ public class Candidato {
     private Long aluno;  
     
     @Column(name = "APROVADO")
-    private String aprovado;
+    private Character aprovado;
     
     @ManyToOne
     @JoinColumn(name = "ID_USUARIO_APROVACAO")

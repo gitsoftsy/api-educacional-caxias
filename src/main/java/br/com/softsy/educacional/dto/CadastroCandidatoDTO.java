@@ -18,7 +18,7 @@ public class CadastroCandidatoDTO {
 	private Long tipoIngressoId;
 	private String classificacao;
 	private Long aluno;
-	private String aprovado;
+	private Character aprovado;
 	private Long  usuarioAprovacaoId;
 	
 public CadastroCandidatoDTO(Candidato candidato) {

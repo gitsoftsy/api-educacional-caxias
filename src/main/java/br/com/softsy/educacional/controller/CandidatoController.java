@@ -168,4 +168,35 @@ public class CandidatoController {
         return result;
     }
     
+    @GetMapping("/listaReservaDeVagas")
+    public Object obtemListaReservaDeVagas(
+            @RequestParam(value = "idConta", required = false) Long idConta,
+            @RequestParam(value = "idEscola", required = false) Long idEscola
+    ) {
+        // Verifica se idConta é nulo, pois ele é obrigatório
+        if (idConta == null) {
+            return "Por favor, informe o parâmetro idConta na requisição.";
+        }
+
+        List<Map<String, Object>> result = candidatoService.obtemListaReservaDeVagas(idConta, idEscola);
+
+        if (result.isEmpty()) {
+            return "Nenhum resultado encontrado para os parâmetros informados.";
+        }
+
+        return result;
+    }
+    
+	  @PutMapping("/{idCandidato}/aprovar")
+	    public ResponseEntity<?> ativar(@PathVariable Long idCandidato) {
+		  candidatoService.aprovaReprova('S', idCandidato);
+	        return ResponseEntity.ok().build();
+	    }
+
+	    @PutMapping("/{idCandidato}/reprovar")
+	    public ResponseEntity<?> desativar(@PathVariable Long idCandidato) {
+	    	candidatoService.aprovaReprova('N', idCandidato);
+	        return ResponseEntity.ok().build();
+	    }
+    
 }

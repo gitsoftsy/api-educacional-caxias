@@ -26,6 +26,13 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Long> {
             @Param("P_CERT_NASC") String certNasc,
             @Param("P_CERT_CASAMENTO") String certCasamento
     );
+    
+    
+    @Procedure(name = "PROC_LISTA_RESERVA_DE_VAGAS")
+    List<Object[]> listarReservas(
+            @Param("P_ID_CONTA") Long idConta,
+            @Param("P_ID_ESCOLA") Long idEscola
+    );
 	
 	@Query("select candidato from Candidato join candidato.conta conta where conta.idConta = :idConta")
     Optional<List<Candidato>> findByConta_IdConta(@Param("idConta") Long idConta);
