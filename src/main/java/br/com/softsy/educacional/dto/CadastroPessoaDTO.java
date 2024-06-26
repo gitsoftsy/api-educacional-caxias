@@ -48,7 +48,7 @@ public class CadastroPessoaDTO {
 
     private String certidaoNascimentoCartorio;
 
-    private Long certidaoNascimentoUfCartorioId;
+    private Long certidaoNascimentoMunicipioCartorioId;
 
     private LocalDate certidaoNascimentoDataEmissao;
 
@@ -62,7 +62,7 @@ public class CadastroPessoaDTO {
 
     private String certidaoCasamentoCartorio;
 
-    private Long certidaoCasamentoUfCartorioId;
+    private Long certidaoCasamentoMunicipioCartorioId;
 
     private LocalDate certidaoCasamentoDataEmissao;
 
@@ -82,15 +82,12 @@ public class CadastroPessoaDTO {
 
     private Long paisNascimentoId;
 
-    private Long ufNascimentoId;
-
     private Long nacionalidadeId;
 
     private Long municipioNascimentoId;
 
     private Long paisResidenciaId;
 
-    private String nacionalidade;
 
     private String nomePai;
 
@@ -122,6 +119,8 @@ public class CadastroPessoaDTO {
     private String telefone;
 
     private String celular;
+    
+	private String estadoCivil;
 
     private String email;
 
@@ -143,6 +142,7 @@ public class CadastroPessoaDTO {
         this.nomeCompleto = pessoa.getNomeCompleto();
         this.nomeSocial = pessoa.getNomeSocial();
         this.cpf = pessoa.getCpf();
+        this.estadoCivil = pessoa.getEstadoCivil();
         this.rgNumero = pessoa.getRgNumero();
         this.rgOrgaoExpedidor = pessoa.getRgOrgaoExpedidor();
         this.rgUfEmissorId = pessoa.getRgUfEmissor() != null ? pessoa.getRgUfEmissor().getIdUf() : null;
@@ -153,14 +153,14 @@ public class CadastroPessoaDTO {
         this.rneDataExpedicao = pessoa.getRneDataExpedicao();
         this.certidaoNascimentoNumero = pessoa.getCertidaoNascimentoNumero();
         this.certidaoNascimentoCartorio = pessoa.getCertidaoNascimentoCartorio();
-        this.certidaoNascimentoUfCartorioId = pessoa.getCertidaoNascimentoUfCartorio() != null ? pessoa.getCertidaoNascimentoUfCartorio().getIdUf() : null;
+        this.certidaoNascimentoMunicipioCartorioId = pessoa.getCertidaoNascimentoMunicipioCartorio() != null ? pessoa.getCertidaoNascimentoMunicipioCartorio().getIdMunicipio() : null;
         this.certidaoNascimentoDataEmissao = pessoa.getCertidaoNascimentoDataEmissao();
         this.certidaoNascimentoFolha = pessoa.getCertidaoNascimentoFolha();
         this.certidaoNascimentoLivro = pessoa.getCertidaoNascimentoLivro();
         this.certidaoNascimentoOrdem = pessoa.getCertidaoNascimentoOrdem();
         this.certidaoCasamentoNumero = pessoa.getCertidaoCasamentoNumero();
         this.certidaoCasamentoCartorio = pessoa.getCertidaoCasamentoCartorio();
-        this.certidaoCasamentoUfCartorioId = pessoa.getCertidaoCasamentoUfCartorio() != null ? pessoa.getCertidaoCasamentoUfCartorio().getIdUf() : null;
+        this.certidaoCasamentoMunicipioCartorioId = pessoa.getCertidaoCasamentoMunicipioCartorio() != null ? pessoa.getCertidaoCasamentoMunicipioCartorio().getIdMunicipio() : null;
         this.certidaoCasamentoDataEmissao = pessoa.getCertidaoCasamentoDataEmissao();
         this.certidaoCasamentoFolha = pessoa.getCertidaoCasamentoFolha();
         this.certidaoCasamentoLivro = pessoa.getCertidaoCasamentoLivro();
@@ -169,11 +169,9 @@ public class CadastroPessoaDTO {
         this.sexo = pessoa.getSexo();
         this.racaId = pessoa.getRaca().getIdRaca();
         this.paisNascimentoId = pessoa.getPaisNascimento().getIdPais();
-        this.ufNascimentoId = pessoa.getUfNascimento().getIdUf();
         this.nacionalidadeId = pessoa.getNacionalidadeId().getIdNacionalidade();
         this.municipioNascimentoId = pessoa.getMunicipioNascimento().getIdMunicipio();
         this.paisResidenciaId = pessoa.getPaisResidencia().getIdPais();
-        this.nacionalidade = pessoa.getNacionalidade();
         this.nomePai = pessoa.getNomePai();
         this.nomeMae = pessoa.getNomeMae();
         this.cep = pessoa.getCep();

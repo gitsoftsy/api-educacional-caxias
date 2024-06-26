@@ -59,9 +59,15 @@ public class PapelPessoasController {
         return ResponseEntity.ok(papelPessoaDTO);
     }
 
-    @DeleteMapping("/{idPapelPessoa}")
-    public ResponseEntity<?> excluirPapelPessoa(@PathVariable Long idPapelPessoa) {
-        papelPessoaService.excluir(idPapelPessoa);
-        return ResponseEntity.ok().build();
-    }
+	@PutMapping("/{idPapelPessoa}/ativar")
+	public ResponseEntity<?> ativar(@PathVariable Long idPapelPessoa){
+		papelPessoaService.ativaDesativa('S', idPapelPessoa);
+		return ResponseEntity.ok().build();
+	}
+	
+	@PutMapping("/{idPapelPessoa}/desativar")
+	public ResponseEntity<?> desativar(@PathVariable Long idPapelPessoa){
+		papelPessoaService.ativaDesativa('N', idPapelPessoa);
+		return ResponseEntity.ok().build();
+	}
 }

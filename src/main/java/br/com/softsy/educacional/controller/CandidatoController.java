@@ -187,6 +187,36 @@ public class CandidatoController {
         return result;
     }
     
+    
+    @GetMapping("/listarReservasPorDocumento")
+    public Object obtemListaReservaDeVagasPorDocumento(
+            @RequestParam(value = "idConta") Long idConta,
+            @RequestParam(value = "idEscola", required = false) Long idEscola,
+            @RequestParam(value = "rgNum", required = false) String rgNum,
+            @RequestParam(value = "cpfNum", required = false) String cpfNum,
+            @RequestParam(value = "certNasc", required = false) String certNasc,
+            @RequestParam(value = "certCasamento", required = false) String certCasamento
+    ) {
+        // Verifica se todos os parâmetros são nulos
+        if (idConta == null && idEscola == null && rgNum == null && cpfNum == null && certNasc == null && certCasamento == null) {
+            return "Por favor, informe ao menos um parâmetro na requisição.";
+        }
+        
+        // Verifica se idConta é nulo, pois ele é obrigatório
+        if (idConta == null) {
+            return "Por favor, informe o parâmetro idConta na requisição.";
+        }
+
+        List<Map<String, Object>> result = candidatoService.obtemListaReservaDeVagasPorDoc(idConta, idEscola, rgNum, cpfNum, certNasc, certCasamento);
+
+        if (result.isEmpty()) {
+            return "Nenhum resultado encontrado para os parâmetros informados.";
+        }
+
+        return result;
+    }
+    
+    
 	  @PutMapping("/{idCandidato}/aprovar")
 	    public ResponseEntity<?> ativar(@PathVariable Long idCandidato) {
 		  candidatoService.aprovaReprova('S', idCandidato);

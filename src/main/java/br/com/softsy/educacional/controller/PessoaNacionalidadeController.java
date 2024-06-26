@@ -32,11 +32,11 @@ public class PessoaNacionalidadeController {
         return ResponseEntity.ok(pessoasNacionalidade);
     }
 
-    @GetMapping("/pessoa/{idPessoa}")
-    public ResponseEntity<List<PessoaNacionalidadeDTO>> buscarPorIdPessoa(@PathVariable Long idPessoa) {
-        List<PessoaNacionalidadeDTO> pessoasNacionalidade = service.buscarPorIdPessoa(idPessoa);
-        return ResponseEntity.ok(pessoasNacionalidade);
-    }
+//    @GetMapping("/pessoa/{idPessoa}")
+//    public ResponseEntity<List<PessoaNacionalidadeDTO>> buscarPorIdPessoa(@PathVariable Long idPessoa) {
+//        List<PessoaNacionalidadeDTO> pessoasNacionalidade = service.buscarPorIdPessoa(idPessoa);
+//        return ResponseEntity.ok(pessoasNacionalidade);
+//    }
 
     @PostMapping
     public ResponseEntity<PessoaNacionalidadeDTO> cadastrar(@RequestBody @Valid CadastroPessoaNacionalidadeDTO dto) {

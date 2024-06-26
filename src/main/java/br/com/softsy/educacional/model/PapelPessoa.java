@@ -1,5 +1,7 @@
 package br.com.softsy.educacional.model;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,4 +33,10 @@ public class PapelPessoa {
     
     @Column(name = "PAPEL_PESSOA", nullable = false)
     private String papelPessoa;
+    
+	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+	private LocalDateTime dataCadastro;
+
+	@Column(name = "ATIVO", nullable = false)
+	private Character ativo;
 }

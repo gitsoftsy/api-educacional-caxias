@@ -33,6 +33,16 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Long> {
             @Param("P_ID_CONTA") Long idConta,
             @Param("P_ID_ESCOLA") Long idEscola
     );
+    
+    @Procedure(name = "PROC_LISTA_RESERVA_DE_VAGAS_FILTRO_DOC")
+    List<Object[]> listarReservasPorDoc(
+            @Param("P_ID_CONTA") Long idConta,
+            @Param("P_ID_ESCOLA") Long idEscola,
+            @Param("P_RG_NUM") String rgNum,
+            @Param("P_CPF_NUM") String cpfNum,
+            @Param("P_CERT_NASC") String certNasc,
+            @Param("P_CERT_CASAMENTO") String certCasamento
+    );
 	
 	@Query("select candidato from Candidato join candidato.conta conta where conta.idConta = :idConta")
     Optional<List<Candidato>> findByConta_IdConta(@Param("idConta") Long idConta);

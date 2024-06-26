@@ -36,14 +36,14 @@ public class PessoaNacionalidadeService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<PessoaNacionalidadeDTO> buscarPorIdPessoa(Long id) {
-        List<PessoaNacionalidade> pessoasNacionalidade = repository.findByPessoaNacionalidade_IdPessoa(id)
-                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar nacionalidades da pessoa por ID"));
-        return pessoasNacionalidade.stream()
-                .map(PessoaNacionalidadeDTO::new)
-                .collect(Collectors.toList());
-    }
+//    @Transactional(readOnly = true)
+//    public List<PessoaNacionalidadeDTO> buscarPorIdPessoa(Long id) {
+//        List<PessoaNacionalidade> pessoasNacionalidade = repository.findByPessoaNacionalidade_IdPessoa(id)
+//                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar nacionalidades da pessoa por ID"));
+//        return pessoasNacionalidade.stream()
+//                .map(PessoaNacionalidadeDTO::new)
+//                .collect(Collectors.toList());
+//    }
 
     @Transactional
     public PessoaNacionalidadeDTO salvar(CadastroPessoaNacionalidadeDTO dto) {

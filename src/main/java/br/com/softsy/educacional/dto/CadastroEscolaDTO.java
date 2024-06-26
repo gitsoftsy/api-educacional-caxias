@@ -120,14 +120,14 @@ public class CadastroEscolaDTO {
 		this.compartilhaEspaco = escola.getCompartilhaEspaco();
 		this.usaEspacoEntornoEscolar = escola.getUsaEspacoEntornoEscolar();
 		this.pppAtualizado12Meses = escola.getPppAtualizado12Meses();
-		this.localizacaoId = escola.getLocalizacao().getIdLocalizacao();
-		this.dependenciaAdmId = escola.getDependenciaAdm().getIdDependenciaAdministrativa();
-		this.situacaoFuncionamentoId = escola.getSituacaoFuncionamento().getIdSituacaoFuncionamento();
-		this.formaOcupacaoPredioId = escola.getFormaOcupacaoPredio().getIdFormaOcupacaoPredio();
-		this.zoneamentoId = escola.getZoneamento().getIdZoneamento();
-		this.categoriaEscolaPrivadaId = escola.getCategoriaEscolaPrivada().getIdCategoriaEscolaPrivada();
-		this.entidadeSuperiorId = escola.getEntidadeSuperior().getIdEntidadeSuperior();
-		this.orgaoPublicoId = escola.getOrgaoPublico().getIdOrgaoPublico();
+		this.localizacaoId = escola.getLocalizacao()!= null ? escola.getLocalizacao().getIdLocalizacao() : null;
+		this.dependenciaAdmId = escola.getDependenciaAdm() != null ? escola.getDependenciaAdm().getIdDependenciaAdministrativa() : null;
+		this.situacaoFuncionamentoId = escola.getSituacaoFuncionamento()!= null ? escola.getSituacaoFuncionamento().getIdSituacaoFuncionamento() : null;
+		this.formaOcupacaoPredioId = escola.getFormaOcupacaoPredio() != null ? escola.getFormaOcupacaoPredio().getIdFormaOcupacaoPredio() : null;
+		this.zoneamentoId = escola.getZoneamento() != null ? escola.getZoneamento().getIdZoneamento() : null;
+		this.categoriaEscolaPrivadaId = escola.getCategoriaEscolaPrivada()!= null ? escola.getCategoriaEscolaPrivada().getIdCategoriaEscolaPrivada() : null;
+		this.entidadeSuperiorId = escola.getEntidadeSuperior() != null ? escola.getEntidadeSuperior().getIdEntidadeSuperior() : null;
+		this.orgaoPublicoId = escola.getOrgaoPublico() != null ? escola.getOrgaoPublico().getIdOrgaoPublico() : null;
 		this.contaId = escola.getConta().getIdConta();
 	}
 

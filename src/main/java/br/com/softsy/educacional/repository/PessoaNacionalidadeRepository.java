@@ -11,7 +11,7 @@ import br.com.softsy.educacional.model.PessoaNacionalidade;
 
 public interface PessoaNacionalidadeRepository extends JpaRepository<PessoaNacionalidade, Long>{
 
-	@Query("select pessoaNacionalidade from PessoaNacionalidade pessoaNacionalidade join pessoaNacionalidade.pessoa pessoa where pessoa.idPessoa = :idPessoa")
-    Optional<List<PessoaNacionalidade>> findByPessoaNacionalidade_IdPessoa(@Param("idPessoa") Long idPessoa);
+//	@Query("select pessoaNacionalidade from PessoaNacionalidade pessoaNacionalidade join pessoaNacionalidade.pessoa pessoa where pessoa.idPessoa = :idPessoa")
+//    Optional<List<PessoaNacionalidade>> findByPessoaNacionalidade_IdPessoa(@Param("idPessoa") Long idPessoa);
 	
 }

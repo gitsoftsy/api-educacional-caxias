@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroMunicipioDTO;
+import br.com.softsy.educacional.dto.CursoDTO;
 import br.com.softsy.educacional.dto.MunicipioDTO;
+import br.com.softsy.educacional.model.Curso;
 import br.com.softsy.educacional.model.Municipio;
 import br.com.softsy.educacional.model.Uf;
 import br.com.softsy.educacional.repository.MunicipioRepository;
@@ -29,6 +31,15 @@ public class MunicipioService {
 
 		return municipio.stream().map(MunicipioDTO::new).collect(Collectors.toList());
 	}
+	
+    @Transactional(readOnly = true)
+    public List<MunicipioDTO> buscarPorIdUf(Long idUf) {
+        List<Municipio> municipio = repository.findByUf_IdUf(idUf)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar munícipio por ID do UF"));
+        return municipio.stream()
+                .map(MunicipioDTO::new)
+                .collect(Collectors.toList());
+    }
 
 	@Transactional(readOnly = true)
 	public MunicipioDTO buscarPorId(Long id) {

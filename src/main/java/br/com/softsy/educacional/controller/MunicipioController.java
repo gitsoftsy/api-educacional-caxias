@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroMunicipioDTO;
+import br.com.softsy.educacional.dto.CursoDTO;
 import br.com.softsy.educacional.dto.MunicipioDTO;
 import br.com.softsy.educacional.service.MunicipioService;
 
@@ -37,6 +38,12 @@ public class MunicipioController {
 	public ResponseEntity<MunicipioDTO> buscarPorId(@PathVariable Long idMunicipio) {
 		return ResponseEntity.ok(service.buscarPorId(idMunicipio));
 	}
+	
+    @GetMapping("/uf/{idUf}")
+    public ResponseEntity<List<MunicipioDTO>> buscarPorIdUf(@PathVariable Long idUf) {
+        List<MunicipioDTO> municipio = service.buscarPorIdUf(idUf);
+        return ResponseEntity.ok(municipio);
+    }
 
 	@PostMapping
 	public ResponseEntity<CadastroMunicipioDTO> cadastrar(@RequestBody @Valid CadastroMunicipioDTO dto) {
@@ -51,12 +58,6 @@ public class MunicipioController {
 		return ResponseEntity.ok(service.atualizar(dto));
 	}
 
-	@GetMapping("/uf/{idUf}")
-	public ResponseEntity<List<MunicipioDTO>> buscarPorIdUf(@PathVariable Long ufId) {
-		@SuppressWarnings("unchecked")
-		List<MunicipioDTO> produto = (List<MunicipioDTO>) service.buscarPorId(ufId);
-		return ResponseEntity.ok(produto);
-	}
 
 	@DeleteMapping("/{idMunicipio}")
 	public ResponseEntity<?> excluir(@PathVariable Long idMunicipio) {

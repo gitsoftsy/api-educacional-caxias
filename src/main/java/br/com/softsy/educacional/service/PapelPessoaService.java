@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.PapelPessoaDTO;
 import br.com.softsy.educacional.model.Conta;
+import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.model.PapelPessoa;
 import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.PapelPessoaRepository;
@@ -64,15 +66,18 @@ public class PapelPessoaService {
         PapelPessoa papelPessoa = new PapelPessoa();
         Conta conta = contaRepository.findById(dto.getContaId())
                 .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+        papelPessoa.setAtivo('S');
+        papelPessoa.setDataCadastro(LocalDateTime.now());
         papelPessoa.setConta(conta);
         papelPessoa.setPapelPessoa(dto.getPapelPessoa());
         return papelPessoa;
     }
 
-    @Transactional
-    public void excluir(Long id) {
-    	papelPessoaRepository.deleteById(id);
-    }
+	@Transactional
+	public void ativaDesativa(char status, Long id) {
+		PapelPessoa papelPessoa = papelPessoaRepository.getReferenceById(id);
+		papelPessoa.setAtivo(status);
+	}
 
     private void atualizarDados(PapelPessoa destino, PapelPessoaDTO origem) {
         Conta conta = contaRepository.findById(origem.getContaId())

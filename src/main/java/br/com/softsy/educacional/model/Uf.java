@@ -25,4 +25,7 @@ public class Uf {
 	@Column(name = "NOME_UF", nullable = false)
 	private String nomeUf;
 	
+	@Column(name = "CODIGO_IBGE")
+	private String codigoIbge;
+	
 }

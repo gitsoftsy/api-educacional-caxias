@@ -54,7 +54,7 @@ public class Pessoa {
 	private String rgOrgaoExpedidor;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_RG_UF_EMISSOR", nullable = true)
+	@JoinColumn(name = "ID_RG_UF_EMISSOR")
 	private Uf rgUfEmissor;
 
 	@Column(name = "RG_DATA_EXP")
@@ -67,7 +67,7 @@ public class Pessoa {
 	private String rneOrgaoExpedidor;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_RNE_UF_EMISSOR", nullable = true)
+	@JoinColumn(name = "ID_RNE_UF_EMISSOR")
 	private Uf rneUfEmissor;
 
 	@Column(name = "RNE_DATA_EXP")
@@ -80,8 +80,8 @@ public class Pessoa {
 	private String certidaoNascimentoCartorio;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_CERT_NASC_UF_CARTORIO", nullable = true)
-	private Uf certidaoNascimentoUfCartorio;
+	@JoinColumn(name = "ID_CERT_NASC_MUNICIPIO_CARTORIO")
+	private Municipio certidaoNascimentoMunicipioCartorio;
 
 	@Column(name = "CERT_NASC_DATA_EMISSAO")
 	private LocalDate certidaoNascimentoDataEmissao;
@@ -102,8 +102,8 @@ public class Pessoa {
 	private String certidaoCasamentoCartorio;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_CERT_CASAMENTO_UF_CARTORIO", nullable = true)
-	private Uf certidaoCasamentoUfCartorio;
+	@JoinColumn(name = "ID_CERT_CASAMENTO_MUNICIPIO_CARTORIO")
+	private Municipio certidaoCasamentoMunicipioCartorio;
 
 	@Column(name = "CERT_CASAMENTO_DATA_EMISSAO")
 	private LocalDate certidaoCasamentoDataEmissao;
@@ -132,10 +132,6 @@ public class Pessoa {
 	private Pais paisNascimento;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_UF_NASCIMENTO", nullable = true)
-	private Uf ufNascimento;
-
-	@ManyToOne
 	@JoinColumn(name = "ID_NACIONALIDADE")
 	private Nacionalidade nacionalidadeId;
 
@@ -146,9 +142,6 @@ public class Pessoa {
 	@ManyToOne
 	@JoinColumn(name = "ID_PAIS_RESIDENCIA")
 	private Pais paisResidencia;
-
-	@Column(name = "NACIONALIDADE", length = 3)
-	private String nacionalidade;
 
 	@Column(name = "NOME_PAI", length = 255)
 	private String nomePai;
@@ -161,11 +154,14 @@ public class Pessoa {
 
 	@Column(name = "ENDERECO", length = 555)
 	private String endereco;
+	
+	@Column(name = "ESTADO_CIVIL", length = 555)
+	private String estadoCivil;
 
 	@Column(name = "NUMERO", length = 20)
 	private String numero;
 
-	@Column(name = "COMPLEMENTO", length = 200)
+	@Column(name = "COMPLEMENTO", length = 2)
 	private String complemento;
 
 	@Column(name = "BAIRRO", length = 200)

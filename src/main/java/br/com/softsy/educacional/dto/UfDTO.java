@@ -15,10 +15,13 @@ public class UfDTO {
 
 	private String nomeUf;
 	
+	private String codigoIbge;
+	
 	public UfDTO(Uf uf) {
 		this.idUf = uf.getIdUf();
 		this.codUf = uf.getCodUf();
 		this.nomeUf = uf.getNomeUf();
+		this.codigoIbge = uf.getCodigoIbge();
 	}
 
 }

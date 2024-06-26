@@ -31,6 +31,7 @@ import br.com.softsy.educacional.model.FormaOcupacaoPredio;
 import br.com.softsy.educacional.model.Localizacao;
 import br.com.softsy.educacional.model.OrgaoPublico;
 import br.com.softsy.educacional.model.SituacaoFuncionamento;
+import br.com.softsy.educacional.model.Uf;
 import br.com.softsy.educacional.model.Zoneamento;
 import br.com.softsy.educacional.repository.CategoriaEscolaPrivadaRepository;
 import br.com.softsy.educacional.repository.ContaRepository;
@@ -170,24 +171,59 @@ public class EscolaService {
 	
 	private Escola criarEscolaAPartirDTO(CadastroEscolaDTO dto) {
 		Escola escola = new Escola();
-		Localizacao localizacao = localizacaoRepository.findById(dto.getLocalizacaoId())
-				.orElseThrow(() -> new IllegalArgumentException("Localizacao não encontrada"));
-		DependenciaAdministrativa dependenciaAdm = dependenciaRepository.findById(dto.getDependenciaAdmId())
-				.orElseThrow(() -> new IllegalArgumentException("Dependencia não encontrada"));
+		
+		Localizacao localizacao = null;
+        if (dto.getLocalizacaoId() != null) {
+        	localizacao = localizacaoRepository.findById(dto.getLocalizacaoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Localização não encontrada"));
+        }
+        
+        DependenciaAdministrativa dependenciaAdm = null;
+        if (dto.getDependenciaAdmId() != null) {
+        	dependenciaAdm = dependenciaRepository.findById(dto.getDependenciaAdmId())
+                    .orElseThrow(() -> new IllegalArgumentException("Dependencia ADM não encontrada"));
+        }
+
 		Conta conta = contaRepository.findById(dto.getContaId())
                 .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
-		SituacaoFuncionamento situacaoFuncionamento = situacaoRepository.findById(dto.getSituacaoFuncionamentoId())
-				.orElseThrow(() -> new IllegalArgumentException("Situação não encontrada"));
-		FormaOcupacaoPredio formaOcupacao = formaRepository.findById(dto.getFormaOcupacaoPredioId())
-				.orElseThrow(() -> new IllegalAccessError("FormaOcupação não encontrada"));
-		Zoneamento zoneamento = zoneamentoRepository.findById(dto.getZoneamentoId())
-				.orElseThrow(()-> new IllegalArgumentException("Zoneamento não encontrado"));
-		CategoriaEscolaPrivada categoriaEscolaPrivada = categoriaEscolaPrivadaRepository.findById(dto.getCategoriaEscolaPrivadaId())
-				.orElseThrow(() -> new IllegalArgumentException("CategoriaEscolaPrivada não encontrada"));
-		EntidadeSuperior entidadeSuperior = entidadeSuperiorRepository.findById(dto.getEntidadeSuperiorId())
-				.orElseThrow(()-> new IllegalArgumentException("Entidade superior não encontrada"));
-		OrgaoPublico orgaoPublico = orgaoRepository.findById(dto.getOrgaoPublicoId())
-				.orElseThrow(() -> new IllegalArgumentException("Orgao público não encontrado"));
+		
+		SituacaoFuncionamento situacaoFuncionamento = null;
+        if (dto.getSituacaoFuncionamentoId() != null) {
+        	situacaoFuncionamento = situacaoRepository.findById(dto.getSituacaoFuncionamentoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Situação de funcionamento não encontrada"));
+        }
+
+        FormaOcupacaoPredio formaOcupacao = null;
+        if (dto.getFormaOcupacaoPredioId() != null) {
+        	formaOcupacao = formaRepository.findById(dto.getFormaOcupacaoPredioId())
+                    .orElseThrow(() -> new IllegalArgumentException("Forma de ocupação não encontrada"));
+        }
+
+        Zoneamento zoneamento = null;
+        if (dto.getZoneamentoId() != null) {
+        	zoneamento = zoneamentoRepository.findById(dto.getZoneamentoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Zoneamento não encontrado"));
+        }
+
+        
+        CategoriaEscolaPrivada categoriaEscolaPrivada = null;
+        if (dto.getCategoriaEscolaPrivadaId() != null) {
+        	categoriaEscolaPrivada = categoriaEscolaPrivadaRepository.findById(dto.getCategoriaEscolaPrivadaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categoria de escola privada não encontrada"));
+        }
+
+        EntidadeSuperior entidadeSuperior = null;
+        if (dto.getEntidadeSuperiorId() != null) {
+        	entidadeSuperior = entidadeSuperiorRepository.findById(dto.getEntidadeSuperiorId())
+                    .orElseThrow(() -> new IllegalArgumentException("Entidade superior não encontrada"));
+        }
+
+        OrgaoPublico orgaoPublico = null;
+        if (dto.getOrgaoPublicoId() != null) {
+        	orgaoPublico = orgaoRepository.findById(dto.getOrgaoPublicoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Orgão público não encontrado"));
+        }
+
 		BeanUtils.copyProperties(dto, escola, "ativo","dataCadastro","idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId", "cnpj");
 		escola.setLocalizacao(localizacao);
 		escola.setDependenciaAdm(dependenciaAdm);

@@ -1,5 +1,7 @@
 package br.com.softsy.educacional.dto;
 
+import java.time.LocalDateTime;
+
 import javax.validation.constraints.NotNull;
 
 import br.com.softsy.educacional.model.PapelPessoa;
@@ -17,10 +19,16 @@ public class PapelPessoaDTO {
 
     @NotNull
     private String papelPessoa;
+    
+	private LocalDateTime dataCadastro;
+	
+	private Character ativo;
 
-    public PapelPessoaDTO(PapelPessoa tipoIngresso) {
-        this.idPapelPessoa = tipoIngresso.getIdPapelPessoa();
-        this.contaId = tipoIngresso.getConta().getIdConta();  
-        this.papelPessoa = tipoIngresso.getPapelPessoa();
+    public PapelPessoaDTO(PapelPessoa papelPessoa) {
+        this.idPapelPessoa = papelPessoa.getIdPapelPessoa();
+        this.contaId = papelPessoa.getConta().getIdConta();  
+        this.papelPessoa = papelPessoa.getPapelPessoa();
+        this.dataCadastro = papelPessoa.getDataCadastro();
+        this.ativo = papelPessoa.getAtivo();
     }
 }

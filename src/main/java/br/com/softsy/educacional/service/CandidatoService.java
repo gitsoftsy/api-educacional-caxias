@@ -258,6 +258,45 @@ public class CandidatoService {
 
         return mappedResultList;
     }
+    
+    public List<Map<String, Object>> obtemListaReservaDeVagasPorDoc(Long idConta, Long idEscola, String rgNum, String cpfNum, String certNasc, String certCasamento) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTA_RESERVA_DE_VAGAS_FILTRO_DOC(:pIdConta, :pIdEscola, :pRgNum, :pCpfNum, :pCertNasc, :pCertCasamento)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        // Definir os parâmetros
+        query.setParameter("pIdConta", idConta);
+        query.setParameter("pIdEscola", idEscola);
+        query.setParameter("pRgNum", rgNum);
+        query.setParameter("pCpfNum", cpfNum);
+        query.setParameter("pCertNasc", certNasc);
+        query.setParameter("pCertCasamento", certCasamento);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        // Mapear os resultados para um formato de mapa
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idCandidato", result[0]);
+            resultMap.put("candidato", result[1]);
+            resultMap.put("nomeCompleto", result[2]);
+            resultMap.put("idEscola", result[3]);
+            resultMap.put("nomeEscola", result[4]);
+            resultMap.put("idTurno", result[5]);
+            resultMap.put("turno", result[6]);
+            resultMap.put("serie", result[7]);
+            resultMap.put("idTipoIngresso", result[8]);
+            resultMap.put("tipoIngresso", result[9]);
+            resultMap.put("aprovado", result[10]);
+            resultMap.put("documentos", result[11]);
+            resultMap.put("fichaMedica", result[12]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
 
     
 }
