@@ -63,7 +63,7 @@ public class ModuloService {
         modulo = moduloRepository.save(modulo);
         
      // Manipulando a imagem e obtendo o caminho
-     	String caminhoIMG = ImageManager.salvaImagemModulo(base64, modulo.getIdModulo(),"logoConta" + dto.getModulo());
+     	String caminhoIMG = ImageManager.salvaImagemModulo(base64, modulo.getIdModulo(),"iconeModulo" + dto.getModulo());
 
      	modulo.setIcone(caminhoIMG);
 		dto.setIcone(caminhoIMG);

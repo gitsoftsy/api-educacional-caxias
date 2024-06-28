@@ -29,8 +29,8 @@ public class ContaPadraoAcessoTransacaoService {
     private TransacaoRepository transacaoRepository;
 
     @Transactional(readOnly = true)
-    public List<ContaPadraoAcessoTransacaoDTO> buscarPorIdContaPadraoAcesso(Long idTransacao) {
-        List<ContaPadraoAcessoTransacao> contaPadraoAcessoTransacoes = repository.findByTransacao_IdTransacao(idTransacao)
+    public List<ContaPadraoAcessoTransacaoDTO> buscarPorIdContaPadraoAcesso(Long idContaPadraoAcesso) {
+        List<ContaPadraoAcessoTransacao> contaPadraoAcessoTransacoes = repository.findByContaPadraoAcesso_IdContaPadraoAcesso(idContaPadraoAcesso)
                 .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar transações por ID da conta padrão de acesso"));
         return contaPadraoAcessoTransacoes.stream()
                 .map(ContaPadraoAcessoTransacaoDTO::new)

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.UsuarioDTO;
+import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.Usuario;
 import br.com.softsy.educacional.repository.UsuarioRepository;
@@ -19,6 +20,8 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository repository;
+	@Autowired
+	private PasswordEncrypt encrypt;
 
     public List<Usuario> listarTudo() {
         return repository.findAll();
@@ -31,10 +34,11 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioDTO salvar(UsuarioDTO dto) {
+    	
         validarUsuario(dto.getUsuario());
 
         Usuario usuario = criarUsuarioAPartirDTO(dto);
-
+        usuario.setSenha(encrypt.hashPassword(dto.getSenha()));
         usuario = repository.save(usuario);
         return new UsuarioDTO(usuario);
     }

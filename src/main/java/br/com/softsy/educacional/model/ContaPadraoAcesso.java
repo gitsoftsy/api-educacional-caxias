@@ -40,4 +40,7 @@ public class ContaPadraoAcesso {
     @JoinColumn(name = "ID_CONTA", nullable = false)
     private Conta conta;
     
+	@OneToMany(mappedBy = "contaPadraoAcesso", cascade = CascadeType.ALL)
+	private Set<ContaPadraoAcessoTransacao> contaPadraoAcessoTransacao = new HashSet<>();
+    
 }

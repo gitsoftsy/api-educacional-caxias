@@ -27,9 +27,9 @@ public class ContaPadraoAcessoTransacaoController {
     @Autowired
     private ContaPadraoAcessoTransacaoService contaPadraoAcessoTransacaoService;
 
-    @GetMapping("/transacao/{idTransacao}")
-    public ResponseEntity<List<ContaPadraoAcessoTransacaoDTO>> buscarPorIdTransacao(@PathVariable Long idTransacao) {
-        List<ContaPadraoAcessoTransacaoDTO> contaPadraoAcessoTransacoes = contaPadraoAcessoTransacaoService.buscarPorIdContaPadraoAcesso(idTransacao);
+    @GetMapping("/contaPadraoAcesso/{idContaPadraoAcesso}")
+    public ResponseEntity<List<ContaPadraoAcessoTransacaoDTO>> buscarPorIdContaPadraoAcesso(@PathVariable Long idContaPadraoAcesso) {
+        List<ContaPadraoAcessoTransacaoDTO> contaPadraoAcessoTransacoes = contaPadraoAcessoTransacaoService.buscarPorIdContaPadraoAcesso(idContaPadraoAcesso);
         return ResponseEntity.ok(contaPadraoAcessoTransacoes);
     }
 

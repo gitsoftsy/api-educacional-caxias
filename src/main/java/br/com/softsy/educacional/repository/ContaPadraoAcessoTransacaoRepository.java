@@ -14,7 +14,7 @@ import br.com.softsy.educacional.model.ContaPadraoAcessoTransacao;
 @Repository
 public interface ContaPadraoAcessoTransacaoRepository extends JpaRepository<ContaPadraoAcessoTransacao, Long> {
 
-	@Query("select contaPadraoAcessoTransacao from ContaPadraoAcessoTransacao contaPadraoAcessoTransacao join contaPadraoAcessoTransacao.transacao transacao where transacao.idTransacao = :idTransacao")
-    Optional<List<ContaPadraoAcessoTransacao>> findByTransacao_IdTransacao(@Param("idTransacao") Long idTransacao);
+	@Query("select contaPadraoAcessoTransacao from ContaPadraoAcessoTransacao contaPadraoAcessoTransacao join contaPadraoAcessoTransacao.contaPadraoAcesso contaPadraoAcesso where contaPadraoAcesso.idContaPadraoAcesso = :idContaPadraoAcesso")
+    Optional<List<ContaPadraoAcessoTransacao>> findByContaPadraoAcesso_IdContaPadraoAcesso(@Param("idContaPadraoAcesso") Long idContaPadraoAcesso);
 	
 }
