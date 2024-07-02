@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Entity
@@ -58,6 +60,7 @@ public class Usuario {
     @Column(name = "CELULAR_VERIFICADO", length = 1)
     private Character celularVerificado;
     
+    @JsonIgnore
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	private Set<UsuarioConta> usuarioConta = new HashSet<>();
 }
