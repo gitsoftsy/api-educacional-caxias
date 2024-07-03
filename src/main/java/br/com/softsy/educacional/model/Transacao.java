@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Entity
@@ -39,6 +41,7 @@ public class Transacao {
     @Column(name = "NOME", length = 255)
     private String nome;
     
+    @JsonIgnore
 	@OneToMany(mappedBy = "transacao", cascade = CascadeType.ALL)
 	private Set<ContaPadraoAcessoTransacao> contaPadraoAcessoTransacao = new HashSet<>();
 }

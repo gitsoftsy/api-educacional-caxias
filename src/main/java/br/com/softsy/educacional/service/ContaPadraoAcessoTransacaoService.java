@@ -66,6 +66,14 @@ public class ContaPadraoAcessoTransacaoService {
         
         return contaPadraoAcessoTransacao;
     }
+    
+    public List<ContaPadraoAcessoTransacaoDTO> salvarLista(List<ContaPadraoAcessoTransacaoDTO> dtos) {
+        List<ContaPadraoAcessoTransacao> contaPadraoAcessoTransacoes = dtos.stream()
+                .map(this::criarContaPadraoAcessoTransacaoAPartirDTO)
+                .collect(Collectors.toList());
+        List<ContaPadraoAcessoTransacao> salvas = repository.saveAll(contaPadraoAcessoTransacoes);
+        return salvas.stream().map(ContaPadraoAcessoTransacaoDTO::new).collect(Collectors.toList());
+    }
 
     @Transactional
     public ContaPadraoAcessoTransacaoDTO atualizar(ContaPadraoAcessoTransacaoDTO dto) {

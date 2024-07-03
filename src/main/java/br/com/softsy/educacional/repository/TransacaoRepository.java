@@ -16,5 +16,8 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long>{
 	@Query("select transacao from Transacao transacao join transacao.modulo modulo where modulo.idModulo = :idModulo")
     Optional<List<Transacao>> findByModulo_IdModulo(@Param("idModulo") Long idModulo);
 	
+	@org.springframework.data.jpa.repository.Query(value = "CALL PROC_LISTA_ACESSOS_USUARIOS(:pIdUsuario)", nativeQuery = true)
+    List<Object[]> listaAcessosUsuarios(@Param("pIdUsuario") Long idUsuario);
+	
 
 }

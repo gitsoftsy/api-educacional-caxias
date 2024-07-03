@@ -40,11 +40,10 @@ public class ContaPadraoAcessoTransacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<ContaPadraoAcessoTransacaoDTO> cadastrar(@RequestBody @Valid ContaPadraoAcessoTransacaoDTO dto) {
-        ContaPadraoAcessoTransacaoDTO contaPadraoAcessoTransacaoDTO = contaPadraoAcessoTransacaoService.salvar(dto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(contaPadraoAcessoTransacaoDTO.getIdContaPadraoAcessoTransacao()).toUri();
-        return ResponseEntity.created(uri).body(contaPadraoAcessoTransacaoDTO);
+    public ResponseEntity<List<ContaPadraoAcessoTransacaoDTO>> cadastrar(@RequestBody @Valid List<ContaPadraoAcessoTransacaoDTO> dtos) {
+        List<ContaPadraoAcessoTransacaoDTO> contaPadraoAcessoTransacaoDTOs = contaPadraoAcessoTransacaoService.salvarLista(dtos);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+        return ResponseEntity.created(uri).body(contaPadraoAcessoTransacaoDTOs);
     }
 
     @PutMapping
