@@ -99,4 +99,9 @@ public class UsuarioContaService {
     public void remover(Long id) {
         usuarioContaRepository.deleteById(id);
     }
+    
+    @Transactional
+    public void removerPorUsuarioId(Long usuarioId) {
+        usuarioContaRepository.deleteByUsuario_IdUsuario(usuarioId);
+    }
 }

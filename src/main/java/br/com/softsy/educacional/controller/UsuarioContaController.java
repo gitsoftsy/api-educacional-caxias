@@ -60,4 +60,10 @@ public class UsuarioContaController {
         usuarioContaService.remover(id);
         return ResponseEntity.ok().build();
     }
+    
+    @DeleteMapping("/usuario/{usuarioId}")
+    public ResponseEntity<Void> removerPorUsuarioId(@PathVariable Long usuarioId) {
+        usuarioContaService.removerPorUsuarioId(usuarioId);
+        return ResponseEntity.ok().build();
+    }
 }

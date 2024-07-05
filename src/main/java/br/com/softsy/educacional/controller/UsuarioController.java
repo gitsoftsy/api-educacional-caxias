@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.softsy.educacional.dto.ListaUsuarioContaDTO;
 import br.com.softsy.educacional.dto.UsuarioDTO;
 import br.com.softsy.educacional.model.Usuario;
 import br.com.softsy.educacional.service.UsuarioService;
@@ -32,9 +33,10 @@ public class UsuarioController {
         return ResponseEntity.ok(service.listarTudo());
     }
 
-    @GetMapping("/{idUsuario}")
-    public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Long idUsuario) {
-        return ResponseEntity.ok(service.buscarPorId(idUsuario));
+    @GetMapping("/{id}")
+    public ResponseEntity<ListaUsuarioContaDTO> buscarPorId(@PathVariable Long id) {
+        ListaUsuarioContaDTO listaUsuarioContaDTO = service.buscarPorId(id);
+        return ResponseEntity.ok(listaUsuarioContaDTO);
     }
 
     @PostMapping

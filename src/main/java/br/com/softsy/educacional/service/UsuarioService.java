@@ -3,16 +3,21 @@ package br.com.softsy.educacional.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.softsy.educacional.dto.ListaUsuarioContaDTO;
+import br.com.softsy.educacional.dto.UsuarioContaDTO;
 import br.com.softsy.educacional.dto.UsuarioDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.Usuario;
+import br.com.softsy.educacional.model.UsuarioConta;
+import br.com.softsy.educacional.repository.UsuarioContaRepository;
 import br.com.softsy.educacional.repository.UsuarioRepository;
 
 @Service
@@ -20,6 +25,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository repository;
+    
+    @Autowired
+    private UsuarioContaRepository usuarioContarepository;
 	@Autowired
 	private PasswordEncrypt encrypt;
 
@@ -28,8 +36,25 @@ public class UsuarioService {
     }
 
     @Transactional(readOnly = true)
-    public UsuarioDTO buscarPorId(Long id) {
-        return new UsuarioDTO(repository.getReferenceById(id));
+    public ListaUsuarioContaDTO buscarPorId(Long id) {
+        // Buscar o Usuario pelo ID
+        UsuarioDTO usuarioDTO = new UsuarioDTO(repository.getReferenceById(id));
+
+        // Buscar a lista de UsuarioConta pelo usuarioId (chave estrangeira de Usuario)
+        List<UsuarioConta> usuarioContas = usuarioContarepository.findByUsuario_IdUsuario(id)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar conta por usuarioId"));
+
+        // Convertendo a lista de UsuarioConta para uma lista de UsuarioContaDTO
+        List<UsuarioContaDTO> usuarioContaDTOs = usuarioContas.stream()
+                .map(UsuarioContaDTO::new)
+                .collect(Collectors.toList());
+
+        // Criar o DTO combinado
+        ListaUsuarioContaDTO listaUsuarioContaDTO = new ListaUsuarioContaDTO();
+        listaUsuarioContaDTO.setUsuario(usuarioDTO);
+        listaUsuarioContaDTO.setUsuarioConta(usuarioContaDTOs); // Adaptei para uma lista de UsuarioContaDTO
+
+        return listaUsuarioContaDTO;
     }
 
     @Transactional
