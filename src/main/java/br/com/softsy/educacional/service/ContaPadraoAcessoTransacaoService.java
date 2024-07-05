@@ -1,7 +1,11 @@
 package br.com.softsy.educacional.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,9 @@ public class ContaPadraoAcessoTransacaoService {
 
     @Autowired
     private TransacaoRepository transacaoRepository;
+    
+    @Autowired
+    private EntityManager entityManager;
 
     @Transactional(readOnly = true)
     public List<ContaPadraoAcessoTransacaoDTO> buscarPorIdContaPadraoAcesso(Long idContaPadraoAcesso) {
@@ -82,6 +89,36 @@ public class ContaPadraoAcessoTransacaoService {
         atualizarDados(contaPadraoAcessoTransacao, dto);
         contaPadraoAcessoTransacao = repository.save(contaPadraoAcessoTransacao);
         return new ContaPadraoAcessoTransacaoDTO(contaPadraoAcessoTransacao);
+    }
+    
+    @Transactional
+    public List<ContaPadraoAcessoTransacaoDTO> atualizaOuInserePadraoAcesso(List<ContaPadraoAcessoTransacaoDTO> dtos) {
+        List<ContaPadraoAcessoTransacaoDTO> updatedDtos = new ArrayList<>();
+
+        for (ContaPadraoAcessoTransacaoDTO dto : dtos) {
+            StringBuilder sql = new StringBuilder();
+            sql.append("CALL PROC_ALTERA_INSERE_PADRAO_ACESSO_TRANSACAO(:pIdContaPadraoAcesso, :pIdTransacao, :pAltera, :pAcessa)");
+
+            Query query = entityManager.createNativeQuery(sql.toString());
+
+            // Definir os parâmetros
+            query.setParameter("pIdContaPadraoAcesso", dto.getContaPadraoAcessoId());
+            query.setParameter("pIdTransacao", dto.getTransacaoId());
+            query.setParameter("pAltera", dto.getAltera());
+            query.setParameter("pAcessa", dto.getAcessa());
+
+            query.executeUpdate();
+
+            // Buscar o registro atualizado
+            Query resultQuery = entityManager.createQuery("FROM ContaPadraoAcessoTransacao WHERE contaPadraoAcesso.idContaPadraoAcesso = :idContaPadraoAcesso AND transacao.idTransacao = :idTransacao");
+            resultQuery.setParameter("idContaPadraoAcesso", dto.getContaPadraoAcessoId());
+            resultQuery.setParameter("idTransacao", dto.getTransacaoId());
+
+            ContaPadraoAcessoTransacao updatedEntity = (ContaPadraoAcessoTransacao) resultQuery.getSingleResult();
+            updatedDtos.add(new ContaPadraoAcessoTransacaoDTO(updatedEntity));
+        }
+
+        return updatedDtos;
     }
 
     private void atualizarDados(ContaPadraoAcessoTransacao destino, ContaPadraoAcessoTransacaoDTO origem) {

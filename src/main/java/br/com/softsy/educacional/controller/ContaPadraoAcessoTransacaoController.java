@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.ContaPadraoAcessoTransacaoDTO;
+import br.com.softsy.educacional.model.ContaPadraoAcessoTransacao;
 import br.com.softsy.educacional.service.ContaPadraoAcessoTransacaoService;
 
 @RestController
@@ -44,6 +46,13 @@ public class ContaPadraoAcessoTransacaoController {
         List<ContaPadraoAcessoTransacaoDTO> contaPadraoAcessoTransacaoDTOs = contaPadraoAcessoTransacaoService.salvarLista(dtos);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
         return ResponseEntity.created(uri).body(contaPadraoAcessoTransacaoDTOs);
+    }
+    
+    @PostMapping("/atualizaInsere")
+    public ResponseEntity<List<ContaPadraoAcessoTransacaoDTO>> atualizaInserePadraoAcesso(@RequestBody @Valid List<ContaPadraoAcessoTransacaoDTO> dtos) {
+        List<ContaPadraoAcessoTransacaoDTO> updatedDtos = contaPadraoAcessoTransacaoService.atualizaOuInserePadraoAcesso(dtos);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+        return ResponseEntity.created(uri).body(updatedDtos);
     }
 
     @PutMapping
