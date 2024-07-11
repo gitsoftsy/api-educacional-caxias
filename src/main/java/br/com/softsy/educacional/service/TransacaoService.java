@@ -63,6 +63,28 @@ public class TransacaoService {
 
         return mappedResultList;
     }
+    
+    public List<Map<String, Object>> listarAcessosUsuariosModulo(Long idUsuario, Long idModulo) {
+        List<Object[]> resultList = repository.listaAcessosUsuariosModulo(idUsuario, idModulo);
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idModulo", result[0]);
+            resultMap.put("modulo", result[1]);
+            resultMap.put("iconeModulo", result[2]);
+            resultMap.put("idTransacao", result[3]);
+            resultMap.put("nome", result[4]);
+            resultMap.put("url", result[5]);
+            resultMap.put("idCodHtml", result[6]);
+            resultMap.put("acessa", result[7]);
+            resultMap.put("altera", result[8]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
 
     @Transactional(readOnly = true)
     public TransacaoDTO buscarPorId(Long id) {
