@@ -59,6 +59,15 @@ public class TransacaoController {
         }
         return ResponseEntity.ok(result);
     }
+    
+    @GetMapping("/{idUsuario}/acessos/transacao/{idTransacao}")
+    public ResponseEntity<?> listarAcessosUsuariosTransacao(@PathVariable Long idUsuario, @PathVariable Long idTransacao) {
+        List<Map<String, Object>> result = transacaoService.listarAcessosUsuariosTransacao(idUsuario, idTransacao);
+        if (result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum acesso encontrado para o usuário ou transação informado.");
+        }
+        return ResponseEntity.ok(result);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<TransacaoDTO> buscarPorId(@PathVariable Long id) {
