@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,7 @@ import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.repository.CandidatoRelacionamentoRepository;
 import br.com.softsy.educacional.repository.PessoaRepository;
 import br.com.softsy.educacional.service.CandidatoRelacionamentoService;
+import br.com.softsy.educacional.service.PessoaCandidatoRelacionamentoService;
 import br.com.softsy.educacional.service.PessoaService;
 
 @RestController
@@ -46,6 +48,9 @@ public class ResponsavelController {
 	@Autowired
 	private PasswordEncrypt encrypt;
 	
+    @Autowired
+    private PessoaCandidatoRelacionamentoService pessoaCandidatoRelacionamentoService;
+	
 	@PersistenceContext
 	private EntityManager entityManager;
 	
@@ -66,6 +71,12 @@ public class ResponsavelController {
 	        } catch (Exception e) {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
 	        }
+	    }
+	 
+	    @PutMapping("/atualizarPessoaCandidatoRelacionamento")
+	    public ResponseEntity<Void> atualizarPessoaCandidatoRelacionamento(@RequestBody CadastroResponsavelDTO dto) {
+	        pessoaCandidatoRelacionamentoService.atualizar(dto);
+	        return ResponseEntity.ok().build();
 	    }
 	 
 	 

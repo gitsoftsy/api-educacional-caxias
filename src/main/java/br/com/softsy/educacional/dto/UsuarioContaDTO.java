@@ -16,10 +16,13 @@ public class UsuarioContaDTO {
     private Long usuarioId;
 
     private Long contaPadraoAcessoId;
+    
+    private Long escolaId;
 
     public UsuarioContaDTO(UsuarioConta usuarioConta) {
         this.idUsuarioConta = usuarioConta.getIdUsuarioConta();
         this.usuarioId = usuarioConta.getUsuario().getIdUsuario();
-        this.contaPadraoAcessoId = usuarioConta.getTransacao().getIdContaPadraoAcesso();
+        this.contaPadraoAcessoId = usuarioConta.getContaPadraoAcesso().getIdContaPadraoAcesso();
+        this.escolaId = usuarioConta.getEscola().getIdEscola();
     }
 }

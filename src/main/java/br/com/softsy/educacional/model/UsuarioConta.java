@@ -27,6 +27,10 @@ public class UsuarioConta {
 
     @ManyToOne
     @JoinColumn(name = "ID_CONTA_PADRAO_ACESSO")
-    private ContaPadraoAcesso transacao;
+    private ContaPadraoAcesso contaPadraoAcesso;
+    
+    @ManyToOne
+    @JoinColumn(name = "ID_ESCOLA")
+    private Escola escola;
 
 }

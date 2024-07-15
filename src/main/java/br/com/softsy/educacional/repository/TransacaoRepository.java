@@ -19,9 +19,6 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long>{
 	@org.springframework.data.jpa.repository.Query(value = "CALL PROC_LISTA_ACESSOS_USUARIOS(:pIdUsuario)", nativeQuery = true)
     List<Object[]> listaAcessosUsuarios(@Param("pIdUsuario") Long idUsuario);
     
-	@org.springframework.data.jpa.repository.Query(value = "CALL PROC_LISTA_ACESSOS_USUARIOS_MODULO(:pIdUsuario, :pIdModulo)", nativeQuery = true)
-    List<Object[]> listaAcessosUsuariosModulo(@Param("pIdUsuario") Long idUsuario, @Param("pIdModulo") Long idModulo);
-    
 	@org.springframework.data.jpa.repository.Query(value = "CALL PROC_OBTEM_ACESSO_USUARIO_TRANSACAO(:pIdUsuario, :pIdTransacao)", nativeQuery = true)
     List<Object[]> listaAcessosUsuariosTransacao(@Param("pIdUsuario") Long idUsuario, @Param("pIdTransacao") Long idTransacao);
 	

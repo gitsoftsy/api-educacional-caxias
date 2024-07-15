@@ -216,6 +216,15 @@ public class CandidatoController {
         return result;
     }
     
+    @GetMapping("/excel/{idConta}")
+    public ResponseEntity<?> listarReservaDeVagasExcel(@PathVariable Long idConta) {
+        List<Map<String, Object>> result = candidatoService.listarReservaDeVagasExcel(idConta);
+        if (result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma reserva encontrada para a conta informada.");
+        }
+        return ResponseEntity.ok(result);
+    }
+    
     
 	  @PutMapping("/{idCandidato}/aprovar")
 	    public ResponseEntity<?> ativar(@PathVariable Long idCandidato) {

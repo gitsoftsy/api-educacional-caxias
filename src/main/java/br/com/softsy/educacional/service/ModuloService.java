@@ -1,7 +1,10 @@
 package br.com.softsy.educacional.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -101,6 +104,21 @@ public class ModuloService {
         return modulo;
     }
 
+    public List<Map<String, Object>> listarAcessosUsuariosModulo(Long idModulo) {
+        List<Object[]> resultList = moduloRepository.listaAcessosUsuariosModulo(idModulo);
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idModulo", result[0]);
+            resultMap.put("modulo", result[1]);
+            resultMap.put("iconeModulo", result[2]);
+            resultMap.put("exibe", result[3]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
 
     private void validarModulo(String modulo) {
         Optional<Modulo> moduloExistente = moduloRepository.findByModulo(modulo).stream().findFirst();

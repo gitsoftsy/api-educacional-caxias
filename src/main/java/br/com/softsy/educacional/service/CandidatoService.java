@@ -197,7 +197,6 @@ public class CandidatoService {
 
         Query query = entityManager.createNativeQuery(sql.toString());
 
-        // Definir os parâmetros
         query.setParameter("pIdCandidato", idCandidato);
         query.setParameter("pCandidato", candidato);
         query.setParameter("pRgNum", rgNum);
@@ -208,7 +207,6 @@ public class CandidatoService {
         List<Object[]> resultList = query.getResultList();
         List<Map<String, Object>> mappedResultList = new ArrayList<>();
 
-        // Mapear os resultados para um formato de mapa
         for (Object[] result : resultList) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("idCandidato", result[0]);
@@ -253,6 +251,48 @@ public class CandidatoService {
             resultMap.put("aprovado", result[10]);
             resultMap.put("documentos", result[11]);
             resultMap.put("fichaMedica", result[12]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
+    public List<Map<String, Object>> listarReservaDeVagasExcel(Long idConta) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTA_RESERVA_DE_VAGAS_EXCEL(:pIdConta)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+        query.setParameter("pIdConta", idConta);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("candidato", result[0]);
+            resultMap.put("nomeCompleto", result[1]);
+            resultMap.put("cpf", result[2]);
+            resultMap.put("rgDataExpedicao", result[3]);
+            resultMap.put("rgNum", result[4]);
+            resultMap.put("rneOrgExpedidor", result[5]);
+            resultMap.put("dtNascimento", result[6]);
+            resultMap.put("sexo", result[7]);
+            resultMap.put("nomePai", result[8]);
+            resultMap.put("nomeMae", result[9]);
+            resultMap.put("telefone", result[10]);
+            resultMap.put("celular", result[11]);
+            resultMap.put("nomeEscola", result[12]);
+            resultMap.put("emailEscola", result[13]);
+            resultMap.put("telefoneEscola", result[14]);
+            resultMap.put("descricaoTelefone", result[15]);
+            resultMap.put("turno", result[16]);
+            resultMap.put("horaInicioTurno", result[17]);
+            resultMap.put("horaFimTurno", result[18]);
+            resultMap.put("serie", result[19]);
+            resultMap.put("tipoIngresso", result[20]);
+            resultMap.put("aprovado", result[21]);
+            resultMap.put("documentos", result[22]);
+            resultMap.put("fichaMedica", result[23]);
             mappedResultList.add(resultMap);
         }
 

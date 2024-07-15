@@ -10,9 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.UsuarioContaDTO;
 import br.com.softsy.educacional.model.ContaPadraoAcesso;
+import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.model.Usuario;
 import br.com.softsy.educacional.model.UsuarioConta;
 import br.com.softsy.educacional.repository.ContaPadraoAcessoRepository;
+import br.com.softsy.educacional.repository.EscolaRepository;
 import br.com.softsy.educacional.repository.UsuarioContaRepository;
 import br.com.softsy.educacional.repository.UsuarioRepository;
 
@@ -28,6 +30,9 @@ public class UsuarioContaService {
     @Autowired
     private ContaPadraoAcessoRepository contaPadraoAcessoRepository;
 
+    @Autowired
+    private EscolaRepository escolaRepository;
+    
     @Transactional(readOnly = true)
     public List<UsuarioContaDTO> buscarPorIdUsuario(Long idUsuario) {
         List<UsuarioConta> usuarioContas = usuarioContaRepository.findByUsuario_IdUsuario(idUsuario)
@@ -62,10 +67,17 @@ public class UsuarioContaService {
             contaPadraoAcesso = contaPadraoAcessoRepository.findById(dto.getContaPadraoAcessoId())
                     .orElseThrow(() -> new IllegalArgumentException("Erro ao encontrar conta padrão de acesso"));
         }
+        
+        Escola escola = null;
+        if (dto.getEscolaId() != null) {
+        	escola = escolaRepository.findById(dto.getEscolaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Erro ao encontrar conta padrão de acesso"));
+        }
 
         BeanUtils.copyProperties(dto, usuarioConta, "idUsuarioConta");
         usuarioConta.setUsuario(usuario);
-        usuarioConta.setTransacao(contaPadraoAcesso);
+        usuarioConta.setContaPadraoAcesso(contaPadraoAcesso);
+        usuarioConta.setEscola(escola);
 
         return usuarioConta;
     }
@@ -90,9 +102,16 @@ public class UsuarioContaService {
             contaPadraoAcesso = contaPadraoAcessoRepository.findById(origem.getContaPadraoAcessoId())
                     .orElseThrow(() -> new IllegalArgumentException("Erro ao encontrar conta padrão de acesso"));
         }
+        
+        Escola escola = null;
+        if (origem.getEscolaId() != null) {
+        	escola = escolaRepository.findById(origem.getEscolaId())
+                    .orElseThrow(() -> new IllegalArgumentException("Erro ao encontrar conta padrão de acesso"));
+        }
 
+        destino.setEscola(escola);
         destino.setUsuario(usuario);
-        destino.setTransacao(contaPadraoAcesso);
+        destino.setContaPadraoAcesso(contaPadraoAcesso);
     }
 
     @Transactional

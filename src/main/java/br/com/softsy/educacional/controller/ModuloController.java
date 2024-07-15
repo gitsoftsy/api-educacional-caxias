@@ -3,10 +3,12 @@ package br.com.softsy.educacional.controller;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +59,16 @@ public class ModuloController {
                 .buildAndExpand(moduloDTO.getIdModulo()).toUri();
         return ResponseEntity.created(uri).body(moduloDTO);
     }
+    
+    @GetMapping("/acessos/{idModulo}")
+    public ResponseEntity<?> listarAcessosUsuariosModulo(@PathVariable Long idModulo) {
+        List<Map<String, Object>> result = service.listarAcessosUsuariosModulo(idModulo);
+        if (result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum acesso encontrado para o usuário ou módulo informado.");
+        }
+        return ResponseEntity.ok(result);
+    }
+
 
 	@PutMapping
 	public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroModuloDTO dto){

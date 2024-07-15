@@ -45,9 +45,11 @@ public class PessoaController {
         return ResponseEntity.ok(pessoaService.buscarPorId(idPessoa));
     }
 
-    @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroPessoaDTO dto) {
-        return ResponseEntity.ok(pessoaService.atualizar(dto));
+    @PutMapping("/{id}")
+    public ResponseEntity<PessoaDTO> atualizar(@PathVariable Long id, @RequestBody CadastroPessoaDTO dto) {
+        dto.setIdPessoa(id); 
+        PessoaDTO pessoaAtualizada = pessoaService.atualizar(dto);
+        return ResponseEntity.ok(pessoaAtualizada);
     }
 
     @PutMapping("/{idPessoa}/ativar")

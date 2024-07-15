@@ -2,10 +2,12 @@ package br.com.softsy.educacional.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +54,7 @@ public class MunicipioController {
 				.toUri();
 		return ResponseEntity.created(uri).body(cadastroDTO);
 	}
-
+	
 	@PutMapping
 	public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroMunicipioDTO dto) {
 		return ResponseEntity.ok(service.atualizar(dto));

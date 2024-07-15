@@ -50,15 +50,7 @@ public class TransacaoController {
         }
         return ResponseEntity.ok(result);
     }
-    
-    @GetMapping("/{idUsuario}/acessos/modulo/{idModulo}")
-    public ResponseEntity<?> listarAcessosUsuariosModulo(@PathVariable Long idUsuario, @PathVariable Long idModulo) {
-        List<Map<String, Object>> result = transacaoService.listarAcessosUsuariosModulo(idUsuario, idModulo);
-        if (result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum acesso encontrado para o usuário ou módulo informado.");
-        }
-        return ResponseEntity.ok(result);
-    }
+   
     
     @GetMapping("/{idUsuario}/acessos/transacao/{idTransacao}")
     public ResponseEntity<?> listarAcessosUsuariosTransacao(@PathVariable Long idUsuario, @PathVariable Long idTransacao) {
