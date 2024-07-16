@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -52,9 +53,9 @@ public class TransacaoController {
     }
    
     
-    @GetMapping("/{idUsuario}/acessos/transacao/{idTransacao}")
-    public ResponseEntity<?> listarAcessosUsuariosTransacao(@PathVariable Long idUsuario, @PathVariable Long idTransacao) {
-        List<Map<String, Object>> result = transacaoService.listarAcessosUsuariosTransacao(idUsuario, idTransacao);
+    @GetMapping("/acessos/{idUsuario}")
+    public ResponseEntity<?> listarAcessosUsuariosTransacao(@PathVariable Long idUsuario, @RequestParam(value = "url", required = false) String url) {
+        List<Map<String, Object>> result = transacaoService.listarAcessosUsuariosUrl(idUsuario, url);
         if (result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhum acesso encontrado para o usuário ou transação informado.");
         }

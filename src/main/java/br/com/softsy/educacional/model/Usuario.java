@@ -48,7 +48,7 @@ public class Usuario {
     @Column(name = "DT_NASCIMENTO")
     private LocalDateTime dataNascimento;
 
-    @Column(name = "SENHA", nullable = false, length = 255)
+    @Column(name = "SENHA", length = 255)
     private String senha;
 
     @Column(name = "ATIVO", nullable = false, length = 1)

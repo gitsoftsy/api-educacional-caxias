@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.softsy.educacional.dto.CadastroResponsavelDTO;
+import br.com.softsy.educacional.dto.CandidatoRelacionamentoDTO;
+import br.com.softsy.educacional.dto.PessoaDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.model.CandidatoRelacionamento;
 import br.com.softsy.educacional.model.Pessoa;
@@ -73,10 +75,17 @@ public class ResponsavelController {
 	        }
 	    }
 	 
-	    @PutMapping("/atualizarPessoaCandidatoRelacionamento")
-	    public ResponseEntity<Void> atualizarPessoaCandidatoRelacionamento(@RequestBody CadastroResponsavelDTO dto) {
-	        pessoaCandidatoRelacionamentoService.atualizar(dto);
-	        return ResponseEntity.ok().build();
+	    @PutMapping("/pessoa-candidato")
+	    public ResponseEntity<Object> atualizarPessoaECandidato(@RequestBody CadastroResponsavelDTO dto) {
+	        try {
+	            PessoaDTO pessoaDTO = pessoaService.atualizar(dto.getPessoaDTO());
+	            CandidatoRelacionamentoDTO candidatoRelacionamentoDTO = candidatoRelacionamentoService.atualizar(dto.getCandidatoRelacionamentoDTO());
+
+	            CadastroResponseDTO responseDTO = new CadastroResponseDTO(pessoaDTO.getIdPessoa(), candidatoRelacionamentoDTO.getIdCandidatoRelacionamento());
+	            return ResponseEntity.ok(responseDTO);
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar: " + e.getMessage());
+	        }
 	    }
 	 
 	 

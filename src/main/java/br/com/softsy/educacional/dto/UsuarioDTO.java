@@ -35,7 +35,6 @@ public class UsuarioDTO {
 
     private LocalDateTime dataNascimento;
 
-    @NotNull
     private String senha;
 
     private Character ativo;

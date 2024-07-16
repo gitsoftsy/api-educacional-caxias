@@ -13,7 +13,7 @@ public class CandidatoRelacionamentoDTO {
 	
 	private Long idCandidatoRelacionamento;
     private CandidatoDTO candidato;
-    private PessoaDTO pessoa;
+    private Long pessoa;
     private PapelPessoaDTO papelPessoa;
     private Character ativo;
     private LocalDateTime dataCadastro;
@@ -22,7 +22,7 @@ public class CandidatoRelacionamentoDTO {
 
     	this.idCandidatoRelacionamento = candidatoRelacionamento.getIdCandidatoRelacionamento();
     	this.candidato = new CandidatoDTO(candidatoRelacionamento.getCandidato());
-        this.pessoa = new PessoaDTO(candidatoRelacionamento.getPessoa());
+    	this.pessoa = candidatoRelacionamento.getPessoa().getIdPessoa();
         this.papelPessoa = new PapelPessoaDTO(candidatoRelacionamento.getPapelPessoa());
         this.ativo = candidatoRelacionamento.getAtivo();
         this.dataCadastro = candidatoRelacionamento.getDataCadastro();

@@ -76,11 +76,23 @@ public class PessoaDTO {
         this.rgNumero = pessoa.getRgNumero();
         this.estadoCivil = pessoa.getEstadoCivil();
         this.rgOrgaoExpedidor = pessoa.getRgOrgaoExpedidor();
-        this.rgUfEmissor = new UfDTO(pessoa.getRgUfEmissor());
+        
+		if (pessoa.getRgUfEmissor() != null) {
+			this.rgUfEmissor = new UfDTO(pessoa.getRgUfEmissor());
+		} else {
+			this.rgUfEmissor = null;
+		}
+        
         this.rgDataExpedicao = pessoa.getRgDataExpedicao();
         this.rneNumero = pessoa.getRneNumero();
         this.rneOrgaoExpedidor = pessoa.getRneOrgaoExpedidor();
-        this.rneUfEmissor = new UfDTO(pessoa.getRneUfEmissor());
+        
+		if (pessoa.getRneUfEmissor() != null) {
+			this.rneUfEmissor = new UfDTO(pessoa.getRneUfEmissor());
+		} else {
+			this.rneUfEmissor = null;
+		}
+		
         this.rneDataExpedicao = pessoa.getRneDataExpedicao();
         this.certidaoNascimentoNumero = pessoa.getCertidaoNascimentoNumero();
         this.certidaoNascimentoCartorio = pessoa.getCertidaoNascimentoCartorio();
@@ -101,7 +113,13 @@ public class PessoaDTO {
         this.raca = new RacaDTO(pessoa.getRaca());
         this.paisNascimento = new PaisDTO(pessoa.getPaisNascimento());
         this.nacionalidadeId = new NacionalidadeDTO(pessoa.getNacionalidadeId());
-        this.municipioNascimento = new MunicipioDTO(pessoa.getMunicipioNascimento());
+        
+		if (pessoa.getMunicipioNascimento() != null) {
+			this.municipioNascimento = new MunicipioDTO(pessoa.getMunicipioNascimento());
+		} else {
+			this.municipioNascimento = null;
+		}
+        
         this.paisResidencia = new PaisDTO(pessoa.getPaisResidencia());
         this.nomePai = pessoa.getNomePai();
         this.nomeMae = pessoa.getNomeMae();

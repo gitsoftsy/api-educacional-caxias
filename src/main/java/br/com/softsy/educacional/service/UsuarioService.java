@@ -14,6 +14,7 @@ import br.com.softsy.educacional.dto.ListaUsuarioContaDTO;
 import br.com.softsy.educacional.dto.UsuarioContaDTO;
 import br.com.softsy.educacional.dto.UsuarioDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
+import br.com.softsy.educacional.infra.exception.NegocioException;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.Usuario;
 import br.com.softsy.educacional.model.UsuarioConta;
@@ -61,6 +62,7 @@ public class UsuarioService {
     public UsuarioDTO salvar(UsuarioDTO dto) {
     	
         validarUsuario(dto.getUsuario());
+        validarSenha(dto.getSenha());
 
         Usuario usuario = criarUsuarioAPartirDTO(dto);
         usuario.setSenha(encrypt.hashPassword(dto.getSenha()));
@@ -96,7 +98,16 @@ public class UsuarioService {
         }
     }
 
+	private void validarSenha(String senha) {
+		if (senha == null) {
+			throw new NegocioException("A senha precisa ser informada!");
+		}
+	}
+    
     private void atualizaDados(Usuario destino, UsuarioDTO origem) {
-        BeanUtils.copyProperties(origem, destino, "idUsuario", "ativo", "dataCadastro");
+        BeanUtils.copyProperties(origem, destino, "idUsuario", "ativo", "dataCadastro", "senha");
+		if(origem.getSenha() != null) {
+			destino.setSenha(encrypt.hashPassword(origem.getSenha()));
+		}
     }
 }

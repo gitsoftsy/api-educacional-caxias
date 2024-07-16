@@ -170,7 +170,7 @@ public class CadastroPessoaDTO {
         this.racaId = pessoa.getRaca().getIdRaca();
         this.paisNascimentoId = pessoa.getPaisNascimento().getIdPais();
         this.nacionalidadeId = pessoa.getNacionalidadeId().getIdNacionalidade();
-        this.municipioNascimentoId = pessoa.getMunicipioNascimento().getIdMunicipio();
+        this.municipioNascimentoId = pessoa.getMunicipioNascimento() != null ? pessoa.getMunicipioNascimento().getIdMunicipio() : null;
         this.paisResidenciaId = pessoa.getPaisResidencia().getIdPais();
         this.nomePai = pessoa.getNomePai();
         this.nomeMae = pessoa.getNomeMae();

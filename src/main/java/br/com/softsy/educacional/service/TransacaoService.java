@@ -65,8 +65,8 @@ public class TransacaoService {
     }
     
     
-    public List<Map<String, Object>> listarAcessosUsuariosTransacao(Long idUsuario, Long idTransacao) {
-        List<Object[]> resultList = repository.listaAcessosUsuariosTransacao(idUsuario, idTransacao);
+    public List<Map<String, Object>> listarAcessosUsuariosUrl(Long idUsuario, String url) {
+        List<Object[]> resultList = repository.listaAcessosUsuariosUsuarioUrl(idUsuario, url);
         List<Map<String, Object>> mappedResultList = new ArrayList<>();
 
         for (Object[] result : resultList) {

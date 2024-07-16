@@ -97,7 +97,7 @@ public class CandidatoRelacionamentoService {
 	    
 	    
 	    private void atualizarDados(CandidatoRelacionamento destino, CadastroCandidatoRelacionamentoDTO origem) {
-	        BeanUtils.copyProperties(origem, destino, "idCandidato", "pessoaId", "papelPessoaId");
+	        BeanUtils.copyProperties(origem, destino, "idCandidato", "pessoaId", "papelPessoaId", "ativo");
 
 	        Candidato candidato = candidatoRepository.findById(origem.getCandidatoId())
 	                .orElseThrow(() -> new IllegalArgumentException("Candidato não encontrado"));

@@ -21,6 +21,8 @@ public class TransacaoDTO {
     private String url;
     
     private String nome;
+    
+    private Character exibeMenu;
 
     public TransacaoDTO(Transacao transacao) {
         this.idTransacao = transacao.getIdTransacao();
@@ -28,5 +30,6 @@ public class TransacaoDTO {
         this.idCodHtml = transacao.getIdCodHtml();
         this.url = transacao.getUrl();
         this.nome = transacao.getNome();
+        this.exibeMenu = transacao.getExibeMenu();
     }
 }

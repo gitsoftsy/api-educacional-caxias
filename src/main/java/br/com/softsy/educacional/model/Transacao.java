@@ -41,6 +41,9 @@ public class Transacao {
     @Column(name = "NOME", length = 255)
     private String nome;
     
+    @Column(name = "EXIBE_MENU")
+    private Character exibeMenu;
+    
     @JsonIgnore
 	@OneToMany(mappedBy = "transacao", cascade = CascadeType.ALL)
 	private Set<ContaPadraoAcessoTransacao> contaPadraoAcessoTransacao = new HashSet<>();

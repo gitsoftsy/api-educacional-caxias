@@ -54,7 +54,7 @@ public class Pessoa {
 	private String rgOrgaoExpedidor;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_RG_UF_EMISSOR")
+	@JoinColumn(name = "ID_RG_UF_EMISSOR", nullable = true)
 	private Uf rgUfEmissor;
 
 	@Column(name = "RG_DATA_EXP")
@@ -67,7 +67,7 @@ public class Pessoa {
 	private String rneOrgaoExpedidor;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_RNE_UF_EMISSOR")
+	@JoinColumn(name = "ID_RNE_UF_EMISSOR", nullable = true)
 	private Uf rneUfEmissor;
 
 	@Column(name = "RNE_DATA_EXP")
@@ -136,7 +136,7 @@ public class Pessoa {
 	private Nacionalidade nacionalidadeId;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_MUNICIPIO_NASCIMENTO")
+	@JoinColumn(name = "ID_MUNICIPIO_NASCIMENTO", nullable = true)
 	private Municipio municipioNascimento;
 
 	@ManyToOne

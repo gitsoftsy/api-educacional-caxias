@@ -218,8 +218,14 @@ public class PessoaService {
 	    Pais paisNascimento = paisRepository.findById(dto.getPaisNascimentoId())
 	            .orElseThrow(() -> new IllegalArgumentException("País de nascimento não encontrado"));
 
-	    Municipio municipioNascimento = municipioRepository.findById(dto.getMunicipioNascimentoId())
-	            .orElseThrow(() -> new IllegalArgumentException("Município de nascimento não encontrado"));
+	    
+	    if (dto.getMunicipioNascimentoId() != null) {
+	    	Municipio municipioNascimento = municipioRepository.findById(dto.getMunicipioNascimentoId())                    .orElseThrow(() -> new IllegalArgumentException("UF do RG Emissor não encontrada"));
+            pessoa.setMunicipioNascimento(municipioNascimento);
+        } else {
+            pessoa.setCertidaoNascimentoMunicipioCartorio(null);
+        }
+	    
 	    Pais paisResidencia = paisRepository.findById(dto.getPaisResidenciaId())
 	            .orElseThrow(() -> new IllegalArgumentException("País de residência não encontrado"));
 	    Nacionalidade nacionalidade = nacionalidadeRepository.findById(dto.getNacionalidadeId())
@@ -268,7 +274,6 @@ public class PessoaService {
 	    pessoa.setSexo(dto.getSexo());
 	    pessoa.setEstadoCivil(dto.getEstadoCivil());
 	    pessoa.setPaisNascimento(paisNascimento);
-	    pessoa.setMunicipioNascimento(municipioNascimento);
 	    pessoa.setUsuario(dto.getUsuario());
 	    pessoa.setPaisResidencia(paisResidencia);
 	    pessoa.setDtNascimento(dto.getDtNascimento());
