@@ -20,6 +20,8 @@ public class CadastroCandidatoDTO {
 	private Long aluno;
 	private Character aprovado;
 	private Long  usuarioAprovacaoId;
+	private Long motivoReprovacaoCandidatoId;
+	private String descricaoReprovacao;
 	
 public CadastroCandidatoDTO(Candidato candidato) {
 		
@@ -32,8 +34,9 @@ public CadastroCandidatoDTO(Candidato candidato) {
 		this.classificacao = candidato.getClassificacao();
 		this.aluno = candidato.getAluno();
 		this.aprovado = candidato.getAprovado();
-		this.usuarioAprovacaoId = candidato.getUsuarioAprovacao() != null ? candidato.getUsuarioAprovacao().getIdUsuario() : null;;
-	
+		this.usuarioAprovacaoId = candidato.getUsuarioAprovacao() != null ? candidato.getUsuarioAprovacao().getIdUsuario() : null;
+		this.motivoReprovacaoCandidatoId = candidato.getMotivoReprovacaoCandidato() != null ? candidato.getMotivoReprovacaoCandidato().getIdMotivoReprovacaoCandidato() : null;
+		this.descricaoReprovacao = candidato.getDescricaoReprovacao();
 		
 	}
 

@@ -96,14 +96,27 @@ public class PessoaDTO {
         this.rneDataExpedicao = pessoa.getRneDataExpedicao();
         this.certidaoNascimentoNumero = pessoa.getCertidaoNascimentoNumero();
         this.certidaoNascimentoCartorio = pessoa.getCertidaoNascimentoCartorio();
-        this.certidaoNascimentoMunicipioCartorio = new MunicipioDTO(pessoa.getCertidaoNascimentoMunicipioCartorio());
+
+		if (pessoa.getCertidaoNascimentoMunicipioCartorio() != null) {
+			this.certidaoNascimentoMunicipioCartorio = new MunicipioDTO(pessoa.getCertidaoNascimentoMunicipioCartorio());
+		} else {
+			this.certidaoNascimentoMunicipioCartorio = null;
+		}
+		
         this.certidaoNascimentoDataEmissao = pessoa.getCertidaoNascimentoDataEmissao();
         this.certidaoNascimentoFolha = pessoa.getCertidaoNascimentoFolha();
         this.certidaoNascimentoLivro = pessoa.getCertidaoNascimentoLivro();
         this.certidaoNascimentoOrdem = pessoa.getCertidaoNascimentoOrdem();
         this.certidaoCasamentoNumero = pessoa.getCertidaoCasamentoNumero();
         this.certidaoCasamentoCartorio = pessoa.getCertidaoCasamentoCartorio();
-        this.certidaoCasamentoMunicipioCartorio = new MunicipioDTO(pessoa.getCertidaoCasamentoMunicipioCartorio());
+
+        
+		if (pessoa.getCertidaoCasamentoMunicipioCartorio() != null) {
+			this.certidaoCasamentoMunicipioCartorio = new MunicipioDTO(pessoa.getCertidaoCasamentoMunicipioCartorio());
+		} else {
+			this.certidaoCasamentoMunicipioCartorio = null;
+		}
+        
         this.certidaoCasamentoDataEmissao = pessoa.getCertidaoCasamentoDataEmissao();
         this.certidaoCasamentoFolha = pessoa.getCertidaoCasamentoFolha();
         this.certidaoCasamentoLivro = pessoa.getCertidaoCasamentoLivro();

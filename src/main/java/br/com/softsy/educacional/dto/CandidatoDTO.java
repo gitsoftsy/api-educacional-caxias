@@ -15,12 +15,13 @@ public class CandidatoDTO {
 	private ContaDTO conta;
 	private Long pessoa;
 	private String candidato;
-	private OfertaConcursoDTO ofertaConcurso;
+	private Long ofertaConcursoId;
 	private TipoIngressoDTO tipoIngresso;
 	private String classificacao;
 	private Long aluno;
 	private Character aprovado;
 	private UsuarioDTO usuarioAprovacao;
+	private MotivoReprovacaoCandidatoDTO motivoReprovacaoCandidato;
 	
 	public CandidatoDTO(Candidato candidato) {
 		
@@ -28,7 +29,7 @@ public class CandidatoDTO {
 		this.conta = new ContaDTO(candidato.getConta());
 		this.pessoa = candidato.getPessoa().getIdPessoa();
 		this.candidato = candidato.getCandidato();
-		this.ofertaConcurso = new OfertaConcursoDTO (candidato.getOfertaConcurso());
+		this.ofertaConcursoId = candidato.getOfertaConcurso() != null ? candidato.getOfertaConcurso().getIdOfertaConcurso() : null;
 		this.tipoIngresso = new TipoIngressoDTO(candidato.getTipoIngresso());
 		this.classificacao = candidato.getClassificacao();
 		this.aluno = candidato.getAluno();
@@ -38,6 +39,12 @@ public class CandidatoDTO {
 			this.usuarioAprovacao = new UsuarioDTO(candidato.getUsuarioAprovacao());
 		} else {
 			this.usuarioAprovacao = null;
+		}
+		
+		if (candidato.getMotivoReprovacaoCandidato() != null) {
+			this.motivoReprovacaoCandidato = new MotivoReprovacaoCandidatoDTO(candidato.getMotivoReprovacaoCandidato());
+		} else {
+			this.motivoReprovacaoCandidato = null;
 		}
 	
 		

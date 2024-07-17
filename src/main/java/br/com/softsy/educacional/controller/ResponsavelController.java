@@ -90,7 +90,7 @@ public class ResponsavelController {
 	 
 	 
 	    @GetMapping("/candidato/{idCandidato}")
-	    public List<Map<String, Object>> buscarResponsaveisPorIdCandidato(
+	    public ResponseEntity<Map<String, Object>> buscarResponsaveisPorIdCandidato(
 	            @PathVariable Long idCandidato) {
 
 	        List<Object[]> resultados = entityManager.createQuery(
@@ -102,18 +102,45 @@ public class ResponsavelController {
 	                .setParameter("idCandidato", idCandidato)
 	                .getResultList();
 
-	        // TRANSFORMANDO EM JSON
-	        List<Map<String, Object>> responsaveisJson = resultados.stream()
-	                .map(resultado -> {
-	                    Map<String, Object> responsavelJson = new HashMap<>();
-	                    responsavelJson.put("papelPessoa", resultado[0]);
-	                    responsavelJson.put("pessoa", resultado[1]);
-	                    // Adicione mais campos conforme necessário, adaptando os índices dos resultados
-	                    return responsavelJson;
-	                })
-	                .collect(Collectors.toList());
+	        if (resultados.isEmpty()) {
+	            return ResponseEntity.notFound().build();
+	        }
 
-	        return responsaveisJson;
+	        // Supondo que você espera um único resultado
+	        Object[] resultado = resultados.get(0);
+	        Map<String, Object> responsavelJson = new HashMap<>();
+	        responsavelJson.put("papelPessoa", resultado[0]);
+	        responsavelJson.put("pessoa", resultado[1]);
+	        // Adicione mais campos conforme necessário, adaptando os índices dos resultados
+
+	        return ResponseEntity.ok(responsavelJson);
+	    }
+	    
+	    @GetMapping("/pessoa/{idPessoa}")
+	    public ResponseEntity<Map<String, Object>> buscarResponsaveisPorIdPessoa(
+	            @PathVariable Long idPessoa) {
+
+	        List<Object[]> resultados = entityManager.createQuery(
+	                "SELECT PP.papelPessoa, P " +
+	                        "FROM CandidatoRelacionamento CR " +
+	                        "JOIN CR.pessoa P " +
+	                        "JOIN CR.papelPessoa PP " +
+	                        "WHERE CR.pessoa.id = :idPessoa", Object[].class)
+	                .setParameter("idPessoa", idPessoa)
+	                .getResultList();
+
+	        if (resultados.isEmpty()) {
+	            return ResponseEntity.notFound().build();
+	        }
+
+	        // Supondo que você espera um único resultado
+	        Object[] resultado = resultados.get(0);
+	        Map<String, Object> responsavelJson = new HashMap<>();
+	        responsavelJson.put("papelPessoa", resultado[0]);
+	        responsavelJson.put("pessoa", resultado[1]);
+	        // Adicione mais campos conforme necessário, adaptando os índices dos resultados
+
+	        return ResponseEntity.ok(responsavelJson);
 	    }
 	 
 	 

@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -224,4 +225,93 @@ public class ImageManager {
         return "\\modulo\\" + idModulo.toString() + "\\moduloIcone.png";
     }
 	
+    
+    ///************************ TRATAMENTO DE DOCUMENTOS ******************************///
+    
+   	private static String criaDiretorioDocumento(Long idCandidatoDocumentoIngresso) {
+   		// Caminho do diretório a ser criado
+   		String directoryPath = ImageProperties.getImagePath() +"\\documentosCandidato\\"+idCandidatoDocumentoIngresso.toString();
+
+   		// Criação do objeto Path com o caminho do diretório
+   		Path directory = Paths.get(directoryPath);
+
+   		// Verifica se o diretório não existe e cria se necessário
+   		if (!Files.exists(directory)) {
+   			try {
+   				Files.createDirectories(directory);
+   				System.out.println("Diretório criado com sucesso!");
+   			} catch (IOException e) {
+   				System.out.println("Falha ao criar o diretório.");
+   				e.printStackTrace();
+   			}
+   		} else {
+   			System.out.println("O diretório já existe.");
+   		}
+   		return "\\documentosCandidato\\"+idCandidatoDocumentoIngresso.toString();
+   	}
+   	
+   	public static String salvaImagemDocumento(String base64, Long documentoCandidato, String nomeArquivo) {
+
+   		String diretorio = "";
+   		try {
+   			// cria o diretorio para salvar o logo
+   			diretorio = criaDiretorioDocumento(documentoCandidato);
+   			
+   			//salva a imagem
+   		
+   			saveImage(base64ToByte(base64), diretorio+"\\"+nomeArquivo+".pdf");;
+   		} catch (IOException e) {
+
+   			e.printStackTrace();
+   		}		
+   		return diretorio+"\\"+nomeArquivo+".pdf";
+   	}
+   	
+   	public static String atualizaImagemDocumento(Long idCandidatoDocumentoIngresso, String imagemBase64) {
+   	    // Caminho do diretório onde a imagem está localizada
+   	    String directoryPath = ImageProperties.getImagePath() + "\\documentosCandidato\\" + idCandidatoDocumentoIngresso.toString();
+   	    
+   	    // Caminho completo da imagem
+   	    String imagePath = directoryPath + "\\candidatoDoc.pdf";
+
+   	    try {
+   	        // Verifica se o diretório existe, caso não exista, cria
+   	        File directory = new File(directoryPath);
+   	        if (!directory.exists()) {
+   	            directory.mkdirs(); // Cria diretórios pais se não existirem
+   	        }
+
+   	        byte[] imagemBytes = Base64.getDecoder().decode(imagemBase64);
+   	        Files.write(Paths.get(imagePath), imagemBytes);
+   	        System.out.println("Imagem atualizada com sucesso!");
+   	    } catch (IOException e) {
+   	        System.out.println("Falha ao atualizar a imagem.");
+   	        e.printStackTrace();
+   	    }
+
+   	    return "\\documentosCandidato\\" + idCandidatoDocumentoIngresso.toString() + "\\candidatoDoc.pdf";
+   	}
+   	
+   	
+   	public static void excluirImagemDocumento(Long idCandidatoDocumentoIngresso) {
+   	    // Caminho do diretório onde a imagem está localizada
+   	    String directoryPath = ImageProperties.getImagePath() + "\\documentosCandidato\\" + idCandidatoDocumentoIngresso.toString();
+   	    
+   	    // Caminho completo da imagem
+   	    String imagePath = directoryPath + "\\candidatoDoc.pdf";
+
+   	    try {
+   	        // Verifica se o arquivo existe antes de excluí-lo
+   	        File arquivo = new File(imagePath);
+   	        if (arquivo.exists()) {
+   	            arquivo.delete(); // Exclui o arquivo do diretório
+   	            System.out.println("Imagem excluída com sucesso!");
+   	        }
+   	    } catch (Exception e) {
+   	        System.out.println("Falha ao excluir a imagem.");
+   	        e.printStackTrace();
+   	    }
+   	}
+   	
+   	
 }

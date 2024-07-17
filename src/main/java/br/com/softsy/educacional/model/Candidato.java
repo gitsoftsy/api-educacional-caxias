@@ -74,4 +74,11 @@ public class Candidato {
     @ManyToOne
     @JoinColumn(name = "ID_USUARIO_APROVACAO")
     private Usuario usuarioAprovacao;
+    
+    @ManyToOne
+    @JoinColumn(name = "ID_MOTIVO_REPROVACAO_CANDIDATO")
+    private MotivoReprovacaoCandidato motivoReprovacaoCandidato;
+    
+    @Column(name = "DESCRICAO_REPROVACAO", length = 2550)
+    private String descricaoReprovacao;
 }

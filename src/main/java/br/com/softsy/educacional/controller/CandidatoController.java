@@ -25,6 +25,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.softsy.educacional.dto.CadastroCandidatoDTO;
 import br.com.softsy.educacional.dto.CadastroCandidatoPessoaDTO;
 import br.com.softsy.educacional.dto.CandidatoDTO;
+import br.com.softsy.educacional.dto.CursoDTO;
 import br.com.softsy.educacional.dto.StepCandidatoDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.model.Candidato;
@@ -108,6 +109,13 @@ public class CandidatoController {
         List<CandidatoDTO> candidatos = candidatoService.listarTudo();
         return ResponseEntity.ok(candidatos);
     }
+    
+    @GetMapping("/conta/{idConta}")
+    public ResponseEntity<List<CandidatoDTO>> buscarPorIdConta(@PathVariable Long idConta) {
+        List<CandidatoDTO> curso = candidatoService.buscarPorIdConta(idConta);
+        return ResponseEntity.ok(curso);
+    }
+
 
     @GetMapping("/{idCandidato}")
     public ResponseEntity<CandidatoDTO> buscarPorId(@PathVariable Long idCandidato) {

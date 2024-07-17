@@ -21,12 +21,14 @@ import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.model.CandidatoRelacionamento;
 import br.com.softsy.educacional.model.Conta;
+import br.com.softsy.educacional.model.MotivoReprovacaoCandidato;
 import br.com.softsy.educacional.model.OfertaConcurso;
 import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.model.TipoIngresso;
 import br.com.softsy.educacional.model.Usuario;
 import br.com.softsy.educacional.repository.CandidatoRepository;
 import br.com.softsy.educacional.repository.ContaRepository;
+import br.com.softsy.educacional.repository.MotivoReprovacaoCandidatoRepository;
 import br.com.softsy.educacional.repository.OfertaConcursoRepository;
 import br.com.softsy.educacional.repository.PessoaRepository;
 import br.com.softsy.educacional.repository.TipoIngressoRepository;
@@ -55,6 +57,9 @@ public class CandidatoService {
     
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private MotivoReprovacaoCandidatoRepository motivoReprovacaoRepository;
     
     @Autowired
     private EntityManager entityManager;
@@ -139,7 +144,13 @@ public class CandidatoService {
         Usuario usuarioAprovacao = null;
         if (dto.getUsuarioAprovacaoId() != null) {
         	usuarioAprovacao = usuarioRepository.findById(dto.getUsuarioAprovacaoId())
-                    .orElseThrow(() -> new IllegalArgumentException("Oferta concurso não encontrado"));
+                    .orElseThrow(() -> new IllegalArgumentException("Usuário aprovação não encontrado"));
+        }
+        
+        MotivoReprovacaoCandidato motivoReprovacao = null;
+        if (dto.getMotivoReprovacaoCandidatoId() != null) {
+        	motivoReprovacao = motivoReprovacaoRepository.findById(dto.getMotivoReprovacaoCandidatoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Motivo de reprovação não encontrado"));
         }
 
         candidato.setConta(conta);
@@ -150,7 +161,9 @@ public class CandidatoService {
         candidato.setClassificacao(dto.getClassificacao());
         candidato.setAluno(dto.getAluno());
         candidato.setAprovado(dto.getAprovado());
-        candidato.setUsuarioAprovacao(usuarioAprovacao); 
+        candidato.setUsuarioAprovacao(usuarioAprovacao);
+        candidato.setDescricaoReprovacao(dto.getDescricaoReprovacao());
+        candidato.setMotivoReprovacaoCandidato(motivoReprovacao);
 
         return candidato;
     }
@@ -167,6 +180,8 @@ public class CandidatoService {
                 .orElseThrow(() -> new IllegalArgumentException("Tipo de Ingresso não encontrado"));
         Usuario usuarioAprovacao = usuarioRepository.findById(origem.getUsuarioAprovacaoId())
                 .orElse(null); 
+        MotivoReprovacaoCandidato motivoReprovacao = motivoReprovacaoRepository.findById(origem.getMotivoReprovacaoCandidatoId())
+                .orElse(null); 
 
         destino.setConta(conta);
         destino.setPessoa(pessoa);
@@ -177,6 +192,8 @@ public class CandidatoService {
         destino.setAluno(origem.getAluno());
         destino.setAprovado(origem.getAprovado());
         destino.setUsuarioAprovacao(usuarioAprovacao);
+        destino.setDescricaoReprovacao(origem.getDescricaoReprovacao());
+        destino.setMotivoReprovacaoCandidato(motivoReprovacao);
     }
     
     @Transactional
