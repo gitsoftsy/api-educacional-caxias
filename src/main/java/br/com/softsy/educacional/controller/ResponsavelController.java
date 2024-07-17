@@ -121,7 +121,7 @@ public class ResponsavelController {
 	            @PathVariable Long idPessoa) {
 
 	        List<Object[]> resultados = entityManager.createQuery(
-	                "SELECT PP.papelPessoa, P " +
+	                "SELECT PP.papelPessoa, PP.idPapelPessoa, P " +
 	                        "FROM CandidatoRelacionamento CR " +
 	                        "JOIN CR.pessoa P " +
 	                        "JOIN CR.papelPessoa PP " +
@@ -137,7 +137,8 @@ public class ResponsavelController {
 	        Object[] resultado = resultados.get(0);
 	        Map<String, Object> responsavelJson = new HashMap<>();
 	        responsavelJson.put("papelPessoa", resultado[0]);
-	        responsavelJson.put("pessoa", resultado[1]);
+	        responsavelJson.put("idPapelPessoa", resultado[1]);
+	        responsavelJson.put("pessoa", resultado[2]);
 	        // Adicione mais campos conforme necessário, adaptando os índices dos resultados
 
 	        return ResponseEntity.ok(responsavelJson);

@@ -14,7 +14,6 @@ public class CandidatoDocumentoIngressoDTO {
 
     private Long idCandidatoDocumentoIngresso;
 
-    @NotNull
     private Long candidatoId;
 
     private LocalDateTime dataCadastro;

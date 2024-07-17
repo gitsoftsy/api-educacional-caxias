@@ -1,5 +1,9 @@
 package br.com.softsy.educacional.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,10 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedStoredProcedureQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.ParameterMode;
 import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -81,4 +88,8 @@ public class Candidato {
     
     @Column(name = "DESCRICAO_REPROVACAO", length = 2550)
     private String descricaoReprovacao;
+    
+	@JsonIgnore
+	@OneToMany(mappedBy = "candidato", cascade = CascadeType.ALL)
+	private Set<CandidatoDocumentoIngresso> candidatoDocumento = new HashSet<>();
 }

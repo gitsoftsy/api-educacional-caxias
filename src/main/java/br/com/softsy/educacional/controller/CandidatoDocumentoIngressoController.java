@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.softsy.educacional.dto.CadastroConcursoDTO;
 import br.com.softsy.educacional.dto.CandidatoDocumentoIngressoDTO;
+import br.com.softsy.educacional.dto.ConcursoDTO;
 import br.com.softsy.educacional.dto.ModuloDTO;
 import br.com.softsy.educacional.model.CaminhoImagemRequest;
 import br.com.softsy.educacional.service.CandidatoDocumentoIngressoService;
@@ -32,6 +34,18 @@ public class CandidatoDocumentoIngressoController {
     @GetMapping
     public ResponseEntity<List<CandidatoDocumentoIngressoDTO>> listarDocumentos() {
         List<CandidatoDocumentoIngressoDTO> documentos = service.listarTudo();
+        return ResponseEntity.ok(documentos);
+    }
+    
+    @GetMapping("/candidato/{idCandidato}")
+    public ResponseEntity<List<CandidatoDocumentoIngressoDTO>> buscarPorIdCandidato(@PathVariable Long idCandidato) {
+        List<CandidatoDocumentoIngressoDTO> documentos = service.buscarPorIdCandidato(idCandidato);
+        return ResponseEntity.ok(documentos);
+    }
+    
+    @PutMapping
+    public ResponseEntity<CandidatoDocumentoIngressoDTO> atualizar(@RequestBody @Valid CandidatoDocumentoIngressoDTO dto) {
+    	CandidatoDocumentoIngressoDTO documentos = service.atualizar(dto);
         return ResponseEntity.ok(documentos);
     }
     
