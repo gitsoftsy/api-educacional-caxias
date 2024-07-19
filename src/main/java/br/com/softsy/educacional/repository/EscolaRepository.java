@@ -22,6 +22,9 @@ public interface EscolaRepository extends JpaRepository<Escola, Long>{
 	
 	@Query("select escola from Escola escola join escola.conta conta where conta.idConta = :idConta")
     Optional<List<Escola>> findByConta_IdConta(@Param("idConta") Long idConta);
+	
+	@org.springframework.data.jpa.repository.Query(value = "CALL PROC_LISTA_ESCOLAS_USUARIO(:pIdUsuario, :pIdConta)", nativeQuery = true)
+    List<Object[]> listaEscolasUsuario(@Param("pIdUsuario") Long idUsuario, @Param("pIdConta") Long idConta);
 
 
 }

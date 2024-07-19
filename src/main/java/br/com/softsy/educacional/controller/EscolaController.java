@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -153,5 +155,14 @@ public class EscolaController {
 		service.ativaDesativa('N', idEscola);
 		return ResponseEntity.ok().build();
 	}
+	
+    @GetMapping("/usuario/{idConta}/{idUsuario}")
+    public ResponseEntity<?> listaEscolasUsuario(@PathVariable Long idConta,@PathVariable Long idUsuario) {
+        List<Map<String, Object>> result = service.listaEscolasUsuario(idUsuario, idConta);
+        if (result.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma escola encontrada para o usuario informado.");
+        }
+        return ResponseEntity.ok(result);
+    }
 
 }

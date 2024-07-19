@@ -21,6 +21,7 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long>{
     
 	@org.springframework.data.jpa.repository.Query(value = "CALL PROC_OBTEM_ACESSO_USUARIO_URL(:pIdUsuario, :pUrl)", nativeQuery = true)
     List<Object[]> listaAcessosUsuariosUsuarioUrl(@Param("pIdUsuario") Long idUsuario, @Param("pUrl") String url);
-	
+    
+
 
 }

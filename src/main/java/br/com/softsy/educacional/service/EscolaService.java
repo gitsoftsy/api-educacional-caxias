@@ -2,6 +2,7 @@ package br.com.softsy.educacional.service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -263,5 +264,52 @@ public class EscolaService {
 		destino.setConta(conta);
 		destino.setLogoEscola(origem.getLogoEscola());
 	}
+	
+	public List<Map<String, Object>> listaEscolasUsuario(Long idUsuario, Long idConta) {
+        List<Object[]> resultList = repository.listaEscolasUsuario(idUsuario, idConta);
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idEscola", result[0]);
+            resultMap.put("idConta", result[1]);
+            resultMap.put("dtCadastro", result[2]);
+            resultMap.put("ativo", result[3]);
+            resultMap.put("nomeEscola", result[4]);
+            resultMap.put("logoEscola", result[5]);
+            resultMap.put("tipoEscola", result[6]);
+            resultMap.put("idCategoriaEscolaPrivada", result[7]);
+            resultMap.put("cnpj", result[8]);
+            resultMap.put("codigoInep", result[9]);
+            resultMap.put("cep", result[10]);
+            resultMap.put("endereco", result[11]);
+            resultMap.put("numero", result[12]);
+            resultMap.put("complemento", result[13]);
+            resultMap.put("bairro", result[14]);
+            resultMap.put("municipio", result[15]);
+            resultMap.put("distrito", result[16]);
+            resultMap.put("uf", result[17]);
+            resultMap.put("numCme", result[18]);
+            resultMap.put("numParecerCme", result[19]);
+            resultMap.put("latitude", result[20]);
+            resultMap.put("longitude", result[21]);
+            resultMap.put("idLocalizacao", result[22]);
+            resultMap.put("idEntidadeSuperior", result[23]);
+            resultMap.put("email", result[24]);
+            resultMap.put("idSituacaoFuncionamento", result[25]);
+            resultMap.put("educacaoIndigena", result[26]);
+            resultMap.put("exameSelecao", result[27]);
+            resultMap.put("compartilhaEspaco", result[28]);
+            resultMap.put("usaEspacoEntornoEscolar", result[29]);
+            resultMap.put("pppAtualizado12Meses", result[30]);
+            resultMap.put("idFormaOcupacaoPredio", result[31]);
+            resultMap.put("idZoneamento", result[32]);
+            resultMap.put("idOrgaoPublico", result[33]);
+            resultMap.put("idDependenciaAdiministrativa", result[34]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
 	
 }
