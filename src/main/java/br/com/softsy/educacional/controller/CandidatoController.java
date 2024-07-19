@@ -24,9 +24,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroCandidatoDTO;
 import br.com.softsy.educacional.dto.CadastroCandidatoPessoaDTO;
+import br.com.softsy.educacional.dto.CadastroResponsavelDTO;
 import br.com.softsy.educacional.dto.CandidatoDTO;
-import br.com.softsy.educacional.dto.CursoDTO;
-import br.com.softsy.educacional.dto.StepCandidatoDTO;
+import br.com.softsy.educacional.dto.CandidatoRelacionamentoDTO;
+import br.com.softsy.educacional.dto.PessoaDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.model.Pessoa;
@@ -84,6 +85,35 @@ public class CandidatoController {
         }
     }
     
+    private static class AtualizarResponseDTO {
+        private Long idPessoa;
+        private Long idCandidato;
+
+        public AtualizarResponseDTO(Long idPessoa, Long idCandidato) {
+            this.idPessoa = idPessoa;
+            this.idCandidato = idCandidato;
+        }
+
+        // Getters e Setters
+        public Long getIdPessoa() {
+            return idPessoa;
+        }
+
+        public void setIdPessoa(Long idPessoa) {
+            this.idPessoa = idPessoa;
+        }
+
+        public Long getIdCandidato() {
+            return idCandidato;
+        }
+
+        public void setIdCandidato(Long idCandidato) {
+            this.idCandidato = idCandidato;
+        }
+    }
+
+    
+    
 	 @PostMapping("/pessoa-candidato")
 	    public ResponseEntity<Object> cadastrarPessoaECandidato(@RequestBody CadastroCandidatoPessoaDTO dto) {
 	        try {
@@ -102,6 +132,43 @@ public class CandidatoController {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
 	        }
 	    }
+	 
+//	 @PutMapping("/pessoa-candidato")
+//	 public ResponseEntity<Object> atualizarPessoaECandidato(@RequestBody CadastroCandidatoPessoaDTO dto) {
+//	     try {
+//	         // Atualiza a pessoa
+//	         PessoaDTO pessoaDTOAtualizada = pessoaService.atualizar(dto.getPessoaDTO());
+//	         Pessoa pessoa = pessoaService.buscarPorId(pessoaDTOAtualizada.getIdPessoa());
+//	         pessoa.setSenha(encrypt.hashPassword(pessoaDTOAtualizada.getSenha())); // Caso a senha seja atualizada
+//	         pessoa = pessoaRepository.save(pessoa);
+//
+//	         // Atualiza o candidato com o ID da pessoa atualizada
+//	         dto.getCandidatoDTO().setPessoaId(pessoa.getIdPessoa());
+//	         CandidatoDTO candidatoDTOAtualizado = candidatoService.atualizar(dto.getCandidatoDTO());
+//	         Candidato candidato = candidatoService.buscarPorId(candidatoDTOAtualizado.getIdCandidato());
+//	         candidato = candidatoRepository.save(candidato);
+//
+//	         // Cria o DTO de resposta com os IDs atualizados
+//	         CadastroResponseDTO responseDTO = new CadastroResponseDTO(pessoa.getIdPessoa(), candidato.getIdCandidato());
+//	         return ResponseEntity.ok(responseDTO);
+//	     } catch (Exception e) {
+//	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar: " + e.getMessage());
+//	     }
+//	 }
+	 
+	    @PutMapping("/pessoa-candidato")
+	    public ResponseEntity<Object> atualizarPessoaECandidato(@RequestBody CadastroCandidatoPessoaDTO dto) {
+	        try {
+	            PessoaDTO pessoaDTO = pessoaService.atualizar(dto.getPessoaDTO());
+	            CandidatoDTO candidatoDTOAtualizado = candidatoService.atualizar(dto.getCandidatoDTO());
+
+	            AtualizarResponseDTO responseDTO = new AtualizarResponseDTO(pessoaDTO.getIdPessoa(), candidatoDTOAtualizado.getIdCandidato());
+	            return ResponseEntity.ok(responseDTO);
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar: " + e.getMessage());
+	        }
+	    }
+	 
     
     
     @GetMapping
@@ -245,5 +312,7 @@ public class CandidatoController {
 	    	candidatoService.aprovaReprova('N', idCandidato);
 	        return ResponseEntity.ok().build();
 	    }
+	    
+	    
     
 }

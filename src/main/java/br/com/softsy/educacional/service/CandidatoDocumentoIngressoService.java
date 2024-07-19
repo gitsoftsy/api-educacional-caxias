@@ -12,15 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.softsy.educacional.dto.CadastroConcursoDTO;
 import br.com.softsy.educacional.dto.CandidatoDocumentoIngressoDTO;
-import br.com.softsy.educacional.dto.ConcursoDTO;
-import br.com.softsy.educacional.dto.ModuloDTO;
 import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.model.CandidatoDocumentoIngresso;
-import br.com.softsy.educacional.model.Concurso;
-import br.com.softsy.educacional.model.Modulo;
 import br.com.softsy.educacional.model.MotivoReprovacaoDocumento;
+import br.com.softsy.educacional.model.Usuario;
 import br.com.softsy.educacional.repository.CandidatoDocumentoIngressoRepository;
 import br.com.softsy.educacional.repository.CandidatoRepository;
 import br.com.softsy.educacional.repository.MotivoReprovacaoDocumentoRepository;
@@ -127,15 +123,29 @@ public class CandidatoDocumentoIngressoService {
         CandidatoDocumentoIngresso documento = new CandidatoDocumentoIngresso();
         
         Candidato candidato = candidatoRepository.findById(dto.getCandidatoId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+                .orElseThrow(() -> new IllegalArgumentException("Candidato não encontrado"));
         
-        MotivoReprovacaoDocumento motivoReprovacao = motivoReprovacaoDocumentoRepository.findById(dto.getMotivoReprovacaoDocumentoId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+     
+        MotivoReprovacaoDocumento motivoReprovacao = null;
+        if (dto.getMotivoReprovacaoDocumentoId() != null) {
+        	motivoReprovacao = motivoReprovacaoDocumentoRepository.findById(dto.getMotivoReprovacaoDocumentoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Motivo de reprovação não encontrado"));
+        }
+        
+        BeanUtils.copyProperties(dto, documento, "docAprovado");
         documento.setCandidato(candidato);
         documento.setMotivoReprovacaoDocumento(motivoReprovacao);
         documento.setDocFileServer(dto.getDocFileServer());
-        documento.setUsuarioAprovacao(usuarioRepository.findById(dto.getUsuarioAprovacaoId())
-                .orElse(null));
+        documento.setDataCadastro(LocalDateTime.now());
+        
+        Usuario usuarioAprovacao = null;
+        if (dto.getUsuarioAprovacaoId() != null) {
+        	usuarioAprovacao = usuarioRepository.findById(dto.getUsuarioAprovacaoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Usuário de aprovação não encontrado"));
+        }
+        
+        documento.setUsuarioAprovacao(usuarioAprovacao);
+        
         return documento;
     }
     
@@ -143,22 +153,58 @@ public class CandidatoDocumentoIngressoService {
     public CandidatoDocumentoIngressoDTO atualizar(CandidatoDocumentoIngressoDTO dto) {
     	CandidatoDocumentoIngresso documento = repository.findById(dto.getIdCandidatoDocumentoIngresso())
                 .orElseThrow(() -> new IllegalArgumentException("Concurso não encontrado"));
-        atualizarDados(documento, dto);
+    	atualizarDadosSemImagem(documento, dto);
         documento = repository.save(documento);
         return new CandidatoDocumentoIngressoDTO(documento);
     }
 
     private void atualizarDados(CandidatoDocumentoIngresso destino, CandidatoDocumentoIngressoDTO origem) {
     	
-        MotivoReprovacaoDocumento motivoReprovacao = motivoReprovacaoDocumentoRepository.findById(origem.getMotivoReprovacaoDocumentoId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+        MotivoReprovacaoDocumento motivoReprovacao = null;
+        if (origem.getMotivoReprovacaoDocumentoId() != null) {
+        	motivoReprovacao = motivoReprovacaoDocumentoRepository.findById(origem.getMotivoReprovacaoDocumentoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Motivo de reprovação não encontrado"));
+        }
     	
-        BeanUtils.copyProperties(origem, destino, "docFileServer", "candidatoId", "dataCadastro");
+        BeanUtils.copyProperties(origem, destino, "candidatoId", "dataCadastro");
+        destino.setDocFileServer(origem.getDocFileServer());
         destino.setDocAprovado(origem.getDocAprovado());
         destino.setDataAprovacao(origem.getDataAprovacao());
         destino.setMotivoReprovacaoDocumento(motivoReprovacao);
         destino.setObsAprovacao(origem.getObsAprovacao());
-        destino.setUsuarioAprovacao(usuarioRepository.findById(origem.getUsuarioAprovacaoId())
-                .orElse(null));
+        
+        Usuario usuarioAprovacao = null;
+        if (origem.getUsuarioAprovacaoId() != null) {
+        	usuarioAprovacao = usuarioRepository.findById(origem.getUsuarioAprovacaoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Usuário de aprovação não encontrado"));
+        }
+        
+        destino.setUsuarioAprovacao(usuarioAprovacao);
     }
+    
+    private void atualizarDadosSemImagem(CandidatoDocumentoIngresso destino, CandidatoDocumentoIngressoDTO origem) {
+        MotivoReprovacaoDocumento motivoReprovacao = null;
+        if (origem.getMotivoReprovacaoDocumentoId() != null) {
+            motivoReprovacao = motivoReprovacaoDocumentoRepository.findById(origem.getMotivoReprovacaoDocumentoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Motivo de reprovação não encontrado"));
+        }
+
+        // Copiando propriedades, exceto 'candidatoId', 'dataCadastro' e 'docFileServer'
+        BeanUtils.copyProperties(origem, destino, "candidatoId", "dataCadastro", "docFileServer");
+
+        // Setando as propriedades restantes manualmente, exceto 'docFileServer' e 'dataCadastro'
+        destino.setDocAprovado(origem.getDocAprovado());
+        destino.setDataAprovacao(origem.getDataAprovacao());
+        destino.setMotivoReprovacaoDocumento(motivoReprovacao);
+        destino.setObsAprovacao(origem.getObsAprovacao());
+
+        Usuario usuarioAprovacao = null;
+        if (origem.getUsuarioAprovacaoId() != null) {
+            usuarioAprovacao = usuarioRepository.findById(origem.getUsuarioAprovacaoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Usuário de aprovação não encontrado"));
+        }
+
+        destino.setUsuarioAprovacao(usuarioAprovacao);
+    }
+    
 }

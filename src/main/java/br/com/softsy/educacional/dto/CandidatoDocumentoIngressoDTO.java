@@ -20,7 +20,6 @@ public class CandidatoDocumentoIngressoDTO {
 
     private String docFileServer;
 
-    @NotNull
     private Character docAprovado;
 
     private LocalDateTime dataAprovacao;
@@ -38,7 +37,7 @@ public class CandidatoDocumentoIngressoDTO {
         this.docFileServer = candidatoDocumentoIngresso.getDocFileServer();
         this.docAprovado = candidatoDocumentoIngresso.getDocAprovado();
         this.dataAprovacao = candidatoDocumentoIngresso.getDataAprovacao();
-        this.motivoReprovacaoDocumentoId = candidatoDocumentoIngresso.getMotivoReprovacaoDocumento().getIdMotivoReprovacaoDocumento();
+        this.motivoReprovacaoDocumentoId = candidatoDocumentoIngresso.getMotivoReprovacaoDocumento() != null ? candidatoDocumentoIngresso.getMotivoReprovacaoDocumento().getIdMotivoReprovacaoDocumento() : null;
         this.obsAprovacao = candidatoDocumentoIngresso.getObsAprovacao();
         this.usuarioAprovacaoId = candidatoDocumentoIngresso.getUsuarioAprovacao() != null ?
             candidatoDocumentoIngresso.getUsuarioAprovacao().getIdUsuario() : null;

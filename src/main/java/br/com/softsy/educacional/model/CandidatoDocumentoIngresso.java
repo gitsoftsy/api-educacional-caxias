@@ -33,7 +33,7 @@ public class CandidatoDocumentoIngresso {
     @Column(name = "DOC_FILE_SERVER")
     private String docFileServer;
 
-    @Column(name = "DOC_APROVADO", nullable = false)
+    @Column(name = "DOC_APROVADO")
     private Character docAprovado;
 
     @Column(name = "DT_APROVACAO")

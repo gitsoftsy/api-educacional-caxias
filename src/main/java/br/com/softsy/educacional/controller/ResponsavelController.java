@@ -56,7 +56,7 @@ public class ResponsavelController {
 	@PersistenceContext
 	private EntityManager entityManager;
 	
-	 @PostMapping("/pessoa-candidato")
+	 @PostMapping("/pessoa-candidatoRelacionamento")
 	    public ResponseEntity<Object> cadastrarPessoaECandidato(@RequestBody CadastroResponsavelDTO dto) {
 	        try {
 	            Pessoa pessoa = pessoaService.criarPessoaAPartirDTO(dto.getPessoaDTO());
@@ -75,7 +75,7 @@ public class ResponsavelController {
 	        }
 	    }
 	 
-	    @PutMapping("/pessoa-candidato")
+	    @PutMapping("/pessoa-candidatoRelacionamento")
 	    public ResponseEntity<Object> atualizarPessoaECandidato(@RequestBody CadastroResponsavelDTO dto) {
 	        try {
 	            PessoaDTO pessoaDTO = pessoaService.atualizar(dto.getPessoaDTO());
@@ -94,7 +94,7 @@ public class ResponsavelController {
 	            @PathVariable Long idCandidato) {
 
 	        List<Object[]> resultados = entityManager.createQuery(
-	                "SELECT PP.papelPessoa, P " +
+	                "SELECT PP.papelPessoa, PP.idPapelPessoa, P " +
 	                        "FROM CandidatoRelacionamento CR " +
 	                        "JOIN CR.pessoa P " +
 	                        "JOIN CR.papelPessoa PP " +
@@ -106,12 +106,11 @@ public class ResponsavelController {
 	            return ResponseEntity.notFound().build();
 	        }
 
-	        // Supondo que você espera um único resultado
 	        Object[] resultado = resultados.get(0);
 	        Map<String, Object> responsavelJson = new HashMap<>();
 	        responsavelJson.put("papelPessoa", resultado[0]);
-	        responsavelJson.put("pessoa", resultado[1]);
-	        // Adicione mais campos conforme necessário, adaptando os índices dos resultados
+	        responsavelJson.put("idPapelPessoa", resultado[1]);
+	        responsavelJson.put("pessoa", resultado[2]);
 
 	        return ResponseEntity.ok(responsavelJson);
 	    }
@@ -133,13 +132,11 @@ public class ResponsavelController {
 	            return ResponseEntity.notFound().build();
 	        }
 
-	        // Supondo que você espera um único resultado
 	        Object[] resultado = resultados.get(0);
 	        Map<String, Object> responsavelJson = new HashMap<>();
 	        responsavelJson.put("papelPessoa", resultado[0]);
 	        responsavelJson.put("idPapelPessoa", resultado[1]);
 	        responsavelJson.put("pessoa", resultado[2]);
-	        // Adicione mais campos conforme necessário, adaptando os índices dos resultados
 
 	        return ResponseEntity.ok(responsavelJson);
 	    }

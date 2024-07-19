@@ -272,6 +272,7 @@ public class PessoaService {
 	    pessoa.setRaca(raca);
 	    pessoa.setNacionalidadeId(nacionalidade);
 	    pessoa.setSexo(dto.getSexo());
+	    pessoa.setNomeCompleto(dto.getNomeCompleto());
 	    pessoa.setEstadoCivil(dto.getEstadoCivil());
 	    pessoa.setPaisNascimento(paisNascimento);
 	    pessoa.setUsuario(dto.getUsuario());

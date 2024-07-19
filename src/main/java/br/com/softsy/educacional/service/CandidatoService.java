@@ -174,14 +174,29 @@ public class CandidatoService {
                 .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
         Pessoa pessoa = pessoaRepository.findById(origem.getPessoaId())
                 .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada"));
-        OfertaConcurso ofertaConcurso = ofertaRepository.findById(origem.getOfertaConcursoId())
-                .orElse(null);
-        TipoIngresso tipoIngresso = tipoIngressoRepository.findById(origem.getTipoIngressoId())
-                .orElseThrow(() -> new IllegalArgumentException("Tipo de Ingresso não encontrado"));
-        Usuario usuarioAprovacao = usuarioRepository.findById(origem.getUsuarioAprovacaoId())
-                .orElse(null); 
-        MotivoReprovacaoCandidato motivoReprovacao = motivoReprovacaoRepository.findById(origem.getMotivoReprovacaoCandidatoId())
-                .orElse(null); 
+        
+        OfertaConcurso ofertaConcurso = null;
+        if (origem.getOfertaConcursoId() != null) {
+        	ofertaConcurso = ofertaRepository.findById(origem.getOfertaConcursoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Oferta concurso não encontrada"));
+        }
+        TipoIngresso tipoIngresso = null;
+        if (origem.getTipoIngressoId() != null) {
+        	tipoIngresso = tipoIngressoRepository.findById(origem.getTipoIngressoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Tipo ingresso não encontrado"));
+        }
+        
+        Usuario usuarioAprovacao = null;
+        if (origem.getUsuarioAprovacaoId() != null) {
+        	usuarioAprovacao = usuarioRepository.findById(origem.getUsuarioAprovacaoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Usuário aprovação não encontrado"));
+        }
+        
+        MotivoReprovacaoCandidato motivoReprovacao = null;
+        if (origem.getMotivoReprovacaoCandidatoId() != null) {
+        	motivoReprovacao = motivoReprovacaoRepository.findById(origem.getMotivoReprovacaoCandidatoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Motivo de reprovação não encontrado"));
+        }
 
         destino.setConta(conta);
         destino.setPessoa(pessoa);

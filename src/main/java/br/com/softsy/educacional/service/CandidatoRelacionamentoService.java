@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.softsy.educacional.dto.AreaConhecimentoDTO;
 import br.com.softsy.educacional.dto.CadastroCandidatoRelacionamentoDTO;
 import br.com.softsy.educacional.dto.CandidatoRelacionamentoDTO;
+import br.com.softsy.educacional.model.AreaConhecimento;
 import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.model.CandidatoRelacionamento;
 import br.com.softsy.educacional.model.PapelPessoa;
@@ -47,6 +49,15 @@ public class CandidatoRelacionamentoService {
 	    @Transactional(readOnly = true)
 	    public CandidatoRelacionamentoDTO buscarPorId(Long id) {
 	        return new CandidatoRelacionamentoDTO(candidatoRelacionamentoRepository.getReferenceById(id));
+	    }
+	    
+	    @Transactional(readOnly = true)
+	    public List<CandidatoRelacionamentoDTO> buscarPorIdPessoa(Long idPessoa) {
+	        List<CandidatoRelacionamento> candidatoRelacionamento = candidatoRelacionamentoRepository.findByPessoa_IdPessoa(idPessoa)
+	                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar candidato relacionamento por ID da pessoa"));
+	        return candidatoRelacionamento.stream()
+	                .map(CandidatoRelacionamentoDTO::new)
+	                .collect(Collectors.toList());
 	    }
 	    
 	    @Transactional
