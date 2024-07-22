@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.softsy.educacional.dto.LinguaEnsinoDTO;
 import br.com.softsy.educacional.dto.PessoaFichaMedicaDTO;
 import br.com.softsy.educacional.service.PessoaFichaMedicaService;
 
@@ -31,6 +32,12 @@ public class PessoaFichaMedicaController {
     public ResponseEntity<List<PessoaFichaMedicaDTO>> listar() {
         return ResponseEntity.ok(pessoaFichaMedicaService.listarTudo());
     }
+    
+	@GetMapping("/pessoa/{idPessoa}")
+	public ResponseEntity<List<PessoaFichaMedicaDTO>> buscarPorIdPessoa(@PathVariable Long idPessoa){
+		List<PessoaFichaMedicaDTO> fichaMedicaDTO = pessoaFichaMedicaService.buscarPorIdPessoa(idPessoa);
+		return ResponseEntity.ok(fichaMedicaDTO);
+	}
 
     @PostMapping
     public ResponseEntity<PessoaFichaMedicaDTO> cadastrar(@RequestBody @Valid PessoaFichaMedicaDTO dto) {

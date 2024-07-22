@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.softsy.educacional.dto.LinguaEnsinoDTO;
 import br.com.softsy.educacional.dto.PessoaFichaMedicaDTO;
+import br.com.softsy.educacional.model.LinguaEnsino;
 import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.model.PessoaFichaMedica;
 import br.com.softsy.educacional.repository.PessoaFichaMedicaRepository;
@@ -36,6 +38,16 @@ public class PessoaFichaMedicaService {
     public PessoaFichaMedicaDTO buscarPorId(Long id) {
         return new PessoaFichaMedicaDTO(repository.getReferenceById(id));
     }
+    
+	@Transactional(readOnly = true)
+	public List<PessoaFichaMedicaDTO> buscarPorIdPessoa(Long id) {
+		List<PessoaFichaMedica> fichas = repository.findByPessoa_IdPessoa(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar ficha médica por id de pessoa"));
+		return fichas.stream()
+				.map(PessoaFichaMedicaDTO::new)
+				.collect(Collectors.toList());
+	}
+    
 
     @Transactional
     public PessoaFichaMedicaDTO salvar(PessoaFichaMedicaDTO dto) {
