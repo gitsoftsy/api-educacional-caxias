@@ -1,8 +1,14 @@
 package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +44,9 @@ public class OfertaConcursoService {
 
     @Autowired
     private TurnoRepository turnoRepository;
+    
+    @Autowired
+    private EntityManager entityManager;
 
     @Transactional(readOnly = true)
     public List<CadastroOfertaConcursoDTO> listarTudo() {
@@ -108,6 +117,40 @@ public class OfertaConcursoService {
         oferta.setAtivo('S');
         return oferta;
     }
+    
+    public List<Map<String, Object>> listaOfertaCursoUsuario(Long idUsuario) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTA_OFERTA_CURSO_USUARIO(:pIdUsuario)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdUsuario", idUsuario);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idOfertaConcurso", result[0]);
+            resultMap.put("concurso", result[1]);
+            resultMap.put("idConcurso", result[2]);
+            resultMap.put("nomeCurso", result[3]);
+            resultMap.put("nomeEscola", result[4]);
+            resultMap.put("turno", result[5]);
+            resultMap.put("serie", result[6]);
+            resultMap.put("descricaoOferta", result[7]);
+            resultMap.put("vagas", result[8]);
+            resultMap.put("minVagasAbertTurma", result[9]);
+            resultMap.put("ativo", result[10]);
+            resultMap.put("idEscola", result[11]);
+            resultMap.put("idTurno", result[12]);
+            resultMap.put("idCurso", result[13]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
 
     private void atualizarDados(OfertaConcurso destino, CadastroOfertaConcursoDTO origem) {
         Concurso concurso = concursoRepository.findById(origem.getConcursoId())

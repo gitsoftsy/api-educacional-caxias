@@ -102,6 +102,21 @@ public class OfertaConcursoController {
 
         return ResponseEntity.ok(response);
     }
+    
+    @GetMapping("/cursoUsuario/{idUsuario}")
+    public Object listaOfertaCursosUsuario(
+            @PathVariable Long idUsuario
+    ) {
+
+        List<Map<String, Object>> result = ofertaConcursoService.listaOfertaCursoUsuario(idUsuario);
+
+        if (result.isEmpty()) {
+            return "Nenhum resultado encontrado para os parâmetros informados.";
+        }
+
+        return result;
+    }
+    
 
     @GetMapping("/concurso/{idConcurso}")
     public ResponseEntity<List<OfertaConcursoDTO>> buscarPorIdConcurso(@PathVariable Long idConcurso) {
