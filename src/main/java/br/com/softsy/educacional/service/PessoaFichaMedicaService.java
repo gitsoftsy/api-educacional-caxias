@@ -48,16 +48,6 @@ public class PessoaFichaMedicaService {
         return new PessoaFichaMedicaDTO(repository.getReferenceById(id));
     }
     
-	@Transactional(readOnly = true)
-	public List<PessoaFichaMedicaDTO> buscarPorIdPessoa(Long id) {
-		List<PessoaFichaMedica> fichas = repository.findByPessoa_IdPessoa(id)
-				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar ficha médica por id de pessoa"));
-		return fichas.stream()
-				.map(PessoaFichaMedicaDTO::new)
-				.collect(Collectors.toList());
-	}
-    
-
     @Transactional
     public PessoaFichaMedicaDTO salvar(PessoaFichaMedicaDTO dto) {
         PessoaFichaMedica ficha = criarFichaMedicaAPartirDTO(dto);
@@ -111,14 +101,14 @@ public class PessoaFichaMedicaService {
         ficha.setResponsavelPessoa(responsavelPessoa);
     }
     
-    public List<Map<String, Object>> listaFichaMedicaResponsavel(Long idResponsavelPessoa) {
+    public List<Map<String, Object>> listaFichaMedicaResponsavel(Long idPessoa) {
         StringBuilder sql = new StringBuilder();
-        sql.append("CALL PROC_LISTA_FICHA_MEDICA_RESPONSAVEL(:pIdResponsavelPessoa)");
+        sql.append("CALL PROC_LISTA_FICHA_MEDICA_RESPONSAVEL(:pIdPessoa)");
 
         Query query = entityManager.createNativeQuery(sql.toString());
 
         // Definir os parâmetros
-        query.setParameter("pIdResponsavelPessoa", idResponsavelPessoa);
+        query.setParameter("pIdPessoa", idPessoa);
 
         List<Object[]> resultList = query.getResultList();
         List<Map<String, Object>> mappedResultList = new ArrayList<>();

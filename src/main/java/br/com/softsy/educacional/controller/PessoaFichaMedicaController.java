@@ -34,12 +34,7 @@ public class PessoaFichaMedicaController {
     public ResponseEntity<List<PessoaFichaMedicaDTO>> listar() {
         return ResponseEntity.ok(pessoaFichaMedicaService.listarTudo());
     }
-    
-	@GetMapping("/pessoa/{idPessoa}")
-	public ResponseEntity<List<PessoaFichaMedicaDTO>> buscarPorIdPessoa(@PathVariable Long idPessoa){
-		List<PessoaFichaMedicaDTO> fichaMedicaDTO = pessoaFichaMedicaService.buscarPorIdPessoa(idPessoa);
-		return ResponseEntity.ok(fichaMedicaDTO);
-	}
+
 
     @PostMapping
     public ResponseEntity<PessoaFichaMedicaDTO> cadastrar(@RequestBody @Valid PessoaFichaMedicaDTO dto) {
@@ -49,16 +44,16 @@ public class PessoaFichaMedicaController {
         return ResponseEntity.created(uri).body(fichaMedicaDTO);
     }
     
-    @GetMapping("/responsavel/{idPessoaResponsavel}")
+    @GetMapping("/pessoa/{idPessoa}")
     public Object listaFichaMedicaResponsavel(
-            @PathVariable Long idPessoaResponsavel
+            @PathVariable Long idPessoa
     ) {
         // Verifica se todos os parâmetros são nulos
-        if (idPessoaResponsavel == null ) {
+        if (idPessoa == null ) {
             return "Por favor, informe o parâmetro obrigatório";
         }
 
-        List<Map<String, Object>> result = pessoaFichaMedicaService.listaFichaMedicaResponsavel(idPessoaResponsavel);
+        List<Map<String, Object>> result = pessoaFichaMedicaService.listaFichaMedicaResponsavel(idPessoa);
 
         if (result.isEmpty()) {
             return "Nenhum resultado encontrado para os parâmetros informados.";

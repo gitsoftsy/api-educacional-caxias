@@ -18,7 +18,7 @@ public interface PessoaFichaMedicaRepository extends JpaRepository<PessoaFichaMe
 	
     @Procedure(name = "PROC_LISTA_FICHA_MEDICA_RESPONSAVEL")
     List<Object[]> listaFichaMedicaResponsavel(
-            @Param("P_ID_RESPONSAVEL_PESSOA") Long idResponsavelPessoa
+            @Param("P_ID_PESSOA") Long idPessoa
     );
 
 }
