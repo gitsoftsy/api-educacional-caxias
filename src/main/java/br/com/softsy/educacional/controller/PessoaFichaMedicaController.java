@@ -2,6 +2,7 @@ package br.com.softsy.educacional.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -46,6 +48,25 @@ public class PessoaFichaMedicaController {
                 .buildAndExpand(fichaMedicaDTO.getIdPessoaFichaMedica()).toUri();
         return ResponseEntity.created(uri).body(fichaMedicaDTO);
     }
+    
+    @GetMapping("/responsavel/{idPessoaResponsavel}")
+    public Object listaFichaMedicaResponsavel(
+            @PathVariable Long idPessoaResponsavel
+    ) {
+        // Verifica se todos os parâmetros são nulos
+        if (idPessoaResponsavel == null ) {
+            return "Por favor, informe o parâmetro obrigatório";
+        }
+
+        List<Map<String, Object>> result = pessoaFichaMedicaService.listaFichaMedicaResponsavel(idPessoaResponsavel);
+
+        if (result.isEmpty()) {
+            return "Nenhum resultado encontrado para os parâmetros informados.";
+        }
+
+        return result;
+    }
+    
 
     @GetMapping("/{id}")
     public ResponseEntity<PessoaFichaMedicaDTO> buscarPorId(@PathVariable Long id) {

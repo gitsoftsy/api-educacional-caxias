@@ -11,6 +11,8 @@ import br.com.softsy.educacional.model.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
 	
 	List<Usuario> findByUsuario(String usuario);
+	List<Usuario> findByEmail(String email);
+	List<Usuario> findByCpf(String cpf);
 
 	Usuario findUsuarioByUsuarioAndAtivo(String email, Character ativo);
 	

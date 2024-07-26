@@ -42,7 +42,7 @@ public class Usuario {
     @Column(name = "EMAIL_VERIFICADO", length = 1)
     private Character emailVerificado;
 
-    @Column(name = "CPF", nullable = false, unique = true, length = 11)
+    @Column(name = "CPF", nullable = false, length = 11)
     private String cpf;
 
     @Column(name = "DT_NASCIMENTO")

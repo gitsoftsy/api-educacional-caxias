@@ -30,7 +30,6 @@ public class UsuarioDTO {
     private Character emailVerificado;
 
     @NotNull
-    @CPF
     private String cpf;
 
     private LocalDateTime dataNascimento;

@@ -1,8 +1,14 @@
 package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +34,9 @@ public class PessoaFichaMedicaService {
 
     @Autowired
     private PessoaRepository responsavelPessoaRepository;
+    
+    @Autowired
+    private EntityManager entityManager;
 
     public List<PessoaFichaMedicaDTO> listarTudo() {
         List<PessoaFichaMedica> fichas = repository.findAll();
@@ -101,6 +110,56 @@ public class PessoaFichaMedicaService {
         ficha.setPessoa(pessoa);
         ficha.setResponsavelPessoa(responsavelPessoa);
     }
+    
+    public List<Map<String, Object>> listaFichaMedicaResponsavel(Long idResponsavelPessoa) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTA_FICHA_MEDICA_RESPONSAVEL(:pIdResponsavelPessoa)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        // Definir os parâmetros
+        query.setParameter("pIdResponsavelPessoa", idResponsavelPessoa);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        // Mapear os resultados para um formato de mapa
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idPessoaFichaMedica", result[0]);
+            resultMap.put("idPessoa", result[1]);
+            resultMap.put("dataCadastro", result[2]);
+            resultMap.put("idResponsavelPessoa", result[3]);
+            resultMap.put("peso", result[4]);
+            resultMap.put("altura", result[5]);
+            resultMap.put("tipoSanguineo", result[6]);
+            resultMap.put("aceitaTransfusao", result[7]);
+            resultMap.put("numeroCartSus", result[8]);
+            resultMap.put("planoSaude", result[9]);
+            resultMap.put("numeroCarteirinha", result[10]);
+            resultMap.put("psEmergenciaCep", result[11]);
+            resultMap.put("psEmergenciaEndereco", result[12]);
+            resultMap.put("psEmergenciaNumero", result[13]);
+            resultMap.put("psEmergenciaComplemento", result[14]);
+            resultMap.put("psEmergenciaBairro", result[15]);
+            resultMap.put("psEmergenciaMunicipio", result[16]);
+            resultMap.put("psEmergenciaDistrito", result[17]);
+            resultMap.put("psEmergenciaUf", result[18]);
+            resultMap.put("psEmergenciaTelefone", result[19]);
+            resultMap.put("alergia", result[20]);
+            resultMap.put("descricaoAlergia", result[21]);
+            resultMap.put("tratamentoMedico", result[22]);
+            resultMap.put("descricaoTratamentoMedico", result[23]);
+            resultMap.put("comorbidades", result[24]);
+            resultMap.put("descricaoComorbidades", result[25]);
+            resultMap.put("outrasDoencas", result[26]);
+            resultMap.put("nomeCompleto", result[27]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
     
     @Transactional
     public void excluir(Long id) {

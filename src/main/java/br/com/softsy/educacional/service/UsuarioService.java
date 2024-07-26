@@ -38,14 +38,11 @@ public class UsuarioService {
 
     @Transactional(readOnly = true)
     public ListaUsuarioContaDTO buscarPorId(Long id) {
-        // Buscar o Usuario pelo ID
         UsuarioDTO usuarioDTO = new UsuarioDTO(repository.getReferenceById(id));
 
-        // Buscar a lista de UsuarioConta pelo usuarioId (chave estrangeira de Usuario)
         List<UsuarioConta> usuarioContas = usuarioContarepository.findByUsuario_IdUsuario(id)
                 .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar conta por usuarioId"));
 
-        // Convertendo a lista de UsuarioConta para uma lista de UsuarioContaDTO
         List<UsuarioContaDTO> usuarioContaDTOs = usuarioContas.stream()
                 .map(UsuarioContaDTO::new)
                 .collect(Collectors.toList());
@@ -62,6 +59,8 @@ public class UsuarioService {
     public UsuarioDTO salvar(UsuarioDTO dto) {
     	
         validarUsuario(dto.getUsuario());
+        validarCpf(dto.getCpf());
+        validarEmail(dto.getEmail());
         validarSenha(dto.getSenha());
 
         Usuario usuario = criarUsuarioAPartirDTO(dto);
@@ -95,6 +94,20 @@ public class UsuarioService {
         Optional<Usuario> usuarioExistente = repository.findByUsuario(usuario).stream().findFirst();
         if (usuarioExistente.isPresent()) {
             throw new UniqueException("Esse usuário já existe.");
+        }
+    }
+    
+    private void validarEmail(String email) {
+        Optional<Usuario> usuarioExistente = repository.findByEmail(email).stream().findFirst();
+        if (usuarioExistente.isPresent()) {
+            throw new UniqueException("Esse email já existe.");
+        }
+    }
+    
+    private void validarCpf(String cpf) {
+        Optional<Usuario> usuarioExistente = repository.findByCpf(cpf).stream().findFirst();
+        if (usuarioExistente.isPresent()) {
+            throw new UniqueException("Esse CPF já existe.");
         }
     }
 
