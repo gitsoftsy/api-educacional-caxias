@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -37,6 +38,33 @@ public class UsuarioController {
     public ResponseEntity<ListaUsuarioContaDTO> buscarPorId(@PathVariable Long id) {
         ListaUsuarioContaDTO listaUsuarioContaDTO = service.buscarPorId(id);
         return ResponseEntity.ok(listaUsuarioContaDTO);
+    }
+    
+    @GetMapping("/verificar-usuario")
+    public ResponseEntity<String> verificarUsuario(@RequestParam String usuario) {
+        if (service.existeUsuarioPorUsuario(usuario)) {
+            return ResponseEntity.badRequest().body("Esse usuário já existe.");
+        } else {
+            return ResponseEntity.ok("Nenhum usuário encontrado com esse nome de usuário.");
+        }
+    }
+    
+    @GetMapping("/verificar-email")
+    public ResponseEntity<String> verificarEmail(@RequestParam String email) {
+        if (service.existeUsuarioPorEmail(email)) {
+            return ResponseEntity.badRequest().body("Esse email já existe.");
+        } else {
+            return ResponseEntity.ok("Nenhum usuário encontrado com esse email.");
+        }
+    }
+    
+    @GetMapping("/verificar-cpf")
+    public ResponseEntity<String> verificarCpf(@RequestParam String cpf) {
+        if (service.existeUsuarioPorCpf(cpf)) {
+            return ResponseEntity.badRequest().body("Esse CPF já existe.");
+        } else {
+            return ResponseEntity.ok("Nenhum usuário encontrado com esse CPF.");
+        }
     }
 
     @PostMapping

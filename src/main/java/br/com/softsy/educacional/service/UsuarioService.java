@@ -54,6 +54,18 @@ public class UsuarioService {
 
         return listaUsuarioContaDTO;
     }
+    
+    public boolean existeUsuarioPorUsuario(String usuario) {
+        return repository.findByUsuario(usuario).stream().findFirst().isPresent();
+    }
+    
+    public boolean existeUsuarioPorEmail(String email) {
+        return repository.findByEmail(email).stream().findFirst().isPresent();
+    }
+    
+    public boolean existeUsuarioPorCpf(String cpf) {
+        return repository.findByCpf(cpf).stream().findFirst().isPresent();
+    }
 
     @Transactional
     public UsuarioDTO salvar(UsuarioDTO dto) {
