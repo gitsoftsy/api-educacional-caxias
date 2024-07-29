@@ -18,7 +18,13 @@ public class CurriculoDTO {
 	private Long cursoId;
 	
 	@NotNull
+	private Long contaId;
+	
+	@NotNull
 	private String curriculo;
+	
+	@NotNull
+	private String descricao;
 	
 	private LocalDateTime dtHomologacao;
 	
@@ -39,7 +45,9 @@ public class CurriculoDTO {
 	public CurriculoDTO(Curriculo curriculo) {
 		this.idCurriculo = curriculo.getIdCurriculo();
 		this.cursoId = curriculo.getCurso().getIdCurso();
+		this.contaId = curriculo.getConta().getIdConta();
 		this.curriculo = curriculo.getCurriculo();
+		this.descricao = curriculo.getDescricao();
 		this.dtHomologacao = curriculo.getDtHomologacao();
 		this.dtExtincao = curriculo.getDtExtincao();
 		this.prazoIdeal = curriculo.getPrazoIdeal();

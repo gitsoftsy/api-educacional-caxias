@@ -17,7 +17,7 @@ import lombok.Data;
 @Entity
 @Table(name = "TBL_CURRICULO", 
 	uniqueConstraints = { 
-		@UniqueConstraint(name = "UQ_CURRICULO", columnNames = { "CURRICULO", "ID_CURSO" })
+		@UniqueConstraint(name = "UQ_CURRICULO", columnNames = { "CURRICULO", "ID_CURSO", "ID_CONTA" })
 		})
 @Data
 public class Curriculo {
@@ -31,8 +31,15 @@ public class Curriculo {
 	@JoinColumn(name = "ID_CURSO", nullable = false)
 	private Curso curso;
 	
+	@ManyToOne
+	@JoinColumn(name = "ID_CONTA", nullable = false)
+	private Conta conta;
+	
 	@Column(name = "CURRICULO", nullable = false)
 	private String curriculo;
+	
+	@Column(name = "DESCRICAO", nullable = false)
+	private String descricao;
 	
 	@Column(name = "DT_HOMOLOGACAO")
 	private LocalDateTime dtHomologacao;

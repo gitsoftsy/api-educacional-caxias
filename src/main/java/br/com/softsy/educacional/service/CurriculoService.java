@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CurriculoDTO;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.Curriculo;
 import br.com.softsy.educacional.model.Curso;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.CurriculoRepository;
 import br.com.softsy.educacional.repository.CursoRepository;
 
@@ -20,6 +22,9 @@ public class CurriculoService {
 	@Autowired
 	private CursoRepository cursoRepository;
 
+	@Autowired
+	private ContaRepository contaRepository;
+	
 	@Autowired
 	private CurriculoRepository curriculoRepository;
 
@@ -60,8 +65,14 @@ public class CurriculoService {
 		Curriculo curriculo = new Curriculo();
 		Curso curso = cursoRepository.findById(dto.getCursoId())
 				.orElseThrow(() -> new IllegalArgumentException("Curso não encontrado"));
+		
+		Conta conta = contaRepository.findById(dto.getContaId())
+				.orElseThrow(() -> new IllegalArgumentException("Conta não encontrado"));
+		
 		curriculo.setCurso(curso);
+		curriculo.setConta(conta);
 		curriculo.setCurriculo(dto.getCurriculo());
+		curriculo.setDescricao(dto.getDescricao());
 		curriculo.setDtHomologacao(dto.getDtHomologacao());
 		curriculo.setDtExtincao(dto.getDtExtincao());
 		curriculo.setPrazoIdeal(dto.getPrazoIdeal());
@@ -76,8 +87,13 @@ public class CurriculoService {
 	private void atualizarDados(Curriculo destino, CurriculoDTO origem) {
 		Curso curso = cursoRepository.findById(origem.getCursoId())
 				.orElseThrow(() -> new IllegalArgumentException("Curso não encontrado"));
+		
+		Conta conta = contaRepository.findById(origem.getContaId())
+				.orElseThrow(() -> new IllegalArgumentException("Conta não encontrado"));
 		destino.setCurso(curso);
+		destino.setConta(conta);
 		destino.setCurriculo(origem.getCurriculo());
+		destino.setDescricao(origem.getDescricao());
 		destino.setDtHomologacao(origem.getDtHomologacao());
 		destino.setDtExtincao(origem.getDtExtincao());
 		destino.setPrazoIdeal(origem.getPrazoIdeal());
