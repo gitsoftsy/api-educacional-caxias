@@ -1,5 +1,7 @@
 package br.com.softsy.educacional.dto;
 
+import java.time.LocalDateTime;
+
 import javax.validation.constraints.NotNull;
 
 import br.com.softsy.educacional.model.Turma;
@@ -13,37 +15,34 @@ public class CadastroTurmaDTO {
     private Long idTurma;
     @NotNull
     private Long escolaId;
-    @NotNull
-    private Long anoEscolarId;
-    @NotNull
-    private String numTurma;
-    @NotNull
-    private String codTurmaInep;
-    @NotNull
-    private Long formaOrganEnsinoId;
-    @NotNull
-    private Long tipoDeMedicaoId;
+    private Long periodoLetivoId;
     @NotNull
     private Long turnoId;
     @NotNull
-    private Long tipoAtendimentoId;
-    @NotNull
-    private Long modalidadeEscolaId;
+    private String nomeTurma;
+    private String codTurmaInep;
+    private Long gradeCurricularId;
     @NotNull
     private Character libras;
-
+    private Character ativo;
+    private LocalDateTime dataCadastro;
+    @NotNull
+    private Integer vagas;
+    @NotNull
+    private Character controlaVagas;
 
     public CadastroTurmaDTO(Turma turma) {
         this.idTurma = turma.getIdTurma();
         this.escolaId = turma.getEscola().getIdEscola();
-        this.anoEscolarId = turma.getAnoEscolar().getIdAnoEscolar();
-        this.numTurma = turma.getNumTurma();
-        this.codTurmaInep = turma.getCodTurmaInep();
-        this.formaOrganEnsinoId = turma.getFormaOrganEnsino().getIdFormaOrganEnsino();
-        this.tipoDeMedicaoId = turma.getTipoDeMedicao().getIdTipoMedicao();
+        this.periodoLetivoId = turma.getPeriodoLetivo().getIdPeriodoLetivo();
         this.turnoId = turma.getTurno().getIdTurno();
-        this.tipoAtendimentoId = turma.getTipoAtendimento().getIdTipoAtendimento();
-        this.modalidadeEscolaId = turma.getModalidadeEscola().getIdModalidadeEscola();
+        this.nomeTurma = turma.getNomeTurma();
+        this.codTurmaInep = turma.getCodTurmaInep();
+        this.gradeCurricularId = turma.getGradeCurricular().getIdGradeCurricular();
         this.libras = turma.getLibras();
+        this.dataCadastro = turma.getDataCadastro();
+        this.ativo = turma.getAtivo();
+        this.vagas = turma.getVagas();
+        this.controlaVagas = turma.getControlaVagas();
     }
 }

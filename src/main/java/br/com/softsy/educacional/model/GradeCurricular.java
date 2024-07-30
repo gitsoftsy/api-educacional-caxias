@@ -17,7 +17,7 @@ import lombok.Data;
 @Entity
 @Table(name = "TBL_GRADE_CURRICULAR", 
 	uniqueConstraints = { 
-		@UniqueConstraint(name = "UQ_GRADE_CURRICULAR", columnNames = { "ID_CURSO_SERIE", "ID_TURNO", "ID_DISCIPLINA", "ID_CURRICULO"})
+		@UniqueConstraint(name = "UQ_GRADE_CURRICULAR", columnNames = {"ID_SERIE", "ID_DISCIPLINA", "ID_CURRICULO"})
 		})
 @Data
 public class GradeCurricular {
@@ -28,12 +28,8 @@ public class GradeCurricular {
 	private Long idGradeCurricular;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_CURSO_SERIE", nullable = false)
-	private CursoSerie cursoSerie;
-
-	@ManyToOne
-	@JoinColumn(name = "ID_TURNO", nullable = false)
-	private Turno turno;
+	@JoinColumn(name = "ID_SERIE", nullable = false)
+	private Serie serie;
 	
 	@ManyToOne
 	@JoinColumn(name = "ID_DISCIPLINA", nullable = false)

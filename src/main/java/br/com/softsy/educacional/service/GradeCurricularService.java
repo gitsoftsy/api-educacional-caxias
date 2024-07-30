@@ -17,11 +17,13 @@ import br.com.softsy.educacional.model.CursoSerie;
 import br.com.softsy.educacional.model.Disciplina;
 import br.com.softsy.educacional.model.EscolaDestinacaoLixo;
 import br.com.softsy.educacional.model.GradeCurricular;
+import br.com.softsy.educacional.model.Serie;
 import br.com.softsy.educacional.model.Turno;
 import br.com.softsy.educacional.repository.CurriculoRepository;
 import br.com.softsy.educacional.repository.CursoSerieRepository;
 import br.com.softsy.educacional.repository.DisciplinaRepository;
 import br.com.softsy.educacional.repository.GradeCurricularRepository;
+import br.com.softsy.educacional.repository.SerieRepository;
 import br.com.softsy.educacional.repository.TurnoRepository;
 import ch.qos.logback.core.joran.util.beans.BeanUtil;
 
@@ -32,10 +34,7 @@ public class GradeCurricularService {
     private GradeCurricularRepository repository;
 
     @Autowired
-    private CursoSerieRepository cursoSerieRepository;
-
-    @Autowired
-    private TurnoRepository turnoRepository;
+    private SerieRepository serieRepository;
 
     @Autowired
     private DisciplinaRepository disciplinaRepository;
@@ -67,17 +66,14 @@ public class GradeCurricularService {
 
     private GradeCurricular criarGradeCurricularAPartirDTO(CadastroGradeCurricularDTO dto) {
         GradeCurricular gradeCurricular = new GradeCurricular();
-        CursoSerie cursoSerie = cursoSerieRepository.findById(dto.getCursoSerieId())
-                .orElseThrow(() -> new IllegalArgumentException("Curso/Série não encontrado"));
-        Turno turno = turnoRepository.findById(dto.getTurnoId())
-                .orElseThrow(() -> new IllegalArgumentException("Turno não encontrado"));
+        Serie serie = serieRepository.findById(dto.getSerieId())
+                .orElseThrow(() -> new IllegalArgumentException("Série não encontrado"));
         Disciplina disciplina = disciplinaRepository.findById(dto.getDisciplinaId())
                 .orElseThrow(() -> new IllegalArgumentException("Disciplina não encontrada"));
         Curriculo curriculo = curriculoRepository.findById(dto.getCurriculoId())
                 .orElseThrow(() -> new IllegalArgumentException("Currículo não encontrado"));
 
-        gradeCurricular.setCursoSerie(cursoSerie);
-        gradeCurricular.setTurno(turno);
+        gradeCurricular.setSerie(serie);
         gradeCurricular.setDisciplina(disciplina);
         gradeCurricular.setCurriculo(curriculo);
         gradeCurricular.setObrigatoria(dto.getObrigatoria());
@@ -107,10 +103,8 @@ public class GradeCurricularService {
     }
 
     private void atualizaDados(GradeCurricular destino, CadastroGradeCurricularDTO origem) {
-        CursoSerie cursoSerie = cursoSerieRepository.findById(origem.getCursoSerieId())
-                .orElseThrow(() -> new IllegalArgumentException("Curso/Série não encontrado"));
-        Turno turno = turnoRepository.findById(origem.getTurnoId())
-                .orElseThrow(() -> new IllegalArgumentException("Turno não encontrado"));
+    	Serie serie = serieRepository.findById(origem.getSerieId())
+                .orElseThrow(() -> new IllegalArgumentException("Série não encontrado"));
         Disciplina disciplina = disciplinaRepository.findById(origem.getDisciplinaId())
                 .orElseThrow(() -> new IllegalArgumentException("Disciplina não encontrada"));
         Curriculo curriculo = curriculoRepository.findById(origem.getCurriculoId())
@@ -118,8 +112,7 @@ public class GradeCurricularService {
         
         BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro");
 
-        destino.setCursoSerie(cursoSerie);
-        destino.setTurno(turno);
+        destino.setSerie(serie);
         destino.setDisciplina(disciplina);
         destino.setCurriculo(curriculo);
         destino.setObrigatoria(origem.getObrigatoria());

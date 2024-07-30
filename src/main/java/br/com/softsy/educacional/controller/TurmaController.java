@@ -59,5 +59,17 @@ public class TurmaController {
         turmaService.remover(idTurma);
         return ResponseEntity.ok().build();
     }
+    
+    @PutMapping("/{idTurma}/ativar")
+    public ResponseEntity<?> ativar(@PathVariable Long idTurma) {
+    	turmaService.ativaDesativa('S', idTurma);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{idTurma}/desativar")
+    public ResponseEntity<?> desatviar(@PathVariable Long idTurma) {
+    	turmaService.ativaDesativa('N', idTurma);
+        return ResponseEntity.ok().build();
+    }
 
 }

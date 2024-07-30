@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,9 @@ import br.com.softsy.educacional.dto.TurmaDTO;
 import br.com.softsy.educacional.model.AnoEscolar;
 import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.model.FormaOrganEnsino;
+import br.com.softsy.educacional.model.GradeCurricular;
 import br.com.softsy.educacional.model.ModalidadeEscola;
+import br.com.softsy.educacional.model.PeriodoLetivo;
 import br.com.softsy.educacional.model.TipoAtendimento;
 import br.com.softsy.educacional.model.TipoDeMedicao;
 import br.com.softsy.educacional.model.Turma;
@@ -21,7 +24,9 @@ import br.com.softsy.educacional.model.Turno;
 import br.com.softsy.educacional.repository.AnoEscolarRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
 import br.com.softsy.educacional.repository.FormaOrganEnsinoRepository;
+import br.com.softsy.educacional.repository.GradeCurricularRepository;
 import br.com.softsy.educacional.repository.ModalidadeEscolaRepository;
+import br.com.softsy.educacional.repository.PeriodoLetivoRepository;
 import br.com.softsy.educacional.repository.TipoAtendimentoRepository;
 import br.com.softsy.educacional.repository.TipoDeMedicaoRepository;
 import br.com.softsy.educacional.repository.TurmaRepository;
@@ -37,22 +42,14 @@ public class TurmaService {
     private EscolaRepository escolaRepository;
 
     @Autowired
-    private AnoEscolarRepository anoEscolarRepository;
-
-    @Autowired
-    private FormaOrganEnsinoRepository formaOrganEnsinoRepository;
-
-    @Autowired
-    private TipoDeMedicaoRepository tipoDeMedicaoRepository;
-
-    @Autowired
     private TurnoRepository turnoRepository;
 
     @Autowired
-    private TipoAtendimentoRepository tipoAtendimentoRepository;
-
+    private PeriodoLetivoRepository periodoLetivoRepository;
+    
     @Autowired
-    private ModalidadeEscolaRepository modalidadeEscolaRepository;
+    private GradeCurricularRepository gradeCurricularRepository;
+
 
     @Transactional(readOnly = true)
     public List<TurmaDTO> listarTudo() {
@@ -91,57 +88,59 @@ public class TurmaService {
         Turma turma = new Turma();
         Escola escola = escolaRepository.findById(dto.getEscolaId())
                 .orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
-        AnoEscolar anoEscolar = anoEscolarRepository.findById(dto.getAnoEscolarId())
-                .orElseThrow(() -> new IllegalArgumentException("Ano escolar não encontrado"));
-        FormaOrganEnsino formaOrganEnsino = formaOrganEnsinoRepository.findById(dto.getFormaOrganEnsinoId())
-                .orElseThrow(() -> new IllegalArgumentException("Forma de organização de ensino não encontrada"));
-        TipoDeMedicao tipoDeMedicao = tipoDeMedicaoRepository.findById(dto.getTipoDeMedicaoId())
-                .orElseThrow(() -> new IllegalArgumentException("Tipo de medição não encontrado"));
         Turno turno = turnoRepository.findById(dto.getTurnoId())
                 .orElseThrow(() -> new IllegalArgumentException("Turno não encontrado"));
-        TipoAtendimento tipoAtendimento = tipoAtendimentoRepository.findById(dto.getTipoAtendimentoId())
-                .orElseThrow(() -> new IllegalArgumentException("Tipo de atendimento não encontrado"));
-        ModalidadeEscola modalidadeEscola = modalidadeEscolaRepository.findById(dto.getModalidadeEscolaId())
-                .orElseThrow(() -> new IllegalArgumentException("Modalidade de escola não encontrada"));
+        
+        PeriodoLetivo periodoLetivo = periodoLetivoRepository.findById(dto.getPeriodoLetivoId())
+                .orElseThrow(() -> new IllegalArgumentException("Período letivo não encontrado"));
+        GradeCurricular gradeCurricular = gradeCurricularRepository.findById(dto.getGradeCurricularId())
+                .orElseThrow(() -> new IllegalArgumentException("Grade curricular não encontrada"));
 
         turma.setEscola(escola);
-        turma.setAnoEscolar(anoEscolar);
-        turma.setNumTurma(dto.getNumTurma());
+        turma.setPeriodoLetivo(periodoLetivo);
+        turma.setGradeCurricular(gradeCurricular);
+        turma.setNomeTurma(dto.getNomeTurma());
         turma.setCodTurmaInep(dto.getCodTurmaInep());
-        turma.setFormaOrganEnsino(formaOrganEnsino);
-        turma.setTipoDeMedicao(tipoDeMedicao);
         turma.setTurno(turno);
-        turma.setTipoAtendimento(tipoAtendimento);
-        turma.setModalidadeEscola(modalidadeEscola);
         turma.setLibras(dto.getLibras());
+        turma.setDataCadastro(LocalDateTime.now());
+        turma.setAtivo('S');
+        turma.setVagas(dto.getVagas());
+        turma.setControlaVagas(dto.getControlaVagas());
         return turma;
     }
 
     private void atualizaDados(Turma destino, CadastroTurmaDTO origem) {
         Escola escola = escolaRepository.findById(origem.getEscolaId())
                 .orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
-        AnoEscolar anoEscolar = anoEscolarRepository.findById(origem.getAnoEscolarId())
-                .orElseThrow(() -> new IllegalArgumentException("Ano escolar não encontrado"));
-        FormaOrganEnsino formaOrganEnsino = formaOrganEnsinoRepository.findById(origem.getFormaOrganEnsinoId())
-                .orElseThrow(() -> new IllegalArgumentException("Forma de organização de ensinode Ensino não encontrada"));
-        TipoDeMedicao tipoDeMedicao = tipoDeMedicaoRepository.findById(origem.getTipoDeMedicaoId())
-                .orElseThrow(() -> new IllegalArgumentException("Tipo de medição não encontrado"));
+      
         Turno turno = turnoRepository.findById(origem.getTurnoId())
                 .orElseThrow(() -> new IllegalArgumentException("Turno não encontrado"));
-        TipoAtendimento tipoAtendimento = tipoAtendimentoRepository.findById(origem.getTipoAtendimentoId())
-                .orElseThrow(() -> new IllegalArgumentException("Tipo de atendimento não encontrado"));
-        ModalidadeEscola modalidadeEscola = modalidadeEscolaRepository.findById(origem.getModalidadeEscolaId())
-                .orElseThrow(() -> new IllegalArgumentException("Modalidade de escola não encontrada"));
+
+        PeriodoLetivo periodoLetivo = periodoLetivoRepository.findById(origem.getPeriodoLetivoId())
+                .orElseThrow(() -> new IllegalArgumentException("Período letivo não encontrado"));
+        GradeCurricular gradeCurricular = gradeCurricularRepository.findById(origem.getGradeCurricularId())
+                .orElseThrow(() -> new IllegalArgumentException("Grade curricular não encontrada"));
 
         destino.setEscola(escola);
-        destino.setAnoEscolar(anoEscolar);
-        destino.setNumTurma(origem.getNumTurma());
+        destino.setPeriodoLetivo(periodoLetivo);
+        destino.setGradeCurricular(gradeCurricular);
+        destino.setNomeTurma(origem.getNomeTurma());
         destino.setCodTurmaInep(origem.getCodTurmaInep());
-        destino.setFormaOrganEnsino(formaOrganEnsino);
-        destino.setTipoDeMedicao(tipoDeMedicao);
         destino.setTurno(turno);
-        destino.setTipoAtendimento(tipoAtendimento);
-        destino.setModalidadeEscola(modalidadeEscola);
         destino.setLibras(origem.getLibras());
+        destino.setDataCadastro(LocalDateTime.now());
+        destino.setAtivo('S');
+        destino.setVagas(origem.getVagas());
+        destino.setControlaVagas(origem.getControlaVagas());
     }
+    
+    @Transactional
+    public void ativaDesativa(char status, Long idTurma) {
+        Turma turma = turmaRepository.findById(idTurma)
+                .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada"));
+
+        turma.setAtivo(status);
+    }
+    
 }

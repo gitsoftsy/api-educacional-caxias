@@ -11,10 +11,9 @@ import lombok.NoArgsConstructor;
 public class CadastroGradeCurricularDTO {
 
     private Long idGradeCurricular;
-    private Long cursoSerieId;
-    private Long turnoId;
-    private Long disciplinaId;
+    private Long serieId;
     private Long curriculoId;
+    private Long disciplinaId;
     private Character obrigatoria;
     private Character retemSerie;
     private LocalDateTime dataCadastro;
@@ -22,8 +21,7 @@ public class CadastroGradeCurricularDTO {
 
     public CadastroGradeCurricularDTO(GradeCurricular gradeCurricular) {
         this.idGradeCurricular = gradeCurricular.getIdGradeCurricular();
-        this.cursoSerieId = gradeCurricular.getCursoSerie().getIdCursoSerie();
-        this.turnoId = gradeCurricular.getTurno().getIdTurno();
+        this.serieId = gradeCurricular.getSerie().getIdSerie();
         this.disciplinaId = gradeCurricular.getDisciplina().getIdDisciplina();
         this.curriculoId = gradeCurricular.getCurriculo().getIdCurriculo();
         this.obrigatoria = gradeCurricular.getObrigatoria();
