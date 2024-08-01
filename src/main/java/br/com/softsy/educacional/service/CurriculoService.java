@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.dto.CurriculoDTO;
+import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.Curriculo;
 import br.com.softsy.educacional.model.Curso;
@@ -46,6 +48,15 @@ public class CurriculoService {
 		curriculo = curriculoRepository.save(curriculo);
 		return new CurriculoDTO(curriculo);
 	}
+	
+    @Transactional(readOnly = true)
+    public List<CurriculoDTO> buscarPorIdCurso(Long idCurso) {
+        List<Curriculo> curriculo = curriculoRepository.findByCurso_IdCurso(idCurso)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar curriculo por ID do curso"));
+        return curriculo.stream()
+                .map(CurriculoDTO::new)
+                .collect(Collectors.toList());
+    }
 
 	@Transactional
 	public CurriculoDTO atualizar(CurriculoDTO dto) {

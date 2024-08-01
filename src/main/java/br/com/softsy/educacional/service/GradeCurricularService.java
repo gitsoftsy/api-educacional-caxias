@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroGradeCurricularDTO;
+import br.com.softsy.educacional.dto.CurriculoDTO;
 import br.com.softsy.educacional.dto.EscolaDestinacaoLixoDTO;
 import br.com.softsy.educacional.dto.GradeCurricularDTO;
 import br.com.softsy.educacional.model.Curriculo;
@@ -56,6 +57,15 @@ public class GradeCurricularService {
         return new GradeCurricularDTO(gradeCurricular);
     }
    
+    @Transactional(readOnly = true)
+    public List<GradeCurricularDTO> buscarPorIdCurriculo(Long idCurriculo) {
+        List<GradeCurricular> gradeCurricular = repository.findByCurriculo_IdCurriculo(idCurriculo)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar grade curricular por ID do curriculo"));
+        return gradeCurricular.stream()
+                .map(GradeCurricularDTO::new)
+                .collect(Collectors.toList());
+    }
+    
 
     @Transactional
     public GradeCurricularDTO salvar(CadastroGradeCurricularDTO dto) {
