@@ -17,4 +17,7 @@ public interface GradeCurricularRepository extends JpaRepository<GradeCurricular
 	@Query("select gradeCurricular from GradeCurricular join gradeCurricular.curriculo curriculo where curriculo.idCurriculo = :idCurriculo")
     Optional<List<GradeCurricular>> findByCurriculo_IdCurriculo(@Param("idCurriculo") Long idCurriculo);
 	
+	@Query("select gradeCurricular from GradeCurricular join gradeCurricular.serie serie where serie.idSerie = :idSerie")
+    Optional<List<GradeCurricular>> findBySerie_IdSerie(@Param("idSerie") Long idSerie);
+	
 }

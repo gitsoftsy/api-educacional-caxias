@@ -80,7 +80,7 @@ public class CandidatoService {
     @Transactional(readOnly = true)
     public List<CandidatoDTO> buscarPorIdConta(Long idConta) {
         List<Candidato> curso = candidatoRepository.findByConta_IdConta(idConta)
-                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar concurso por ID da conta"));
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar candidato por ID da conta"));
         return curso.stream()
                 .map(CandidatoDTO::new)
                 .collect(Collectors.toList());

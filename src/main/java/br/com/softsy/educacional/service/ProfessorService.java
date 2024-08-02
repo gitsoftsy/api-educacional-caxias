@@ -11,13 +11,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroProfessorDTO;
+import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.dto.ProfessorDTO;
+import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.Candidato;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.NivelEscolaridade;
 import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.model.Professor;
 import br.com.softsy.educacional.model.SituacaoProfessor;
 import br.com.softsy.educacional.model.TipoEnsinoMedio;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.NivelEscolaridadeRepository;
 import br.com.softsy.educacional.repository.PessoaRepository;
 import br.com.softsy.educacional.repository.ProfessorRepository;
@@ -34,13 +39,10 @@ public class ProfessorService {
     private PessoaRepository pessoaRepository;
 
     @Autowired
-    private SituacaoProfessorRepository situacaoProfessorRepository;
-
-    @Autowired
-    private NivelEscolaridadeRepository nivelEscolaridadeRepository;
-
-    @Autowired
-    private TipoEnsinoMedioRepository tipoEnsinoMedioRepository;
+    private ContaRepository contaRepository;
+    
+	@Autowired
+	private PasswordEncrypt encrypt;
 
     public List<ProfessorDTO> listarTudo() {
         List<Professor> professores = professorRepository.findAll();
@@ -52,15 +54,23 @@ public class ProfessorService {
     public ProfessorDTO buscarPorId(Long id) {
         return new ProfessorDTO(professorRepository.getReferenceById(id));
     }
+    
+    @Transactional(readOnly = true)
+    public List<ProfessorDTO> buscarPorIdConta(Long idConta) {
+        List<Professor> curso = professorRepository.findByConta_IdConta(idConta)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar professor por ID da conta"));
+        return curso.stream()
+                .map(ProfessorDTO::new)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public CadastroProfessorDTO salvar(CadastroProfessorDTO dto) {
-    	validarMatricula(dto.getMatricula());
-        validarCodigoInep(dto.getCodigoInep());
 
         Professor professor = criarProfessorAPartirDTO(dto);
 
         professor = professorRepository.save(professor);
+        professor.setSenha(encrypt.hashPassword(dto.getSenha()));
         return new CadastroProfessorDTO(professor);
     }
 
@@ -81,42 +91,35 @@ public class ProfessorService {
         Professor professor = new Professor();
         Pessoa pessoa = pessoaRepository.findById(dto.getPessoaId())
                 .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada"));
-        SituacaoProfessor situacaoProfessor = situacaoProfessorRepository.findById(dto.getSituacaoProfessorId())
-                .orElseThrow(() -> new IllegalArgumentException("Situação do professor não encontrada"));
-        NivelEscolaridade nivelEscolaridade = nivelEscolaridadeRepository.findById(dto.getNivelEscolaridadeId())
-                .orElseThrow(() -> new IllegalArgumentException("Nível de escolaridade não encontrado"));
-        TipoEnsinoMedio tipoEnsinoMedio = tipoEnsinoMedioRepository.findById(dto.getTipoEnsinoMedioId())
-                .orElseThrow(() -> new IllegalArgumentException("Tipo de ensino médio não encontrado"));
+        
+        Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 
-        BeanUtils.copyProperties(dto, professor, "idProfessor", "pessoaId", "situacaoProfessorId", "nivelEscolaridadeId",
-                "tipoEnsinoMedioId", "ativo");
+        BeanUtils.copyProperties(dto, professor, "idProfessor", "pessoaId", "contaId",
+                "dataCadastro", "ativo");
 
         professor.setPessoa(pessoa);
-        professor.setSituacaoProfessor(situacaoProfessor);
-        professor.setNivelEscolaridade(nivelEscolaridade);
-        professor.setTipoEnsinoMedio(tipoEnsinoMedio);
+        professor.setConta(conta);
         professor.setAtivo('S');
         professor.setDataCadastro(LocalDateTime.now());
 
         return professor;
     }
 
-    private void validarCodigoInep(String codigoInep) {
-        Optional<Professor> professorExistente = professorRepository.findByCodigoInep(codigoInep).stream().findFirst();
-        if (professorExistente.isPresent()) {
-            throw new UniqueException("Já existe um professor com o código Inep fornecido.");
-        }
-    }
-    
-    private void validarMatricula(String matricula) {
-        Optional<Professor> matriculaExistente = professorRepository.findByMatricula(matricula).stream().findFirst();
-        if (matriculaExistente.isPresent()) {
-            throw new UniqueException("Já existe um professor com a matrícula fornecida.");
-        }
-    }
 
     private void atualizaDados(Professor destino, CadastroProfessorDTO origem) {
-        BeanUtils.copyProperties(origem, destino, "idProfessor", "pessoaId", "situacaoProfessorId", "nivelEscolaridadeId",
-                "tipoEnsinoMedioId", "ativo");
+    	
+        Pessoa pessoa = pessoaRepository.findById(origem.getPessoaId())
+                .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada"));
+        
+        Conta conta = contaRepository.findById(origem.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+    	
+        BeanUtils.copyProperties(origem, destino, "idProfessor", "pessoaId", "contaId", "ativo", "senha", "dataCadastro");
+		if(origem.getSenha() != null) {
+			destino.setSenha(encrypt.hashPassword(origem.getSenha()));
+		}
+        destino.setConta(conta);
+        destino.setPessoa(pessoa);
     }
 }

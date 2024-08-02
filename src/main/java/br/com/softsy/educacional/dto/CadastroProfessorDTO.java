@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
@@ -13,40 +14,30 @@ import lombok.NoArgsConstructor;
 public class CadastroProfessorDTO {
 
     private Long idProfessor;
-    @NotNull
+    private Long contaId;
     private Long pessoaId;
-    @NotNull
     private String codigoInep;
-    @NotNull
     private String matricula;
-    @NotNull
-    private Long situacaoProfessorId;
-    @NotNull
-    private Character deficiente;
-    @NotNull
-    private Character autista;
-    @NotNull
-    private Character altasHabilidades;
-
+    private String usuario;
+    private String senha;
     private LocalDateTime dataCadastro;
-    @NotNull
-    private Long nivelEscolaridadeId;
-    @NotNull
-    private Long tipoEnsinoMedioId;
     private Character ativo;
-
+    private String emailInstitucional;
+    private LocalDate dataContratacao;
+    private LocalDate dataDemissao;
+    
     public CadastroProfessorDTO(Professor professor) {
         this.idProfessor = professor.getIdProfessor();
+        this.contaId = professor.getConta().getIdConta();
         this.pessoaId = professor.getPessoa().getIdPessoa();
         this.codigoInep = professor.getCodigoInep();
         this.matricula = professor.getMatricula();
-        this.situacaoProfessorId = professor.getSituacaoProfessor().getIdSituacaoProfessor();
-        this.deficiente = professor.getDeficiente();
-        this.autista = professor.getAutista();
-        this.altasHabilidades = professor.getAltasHabilidades();
+        this.usuario = professor.getUsuario();
+        this.senha = professor.getSenha();
         this.dataCadastro = professor.getDataCadastro();
-        this.nivelEscolaridadeId = professor.getNivelEscolaridade().getIdNivelEscolaridade();
-        this.tipoEnsinoMedioId = professor.getTipoEnsinoMedio().getIdTipoEnsinoMedio();
         this.ativo = professor.getAtivo();
+        this.emailInstitucional = professor.getEmailInstitucional();
+        this.dataContratacao = professor.getDataContratacao();
+        this.dataDemissao = professor.getDataDemissao();
     }
 }

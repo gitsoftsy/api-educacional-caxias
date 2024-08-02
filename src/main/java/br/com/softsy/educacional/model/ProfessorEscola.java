@@ -30,17 +30,6 @@ public class ProfessorEscola {
 	@JoinColumn(name = "ID_ESCOLA", nullable = false)
 	private Escola escola;
 	
-	@ManyToOne
-	@JoinColumn(name = "ID_TURNO_PROFESSOR", nullable = false)
-	private TurnoProfessor turnoProfessor;
-	
-	@ManyToOne
-	@JoinColumn(name = "ID_CARGO_PROFESSOR", nullable = false)
-	private CargoProfessor cargoProfessor;
-	
-	@Column(name = "DT_NOMENCLATURA", nullable = false)
-	private Long dtNomenclatura;
-	
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
 	

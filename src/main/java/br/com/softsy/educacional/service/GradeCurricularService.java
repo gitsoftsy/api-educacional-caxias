@@ -58,10 +58,19 @@ public class GradeCurricularService {
     }
    
     @Transactional(readOnly = true)
-    public List<GradeCurricularDTO> buscarPorIdCurriculo(Long idCurriculo) {
-        List<GradeCurricular> gradeCurricular = repository.findByCurriculo_IdCurriculo(idCurriculo)
+    public List<GradeCurricularDTO> buscarPorIdCurriculoEIdSerie(Long idCurriculo, Long idSerie) {
+        List<GradeCurricular> gradeCurricularPorCurriculo = repository.findByCurriculo_IdCurriculo(idCurriculo)
                 .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar grade curricular por ID do curriculo"));
-        return gradeCurricular.stream()
+        
+        List<GradeCurricular> gradeCurricularPorSerie = repository.findBySerie_IdSerie(idSerie)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar grade curricular por ID da série"));
+
+        // Retornar a interseção das duas listas
+        List<GradeCurricular> result = gradeCurricularPorCurriculo.stream()
+                .filter(gradeCurricularPorSerie::contains)
+                .collect(Collectors.toList());
+
+        return result.stream()
                 .map(GradeCurricularDTO::new)
                 .collect(Collectors.toList());
     }

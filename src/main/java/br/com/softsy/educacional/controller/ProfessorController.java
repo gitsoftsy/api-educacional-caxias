@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroProfessorDTO;
+import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.dto.ProfessorDTO;
 import br.com.softsy.educacional.service.ProfessorService;
 
@@ -44,6 +45,13 @@ public class ProfessorController {
     public ResponseEntity<ProfessorDTO> buscarPorId(@PathVariable Long idProfessor) {
         return ResponseEntity.ok(professorService.buscarPorId(idProfessor));
     }
+    
+    @GetMapping("/conta/{idConta}")
+    public ResponseEntity<List<ProfessorDTO>> buscarPorIdConta(@PathVariable Long idConta) {
+        List<ProfessorDTO> curso = professorService.buscarPorIdConta(idConta);
+        return ResponseEntity.ok(curso);
+    }
+
 
     @PutMapping
     public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroProfessorDTO dto) {

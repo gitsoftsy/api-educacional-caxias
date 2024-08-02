@@ -82,15 +82,8 @@ public class ProfessorEscolaService {
                 .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado"));
         Escola escola = escolaRepository.findById(dto.getEscolaId())
                 .orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
-        TurnoProfessor turnoProfessor = turnoProfessorRepository.findById(dto.getTurnoProfessorId())
-                .orElseThrow(() -> new IllegalArgumentException("Turno do professor não encontrado"));
-        CargoProfessor cargoProfessor = cargoProfessorRepository.findById(dto.getCargoProfessorId())
-                .orElseThrow(() -> new IllegalArgumentException("Cargo do professor não encontrado"));
         professorEscola.setProfessor(professor);
         professorEscola.setEscola(escola);
-        professorEscola.setTurnoProfessor(turnoProfessor);
-        professorEscola.setCargoProfessor(cargoProfessor);
-        professorEscola.setDtNomenclatura(dto.getDtNomenclatura());
         professorEscola.setDataCadastro(LocalDateTime.now());
         professorEscola.setAtivo('S');
         return professorEscola;
@@ -101,11 +94,6 @@ public class ProfessorEscolaService {
                 .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado")));
         destino.setEscola(escolaRepository.findById(origem.getEscolaId())
                 .orElseThrow(() -> new IllegalArgumentException("Escola não encontrada")));
-        destino.setTurnoProfessor(turnoProfessorRepository.findById(origem.getTurnoProfessorId())
-                .orElseThrow(() -> new IllegalArgumentException("Turno do professor não encontrado")));
-        destino.setCargoProfessor(cargoProfessorRepository.findById(origem.getCargoProfessorId())
-                .orElseThrow(() -> new IllegalArgumentException("Cargo do professor não encontrado")));
-        destino.setDtNomenclatura(origem.getDtNomenclatura());
         destino.setDataCadastro(LocalDateTime.now());
     }
 }

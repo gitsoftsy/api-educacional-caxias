@@ -41,9 +41,11 @@ public class GradeCurricularController {
         return ResponseEntity.ok(gradeCurricular);
     }
  
-    @GetMapping("/curriculo/{idCurriculo}")
-    public ResponseEntity<List<GradeCurricularDTO>> buscarPorIdCurriculo(@PathVariable Long idCurriculo) {
-        List<GradeCurricularDTO> gradeCurricular = service.buscarPorIdCurriculo(idCurriculo);
+    @GetMapping("/curriculo/{idCurriculo}/serie/{idSerie}")
+    public ResponseEntity<List<GradeCurricularDTO>> buscarPorIdCurriculoEIdSerie(
+            @PathVariable Long idCurriculo,
+            @PathVariable Long idSerie) {
+        List<GradeCurricularDTO> gradeCurricular = service.buscarPorIdCurriculoEIdSerie(idCurriculo, idSerie);
         return ResponseEntity.ok(gradeCurricular);
     }
     

@@ -13,9 +13,6 @@ public class ProfessorEscolaDTO {
     private Long idProfessorEscola;
     private Long professorId;
     private Long escolaId;
-    private TurnoProfessorDTO turnoProfessor;
-    private CargoProfessorDTO cargoProfessor;
-    private Long dtNomenclatura;
     private LocalDateTime dataCadastro;
     private Character ativo;
 
@@ -23,9 +20,6 @@ public class ProfessorEscolaDTO {
         this.idProfessorEscola = professorEscola.getIdProfessorEscola();
         this.professorId = professorEscola.getProfessor().getIdProfessor();
         this.escolaId = professorEscola.getEscola().getIdEscola();
-        this.turnoProfessor = new TurnoProfessorDTO(professorEscola.getTurnoProfessor());
-        this.cargoProfessor = new CargoProfessorDTO(professorEscola.getCargoProfessor());
-        this.dtNomenclatura = professorEscola.getDtNomenclatura();
         this.dataCadastro = professorEscola.getDataCadastro();
         this.ativo = professorEscola.getAtivo();
     }
