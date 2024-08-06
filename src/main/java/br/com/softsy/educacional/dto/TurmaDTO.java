@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 public class TurmaDTO {
 
     private Long idTurma;
-    private Long escolaId;
+    private EscolaDTO escola;
     private PeriodoLetivoDTO periodoLetivo;
     private TurnoDTO turno;
     @NotNull
     private String nomeTurma;
     private String codTurmaInep;
-    private Long gradeCurricularId;
+    private GradeCurricularDTO gradeCurricular;
     @NotNull
     private Character libras;
     private LocalDateTime dataCadastro;
@@ -32,12 +32,12 @@ public class TurmaDTO {
 
     public TurmaDTO(Turma turma) {
         this.idTurma = turma.getIdTurma();
-        this.escolaId = turma.getEscola().getIdEscola();
+        this.escola = new EscolaDTO(turma.getEscola());
         this.periodoLetivo = new PeriodoLetivoDTO(turma.getPeriodoLetivo());
         this.turno = new TurnoDTO(turma.getTurno());
         this.nomeTurma = turma.getNomeTurma();
         this.codTurmaInep = turma.getCodTurmaInep();
-        this.gradeCurricularId = turma.getGradeCurricular().getIdGradeCurricular();
+        this.gradeCurricular = new GradeCurricularDTO(turma.getGradeCurricular());
         this.libras = turma.getLibras();
         this.dataCadastro = turma.getDataCadastro();
         this.ativo = turma.getAtivo();

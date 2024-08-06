@@ -9,5 +9,7 @@ import br.com.softsy.educacional.model.Pessoa;
 public interface PessoaRepository extends JpaRepository<Pessoa, Long>{
 	
 	List<Pessoa> findByCpf(String cpf);
+	
+	Pessoa findByCpfAndConta_IdConta(String cpf, Long contaId);
 
 }

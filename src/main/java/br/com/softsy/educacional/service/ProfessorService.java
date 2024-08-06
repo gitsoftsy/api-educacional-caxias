@@ -87,7 +87,7 @@ public class ProfessorService {
         professor.setAtivo(status);
     }
 
-    private Professor criarProfessorAPartirDTO(CadastroProfessorDTO dto) {
+    public Professor criarProfessorAPartirDTO(CadastroProfessorDTO dto) {
         Professor professor = new Professor();
         Pessoa pessoa = pessoaRepository.findById(dto.getPessoaId())
                 .orElseThrow(() -> new IllegalArgumentException("Pessoa não encontrada"));

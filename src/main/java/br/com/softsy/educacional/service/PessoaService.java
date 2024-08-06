@@ -218,14 +218,14 @@ public class PessoaService {
 	    Pais paisNascimento = paisRepository.findById(dto.getPaisNascimentoId())
 	            .orElseThrow(() -> new IllegalArgumentException("País de nascimento não encontrado"));
 
-	    
 	    if (dto.getMunicipioNascimentoId() != null) {
-	    	Municipio municipioNascimento = municipioRepository.findById(dto.getMunicipioNascimentoId())                    .orElseThrow(() -> new IllegalArgumentException("UF do RG Emissor não encontrada"));
-            pessoa.setMunicipioNascimento(municipioNascimento);
-        } else {
-            pessoa.setCertidaoNascimentoMunicipioCartorio(null);
-        }
-	    
+	        Municipio municipioNascimento = municipioRepository.findById(dto.getMunicipioNascimentoId())
+	                .orElseThrow(() -> new IllegalArgumentException("Município de nascimento não encontrado"));
+	        pessoa.setMunicipioNascimento(municipioNascimento);
+	    } else {
+	        pessoa.setCertidaoNascimentoMunicipioCartorio(null);
+	    }
+
 	    Pais paisResidencia = paisRepository.findById(dto.getPaisResidenciaId())
 	            .orElseThrow(() -> new IllegalArgumentException("País de residência não encontrado"));
 	    Nacionalidade nacionalidade = nacionalidadeRepository.findById(dto.getNacionalidadeId())
@@ -233,41 +233,38 @@ public class PessoaService {
 	    Conta conta = contaRepository.findById(dto.getContaId())
 	            .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 
-	    
 	    if (dto.getRgUfEmissorId() != null) {
-            Uf ufRgEmissor = ufRepository.findById(dto.getRgUfEmissorId())
-                    .orElseThrow(() -> new IllegalArgumentException("UF do RG Emissor não encontrada"));
-            pessoa.setRgUfEmissor(ufRgEmissor);
-        } else {
-            pessoa.setRgUfEmissor(null);
-        }
+	        Uf ufRgEmissor = ufRepository.findById(dto.getRgUfEmissorId())
+	                .orElseThrow(() -> new IllegalArgumentException("UF do RG Emissor não encontrada"));
+	        pessoa.setRgUfEmissor(ufRgEmissor);
+	    } else {
+	        pessoa.setRgUfEmissor(null);
+	    }
 
 	    if (dto.getRneUfEmissorId() != null) {
-            Uf ufRneEmissor = ufRepository.findById(dto.getRneUfEmissorId())
-                    .orElseThrow(() -> new IllegalArgumentException("UF do RG Emissor não encontrada"));
-            pessoa.setRneUfEmissor(ufRneEmissor);
-        } else {
-            pessoa.setRneUfEmissor(null);
-        }
-	    
-	    
-	    if (dto.getCertidaoCasamentoMunicipioCartorioId() != null) {
-	    	Municipio municipioCertidaoCasamento = municipioRepository.findById(dto.getCertidaoCasamentoMunicipioCartorioId())
-                    .orElseThrow(() -> new IllegalArgumentException("UF do RG Emissor não encontrada"));
-            pessoa.setCertidaoCasamentoMunicipioCartorio(municipioCertidaoCasamento);
-        } else {
-            pessoa.setCertidaoCasamentoMunicipioCartorio(null);
-        }
-	    
-	    if (dto.getCertidaoNascimentoMunicipioCartorioId() != null) {
-	    	Municipio municipioCertidaoNascimento = municipioRepository.findById(dto.getCertidaoNascimentoMunicipioCartorioId())
-                    .orElseThrow(() -> new IllegalArgumentException("UF do RG Emissor não encontrada"));
-            pessoa.setCertidaoNascimentoMunicipioCartorio(municipioCertidaoNascimento);
-        } else {
-            pessoa.setCertidaoNascimentoMunicipioCartorio(null);
-        }
+	        Uf ufRneEmissor = ufRepository.findById(dto.getRneUfEmissorId())
+	                .orElseThrow(() -> new IllegalArgumentException("UF do RNE Emissor não encontrada"));
+	        pessoa.setRneUfEmissor(ufRneEmissor);
+	    } else {
+	        pessoa.setRneUfEmissor(null);
+	    }
 
-	    
+	    if (dto.getCertidaoCasamentoMunicipioCartorioId() != null) {
+	        Municipio municipioCertidaoCasamento = municipioRepository.findById(dto.getCertidaoCasamentoMunicipioCartorioId())
+	                .orElseThrow(() -> new IllegalArgumentException("Município de certidão de casamento não encontrado"));
+	        pessoa.setCertidaoCasamentoMunicipioCartorio(municipioCertidaoCasamento);
+	    } else {
+	        pessoa.setCertidaoCasamentoMunicipioCartorio(null);
+	    }
+
+	    if (dto.getCertidaoNascimentoMunicipioCartorioId() != null) {
+	        Municipio municipioCertidaoNascimento = municipioRepository.findById(dto.getCertidaoNascimentoMunicipioCartorioId())
+	                .orElseThrow(() -> new IllegalArgumentException("Município de certidão de nascimento não encontrado"));
+	        pessoa.setCertidaoNascimentoMunicipioCartorio(municipioCertidaoNascimento);
+	    } else {
+	        pessoa.setCertidaoNascimentoMunicipioCartorio(null);
+	    }
+
 	    // Atualizando apenas os campos relevantes
 	    pessoa.setRaca(raca);
 	    pessoa.setNacionalidadeId(nacionalidade);
@@ -310,10 +307,21 @@ public class PessoaService {
 	    pessoa.setTelefone(dto.getTelefone());
 	    pessoa.setCelular(dto.getCelular());
 	    pessoa.setEmail(dto.getEmail());
-	    pessoa.setCpf(dto.getCpf());
+
+	    if (dto.getCpf() != null && !dto.getCpf().equals(pessoa.getCpf())) {
+	        Pessoa pessoaComMesmoCpf = repository.findByCpfAndConta_IdConta(dto.getCpf(), pessoa.getConta().getIdConta());
+	        if (pessoaComMesmoCpf != null && !pessoaComMesmoCpf.getIdPessoa().equals(pessoa.getIdPessoa())) {
+	            pessoa.setCpf(dto.getCpf());
+	        }
+	        throw new IllegalArgumentException("Já existe uma pessoa com este CPF");
+	    }
+
 	    pessoa.setEmpresa(dto.getEmpresa());
 	    pessoa.setOcupacao(dto.getOcupacao());
 	    pessoa.setTelefoneComercial(dto.getTelefoneComercial());
-	    pessoa.setSenha(dto.getSenha());
+
+	    if (dto.getSenha() != null) {
+	        pessoa.setSenha(encrypt.hashPassword(dto.getSenha()));
+	    }
 	}
 }
