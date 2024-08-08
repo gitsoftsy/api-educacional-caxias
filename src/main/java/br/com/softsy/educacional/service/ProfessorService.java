@@ -1,9 +1,15 @@
 package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +46,9 @@ public class ProfessorService {
 
     @Autowired
     private ContaRepository contaRepository;
+    
+    @Autowired
+    private EntityManager entityManager;
     
 	@Autowired
 	private PasswordEncrypt encrypt;
@@ -105,7 +114,130 @@ public class ProfessorService {
 
         return professor;
     }
+    
+    public List<Map<String, Object>> listaDisciplinasProfessor(Long idProfessor) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTA_DISCIPLINAS_PROFESSOR(:pIdProfessor)");
 
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdProfessor", idProfessor);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idDisciplina", result[0]);
+            resultMap.put("dataCadastro", result[1]);
+            resultMap.put("idConta", result[2]);
+            resultMap.put("idAreaConhecimento", result[3]);
+            resultMap.put("codDiscip", result[4]);
+            resultMap.put("nome", result[5]);
+            resultMap.put("creditos", result[6]);
+            resultMap.put("horasAula", result[7]);
+            resultMap.put("horasLab", result[8]);
+            resultMap.put("horasEstagio", result[9]);
+            resultMap.put("horasAtiv", result[10]);
+            resultMap.put("horasAno", result[11]);
+            resultMap.put("horasSemanal", result[12]);
+            resultMap.put("ativo", result[13]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+
+    
+    public List<Map<String, Object>> listaEscolasProfessor(Long idProfessor) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTA_ESCOLAS_PROFESSOR(:pIdProfessor)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        // Definir os parâmetros
+        query.setParameter("pIdProfessor", idProfessor);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        // Mapear os resultados para um formato de mapa
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idEscola", result[0]);
+            resultMap.put("idConta", result[1]);
+            resultMap.put("dataCadastro", result[2]);
+            resultMap.put("ativo", result[3]);
+            resultMap.put("nomeEscola", result[4]);
+            resultMap.put("logoEscola", result[5]);
+            resultMap.put("tipoEscola", result[6]);
+            resultMap.put("idCategoriaEscolaPrivada", result[7]);
+            resultMap.put("cnpj", result[8]);
+            resultMap.put("codigoInep", result[9]);
+            resultMap.put("cep", result[10]);
+            resultMap.put("endereco", result[11]);
+            resultMap.put("numero", result[12]);
+            resultMap.put("complemento", result[13]);
+            resultMap.put("bairro", result[14]);
+            resultMap.put("municipio", result[15]);
+            resultMap.put("distrito", result[16]);
+            resultMap.put("uf", result[17]);
+            resultMap.put("numCme", result[18]);
+            resultMap.put("numParecerCme", result[19]);
+            resultMap.put("latitude", result[20]);
+            resultMap.put("longitude", result[21]);
+            resultMap.put("idLocalizacao", result[22]);
+            resultMap.put("idEntidadeSuperior", result[23]);
+            resultMap.put("email", result[24]);
+            resultMap.put("idSituacaoFuncionamento", result[25]);
+            resultMap.put("educacaoIndigena", result[26]);
+            resultMap.put("exameSelecao", result[27]);
+            resultMap.put("compartilhaEspaco", result[28]);
+            resultMap.put("usaEspacoEntornoEscolar", result[29]);
+            resultMap.put("pppAtualizado12Meses", result[30]);
+            resultMap.put("idFormaOcupacaoPredio", result[31]);
+            resultMap.put("idZoneamento", result[32]);
+            resultMap.put("idOrgaoPublico", result[33]);
+            resultMap.put("idDependenciaAdm", result[34]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
+    public List<Map<String, Object>> filtrarProfessor(String cpf, String nome, String matricula) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_FILTRAR_PROFESSOR(:pCpf, :pNome, :pMatricula)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        // Definir os parâmetros
+        query.setParameter("pCpf", cpf);
+        query.setParameter("pNome", nome);
+        query.setParameter("pMatricula", matricula);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        // Mapear os resultados para um formato de mapa
+        for (Object[] result : resultList) {
+        	Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("matricula", result[0]);
+            resultMap.put("codigoInep", result[1]);
+            resultMap.put("idProfessor", result[2]);
+            resultMap.put("usuario", result[3]);
+            resultMap.put("ativo", result[4]);
+            resultMap.put("emailInstitucional", result[5]);
+            resultMap.put("nomeCompleto", result[6]);
+            resultMap.put("cpf", result[7]);
+            resultMap.put("email", result[8]);
+            resultMap.put("celular", result[9]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
 
     private void atualizaDados(Professor destino, CadastroProfessorDTO origem) {
     	

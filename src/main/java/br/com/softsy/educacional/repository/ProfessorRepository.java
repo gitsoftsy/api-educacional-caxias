@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -20,4 +21,21 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long>{
 	@Query("select professor from Professor join professor.conta conta where conta.idConta = :idConta")
     Optional<List<Professor>> findByConta_IdConta(@Param("idConta") Long idConta);
 
+    @Procedure(name = "PROC_LISTA_DISCIPLINAS_PROFESSOR")
+    List<Object[]> listarDisciplinasProfessor(
+            @Param("P_ID_PROFESSOR") Long idProfessor
+    );
+    
+    @Procedure(name = "PROC_LISTA_ESCOLAS_PROFESSOR")
+    List<Object[]> listarEscpçasProfessor(
+            @Param("P_ID_PROFESSOR") Long idProfessor
+    );
+    
+    @Procedure(name = "PROC_FILTRAR_PROFESSOR")
+    List<Object[]> filtrarProfessor(
+            @Param("P_CPF") String cpf,
+            @Param("P_NOME") String nome,
+            @Param("P_MATRICULA") String matricula
+    );
+	
 }

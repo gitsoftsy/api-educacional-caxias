@@ -44,6 +44,7 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Long> {
             @Param("P_CERT_CASAMENTO") String certCasamento
     );
     
+    
     @Procedure(name = "PROC_LISTA_RESERVA_DE_VAGAS_EXCEL")
     List<Object[]> listaReservaDeVagasExcel(@Param("P_ID_CONTA") Long idConta);
 	

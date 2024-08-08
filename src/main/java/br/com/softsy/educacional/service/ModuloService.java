@@ -19,7 +19,6 @@ import br.com.softsy.educacional.dto.ModuloDTO;
 import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.model.Modulo;
 import br.com.softsy.educacional.repository.ModuloRepository;
-import br.com.softsy.educacional.utils.ImageManager;
 
 @Service
 public class ModuloService {
@@ -40,59 +39,20 @@ public class ModuloService {
         return new ModuloDTO(modulo);
     }
     
-	public String getLogoById(Long idModulo, String caminho) throws IOException {
-		Optional<Modulo> contaOptional = moduloRepository.findById(idModulo);
-
-		String imagemCarregada;
-		imagemCarregada = ImageManager.buscaImagem(caminho);
-
-		if (contaOptional.isPresent()) {
-			return imagemCarregada;
-		} else {
-			return null;
-		}
-	}
 
     @Transactional
     public CadastroModuloDTO salvar(CadastroModuloDTO dto) {
         validarModulo(dto.getModulo());
         
-        String base64 = "";
         Modulo modulo = criarModuloAPartirDTO(dto);
         
-        base64 = modulo.getIcone();
-        
-        modulo.setIcone(null);
         modulo = moduloRepository.save(modulo);
-        
-     // Manipulando a imagem e obtendo o caminho
-     	String caminhoIMG = ImageManager.salvaImagemModulo(base64, modulo.getIdModulo(),"iconeModulo" + dto.getModulo());
-
-     	modulo.setIcone(caminhoIMG);
-		dto.setIcone(caminhoIMG);
-		dto.setIdModulo(modulo.getIdModulo());
-		
-		atualizaDados(modulo, dto);
-
-		CadastroModuloDTO moduloCriado = new CadastroModuloDTO(modulo);
-		return moduloCriado;
+		return new CadastroModuloDTO(modulo);
     }
 
 	@Transactional
 	public ModuloDTO atualizar(CadastroModuloDTO dto) {
 		Modulo modulo = moduloRepository.getReferenceById(dto.getIdModulo());
-	      
-		modulo = moduloRepository.save(modulo);
-
-	    // Manipulando a imagem e obtendo o caminho
-	    String caminhoIMG = ImageManager.atualizaImagemModulo(dto.getIdModulo(), dto.getIcone());
-
-	    // Setando a imagem diretamente no objeto escola
-	    modulo.setIcone(caminhoIMG); 
-	    dto.setIcone(caminhoIMG);
-	    dto.setIdModulo(modulo.getIdModulo());
-		
-		
 		atualizaDados(modulo, dto);
 		return new ModuloDTO(modulo);
 	}

@@ -45,12 +45,6 @@ public class ModuloController {
         return ResponseEntity.ok(moduloDTO);
     }
 
-    @GetMapping("/{id}/logo")
-    public ResponseEntity<String> getLogoById(@PathVariable("id") Long id, @RequestBody CaminhoImagemRequest request) throws IOException {
-        String caminho = request.getCaminho();
-        String logo = service.getLogoById(id, caminho);
-        return ResponseEntity.ok(logo);
-    }
 
     @PostMapping
     public ResponseEntity<CadastroModuloDTO> cadastrar(@RequestBody @Valid CadastroModuloDTO dto) {

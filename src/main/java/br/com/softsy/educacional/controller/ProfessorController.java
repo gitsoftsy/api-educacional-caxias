@@ -1,7 +1,9 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -14,13 +16,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroPessoaProfessorDTO;
 import br.com.softsy.educacional.dto.CadastroProfessorDTO;
-import br.com.softsy.educacional.dto.CadastroResponsavelDTO;
-import br.com.softsy.educacional.dto.CandidatoRelacionamentoDTO;
 import br.com.softsy.educacional.dto.PessoaDTO;
 import br.com.softsy.educacional.dto.ProfessorDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
@@ -107,6 +108,60 @@ public class ProfessorController {
         List<ProfessorDTO> curso = professorService.buscarPorIdConta(idConta);
         return ResponseEntity.ok(curso);
     }
+    
+    @GetMapping("/disciplinas")
+    public ResponseEntity<AllResponse> listaDisciplinasProfessor(
+            @RequestParam(value = "idProfessor", required = false) Long idProfessor
+    ) {
+        if (idProfessor == null) {
+            return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe o parâmetro idProfessor na requisição.", new ArrayList<>()));
+        }
+
+        List<Map<String, Object>> result = professorService.listaDisciplinasProfessor(idProfessor);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+        }
+
+        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+    }
+
+    @GetMapping("/escolas")
+    public ResponseEntity<AllResponse> listaEscolasProfessor(
+            @RequestParam(value = "idProfessor", required = false) Long idProfessor
+    ) {
+        if (idProfessor == null) {
+            return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe o parâmetro idProfessor na requisição.", new ArrayList<>()));
+        }
+
+        List<Map<String, Object>> result = professorService.listaEscolasProfessor(idProfessor);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+        }
+
+        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+    }
+
+    @GetMapping("/filtrar")
+    public ResponseEntity<AllResponse> filtrarProfessor(
+            @RequestParam(value = "cpf", required = false) String cpf,
+            @RequestParam(value = "nome", required = false) String nome,
+            @RequestParam(value = "matricula", required = false) String matricula
+    ) {
+        if (cpf == null && nome == null && matricula == null) {
+            return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+        }
+
+        List<Map<String, Object>> result = professorService.filtrarProfessor(cpf, nome, matricula);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+        }
+
+        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+    }
+    
 
 
     @PutMapping
@@ -154,4 +209,29 @@ public class ProfessorController {
         }
     }
     
+    public class AllResponse {
+        private String message;
+        private List<Object> data;
+
+        public AllResponse(String message, List<Object> data) {
+            this.message = message;
+            this.data = data;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+        
+        public List<Object> getData() {
+            return data;
+        }
+
+        public void setData(List<Object> data) {
+            this.data = data;
+        }
+    }
 }
