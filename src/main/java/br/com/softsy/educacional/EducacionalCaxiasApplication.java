@@ -12,3 +12,4 @@ public class EducacionalCaxiasApplication extends SpringBootServletInitializer {
 	}
 
 }
+ 
