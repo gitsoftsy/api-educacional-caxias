@@ -142,6 +142,7 @@ public class ProfessorService {
             resultMap.put("horasAno", result[11]);
             resultMap.put("horasSemanal", result[12]);
             resultMap.put("ativo", result[13]);
+            resultMap.put("idProfessorDisciplina", result[14]);
             mappedResultList.add(resultMap);
         }
 
@@ -199,6 +200,7 @@ public class ProfessorService {
             resultMap.put("idZoneamento", result[32]);
             resultMap.put("idOrgaoPublico", result[33]);
             resultMap.put("idDependenciaAdm", result[34]);
+            resultMap.put("idProfessorEscola", result[35]);
             mappedResultList.add(resultMap);
         }
 

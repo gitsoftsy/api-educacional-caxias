@@ -27,7 +27,7 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long>{
     );
     
     @Procedure(name = "PROC_LISTA_ESCOLAS_PROFESSOR")
-    List<Object[]> listarEscpçasProfessor(
+    List<Object[]> listarEscolasProfessor(
             @Param("P_ID_PROFESSOR") Long idProfessor
     );
     

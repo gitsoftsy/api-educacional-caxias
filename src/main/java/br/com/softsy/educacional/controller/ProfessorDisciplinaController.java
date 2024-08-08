@@ -22,7 +22,7 @@ import br.com.softsy.educacional.service.ProfessorDisciplinaService;
 @RestController
 @RequestMapping("/professorDisciplina")
 public class ProfessorDisciplinaController {
-
+	
     @Autowired
     private ProfessorDisciplinaService service;
 
