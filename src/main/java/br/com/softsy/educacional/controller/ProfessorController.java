@@ -162,6 +162,40 @@ public class ProfessorController {
         return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
     }
     
+    
+    @GetMapping("/verificar-matricula")
+    public ResponseEntity<AllResponse> verificarMatricula(
+            @RequestParam(value = "matricula", required = false) String matricula
+    ) {
+        if (matricula == null) {
+            return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe o parâmetro matrícula na requisição.", new ArrayList<>()));
+        }
+
+        List<ProfessorDTO> result = professorService.buscarPorMatricula(matricula);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+        }
+
+        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+    }
+    
+    @GetMapping("/verificar-usuario")
+    public ResponseEntity<AllResponse> verificarUsuario(
+            @RequestParam(value = "usuario", required = false) String usuario
+    ) {
+        if (usuario == null) {
+            return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe o parâmetro usuário na requisição.", new ArrayList<>()));
+        }
+
+        List<ProfessorDTO> result = professorService.buscarPorUsuario(usuario);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+        }
+
+        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+    }
 
 
     @PutMapping

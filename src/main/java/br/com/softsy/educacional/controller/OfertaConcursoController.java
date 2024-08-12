@@ -51,7 +51,7 @@ public class OfertaConcursoController {
     @GetMapping("/series/conta/{idConta}/curso/{idCurso}/escola/{idEscola}")
     public List<Map<String, Object>> getSeries(@PathVariable Long idConta, @PathVariable Long idCurso, @PathVariable Long idEscola) {
         List<Integer> series = entityManager.createQuery(
-                "SELECT DISTINCT oc.serie " +
+                "SELECT oc.serie " +
                         "FROM OfertaConcurso oc " +
                         "JOIN oc.concurso c " +
                         "WHERE c.ativo = 'S' " +

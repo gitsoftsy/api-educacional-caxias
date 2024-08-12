@@ -27,6 +27,11 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Long> {
             @Param("P_CERT_CASAMENTO") String certCasamento
     );
     
+    @Procedure(name = "PROC_LISTA_DADOS_CANDIDATO_FINAL_RESERVA")
+    List<Object[]> listaDadosCandidatoFinal(
+            @Param("P_CANDIDATO") String candidato
+    );
+    
     
     @Procedure(name = "PROC_LISTA_RESERVA_DE_VAGAS")
     List<Object[]> listarReservas(

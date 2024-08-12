@@ -65,10 +65,28 @@ public class ProfessorService {
     }
     
     @Transactional(readOnly = true)
+    public List<ProfessorDTO> buscarPorUsuario(String usuario) {
+    	List<Professor> professor = professorRepository.findByUsuario(usuario)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar professor por usuário"));
+        return professor.stream()
+                .map(ProfessorDTO::new)
+                .collect(Collectors.toList());
+    }
+    
+    @Transactional(readOnly = true)
+    public List<ProfessorDTO> buscarPorMatricula(String matricula) {
+    	List<Professor> professor = professorRepository.findByMatricula(matricula)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar professor por matricula"));
+        return professor.stream()
+                .map(ProfessorDTO::new)
+                .collect(Collectors.toList());
+    }
+    
+    @Transactional(readOnly = true)
     public List<ProfessorDTO> buscarPorIdConta(Long idConta) {
-        List<Professor> curso = professorRepository.findByConta_IdConta(idConta)
+        List<Professor> professor = professorRepository.findByConta_IdConta(idConta)
                 .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar professor por ID da conta"));
-        return curso.stream()
+        return professor.stream()
                 .map(ProfessorDTO::new)
                 .collect(Collectors.toList());
     }
@@ -241,7 +259,7 @@ public class ProfessorService {
 
         return mappedResultList;
     }
-    
+     
 
     private void atualizaDados(Professor destino, CadastroProfessorDTO origem) {
     	

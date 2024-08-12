@@ -44,6 +44,11 @@ public class PessoaController {
     public ResponseEntity<PessoaDTO> buscarPorId(@PathVariable Long idPessoa) {
         return ResponseEntity.ok(pessoaService.buscarPorId(idPessoa));
     }
+    
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<PessoaDTO> buscarPorCpf(@PathVariable String cpf) {
+        return ResponseEntity.ok(pessoaService.buscarPorCpf(cpf));
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<PessoaDTO> atualizar(@PathVariable Long id, @RequestBody CadastroPessoaDTO dto) {

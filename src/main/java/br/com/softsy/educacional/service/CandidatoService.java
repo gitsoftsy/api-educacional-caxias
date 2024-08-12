@@ -254,6 +254,33 @@ public class CandidatoService {
     }
     
     
+    public List<Map<String, Object>> obtemStepCandidato(String candidato) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTA_DADOS_CANDIDATO_FINAL_RESERVA(:pCandidato)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pCandidato", candidato);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("candidato", result[0]);
+            resultMap.put("turno", result[1]);
+            resultMap.put("codCurso", result[2]);
+            resultMap.put("nomeCurso", result[3]);
+            resultMap.put("nomeEscola", result[4]);
+            resultMap.put("tipoEscola", result[5]);
+            resultMap.put("serie", result[6]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
+    
     public List<Map<String, Object>> obtemListaReservaDeVagas(Long idConta, Long idEscola) {
         StringBuilder sql = new StringBuilder();
         sql.append("CALL PROC_LISTA_RESERVA_DE_VAGAS(:pIdConta, :pIdEscola)");

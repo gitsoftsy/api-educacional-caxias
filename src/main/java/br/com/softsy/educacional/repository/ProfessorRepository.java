@@ -16,7 +16,8 @@ import br.com.softsy.educacional.model.Professor;
 public interface ProfessorRepository extends JpaRepository<Professor, Long>{
 	
 	List<Professor> findByCodigoInep(String codigoInep);
-	List<Professor> findByMatricula(String matricula);
+	Optional<List<Professor>> findByMatricula(String matricula);
+	Optional<List<Professor>> findByUsuario(String usuario);
 	
 	@Query("select professor from Professor join professor.conta conta where conta.idConta = :idConta")
     Optional<List<Professor>> findByConta_IdConta(@Param("idConta") Long idConta);

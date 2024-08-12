@@ -132,29 +132,7 @@ public class CandidatoController {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
 	        }
 	    }
-	 
-//	 @PutMapping("/pessoa-candidato")
-//	 public ResponseEntity<Object> atualizarPessoaECandidato(@RequestBody CadastroCandidatoPessoaDTO dto) {
-//	     try {
-//	         // Atualiza a pessoa
-//	         PessoaDTO pessoaDTOAtualizada = pessoaService.atualizar(dto.getPessoaDTO());
-//	         Pessoa pessoa = pessoaService.buscarPorId(pessoaDTOAtualizada.getIdPessoa());
-//	         pessoa.setSenha(encrypt.hashPassword(pessoaDTOAtualizada.getSenha())); // Caso a senha seja atualizada
-//	         pessoa = pessoaRepository.save(pessoa);
-//
-//	         // Atualiza o candidato com o ID da pessoa atualizada
-//	         dto.getCandidatoDTO().setPessoaId(pessoa.getIdPessoa());
-//	         CandidatoDTO candidatoDTOAtualizado = candidatoService.atualizar(dto.getCandidatoDTO());
-//	         Candidato candidato = candidatoService.buscarPorId(candidatoDTOAtualizado.getIdCandidato());
-//	         candidato = candidatoRepository.save(candidato);
-//
-//	         // Cria o DTO de resposta com os IDs atualizados
-//	         CadastroResponseDTO responseDTO = new CadastroResponseDTO(pessoa.getIdPessoa(), candidato.getIdCandidato());
-//	         return ResponseEntity.ok(responseDTO);
-//	     } catch (Exception e) {
-//	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar: " + e.getMessage());
-//	     }
-//	 }
+
 	 
 	    @PutMapping("/pessoa-candidato")
 	    public ResponseEntity<Object> atualizarPessoaECandidato(@RequestBody CadastroCandidatoPessoaDTO dto) {
@@ -242,6 +220,24 @@ public class CandidatoController {
 
         return result;
     }
+    
+    @GetMapping("/reservaFinal")
+    public Object listaDadosReservaFinal(
+            @RequestParam(value = "candidato", required = false) String candidato
+    ) {
+        if (candidato == null) {
+            return "Por favor, informe o parâmetro na requisição.";
+        }
+
+        List<Map<String, Object>> result = candidatoService.obtemStepCandidato(candidato);
+
+        if (result.isEmpty()) {
+            return "Nenhum resultado encontrado para os parâmetros informados.";
+        }
+
+        return result;
+    }
+    
     
     @GetMapping("/listaReservaDeVagas")
     public Object obtemListaReservaDeVagas(

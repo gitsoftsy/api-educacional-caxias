@@ -2,6 +2,7 @@ package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -13,6 +14,7 @@ import br.com.softsy.educacional.dto.CadastroPessoaDTO;
 import br.com.softsy.educacional.dto.PessoaDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.infra.exception.NegocioException;
+import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.Municipio;
 import br.com.softsy.educacional.model.Nacionalidade;
@@ -20,6 +22,7 @@ import br.com.softsy.educacional.model.Pais;
 import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.model.Raca;
 import br.com.softsy.educacional.model.Uf;
+import br.com.softsy.educacional.model.Usuario;
 import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.MunicipioRepository;
 import br.com.softsy.educacional.repository.NacionalidadeRepository;
@@ -63,6 +66,11 @@ public class PessoaService {
     @Transactional(readOnly = true)
     public PessoaDTO buscarPorId(Long id) {
         return new PessoaDTO(repository.getReferenceById(id));
+    }
+    
+    @Transactional(readOnly = true)
+    public PessoaDTO buscarPorCpf(String cpf) {
+        return new PessoaDTO(repository.findByCpf(cpf));
     }
 
     @Transactional
@@ -206,7 +214,7 @@ public class PessoaService {
 			throw new NegocioException("A senha precisa ser informada!");
 		}
 	}
-    
+ 
 
 	private void atualizaDados(Pessoa pessoa, CadastroPessoaDTO dto) {
 	    if (dto.getCertidaoNascimentoMunicipioCartorioId() == null && dto.getCertidaoCasamentoMunicipioCartorioId() == null) {
@@ -265,7 +273,6 @@ public class PessoaService {
 	        pessoa.setCertidaoNascimentoMunicipioCartorio(null);
 	    }
 
-	    // Atualizando apenas os campos relevantes
 	    pessoa.setRaca(raca);
 	    pessoa.setNacionalidadeId(nacionalidade);
 	    pessoa.setSexo(dto.getSexo());
