@@ -24,21 +24,17 @@ public class TurmaProfessor {
 	private Long idTurmaProfessor;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_TURMA_DISCIPLINA", nullable = false)
-	private TurmaDisciplina turmaDisciplina;
+	@JoinColumn(name = "ID_TURMA", nullable = false)
+	private Turma turma;
 	
 	@ManyToOne
 	@JoinColumn(name = "ID_PROFESSOR", nullable = false)
 	private Professor professor;
 	
-	@Column(name = "TIPO_PROFESSOR", length = 1)
-	private Character tipoProfessor;
-	
-	@Column(name = "TIPO_VAGA", length = 1)
-	private Character tipoVaga;
-	
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
 
+	@Column(name = "ATIVO", nullable = false)
+	private Character ativo;
 
 }

@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroTurmaProfessorDTO;
+import br.com.softsy.educacional.dto.DeficienciaDTO;
 import br.com.softsy.educacional.dto.TurmaProfessorDTO;
 import br.com.softsy.educacional.model.Professor;
 import br.com.softsy.educacional.model.Turma;
@@ -26,7 +28,7 @@ public class TurmaProfessorService {
     private TurmaProfessorRepository repository;
 
     @Autowired
-    private TurmaDisciplinaRepository turmaRepository;
+    private TurmaRepository turmaRepository;
 
     @Autowired
     private ProfessorRepository professorRepository;
@@ -48,6 +50,11 @@ public class TurmaProfessorService {
                 .collect(Collectors.toList());
     }
 
+	@Transactional(readOnly = true)
+	public TurmaProfessorDTO buscarPorId(Long id) {
+		return new TurmaProfessorDTO(repository.getReferenceById(id));
+	}
+    
     @Transactional
     public TurmaProfessorDTO salvar(CadastroTurmaProfessorDTO dto) {
         TurmaProfessor turmaProfessor = criarTurmaProfessorAPartirDTO(dto);
@@ -62,32 +69,31 @@ public class TurmaProfessorService {
         return new TurmaProfessorDTO(turmaProfessor);
     }
 
-    @Transactional
-    public void remover(Long id) {
-        repository.deleteById(id);
-    }
 
     private TurmaProfessor criarTurmaProfessorAPartirDTO(CadastroTurmaProfessorDTO dto) {
         TurmaProfessor turmaProfessor = new TurmaProfessor();
-        TurmaDisciplina turma = turmaRepository.findById(dto.getTurmaDisciplinaId())
+        Turma turma = turmaRepository.findById(dto.getTurmaId())
                 .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada"));
         Professor professor = professorRepository.findById(dto.getProfessorId())
                 .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado"));
-        turmaProfessor.setTurmaDisciplina(turma);
+        turmaProfessor.setTurma(turma);
         turmaProfessor.setProfessor(professor);
-        turmaProfessor.setTipoProfessor(dto.getTipoProfessor());
-        turmaProfessor.setTipoVaga(dto.getTipoVaga());
         turmaProfessor.setDataCadastro(LocalDateTime.now());
+        turmaProfessor.setAtivo('S');
         return turmaProfessor;
     }
 
     private void atualizaDados(TurmaProfessor destino, CadastroTurmaProfessorDTO origem) {
-        destino.setTurmaDisciplina(turmaRepository.findById(origem.getTurmaDisciplinaId())
+    	BeanUtils.copyProperties(origem, destino, "idTurmaProfessor", "dataCadastro", "ativo");
+        destino.setTurma(turmaRepository.findById(origem.getTurmaId())
                 .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada")));
         destino.setProfessor(professorRepository.findById(origem.getProfessorId())
                 .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado")));
-        destino.setTipoProfessor(origem.getTipoProfessor());
-        destino.setTipoVaga(origem.getTipoVaga());
-        destino.setDataCadastro(LocalDateTime.now());
     }
+    
+	@Transactional
+	public void ativaDesativa(char status, Long id) {
+		TurmaProfessor turmaProfessor = repository.getReferenceById(id);
+		turmaProfessor.setAtivo(status);
+	}
 }

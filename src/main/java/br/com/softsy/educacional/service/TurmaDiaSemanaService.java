@@ -28,10 +28,8 @@ public class TurmaDiaSemanaService {
     private TurmaDiaSemanaRepository repository;
 
     @Autowired
-    private TurmaProfessorRepository turmaRepository;
+    private TurmaRepository turmaRepository;
     
-    @Autowired
-    private EscolaDependenciaRepository escolaRepository;
 
     @Transactional(readOnly = true)
     public List<TurmaDiaSemanaDTO> listarTudo() {
@@ -63,28 +61,25 @@ public class TurmaDiaSemanaService {
 
     private TurmaDiaSemana criarTurmaDiaSemanaAPartirDTO(TurmaDiaSemanaDTO dto) {
         TurmaDiaSemana turmaDiaSemana = new TurmaDiaSemana();
-        TurmaProfessor turma = turmaRepository.findById(dto.getTurmaProfessorId())
+        Turma turma = turmaRepository.findById(dto.getTurmaId())
                 .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada"));
-        EscolaDependencia escolaDependencia = escolaRepository.findById(dto.getEscolaDependenciaId())
-        		.orElseThrow(() -> new IllegalArgumentException("Dependência da escola não encontrada"));
         BeanUtils.copyProperties(dto, turmaDiaSemana, "idTurmaDiaSemana", "dataCadastro");
-        turmaDiaSemana.setEscolaDependencia(escolaDependencia);
-        turmaDiaSemana.setTurmaProfessor(turma);
+        turmaDiaSemana.setTurma(turma);
         turmaDiaSemana.setDataCadastro(LocalDateTime.now());
+        turmaDiaSemana.setAtivo('S');
         return turmaDiaSemana;
     }
 
     private void atualizaDados(TurmaDiaSemana destino, TurmaDiaSemanaDTO origem) {
-        destino.setTurmaProfessor(turmaRepository.findById(origem.getTurmaProfessorId())
+        destino.setTurma(turmaRepository.findById(origem.getTurmaId())
                 .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada")));
-        EscolaDependencia escolaDependencia = escolaRepository.findById(origem.getEscolaDependenciaId())
-        		.orElseThrow(() -> new IllegalArgumentException("Dependência da escola não encontrada"));
-        BeanUtils.copyProperties(origem, destino, "idTurmaDiaSemana", "dataCadastro");
-        destino.setEscolaDependencia(escolaDependencia);;
+        BeanUtils.copyProperties(origem, destino, "idTurmaDiaSemana", "dataCadastro", "ativo");
     }
     
 	@Transactional
-	public void remover(Long id) {
-		repository.deleteById(id);
+	public void ativaDesativa(char status, Long id) {
+		TurmaDiaSemana turmaDiaSemana = repository.getReferenceById(id);
+		turmaDiaSemana.setAtivo(status);
 	}
+    
 }

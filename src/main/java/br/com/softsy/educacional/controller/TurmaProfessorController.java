@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.softsy.educacional.dto.CadastroTurmaProfessorDTO;
+import br.com.softsy.educacional.dto.DeficienciaDTO;
 import br.com.softsy.educacional.dto.TurmaProfessorDTO;
 import br.com.softsy.educacional.service.TurmaProfessorService;
 
@@ -37,6 +38,11 @@ public class TurmaProfessorController {
         List<TurmaProfessorDTO> turmasProfessores = turmaProfessorService.buscarPorIdProfessor(idProfessor);
         return ResponseEntity.ok(turmasProfessores);
     }
+    
+	@GetMapping("/{idTurmaProfessor}")
+	public ResponseEntity<TurmaProfessorDTO> buscarPorId(@PathVariable Long idTurmaProfessor) {
+		return ResponseEntity.ok(turmaProfessorService.buscarPorId(idTurmaProfessor));
+	}
 
     @PostMapping
     public ResponseEntity<TurmaProfessorDTO> cadastrar(@RequestBody @Valid CadastroTurmaProfessorDTO dto) {
@@ -49,10 +55,16 @@ public class TurmaProfessorController {
         TurmaProfessorDTO turmaProfessorDTO = turmaProfessorService.atualizar(dto);
         return ResponseEntity.ok(turmaProfessorDTO);
     }
+    
+	@PutMapping("/{idTurmaProfessor}/ativar")
+	public ResponseEntity<?> ativar(@PathVariable Long idTurmaProfessor) {
+		turmaProfessorService.ativaDesativa('S', idTurmaProfessor);
+		return ResponseEntity.ok().build();
+	}
 
-    @DeleteMapping("/{idProfessorDeficiencia}")
-    public ResponseEntity<?> excluir(@PathVariable Long idProfessorDeficiencia) {
-        turmaProfessorService.remover(idProfessorDeficiencia);
-        return ResponseEntity.ok().build();
-    }
+	@PutMapping("/{idTurmaProfessor}/desativar")
+	public ResponseEntity<?> desativar(@PathVariable Long idTurmaProfessor) {
+		turmaProfessorService.ativaDesativa('N', idTurmaProfessor);
+		return ResponseEntity.ok().build();
+	}
 }

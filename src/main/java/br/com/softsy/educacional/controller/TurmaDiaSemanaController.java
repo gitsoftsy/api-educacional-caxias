@@ -51,10 +51,17 @@ public class TurmaDiaSemanaController {
         TurmaDiaSemanaDTO turmaDiaSemanaDTO = service.atualizar(dto);
         return ResponseEntity.ok(turmaDiaSemanaDTO);
     }
+    
+	@PutMapping("/{idTurmaDiaSemana}/ativar")
+	public ResponseEntity<?> ativar(@PathVariable Long idTurmaDiaSemana) {
+		service.ativaDesativa('S', idTurmaDiaSemana);
+		return ResponseEntity.ok().build();
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> excluir(@PathVariable Long id) {
-        service.remover(id);
-        return ResponseEntity.ok().build();
-    }
+	@PutMapping("/{idTurmaDiaSemana}/desativar")
+	public ResponseEntity<?> desativar(@PathVariable Long idTurmaDiaSemana) {
+		service.ativaDesativa('N', idTurmaDiaSemana);
+		return ResponseEntity.ok().build();
+	}
+
 }

@@ -15,9 +15,8 @@ public class TurmaDiaSemanaDTO {
     private Long idTurmaDiaSemana;
     
     @NotNull
-    private Long turmaProfessorId;
+    private Long turmaId;
     
-    private Long escolaDependenciaId;
     @NotNull
     private Integer diaSemana;
     private Time horaInicio;
@@ -25,15 +24,16 @@ public class TurmaDiaSemanaDTO {
     private Character permiteChoqueHorario;
     private Time horaFim;
     private LocalDateTime dataCadastro;
+	private Character ativo;
 
     public TurmaDiaSemanaDTO(TurmaDiaSemana turmaDiaSemana) {
         this.idTurmaDiaSemana = turmaDiaSemana.getIdTurmaDiaSemana();
-        this.escolaDependenciaId = turmaDiaSemana.getEscolaDependencia().getIdEscolaDependencia();
-        this.turmaProfessorId = turmaDiaSemana.getTurmaProfessor().getIdTurmaProfessor();
+        this.turmaId = turmaDiaSemana.getTurma().getIdTurma();
         this.diaSemana = turmaDiaSemana.getDiaSemana();
         this.horaInicio = turmaDiaSemana.getHoraInicio();
         this.permiteChoqueHorario = turmaDiaSemana.getPermiteChoqueHorario();
         this.horaFim = turmaDiaSemana.getHoraFim();
         this.dataCadastro = turmaDiaSemana.getDataCadastro();
+        this.ativo = turmaDiaSemana.getAtivo();
     }
 }

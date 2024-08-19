@@ -26,12 +26,8 @@ public class TurmaDiaSemana {
 	private Long idTurmaDiaSemana;
 	
 	@ManyToOne
-	@JoinColumn(name = "ID_ESCOLA_DEPENDENCIA", nullable = false)
-	private EscolaDependencia escolaDependencia;
-	
-	@ManyToOne
-	@JoinColumn(name = "ID_TURMA_PROFESSOR", nullable = false)
-	private TurmaProfessor turmaProfessor;
+	@JoinColumn(name = "ID_TURMA", nullable = false)
+	private Turma turma;
 	
 	@Column(name = "DIA_SEMANA", nullable = false)
 	private Integer diaSemana;
@@ -47,5 +43,8 @@ public class TurmaDiaSemana {
 	
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
+	
+	@Column(name = "ATIVO", nullable = false)
+	private Character ativo;
 
 }
