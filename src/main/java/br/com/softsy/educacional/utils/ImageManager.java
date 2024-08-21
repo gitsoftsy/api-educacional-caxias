@@ -313,5 +313,66 @@ public class ImageManager {
    	    }
    	}
    	
+  ///************************ TRATAMENTO DE IMAGENS DE AGENDA ******************************///
+    
+  	private static String criaDiretorioAgenda(Long idAgendaAnexo) {
+  		// Caminho do diretório a ser criado
+  		String directoryPath = ImageProperties.getImagePath() +"\\agenda\\"+idAgendaAnexo.toString();
+
+  		// Criação do objeto Path com o caminho do diretório
+  		Path directory = Paths.get(directoryPath);
+
+  		// Verifica se o diretório não existe e cria se necessário
+  		if (!Files.exists(directory)) {
+  			try {
+  				Files.createDirectories(directory);
+  				System.out.println("Diretório criado com sucesso!");
+  			} catch (IOException e) {
+  				System.out.println("Falha ao criar o diretório.");
+  				e.printStackTrace();
+  			}
+  		} else {
+  			System.out.println("O diretório já existe.");
+  		}
+  		return "\\agenda\\"+idAgendaAnexo.toString();
+  	}
+  	
+  	public static String salvaImagemAgenda(String base64, Long agenda, String nomeArquivo) {
+
+  		String diretorio = "";
+  		try {
+  			// cria o diretorio para salvar o logo
+  			diretorio = criaDiretorioAgenda(agenda);
+  			
+  			//salva a imagem
+  		
+  			saveImage(base64ToByte(base64), diretorio+"\\"+nomeArquivo+".jpg");;
+  		} catch (IOException e) {
+
+  			e.printStackTrace();
+  		}		
+  		return diretorio+"\\"+nomeArquivo+".jpg";
+  	}
+  	
+      public static String atualizaImagemAgenda(Long idAgendaAnexo, String imagemBase64) {
+          // Caminho do diretório onde a imagem está localizada
+          String directoryPath = ImageProperties.getImagePath() + "\\agenda\\" + idAgendaAnexo.toString();
+
+          // Caminho completo da imagem
+          String imagePath = directoryPath + "\\agendaAnexo.png";
+
+          try {
+              byte[] imagemBytes = Base64.getDecoder().decode(imagemBase64);
+              Files.write(Paths.get(imagePath), imagemBytes);
+              System.out.println("Imagem atualizada com sucesso!");
+          } catch (IOException e) {
+              System.out.println("Falha ao atualizar a imagem.");
+              e.printStackTrace();
+          }
+          
+          return "\\idAgendaAnexo\\" + idAgendaAnexo.toString() + "\\agendaAnexo.png";
+      }
+
+   	
    	
 }

@@ -25,6 +25,8 @@ public class TurmaDiaSemanaDTO {
     private Time horaFim;
     private LocalDateTime dataCadastro;
 	private Character ativo;
+	
+	private TurmaDTO turma;
 
     public TurmaDiaSemanaDTO(TurmaDiaSemana turmaDiaSemana) {
         this.idTurmaDiaSemana = turmaDiaSemana.getIdTurmaDiaSemana();
@@ -35,5 +37,6 @@ public class TurmaDiaSemanaDTO {
         this.horaFim = turmaDiaSemana.getHoraFim();
         this.dataCadastro = turmaDiaSemana.getDataCadastro();
         this.ativo = turmaDiaSemana.getAtivo();
+        this.turma = new TurmaDTO(turmaDiaSemana.getTurma());
     }
 }

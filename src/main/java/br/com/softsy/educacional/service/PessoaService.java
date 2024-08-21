@@ -100,10 +100,6 @@ public class PessoaService {
     }
 
     public Pessoa criarPessoaAPartirDTO(CadastroPessoaDTO dto) {
-    	
-        if (dto.getCertidaoNascimentoMunicipioCartorioId() == null && dto.getCertidaoCasamentoMunicipioCartorioId() == null) {
-            throw new IllegalArgumentException("Pelo menos um dos campos certidaoNascimentoUfCartorioId ou certidaoCasamentoUfCartorioId deve ser preenchido");
-        }
         
         Pessoa pessoa = new Pessoa();
 
