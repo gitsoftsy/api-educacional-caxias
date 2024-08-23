@@ -38,5 +38,11 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long>{
             @Param("P_NOME") String nome,
             @Param("P_MATRICULA") String matricula
     );
+    
+    @Procedure(name = "PROC_FILTRAR_PROFESSOR_ESCOLA_DISCIPLINA")
+    List<Object[]> filtrarProfessorPorDisciplinaEEscola(
+            @Param("P_ID_ESCOLA") Long idEscola,
+            @Param("P_ID_DISCIPLINA") Long idDisciplina
+    );
 	
 }

@@ -162,6 +162,24 @@ public class ProfessorController {
         return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
     }
     
+    @GetMapping("/filtrarDisciplinaEscola")
+    public ResponseEntity<AllResponse> filtrarProfessorDisciplinaEscola(
+            @RequestParam(value = "idEscola", required = false) Long idEscola,
+            @RequestParam(value = "idDisciplina", required = false) Long idDisciplina
+    ) {
+        if (idEscola == null && idDisciplina == null) {
+            return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+        }
+
+        List<Map<String, Object>> result = professorService.filtrarProfessorPorEscolaEDisciplina(idEscola, idDisciplina);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+        }
+
+        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+    }
+    
     
     @GetMapping("/verificar-matricula")
     public ResponseEntity<AllResponse> verificarMatricula(

@@ -1,7 +1,9 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -14,9 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.softsy.educacional.controller.ProfessorController.AllResponse;
 import br.com.softsy.educacional.dto.CadastroTurmaDTO;
 import br.com.softsy.educacional.dto.TurmaDTO;
 import br.com.softsy.educacional.service.TurmaService;
@@ -48,6 +52,24 @@ public class TurmaController {
         TurmaDTO turma = turmaService.buscarPorId(idTurma);
         return ResponseEntity.ok(turma);
     }
+    
+    @GetMapping("/filtrar")
+    public ResponseEntity<AllResponse> filtrarTurmaDisciplinaEscola(
+            @RequestParam(value = "idEscola", required = false) Long idEscola,
+            @RequestParam(value = "idDisciplina", required = false) Long idDisciplina
+    ) {
+        if (idEscola == null && idDisciplina == null) {
+            return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+        }
+
+        List<Map<String, Object>> result = turmaService.filtrarTurmaPorEscolaEDisciplina(idEscola, idDisciplina);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+        }
+
+        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+    }
 
     @PutMapping
     public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroTurmaDTO dto) {
@@ -72,4 +94,30 @@ public class TurmaController {
         return ResponseEntity.ok().build();
     }
 
+    public class AllResponse {
+        private String message;
+        private List<Object> data;
+
+        public AllResponse(String message, List<Object> data) {
+            this.message = message;
+            this.data = data;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+        
+        public List<Object> getData() {
+            return data;
+        }
+
+        public void setData(List<Object> data) {
+            this.data = data;
+        }
+    }
+    
 }

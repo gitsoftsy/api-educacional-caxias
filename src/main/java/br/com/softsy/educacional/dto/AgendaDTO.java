@@ -35,6 +35,8 @@ public class AgendaDTO {
     private String resumoAula;
 
     private Character ativo;
+    
+    private TurmaDTO turma;
 
     public AgendaDTO(Agenda agenda) {
         this.idAgenda = agenda.getIdAgenda();
@@ -46,5 +48,6 @@ public class AgendaDTO {
         this.tituloAula = agenda.getTituloAula();
         this.resumoAula = agenda.getResumoAula();
         this.ativo = agenda.getAtivo();
+        this.turma = new TurmaDTO(agenda.getTurma());
     }
 }

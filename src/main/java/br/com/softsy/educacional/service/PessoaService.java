@@ -213,9 +213,6 @@ public class PessoaService {
  
 
 	private void atualizaDados(Pessoa pessoa, CadastroPessoaDTO dto) {
-	    if (dto.getCertidaoNascimentoMunicipioCartorioId() == null && dto.getCertidaoCasamentoMunicipioCartorioId() == null) {
-	        throw new IllegalArgumentException("Pelo menos um dos campos certidaoNascimentoMunicipioCartorioId ou certidaoCasamentoMunicipioCartorioId deve ser preenchido");
-	    }
 
 	    Raca raca = racaRepository.findById(dto.getRacaId())
 	            .orElseThrow(() -> new IllegalArgumentException("Raça não encontrada"));

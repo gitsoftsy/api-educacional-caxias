@@ -22,6 +22,8 @@ public class AgendaAnexoDTO {
     private String caminhoArquivo;
 
     private Character ativo;
+    
+    private AgendaDTO agenda;
 
     public AgendaAnexoDTO(AgendaAnexo agendaAnexo) {
         this.idAgendaAnexo = agendaAnexo.getIdAgendaAnexo();
@@ -29,5 +31,6 @@ public class AgendaAnexoDTO {
         this.dataCadastro = agendaAnexo.getDataCadastro();
         this.caminhoArquivo = agendaAnexo.getCaminhoArquivo();
         this.ativo = agendaAnexo.getAtivo();
+        this.agenda = new AgendaDTO(agendaAnexo.getAgenda());
     }
 }

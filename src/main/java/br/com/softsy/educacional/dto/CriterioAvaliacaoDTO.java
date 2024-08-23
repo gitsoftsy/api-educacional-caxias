@@ -27,6 +27,8 @@ public class CriterioAvaliacaoDTO {
     private LocalDate dataProva;
 
     private Character ativo;
+    
+    private TurmaDTO turma;
 
     public CriterioAvaliacaoDTO(CriterioAvaliacao criterioAvaliacao) {
         this.idCriterioAvaliacao = criterioAvaliacao.getIdCriterioAvaliacao();
@@ -35,5 +37,6 @@ public class CriterioAvaliacaoDTO {
         this.ordem = criterioAvaliacao.getOrdem();
         this.dataProva = criterioAvaliacao.getDataProva();
         this.ativo = criterioAvaliacao.getAtivo();
+        this.turma = new TurmaDTO(criterioAvaliacao.getTurma());
     }
 }
