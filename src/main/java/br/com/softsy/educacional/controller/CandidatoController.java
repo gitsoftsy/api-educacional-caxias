@@ -241,15 +241,14 @@ public class CandidatoController {
     
     @GetMapping("/listaReservaDeVagas")
     public Object obtemListaReservaDeVagas(
-            @RequestParam(value = "idConta", required = false) Long idConta,
-            @RequestParam(value = "idEscola", required = false) Long idEscola
+            @RequestParam(value = "idUsuario", required = false) Long idUsuario
     ) {
         // Verifica se idConta é nulo, pois ele é obrigatório
-        if (idConta == null) {
-            return "Por favor, informe o parâmetro idConta na requisição.";
+        if (idUsuario == null) {
+            return "Por favor, informe o parâmetro idUsuario na requisição.";
         }
 
-        List<Map<String, Object>> result = candidatoService.obtemListaReservaDeVagas(idConta, idEscola);
+        List<Map<String, Object>> result = candidatoService.obtemListaReservaDeVagas(idUsuario);
 
         if (result.isEmpty()) {
             return "Nenhum resultado encontrado para os parâmetros informados.";

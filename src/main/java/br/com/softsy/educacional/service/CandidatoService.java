@@ -281,15 +281,14 @@ public class CandidatoService {
     }
     
     
-    public List<Map<String, Object>> obtemListaReservaDeVagas(Long idConta, Long idEscola) {
+    public List<Map<String, Object>> obtemListaReservaDeVagas(Long idUsuario) {
         StringBuilder sql = new StringBuilder();
-        sql.append("CALL PROC_LISTA_RESERVA_DE_VAGAS(:pIdConta, :pIdEscola)");
+        sql.append("CALL PROC_LISTA_RESERVA_DE_VAGAS(:pIdUsuario)");
 
         Query query = entityManager.createNativeQuery(sql.toString());
 
         // Definir os parâmetros
-        query.setParameter("pIdConta", idConta);
-        query.setParameter("pIdEscola", idEscola);
+        query.setParameter("pIdUsuario", idUsuario);
 
         List<Object[]> resultList = query.getResultList();
         List<Map<String, Object>> mappedResultList = new ArrayList<>();

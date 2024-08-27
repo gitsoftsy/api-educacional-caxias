@@ -17,13 +17,12 @@ public class CriterioAvaliacaoDTO {
     @NotNull
     private Long turmaId;
 
+    private String codCriterioAvaliacao;
     @NotNull
     private String criterioAvaliacao;
 
-    @NotNull
     private Integer ordem;
 
-    @NotNull
     private LocalDate dataProva;
 
     private Character ativo;
@@ -33,6 +32,7 @@ public class CriterioAvaliacaoDTO {
     public CriterioAvaliacaoDTO(CriterioAvaliacao criterioAvaliacao) {
         this.idCriterioAvaliacao = criterioAvaliacao.getIdCriterioAvaliacao();
         this.turmaId = criterioAvaliacao.getTurma().getIdTurma();
+        this.codCriterioAvaliacao = criterioAvaliacao.getCodCriterioAvaliacao();
         this.criterioAvaliacao = criterioAvaliacao.getCriterioAvaliacao();
         this.ordem = criterioAvaliacao.getOrdem();
         this.dataProva = criterioAvaliacao.getDataProva();

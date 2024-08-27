@@ -27,6 +27,9 @@ public class CriterioAvaliacao {
     @JoinColumn(name = "ID_TURMA", nullable = false)
     private Turma turma;
 
+    @Column(name = "COD_CRITERIO_AVALICAO", nullable = false)
+    private String codCriterioAvaliacao;
+    
     @Column(name = "CRITERIO_AVALIACAO", nullable = false)
     private String criterioAvaliacao;
 
