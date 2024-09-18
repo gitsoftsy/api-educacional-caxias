@@ -23,7 +23,7 @@ import br.com.softsy.educacional.utils.ImageManager;
 public class ContaService {
 
 	@Autowired
-	ContaRepository repository;
+	private ContaRepository repository;
 
 	public List<Conta> listarTudo() {
 		return repository.findAll();

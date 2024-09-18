@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.AreaConhecimentoDTO;
+import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.AreaConhecimento;
 import br.com.softsy.educacional.model.Conta;
@@ -31,15 +32,10 @@ public class AreaConhecimentoService {
                 .map(AreaConhecimentoDTO::new)
                 .collect(Collectors.toList());
     }
-
+    
     @Transactional(readOnly = true)
     public AreaConhecimentoDTO buscarPorId(Long id) {
-        Optional<AreaConhecimento> areaConhecimentoOptional = repository.findById(id);
-        if (areaConhecimentoOptional.isPresent()) {
-            AreaConhecimento areaConhecimento = areaConhecimentoOptional.get();
-            return new AreaConhecimentoDTO(areaConhecimento);
-        }
-        return null;
+        return new AreaConhecimentoDTO(repository.getReferenceById(id));
     }
     
     @Transactional(readOnly = true)

@@ -30,8 +30,11 @@ public class AgendaAnexo {
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
 	
-	@Column(name = "CAMINHO_ARQUIVO", length = 14)
+	@Column(name = "CAMINHO_ARQUIVO")
 	private String caminhoArquivo;
+	
+	@Column(name = "DESCRICAO")
+	private String descricao;
 	
 	@Column(name = "ATIVO", nullable = false)
 	private Character ativo;

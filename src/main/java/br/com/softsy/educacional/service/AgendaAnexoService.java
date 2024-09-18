@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.AgendaAnexoDTO;
+import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.model.Agenda;
 import br.com.softsy.educacional.model.AgendaAnexo;
+import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.repository.AgendaAnexoRepository;
 import br.com.softsy.educacional.repository.AgendaRepository;
@@ -53,6 +55,15 @@ public class AgendaAnexoService {
 			return null;
 		}
 	}
+	
+    @Transactional(readOnly = true)
+    public List<AgendaAnexoDTO> buscarPorIdAgenda(Long idAgenda) {
+        List<AgendaAnexo> curso = repository.findByAgenda_IdAgenda(idAgenda)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar agendaAnexo por ID da agenda"));
+        return curso.stream()
+                .map(AgendaAnexoDTO::new)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public AgendaAnexoDTO salvar(AgendaAnexoDTO dto) {

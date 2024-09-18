@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.AgendaAnexoDTO;
+import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.model.CaminhoImagemRequest;
 import br.com.softsy.educacional.service.AgendaAnexoService;
 
@@ -36,6 +37,13 @@ public class AgendaAnexoController {
     @GetMapping("/{idAgendaAnexo}")
     public ResponseEntity<AgendaAnexoDTO> buscarPorId(@PathVariable Long idAgendaAnexo) {
         return ResponseEntity.ok(service.buscarPorId(idAgendaAnexo));
+    }
+
+    
+    @GetMapping("/agenda/{idAgenda}")
+    public ResponseEntity<List<AgendaAnexoDTO>> buscarPorIdAgenda(@PathVariable Long idAgenda) {
+        List<AgendaAnexoDTO> curso = service.buscarPorIdAgenda(idAgenda);
+        return ResponseEntity.ok(curso);
     }
 
     @GetMapping("/{id}/logo")

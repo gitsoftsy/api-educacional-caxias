@@ -1,0 +1,189 @@
+package br.com.softsy.educacional.service;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.com.softsy.educacional.dto.AgendaDTO;
+import br.com.softsy.educacional.dto.AvisoDTO;
+import br.com.softsy.educacional.dto.CadastroAvisoDTO;
+import br.com.softsy.educacional.dto.CadastroContaDTO;
+import br.com.softsy.educacional.dto.CandidatoDocumentoIngressoDTO;
+import br.com.softsy.educacional.dto.ContaDTO;
+import br.com.softsy.educacional.model.Agenda;
+import br.com.softsy.educacional.model.Aluno;
+import br.com.softsy.educacional.model.Aviso;
+import br.com.softsy.educacional.model.CandidatoDocumentoIngresso;
+import br.com.softsy.educacional.model.Conta;
+import br.com.softsy.educacional.model.Municipio;
+import br.com.softsy.educacional.model.Professor;
+import br.com.softsy.educacional.model.TipoAviso;
+import br.com.softsy.educacional.model.Usuario;
+import br.com.softsy.educacional.repository.AlunoRepository;
+import br.com.softsy.educacional.repository.AvisoRepository;
+import br.com.softsy.educacional.repository.ProfessorRepository;
+import br.com.softsy.educacional.repository.TipoAvisoRepository;
+import br.com.softsy.educacional.repository.UsuarioRepository;
+import br.com.softsy.educacional.utils.ImageManager;
+
+@Service
+public class AvisoService {
+	
+	@Autowired
+	private AvisoRepository repository;
+	
+	@Autowired
+	private AlunoRepository alunoRepository;
+	
+	@Autowired
+	private TipoAvisoRepository tipoAvisoRepository;
+	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private ProfessorRepository professorRepository;
+
+
+    @Transactional(readOnly = true)
+    public List<AvisoDTO> listarTudo() {
+        List<Aviso> agendas = repository.findAll();
+        return agendas.stream()
+                .map(AvisoDTO::new)
+                .collect(Collectors.toList());
+    }
+	
+	@Transactional(readOnly = true)
+	public AvisoDTO buscarPorId(Long id) {
+		return new AvisoDTO(repository.getReferenceById(id));
+	}
+	
+	public String getLogoById(Long idAviso, String caminho) throws IOException {
+		Optional<Aviso> contaOptional = repository.findById(idAviso);
+
+		String imagemCarregada;
+		imagemCarregada = ImageManager.buscaImagem(caminho);
+
+		if (contaOptional.isPresent()) {
+			return imagemCarregada;
+		} else {
+			return null;
+		}
+	}
+	
+    @Transactional(readOnly = true)
+    public List<AvisoDTO> buscarPorIdProfessor(Long idProfessor) {
+        List<Aviso> aviso = repository.findByProfessor_IdProfessor(idProfessor)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar concurso por ID do professor"));
+        return aviso.stream()
+                .map(AvisoDTO::new)
+                .collect(Collectors.toList());
+    }
+	
+	@Transactional
+	public CadastroAvisoDTO salvar(CadastroAvisoDTO dto) {
+
+		String base64 = "";
+		Aviso aviso = criarAvisoAPartirDTO(dto);
+
+		base64 = aviso.getPathAnexo();
+
+		aviso.setPathAnexo(null);
+		// Salvando a escola no banco de dados após tratar a imagem
+		aviso = repository.save(aviso);
+
+		// Manipulando a imagem e obtendo o caminho
+		String caminhoIMG = ImageManager.salvaImagemAviso(base64, aviso.getIdAviso(),"anexoAviso" + dto.getTipoAvisoId());
+
+		// Setando a imagem diretamente no objeto escola
+		aviso.setPathAnexo(caminhoIMG);
+		dto.setPathAnexo(caminhoIMG);
+		dto.setIdAviso(aviso.getIdAviso());
+
+		atualizaDados(aviso, dto);
+
+		// Criando o DTO com os dados atualizados da escola
+		CadastroAvisoDTO avisoCriado = new CadastroAvisoDTO(aviso);
+
+		return avisoCriado;
+	}
+	
+	private Aviso criarAvisoAPartirDTO(CadastroAvisoDTO dto) {
+		Aviso aviso = new Aviso();
+		BeanUtils.copyProperties(dto, aviso, "idAviso", "dataCadastro");
+		
+		if(dto.getUsuarioId() == null && dto.getProfessorId() == null) {
+			throw new IllegalArgumentException("Pelo menos um dos campos usuarioId ou professorId deve ser preenchido");
+		}
+		
+		Aluno aluno = alunoRepository.findById(dto.getAlunoId())
+                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
+		
+		TipoAviso tipoAviso = tipoAvisoRepository.findById(dto.getTipoAvisoId())
+                .orElseThrow(() -> new IllegalArgumentException("Tipo do aviso não encontrado"));
+		
+		Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+		
+		Professor professor = professorRepository.findById(dto.getProfessorId())
+                .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado"));
+		
+		aviso.setDataCadastro(LocalDateTime.now());
+		aviso.setAluno(aluno);
+		aviso.setTipoAviso(tipoAviso);
+		aviso.setUsuario(usuario);
+		aviso.setProfessor(professor);
+		return aviso;
+	}
+	
+	@Transactional
+	public AvisoDTO atualizar(CadastroAvisoDTO dto) {
+		Aviso aviso = repository.getReferenceById(dto.getIdAviso());
+		
+		aviso = repository.save(aviso);
+
+	    String caminhoIMG = ImageManager.atualizaImagemAviso(dto.getIdAviso(), dto.getPathAnexo());
+
+	    aviso.setPathAnexo(caminhoIMG); 
+	    dto.setPathAnexo(caminhoIMG);
+	    dto.setIdAviso(aviso.getIdAviso());
+		
+		atualizaDados(aviso, dto);
+		return new AvisoDTO(aviso);
+	}
+	
+	private void atualizaDados(Aviso destino, CadastroAvisoDTO origem) {
+		BeanUtils.copyProperties(origem, destino, "idAviso", "dataCadastro");
+		
+		Aluno aluno = alunoRepository.findById(origem.getAlunoId())
+                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
+		
+		TipoAviso tipoAviso = tipoAvisoRepository.findById(origem.getTipoAvisoId())
+                .orElseThrow(() -> new IllegalArgumentException("Tipo do aviso não encontrado"));
+		
+		Usuario usuario = usuarioRepository.findById(origem.getUsuarioId())
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+		
+		Professor professor = professorRepository.findById(origem.getProfessorId())
+                .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado"));
+		
+		destino.setAluno(aluno);
+		destino.setTipoAviso(tipoAviso);
+		destino.setUsuario(usuario);
+		destino.setProfessor(professor);
+		destino.setPathAnexo(origem.getPathAnexo());
+	}
+	
+    @Transactional
+    public void excluir(Long id) {
+        repository.deleteById(id);
+    }
+	
+}
