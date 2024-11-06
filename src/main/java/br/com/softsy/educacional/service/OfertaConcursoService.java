@@ -25,6 +25,7 @@ import br.com.softsy.educacional.repository.ConcursoRepository;
 import br.com.softsy.educacional.repository.CursoRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
 import br.com.softsy.educacional.repository.OfertaConcursoRepository;
+import br.com.softsy.educacional.repository.SerieRepository;
 import br.com.softsy.educacional.repository.TurnoRepository;
 
 @Service
@@ -44,6 +45,9 @@ public class OfertaConcursoService {
 
     @Autowired
     private TurnoRepository turnoRepository;
+    
+    @Autowired
+    private SerieRepository serieRepository;
     
     @Autowired
     private EntityManager entityManager;
