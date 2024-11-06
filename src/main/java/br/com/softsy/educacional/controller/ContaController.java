@@ -7,6 +7,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,7 +49,7 @@ public class ContaController {
     }
 	
 	@PostMapping
-	public ResponseEntity<CadastroContaDTO> cadastrar(@RequestBody @Valid CadastroContaDTO dto){
+	public ResponseEntity<CadastroContaDTO> cadastrar(@RequestBody @Valid CadastroContaDTO dto) throws IOException{
 		CadastroContaDTO contaDTO = service.salvar(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(contaDTO.getIdConta()).toUri();
@@ -56,9 +57,24 @@ public class ContaController {
 	}
 	
 	@PutMapping
-	public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroContaDTO dto){
+	public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroContaDTO dto) throws IOException{
 		return ResponseEntity.ok(service.atualizar(dto));
 	}
+	
+	@PutMapping("/imagem/{id}")
+    public ResponseEntity<ContaDTO> alterarImagemConta(
+            @PathVariable Long id,
+            @RequestBody ContaDTO dto) {
+        
+        try {
+        	ContaDTO contaAtualizada = service.alterarImagemConta(id, dto.getLogoConta());
+            return ResponseEntity.ok(contaAtualizada);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 	
 	@PutMapping("/{idConta}/ativar")
 	public ResponseEntity<?> ativar(@PathVariable Long idConta){

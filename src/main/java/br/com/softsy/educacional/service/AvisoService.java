@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.softsy.educacional.dto.AgendaAnexoDTO;
 import br.com.softsy.educacional.dto.AgendaDTO;
 import br.com.softsy.educacional.dto.AvisoDTO;
 import br.com.softsy.educacional.dto.CadastroAvisoDTO;
@@ -18,6 +20,7 @@ import br.com.softsy.educacional.dto.CadastroContaDTO;
 import br.com.softsy.educacional.dto.CandidatoDocumentoIngressoDTO;
 import br.com.softsy.educacional.dto.ContaDTO;
 import br.com.softsy.educacional.model.Agenda;
+import br.com.softsy.educacional.model.AgendaAnexo;
 import br.com.softsy.educacional.model.Aluno;
 import br.com.softsy.educacional.model.Aviso;
 import br.com.softsy.educacional.model.CandidatoDocumentoIngresso;
@@ -88,7 +91,7 @@ public class AvisoService {
     }
 	
 	@Transactional
-	public CadastroAvisoDTO salvar(CadastroAvisoDTO dto) {
+	public CadastroAvisoDTO salvar(CadastroAvisoDTO dto) throws IOException {
 
 		String base64 = "";
 		Aviso aviso = criarAvisoAPartirDTO(dto);
@@ -146,17 +149,28 @@ public class AvisoService {
 	@Transactional
 	public AvisoDTO atualizar(CadastroAvisoDTO dto) {
 		Aviso aviso = repository.getReferenceById(dto.getIdAviso());
-		
-		aviso = repository.save(aviso);
-
-	    String caminhoIMG = ImageManager.atualizaImagemAviso(dto.getIdAviso(), dto.getPathAnexo());
-
-	    aviso.setPathAnexo(caminhoIMG); 
-	    dto.setPathAnexo(caminhoIMG);
-	    dto.setIdAviso(aviso.getIdAviso());
-		
 		atualizaDados(aviso, dto);
 		return new AvisoDTO(aviso);
+	}
+	
+	@Transactional
+	public AvisoDTO alterarImagemAviso(Long idAviso, String novaImagemBase64) throws IOException {
+		Aviso aviso = repository.findById(idAviso).orElseThrow(() -> new IllegalArgumentException("Aviso não encontrado"));
+
+	    if (aviso.getPathAnexo() != null) {
+	        File imagemExistente = new File(aviso.getPathAnexo());
+	        if (imagemExistente.exists()) {
+	            imagemExistente.delete();
+	        }
+	    }
+
+	    String novoCaminhoIMG = ImageManager.salvaImagemConta(novaImagemBase64, idAviso, "conta" + aviso.getTitulo());
+
+	    aviso.setPathAnexo(novoCaminhoIMG);
+	    repository.save(aviso);
+
+	    AvisoDTO avisoAtualizado = new AvisoDTO(aviso);
+	    return avisoAtualizado;
 	}
 	
 	private void atualizaDados(Aviso destino, CadastroAvisoDTO origem) {

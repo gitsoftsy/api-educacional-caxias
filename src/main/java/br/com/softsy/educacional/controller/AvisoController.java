@@ -7,6 +7,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import br.com.softsy.educacional.dto.AgendaDTO;
 import br.com.softsy.educacional.dto.AreaConhecimentoDTO;
 import br.com.softsy.educacional.dto.AvisoDTO;
 import br.com.softsy.educacional.dto.CadastroAvisoDTO;
+import br.com.softsy.educacional.dto.ContaDTO;
 import br.com.softsy.educacional.model.Aviso;
 import br.com.softsy.educacional.model.CaminhoImagemRequest;
 import br.com.softsy.educacional.service.AvisoService;
@@ -57,7 +59,7 @@ public class AvisoController {
     }
 
     @PostMapping
-    public ResponseEntity<CadastroAvisoDTO> cadastrar(@RequestBody @Valid CadastroAvisoDTO dto) {
+    public ResponseEntity<CadastroAvisoDTO> cadastrar(@RequestBody @Valid CadastroAvisoDTO dto) throws IOException {
         CadastroAvisoDTO avisoDTO = service.salvar(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(avisoDTO.getIdAviso()).toUri();
@@ -67,6 +69,21 @@ public class AvisoController {
     @PutMapping
     public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroAvisoDTO dto) {
         return ResponseEntity.ok(service.atualizar(dto));
+    }
+    
+	@PutMapping("/imagem/{id}")
+    public ResponseEntity<AvisoDTO> alterarImagemAviso(
+            @PathVariable Long id,
+            @RequestBody AvisoDTO dto) {
+        
+        try {
+        	AvisoDTO avisoAtualizado = service.alterarImagemAviso(id, dto.getPathAnexo());
+            return ResponseEntity.ok(avisoAtualizado);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
     
     @DeleteMapping("/{idAviso}")

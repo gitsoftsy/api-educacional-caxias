@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.softsy.educacional.dto.CadastroEscolaDTO;
+import br.com.softsy.educacional.dto.ContaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.CategoriaEscolaPrivada;
@@ -116,7 +118,7 @@ public class EscolaService {
 	}
 	
 	@Transactional
-	public CadastroEscolaDTO salvar(CadastroEscolaDTO dto) {
+	public CadastroEscolaDTO salvar(CadastroEscolaDTO dto) throws IOException {
 //	    validarCnpjUnico(dto.getCnpj());
 	    validarCodigoInepUnico(dto.getCodigoInep());
 
@@ -148,20 +150,32 @@ public class EscolaService {
 	@Transactional
 	public EscolaDTO atualizar(CadastroEscolaDTO dto) {
 		Escola escola = repository.getReferenceById(dto.getIdEscola());
-	      
-	    escola = repository.save(escola);
-
-	    // Manipulando a imagem e obtendo o caminho
-	    String caminhoIMG = ImageManager.atualizaImagemEscola(dto.getIdEscola(), dto.getLogoEscola());
-
-	    // Setando a imagem diretamente no objeto escola
-	    escola.setLogoEscola(caminhoIMG); 
-	    dto.setLogoEscola(caminhoIMG);
-	    dto.setIdEscola(escola.getIdEscola());
-		
-		
 		atualizaDados(escola, dto);
 		return new EscolaDTO(escola);
+	}
+	
+	@Transactional
+	public EscolaDTO alterarImagemEscola(Long idEscola, String novaImagemBase64) throws IOException {
+		Escola escola = repository.findById(idEscola).orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
+
+	    // Verificar se já existe uma imagem e apagar do servidor
+	    if (escola.getLogoEscola() != null) {
+	        File imagemExistente = new File(escola.getLogoEscola());
+	        if (imagemExistente.exists()) {
+	            imagemExistente.delete();
+	        }
+	    }
+
+	    // Salvar a nova imagem
+	    String novoCaminhoIMG = ImageManager.salvaImagemConta(novaImagemBase64, idEscola, "escola" + escola.getNomeEscola());
+
+	    // Atualizar o caminho da imagem no banco de dados
+	    escola.setLogoEscola(novoCaminhoIMG);
+	    repository.save(escola);
+
+	    // Criar e retornar o DTO atualizado
+	    EscolaDTO escolaAtualizada = new EscolaDTO(escola);
+	    return escolaAtualizada;
 	}
 	
 	@Transactional

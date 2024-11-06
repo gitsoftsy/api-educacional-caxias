@@ -14,6 +14,8 @@ public class DisciplinaDTO {
 	private ContaDTO conta;
 
 	private Long areaConhecimentoId;
+	
+	private String nomeAreaConhecimento;
 
 	private String codDiscip;
 	private String nome;
@@ -39,6 +41,7 @@ public class DisciplinaDTO {
 		this.idDisciplina = disciplina.getIdDisciplina();
 		this.conta = new ContaDTO(disciplina.getConta());
 		this.areaConhecimentoId = disciplina.getAreaConhecimento().getIdAreaConhecimento();
+		this.nomeAreaConhecimento = disciplina.getAreaConhecimento().getAreaConhecimento();
 		this.codDiscip = disciplina.getCodDiscip();
 		this.nome = disciplina.getNome();
 		this.creditos = disciplina.getCreditos();

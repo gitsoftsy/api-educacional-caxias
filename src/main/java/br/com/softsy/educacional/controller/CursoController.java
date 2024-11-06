@@ -52,7 +52,7 @@ public class CursoController {
     @GetMapping("/ativos/{idConta}")
     public List<Map<String, Object>> getCursos(@PathVariable Long idConta) {
         List<Object[]> cursos = entityManager.createQuery(
-                "SELECT DISTINCT cu.idCurso, cu.nome " +
+                "SELECT DISTINCT cu.idCurso, cu.nome, cu.codCurso " +
                         "FROM Curso cu " +
                         "JOIN cu.ofertaConcurso oc " +
                         "JOIN oc.concurso c " +
@@ -63,12 +63,13 @@ public class CursoController {
                 .setParameter("idConta", idConta)
                 .getResultList();
 
-        // TRANSFORMANDO EM JSON
+
         List<Map<String, Object>> cursosJson = cursos.stream()
                 .map(curso -> {
                     Map<String, Object> cursoJson = new HashMap<>();
                     cursoJson.put("idCurso", curso[0]);
                     cursoJson.put("nome", curso[1]);
+                    cursoJson.put("codCurso", curso[2]);
                     return cursoJson;
                 })
                 .collect(Collectors.toList());

@@ -67,17 +67,25 @@ public class ProfessorController {
     @PostMapping("/pessoa-professor")
     public ResponseEntity<Object> cadastrarPessoaEProfessor(@RequestBody CadastroPessoaProfessorDTO dto) {
         try {
-            Pessoa pessoa = pessoaService.criarPessoaAPartirDTO(dto.getPessoaDTO());
-            pessoa.setSenha(encrypt.hashPassword(pessoa.getSenha()));
-            pessoa = pessoaRepository.save(pessoa);
+        	
+        	PessoaDTO pessoaCPF = pessoaService.buscarPorCpfEIdConta(dto.getPessoaDTO().getCpf(), dto.getPessoaDTO().getContaId());
 
-            dto.getProfessorDTO().setPessoaId(pessoa.getIdPessoa());
+        	if (pessoaCPF != null && pessoaCPF.getIdPessoa() != null) {
+        	    dto.getProfessorDTO().setPessoaId(pessoaCPF.getIdPessoa());
+        	} else {
+        	    Pessoa pessoa = pessoaService.criarPessoaAPartirDTO(dto.getPessoaDTO());
+        	    pessoa.setSenha(encrypt.hashPassword(pessoa.getSenha()));
+        	    pessoa = pessoaRepository.save(pessoa);
+
+        	    dto.getProfessorDTO().setPessoaId(pessoa.getIdPessoa());
+        	}
+        	
 
             Professor professor = professorService.criarProfessorAPartirDTO(dto.getProfessorDTO());
             professor.setSenha(encrypt.hashPassword(professor.getSenha()));
             professor = professorRepository.save(professor);
 
-            CadastroResponseDTO responseDTO = new CadastroResponseDTO(pessoa.getIdPessoa(), professor.getIdProfessor());
+            CadastroResponseDTO responseDTO = new CadastroResponseDTO(professor.getPessoa().getIdPessoa(), professor.getIdProfessor());
             return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
