@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroProfessorDTO;
 import br.com.softsy.educacional.dto.CandidatoDTO;
+import br.com.softsy.educacional.dto.PessoaDTO;
 import br.com.softsy.educacional.dto.ProfessorDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.infra.exception.UniqueException;
@@ -81,6 +82,8 @@ public class ProfessorService {
                 .map(ProfessorDTO::new)
                 .collect(Collectors.toList());
     }
+    
+
     
     @Transactional(readOnly = true)
     public List<ProfessorDTO> buscarPorIdConta(Long idConta) {

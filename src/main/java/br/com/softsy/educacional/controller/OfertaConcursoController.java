@@ -50,15 +50,16 @@ public class OfertaConcursoController {
     
     @GetMapping("/series/conta/{idConta}/curso/{idCurso}/escola/{idEscola}")
     public List<Map<String, Object>> getSeries(@PathVariable Long idConta, @PathVariable Long idCurso, @PathVariable Long idEscola) {
-        List<Integer> series = entityManager.createQuery(
-                "SELECT oc.serie " +
+        List<Object[]> series = entityManager.createQuery(
+                "SELECT oc.serie, cu.codCurso " +
                         "FROM OfertaConcurso oc " +
                         "JOIN oc.concurso c " +
+                        "JOIN oc.curso cu " +
                         "WHERE c.ativo = 'S' " +
                         "AND oc.ativo = 'S' " +
                         "AND c.conta.idConta = :idConta " +
                         "AND oc.curso.idCurso = :idCurso " +
-                        "AND oc.escola.idEscola = :idEscola", Integer.class)
+                        "AND oc.escola.idEscola = :idEscola", Object[].class)
                 .setParameter("idConta", idConta)
                 .setParameter("idCurso", idCurso)
                 .setParameter("idEscola", idEscola)
@@ -68,7 +69,8 @@ public class OfertaConcursoController {
         List<Map<String, Object>> seriesJson = series.stream()
                 .map(serie -> {
                     Map<String, Object> serieJson = new HashMap<>();
-                    serieJson.put("serie", serie);
+                    serieJson.put("serie", serie[0]);
+                    serieJson.put("codCurso", serie[1]);
                     return serieJson;
                 })
                 .collect(Collectors.toList());

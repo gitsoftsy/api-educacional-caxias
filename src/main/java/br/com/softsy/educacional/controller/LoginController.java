@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.softsy.educacional.dto.LoginDTO;
 import br.com.softsy.educacional.dto.LoginUsuarioContaDTO;
+import br.com.softsy.educacional.security.UsuarioAutenticador.UsuarioDesativadoException;
 import br.com.softsy.educacional.service.LoginService;
 
 @RestController
@@ -26,9 +27,26 @@ public class LoginController {
             return ResponseEntity.ok(loginUsuario);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("O usuário ou a senha são inválidos");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno do servidor");
+        } catch (UsuarioDesativadoException e) {
+        	return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponse(e.getMessage()));
         }
     }
+	
+	public class ErrorResponse {
+		private String message;
+
+		public ErrorResponse(String message) {
+			this.message = message;
+		}
+
+		// Getter e Setter
+		public String getMessage() {
+			return message;
+		}
+
+		public void setMessage(String message) {
+			this.message = message;
+		}
+	}
 
 }

@@ -135,16 +135,17 @@ public class OfertaConcursoService {
             resultMap.put("concurso", result[1]);
             resultMap.put("idConcurso", result[2]);
             resultMap.put("nomeCurso", result[3]);
-            resultMap.put("nomeEscola", result[4]);
-            resultMap.put("turno", result[5]);
-            resultMap.put("serie", result[6]);
-            resultMap.put("descricaoOferta", result[7]);
-            resultMap.put("vagas", result[8]);
-            resultMap.put("minVagasAbertTurma", result[9]);
-            resultMap.put("ativo", result[10]);
-            resultMap.put("idEscola", result[11]);
-            resultMap.put("idTurno", result[12]);
-            resultMap.put("idCurso", result[13]);
+            resultMap.put("codigoCurso", result[4]);
+            resultMap.put("nomeEscola", result[5]);
+            resultMap.put("turno", result[6]);
+            resultMap.put("serie", result[7]);
+            resultMap.put("descricaoOferta", result[8]);
+            resultMap.put("vagas", result[9]);
+            resultMap.put("minVagasAbertTurma", result[10]);
+            resultMap.put("ativo", result[11]);
+            resultMap.put("idEscola", result[12]);
+            resultMap.put("idTurno", result[13]);
+            resultMap.put("idCurso", result[14]);
             mappedResultList.add(resultMap);
         }
 

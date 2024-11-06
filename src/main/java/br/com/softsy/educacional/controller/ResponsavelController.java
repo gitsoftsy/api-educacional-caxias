@@ -59,16 +59,25 @@ public class ResponsavelController {
 	 @PostMapping("/pessoa-candidatoRelacionamento")
 	    public ResponseEntity<Object> cadastrarPessoaECandidato(@RequestBody CadastroResponsavelDTO dto) {
 	        try {
-	            Pessoa pessoa = pessoaService.criarPessoaAPartirDTO(dto.getPessoaDTO());
-	            pessoa.setSenha(encrypt.hashPassword(pessoa.getSenha()));
-	            pessoa = pessoaRepository.save(pessoa);
-
-	            dto.getCandidatoRelacionamentoDTO().setPessoaId(pessoa.getIdPessoa());
+	        	
+	        	PessoaDTO pessoaCPF = pessoaService.buscarPorCpfEIdConta(dto.getPessoaDTO().getCpf(),
+						dto.getPessoaDTO().getContaId());
+	        	
+	        	if (pessoaCPF != null && pessoaCPF.getIdPessoa() != null) {
+					dto.getCandidatoRelacionamentoDTO().setPessoaId(pessoaCPF.getIdPessoa());
+				} else {
+					Pessoa pessoa = pessoaService.criarPessoaAPartirDTO(dto.getPessoaDTO());
+					pessoa.setSenha(encrypt.hashPassword(pessoa.getSenha()));
+					pessoa = pessoaRepository.save(pessoa);
+					
+					dto.getCandidatoRelacionamentoDTO().setPessoaId(pessoa.getIdPessoa());
+				}
+	        	
 
 	            CandidatoRelacionamento candidato = candidatoRelacionamentoService.criarCandidatoRelacionamentoAPartirDTO(dto.getCandidatoRelacionamentoDTO());
 	            candidato = candidatoRepository.save(candidato);
 
-	            CadastroResponseDTO responseDTO = new CadastroResponseDTO(pessoa.getIdPessoa(), candidato.getIdCandidatoRelacionamento());
+	            CadastroResponseDTO responseDTO = new CadastroResponseDTO(candidato.getPessoa().getIdPessoa(), candidato.getIdCandidatoRelacionamento());
 	            return ResponseEntity.ok(responseDTO);
 	        } catch (Exception e) {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());

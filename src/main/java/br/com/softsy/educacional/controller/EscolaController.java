@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroEscolaDTO;
+import br.com.softsy.educacional.dto.ContaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
 import br.com.softsy.educacional.model.CaminhoImagemRequest;
 import br.com.softsy.educacional.service.EscolaService;
@@ -122,7 +123,7 @@ public class EscolaController {
     }
 	
 	@PostMapping
-	public ResponseEntity<CadastroEscolaDTO> cadastrar(@RequestBody @Valid CadastroEscolaDTO dto){
+	public ResponseEntity<CadastroEscolaDTO> cadastrar(@RequestBody @Valid CadastroEscolaDTO dto) throws IOException{
 		CadastroEscolaDTO cadastroDTO = service.salvar(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(cadastroDTO.getIdEscola()).toUri();
@@ -143,6 +144,21 @@ public class EscolaController {
 	public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroEscolaDTO dto){
 		return ResponseEntity.ok(service.atualizar(dto));
 	}
+	
+	@PutMapping("/imagem/{id}")
+    public ResponseEntity<EscolaDTO> alterarImagemEscola(
+            @PathVariable Long id,
+            @RequestBody EscolaDTO dto) {
+        
+        try {
+        	EscolaDTO escolaAtualizada = service.alterarImagemEscola(id, dto.getLogoEscola());
+            return ResponseEntity.ok(escolaAtualizada);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 	
 	@PutMapping("/{idEscola}/ativar")
 	public ResponseEntity<?> ativar(@PathVariable Long idEscola){

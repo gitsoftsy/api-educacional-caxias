@@ -96,6 +96,7 @@ public class UsuarioContaService {
 
         Usuario usuario = usuarioRepository.findById(origem.getUsuarioId())
                 .orElseThrow(() -> new IllegalArgumentException("Erro ao encontrar usuário"));
+        
 
         ContaPadraoAcesso contaPadraoAcesso = null;
         if (origem.getContaPadraoAcessoId() != null) {

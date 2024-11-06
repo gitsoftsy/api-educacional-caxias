@@ -7,6 +7,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.AgendaAnexoDTO;
 import br.com.softsy.educacional.dto.CandidatoDTO;
+import br.com.softsy.educacional.dto.ContaDTO;
 import br.com.softsy.educacional.model.CaminhoImagemRequest;
 import br.com.softsy.educacional.service.AgendaAnexoService;
 
@@ -55,7 +57,7 @@ public class AgendaAnexoController {
     }
 
     @PostMapping
-    public ResponseEntity<AgendaAnexoDTO> cadastrar(@RequestBody @Valid AgendaAnexoDTO dto) {
+    public ResponseEntity<AgendaAnexoDTO> cadastrar(@RequestBody @Valid AgendaAnexoDTO dto) throws IOException {
         AgendaAnexoDTO anexoDTO = service.salvar(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(anexoDTO.getIdAgendaAnexo()).toUri();
@@ -65,6 +67,21 @@ public class AgendaAnexoController {
     @PutMapping
     public ResponseEntity<AgendaAnexoDTO> atualizar(@RequestBody @Valid AgendaAnexoDTO dto) {
         return ResponseEntity.ok(service.atualizar(dto));
+    }
+    
+	@PutMapping("/imagem/{id}")
+    public ResponseEntity<AgendaAnexoDTO> alterarImagemConta(
+            @PathVariable Long id,
+            @RequestBody AgendaAnexoDTO dto) {
+        
+        try {
+        	AgendaAnexoDTO agendaAtualizada = service.alterarImagemAgenda(id, dto.getCaminhoArquivo());
+            return ResponseEntity.ok(agendaAtualizada);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @PutMapping("/{idAgendaAnexo}/ativar")

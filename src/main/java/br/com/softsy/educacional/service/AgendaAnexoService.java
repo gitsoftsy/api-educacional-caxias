@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.AgendaAnexoDTO;
 import br.com.softsy.educacional.dto.CandidatoDTO;
+import br.com.softsy.educacional.dto.ContaDTO;
 import br.com.softsy.educacional.model.Agenda;
 import br.com.softsy.educacional.model.AgendaAnexo;
 import br.com.softsy.educacional.model.Candidato;
@@ -66,7 +68,7 @@ public class AgendaAnexoService {
     }
 
     @Transactional
-    public AgendaAnexoDTO salvar(AgendaAnexoDTO dto) {
+    public AgendaAnexoDTO salvar(AgendaAnexoDTO dto) throws IOException {
     	
     	String base64 = "";
         AgendaAnexo anexo = criarAnexoAPartirDTO(dto);
@@ -93,18 +95,29 @@ public class AgendaAnexoService {
     @Transactional
     public AgendaAnexoDTO atualizar(AgendaAnexoDTO dto) {
         AgendaAnexo anexo = repository.getReferenceById(dto.getIdAgendaAnexo());
-        
-        anexo = repository.save(anexo);
-        
-        String caminhoIMG = ImageManager.atualizaImagemAgenda(dto.getIdAgendaAnexo(), dto.getCaminhoArquivo());
-
-        anexo.setCaminhoArquivo(caminhoIMG);
-        dto.setCaminhoArquivo(caminhoIMG);
-        dto.setIdAgendaAnexo(anexo.getIdAgendaAnexo());
-        
         atualizaDados(anexo, dto);
         return new AgendaAnexoDTO(anexo);
     }
+    
+    @Transactional
+	public AgendaAnexoDTO alterarImagemAgenda(Long idAgenda, String novaImagemBase64) throws IOException {
+    	AgendaAnexo anexo = repository.findById(idAgenda).orElseThrow(() -> new IllegalArgumentException("Agenda não encontrada"));
+
+	    if (anexo.getCaminhoArquivo() != null) {
+	        File imagemExistente = new File(anexo.getCaminhoArquivo());
+	        if (imagemExistente.exists()) {
+	            imagemExistente.delete();
+	        }
+	    }
+
+	    String novoCaminhoIMG = ImageManager.salvaImagemConta(novaImagemBase64, idAgenda, "conta" + anexo.getAgenda());
+
+	    anexo.setCaminhoArquivo(novoCaminhoIMG);
+	    repository.save(anexo);
+
+	    AgendaAnexoDTO agendaAtualizada = new AgendaAnexoDTO(anexo);
+	    return agendaAtualizada;
+	}
 
     private AgendaAnexo criarAnexoAPartirDTO(AgendaAnexoDTO dto) {
         AgendaAnexo anexo = new AgendaAnexo();

@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,11 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroContaDTO;
-import br.com.softsy.educacional.dto.CadastroEscolaDTO;
 import br.com.softsy.educacional.dto.ContaDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.Conta;
-import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.utils.ImageManager;
 
@@ -48,7 +47,7 @@ public class ContaService {
 	}
 
 	@Transactional
-	public CadastroContaDTO salvar(CadastroContaDTO dto) {
+	public CadastroContaDTO salvar(CadastroContaDTO dto) throws IOException {
 		validarConta(dto.getConta());
 
 		String base64 = "";
@@ -85,21 +84,34 @@ public class ContaService {
 	}
 
 	@Transactional
-	public ContaDTO atualizar(CadastroContaDTO dto) {
+	public ContaDTO atualizar(CadastroContaDTO dto) throws IOException {
 		Conta conta = repository.getReferenceById(dto.getIdConta());
-		
-		conta = repository.save(conta);
-
-	    // Manipulando a imagem e obtendo o caminho
-	    String caminhoIMG = ImageManager.atualizaImagemConta(dto.getIdConta(), dto.getLogoConta());
-
-	    // Setando a imagem diretamente no objeto escola
-	    conta.setLogoConta(caminhoIMG); 
-	    dto.setLogoConta(caminhoIMG);
-	    dto.setIdConta(conta.getIdConta());
-		
 		atualizaDados(conta, dto);
 		return new ContaDTO(conta);
+	}
+	
+	@Transactional
+	public ContaDTO alterarImagemConta(Long idConta, String novaImagemBase64) throws IOException {
+		Conta conta = repository.findById(idConta).orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+
+	    // Verificar se já existe uma imagem e apagar do servidor
+	    if (conta.getLogoConta() != null) {
+	        File imagemExistente = new File(conta.getLogoConta());
+	        if (imagemExistente.exists()) {
+	            imagemExistente.delete();
+	        }
+	    }
+
+	    // Salvar a nova imagem
+	    String novoCaminhoIMG = ImageManager.salvaImagemConta(novaImagemBase64, idConta, "conta" + conta.getConta());
+
+	    // Atualizar o caminho da imagem no banco de dados
+	    conta.setLogoConta(novoCaminhoIMG);
+	    repository.save(conta);
+
+	    // Criar e retornar o DTO atualizado
+	    ContaDTO contaAtualizada = new ContaDTO(conta);
+	    return contaAtualizada;
 	}
 
 	@Transactional

@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import br.com.softsy.educacional.model.Candidato;
+import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.model.Professor;
 
 @Repository
@@ -18,6 +19,7 @@ public interface ProfessorRepository extends JpaRepository<Professor, Long>{
 	List<Professor> findByCodigoInep(String codigoInep);
 	Optional<List<Professor>> findByMatricula(String matricula);
 	Optional<List<Professor>> findByUsuario(String usuario);
+
 	
 	@Query("select professor from Professor join professor.conta conta where conta.idConta = :idConta")
     Optional<List<Professor>> findByConta_IdConta(@Param("idConta") Long idConta);

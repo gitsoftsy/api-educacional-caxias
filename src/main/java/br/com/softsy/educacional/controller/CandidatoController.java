@@ -39,275 +39,266 @@ import br.com.softsy.educacional.service.PessoaService;
 @RestController
 @RequestMapping("/candidatos")
 public class CandidatoController {
-	
-    @Autowired
-    private PessoaService pessoaService;
-    @Autowired
-    private CandidatoService candidatoService;
-    
-    @Autowired
-    private PessoaRepository pessoaRepository;
-    
-    @Autowired
-    private CandidatoRepository candidatoRepository;
-    
+
+	@Autowired
+	private PessoaService pessoaService;
+	@Autowired
+	private CandidatoService candidatoService;
+
+	@Autowired
+	private PessoaRepository pessoaRepository;
+
+	@Autowired
+	private CandidatoRepository candidatoRepository;
+
 	@Autowired
 	private PasswordEncrypt encrypt;
-    
-    @PersistenceContext
-    private EntityManager entityManager;
 
-    
-    private static class CadastroResponseDTO {
-        private String candidato;
-        private Long idCandidato;
+	@PersistenceContext
+	private EntityManager entityManager;
 
-        public CadastroResponseDTO(String candidato, Long idCandidato) {
-            this.candidato = candidato;
-            this.idCandidato = idCandidato;
-        }
+	private static class CadastroResponseDTO {
+		private String candidato;
+		private Long idCandidato;
 
-        // Getters e Setters
-        public String getCandidato() {
-            return candidato;
-        }
+		public CadastroResponseDTO(String candidato, Long idCandidato) {
+			this.candidato = candidato;
+			this.idCandidato = idCandidato;
+		}
 
-        public void setCandidato(String candidato) {
-            this.candidato = candidato;
-        }
+		// Getters e Setters
+		public String getCandidato() {
+			return candidato;
+		}
 
-        public Long getIdCandidato() {
-            return idCandidato;
-        }
+		public void setCandidato(String candidato) {
+			this.candidato = candidato;
+		}
 
-        public void setIdCandidato(Long idCandidato) {
-            this.idCandidato = idCandidato;
-        }
-    }
-    
-    private static class AtualizarResponseDTO {
-        private Long idPessoa;
-        private Long idCandidato;
+		public Long getIdCandidato() {
+			return idCandidato;
+		}
 
-        public AtualizarResponseDTO(Long idPessoa, Long idCandidato) {
-            this.idPessoa = idPessoa;
-            this.idCandidato = idCandidato;
-        }
+		public void setIdCandidato(Long idCandidato) {
+			this.idCandidato = idCandidato;
+		}
+	}
 
-        // Getters e Setters
-        public Long getIdPessoa() {
-            return idPessoa;
-        }
+	private static class AtualizarResponseDTO {
+		private Long idPessoa;
+		private Long idCandidato;
 
-        public void setIdPessoa(Long idPessoa) {
-            this.idPessoa = idPessoa;
-        }
+		public AtualizarResponseDTO(Long idPessoa, Long idCandidato) {
+			this.idPessoa = idPessoa;
+			this.idCandidato = idCandidato;
+		}
 
-        public Long getIdCandidato() {
-            return idCandidato;
-        }
+		// Getters e Setters
+		public Long getIdPessoa() {
+			return idPessoa;
+		}
 
-        public void setIdCandidato(Long idCandidato) {
-            this.idCandidato = idCandidato;
-        }
-    }
+		public void setIdPessoa(Long idPessoa) {
+			this.idPessoa = idPessoa;
+		}
 
-    
-    
-	 @PostMapping("/pessoa-candidato")
-	    public ResponseEntity<Object> cadastrarPessoaECandidato(@RequestBody CadastroCandidatoPessoaDTO dto) {
-	        try {
-	            Pessoa pessoa = pessoaService.criarPessoaAPartirDTO(dto.getPessoaDTO());
-	            pessoa.setSenha(encrypt.hashPassword(pessoa.getSenha()));
-	            pessoa = pessoaRepository.save(pessoa);
+		public Long getIdCandidato() {
+			return idCandidato;
+		}
 
-	            dto.getCandidatoDTO().setPessoaId(pessoa.getIdPessoa());
+		public void setIdCandidato(Long idCandidato) {
+			this.idCandidato = idCandidato;
+		}
+	}
 
-	            Candidato candidato = candidatoService.criarCandidatoAPartirDTO(dto.getCandidatoDTO());
-	            candidato = candidatoRepository.save(candidato);
+	@PostMapping("/pessoa-candidato")
+	public ResponseEntity<Object> cadastrarPessoaECandidato(@RequestBody CadastroCandidatoPessoaDTO dto) {
+		try {
 
-	            CadastroResponseDTO responseDTO = new CadastroResponseDTO(candidato.getCandidato(), candidato.getIdCandidato());
-	            return ResponseEntity.ok(responseDTO);
-	        } catch (Exception e) {
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
-	        }
-	    }
+			PessoaDTO pessoaCPF = pessoaService.buscarPorCpfEIdConta(dto.getPessoaDTO().getCpf(),
+					dto.getPessoaDTO().getContaId());
 
-	 
-	    @PutMapping("/pessoa-candidato")
-	    public ResponseEntity<Object> atualizarPessoaECandidato(@RequestBody CadastroCandidatoPessoaDTO dto) {
-	        try {
-	            PessoaDTO pessoaDTO = pessoaService.atualizar(dto.getPessoaDTO());
-	            CandidatoDTO candidatoDTOAtualizado = candidatoService.atualizar(dto.getCandidatoDTO());
+			if (pessoaCPF != null && pessoaCPF.getIdPessoa() != null) {
+				dto.getCandidatoDTO().setPessoaId(pessoaCPF.getIdPessoa());
+			} else {
+				Pessoa pessoa = pessoaService.criarPessoaAPartirDTO(dto.getPessoaDTO());
+				pessoa.setSenha(encrypt.hashPassword(pessoa.getSenha()));
+				pessoa = pessoaRepository.save(pessoa);
+				
+				dto.getCandidatoDTO().setPessoaId(pessoa.getIdPessoa());
+			}
 
-	            AtualizarResponseDTO responseDTO = new AtualizarResponseDTO(pessoaDTO.getIdPessoa(), candidatoDTOAtualizado.getIdCandidato());
-	            return ResponseEntity.ok(responseDTO);
-	        } catch (Exception e) {
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar: " + e.getMessage());
-	        }
-	    }
-	 
-    
-    
-    @GetMapping
-    public ResponseEntity<List<CandidatoDTO>> listar() {
-        List<CandidatoDTO> candidatos = candidatoService.listarTudo();
-        return ResponseEntity.ok(candidatos);
-    }
-    
-    @GetMapping("/conta/{idConta}")
-    public ResponseEntity<List<CandidatoDTO>> buscarPorIdConta(@PathVariable Long idConta) {
-        List<CandidatoDTO> curso = candidatoService.buscarPorIdConta(idConta);
-        return ResponseEntity.ok(curso);
-    }
+			Candidato candidato = candidatoService.criarCandidatoAPartirDTO(dto.getCandidatoDTO());
+			candidato = candidatoRepository.save(candidato);
 
+			CadastroResponseDTO responseDTO = new CadastroResponseDTO(candidato.getCandidato(),
+					candidato.getIdCandidato());
+			return ResponseEntity.ok(responseDTO);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
+		}
+	}
 
-    @GetMapping("/{idCandidato}")
-    public ResponseEntity<CandidatoDTO> buscarPorId(@PathVariable Long idCandidato) {
-        CandidatoDTO candidatoDto = candidatoService.buscarPorId(idCandidato);
-        return ResponseEntity.ok(candidatoDto);
-    }
-    
-    @PutMapping("/candidato/{idCandidato}/oferta/{idOfertaConcurso}")
-    public ResponseEntity<Map<String, Object>> updateCandidatoOfertaConcurso(
-            @PathVariable Long idCandidato,
-            @PathVariable Long idOfertaConcurso
-        ) {
-            Map<String, Object> response = candidatoService.updateCandidatoOfertaConcurso(idCandidato, idOfertaConcurso);
-            return ResponseEntity.ok(response);
-        }
+	@PutMapping("/pessoa-candidato")
+	public ResponseEntity<Object> atualizarPessoaECandidato(@RequestBody CadastroCandidatoPessoaDTO dto) {
+		try {
+			PessoaDTO pessoaDTO = pessoaService.atualizar(dto.getPessoaDTO());
+			CandidatoDTO candidatoDTOAtualizado = candidatoService.atualizar(dto.getCandidatoDTO());
 
-    @PostMapping
-    public ResponseEntity<CandidatoDTO> cadastrar(@RequestBody @Valid CadastroCandidatoDTO dto) {
-        CandidatoDTO candidatoDTO = candidatoService.salvar(dto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(candidatoDTO.getIdCandidato()).toUri();
-        return ResponseEntity.created(uri).body(candidatoDTO);
-    }
+			AtualizarResponseDTO responseDTO = new AtualizarResponseDTO(pessoaDTO.getIdPessoa(),
+					candidatoDTOAtualizado.getIdCandidato());
+			return ResponseEntity.ok(responseDTO);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar: " + e.getMessage());
+		}
+	}
 
+	@GetMapping
+	public ResponseEntity<List<CandidatoDTO>> listar() {
+		List<CandidatoDTO> candidatos = candidatoService.listarTudo();
+		return ResponseEntity.ok(candidatos);
+	}
 
-    @PutMapping
-    public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroCandidatoDTO dto) {
-        return ResponseEntity.ok(candidatoService.atualizar(dto));
-    }
-	
-    
-    @DeleteMapping("/{idCandidato}")
-    public ResponseEntity<?> excluir(@PathVariable Long idCandidato) {
-    	candidatoService.remover(idCandidato);
-        return ResponseEntity.ok().build();
-    }
-    
-    @GetMapping("/step")
-    public Object obtemStepCandidato(
-            @RequestParam(value = "idCandidato", required = false) Long idCandidato,
-            @RequestParam(value = "candidato", required = false) String candidato,
-            @RequestParam(value = "rgNum", required = false) String rgNum,
-            @RequestParam(value = "cpfNum", required = false) String cpfNum,
-            @RequestParam(value = "certNasc", required = false) String certNasc,
-            @RequestParam(value = "certCasamento", required = false) String certCasamento
-    ) {
-        // Verifica se todos os parâmetros são nulos
-        if (idCandidato == null && candidato == null && rgNum == null && cpfNum == null && certNasc == null && certCasamento == null) {
-            return "Por favor, informe ao menos um parâmetro na requisição.";
-        }
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<CandidatoDTO>> buscarPorIdConta(@PathVariable Long idConta) {
+		List<CandidatoDTO> curso = candidatoService.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(curso);
+	}
 
-        List<Map<String, Object>> result = candidatoService.obtemStepCandidato(idCandidato, candidato, rgNum, cpfNum, certNasc, certCasamento);
+	@GetMapping("/{idCandidato}")
+	public ResponseEntity<CandidatoDTO> buscarPorId(@PathVariable Long idCandidato) {
+		CandidatoDTO candidatoDto = candidatoService.buscarPorId(idCandidato);
+		return ResponseEntity.ok(candidatoDto);
+	}
 
-        if (result.isEmpty()) {
-            return "Nenhum resultado encontrado para os parâmetros informados.";
-        }
+	@PutMapping("/candidato/{idCandidato}/oferta/{idOfertaConcurso}")
+	public ResponseEntity<Map<String, Object>> updateCandidatoOfertaConcurso(@PathVariable Long idCandidato,
+			@PathVariable Long idOfertaConcurso) {
+		Map<String, Object> response = candidatoService.updateCandidatoOfertaConcurso(idCandidato, idOfertaConcurso);
+		return ResponseEntity.ok(response);
+	}
 
-        return result;
-    }
-    
-    @GetMapping("/reservaFinal")
-    public Object listaDadosReservaFinal(
-            @RequestParam(value = "candidato", required = false) String candidato
-    ) {
-        if (candidato == null) {
-            return "Por favor, informe o parâmetro na requisição.";
-        }
+	@PostMapping
+	public ResponseEntity<CandidatoDTO> cadastrar(@RequestBody @Valid CadastroCandidatoDTO dto) {
+		CandidatoDTO candidatoDTO = candidatoService.salvar(dto);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(candidatoDTO.getIdCandidato()).toUri();
+		return ResponseEntity.created(uri).body(candidatoDTO);
+	}
 
-        List<Map<String, Object>> result = candidatoService.obtemStepCandidato(candidato);
+	@PutMapping
+	public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroCandidatoDTO dto) {
+		return ResponseEntity.ok(candidatoService.atualizar(dto));
+	}
 
-        if (result.isEmpty()) {
-            return "Nenhum resultado encontrado para os parâmetros informados.";
-        }
+	@DeleteMapping("/{idCandidato}")
+	public ResponseEntity<?> excluir(@PathVariable Long idCandidato) {
+		candidatoService.remover(idCandidato);
+		return ResponseEntity.ok().build();
+	}
 
-        return result;
-    }
-    
-    
-    @GetMapping("/listaReservaDeVagas")
-    public Object obtemListaReservaDeVagas(
-            @RequestParam(value = "idUsuario", required = false) Long idUsuario
-    ) {
-        // Verifica se idConta é nulo, pois ele é obrigatório
-        if (idUsuario == null) {
-            return "Por favor, informe o parâmetro idUsuario na requisição.";
-        }
+	@GetMapping("/step")
+	public Object obtemStepCandidato(@RequestParam(value = "idCandidato", required = false) Long idCandidato,
+			@RequestParam(value = "candidato", required = false) String candidato,
+			@RequestParam(value = "rgNum", required = false) String rgNum,
+			@RequestParam(value = "cpfNum", required = false) String cpfNum,
+			@RequestParam(value = "certNasc", required = false) String certNasc,
+			@RequestParam(value = "certCasamento", required = false) String certCasamento) {
+		// Verifica se todos os parâmetros são nulos
+		if (idCandidato == null && candidato == null && rgNum == null && cpfNum == null && certNasc == null
+				&& certCasamento == null) {
+			return "Por favor, informe ao menos um parâmetro na requisição.";
+		}
 
-        List<Map<String, Object>> result = candidatoService.obtemListaReservaDeVagas(idUsuario);
+		List<Map<String, Object>> result = candidatoService.obtemStepCandidato(idCandidato, candidato, rgNum, cpfNum,
+				certNasc, certCasamento);
 
-        if (result.isEmpty()) {
-            return "Nenhum resultado encontrado para os parâmetros informados.";
-        }
+		if (result.isEmpty()) {
+			return "Nenhum resultado encontrado para os parâmetros informados.";
+		}
 
-        return result;
-    }
-    
-    
-    @GetMapping("/listarReservasPorDocumento")
-    public Object obtemListaReservaDeVagasPorDocumento(
-            @RequestParam(value = "idConta") Long idConta,
-            @RequestParam(value = "idEscola", required = false) Long idEscola,
-            @RequestParam(value = "rgNum", required = false) String rgNum,
-            @RequestParam(value = "cpfNum", required = false) String cpfNum,
-            @RequestParam(value = "certNasc", required = false) String certNasc,
-            @RequestParam(value = "certCasamento", required = false) String certCasamento
-    ) {
-        // Verifica se todos os parâmetros são nulos
-        if (idConta == null && idEscola == null && rgNum == null && cpfNum == null && certNasc == null && certCasamento == null) {
-            return "Por favor, informe ao menos um parâmetro na requisição.";
-        }
-        
-        // Verifica se idConta é nulo, pois ele é obrigatório
-        if (idConta == null) {
-            return "Por favor, informe o parâmetro idConta na requisição.";
-        }
+		return result;
+	}
 
-        List<Map<String, Object>> result = candidatoService.obtemListaReservaDeVagasPorDoc(idConta, idEscola, rgNum, cpfNum, certNasc, certCasamento);
+	@GetMapping("/reservaFinal")
+	public Object listaDadosReservaFinal(@RequestParam(value = "candidato", required = false) String candidato) {
+		if (candidato == null) {
+			return "Por favor, informe o parâmetro na requisição.";
+		}
 
-        if (result.isEmpty()) {
-            return "Nenhum resultado encontrado para os parâmetros informados.";
-        }
+		List<Map<String, Object>> result = candidatoService.obtemStepCandidato(candidato);
 
-        return result;
-    }
-    
-    @GetMapping("/excel/{idConta}")
-    public ResponseEntity<?> listarReservaDeVagasExcel(@PathVariable Long idConta) {
-        List<Map<String, Object>> result = candidatoService.listarReservaDeVagasExcel(idConta);
-        if (result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma reserva encontrada para a conta informada.");
-        }
-        return ResponseEntity.ok(result);
-    }
-    
-    
-	  @PutMapping("/{idCandidato}/aprovar")
-	    public ResponseEntity<?> ativar(@PathVariable Long idCandidato) {
-		  candidatoService.aprovaReprova('S', idCandidato);
-	        return ResponseEntity.ok().build();
-	    }
+		if (result.isEmpty()) {
+			return "Nenhum resultado encontrado para os parâmetros informados.";
+		}
 
-	    @PutMapping("/{idCandidato}/reprovar")
-	    public ResponseEntity<?> desativar(@PathVariable Long idCandidato) {
-	    	candidatoService.aprovaReprova('N', idCandidato);
-	        return ResponseEntity.ok().build();
-	    }
-	    
-	    
-    
+		return result;
+	}
+
+	@GetMapping("/listaReservaDeVagas")
+	public Object obtemListaReservaDeVagas(@RequestParam(value = "idUsuario", required = false) Long idUsuario) {
+		// Verifica se idConta é nulo, pois ele é obrigatório
+		if (idUsuario == null) {
+			return "Por favor, informe o parâmetro idUsuario na requisição.";
+		}
+
+		List<Map<String, Object>> result = candidatoService.obtemListaReservaDeVagas(idUsuario);
+
+		if (result.isEmpty()) {
+			return "Nenhum resultado encontrado para os parâmetros informados.";
+		}
+
+		return result;
+	}
+
+	@GetMapping("/listarReservasPorDocumento")
+	public Object obtemListaReservaDeVagasPorDocumento(@RequestParam(value = "idConta") Long idConta,
+			@RequestParam(value = "idEscola", required = false) Long idEscola,
+			@RequestParam(value = "rgNum", required = false) String rgNum,
+			@RequestParam(value = "cpfNum", required = false) String cpfNum,
+			@RequestParam(value = "certNasc", required = false) String certNasc,
+			@RequestParam(value = "certCasamento", required = false) String certCasamento) {
+		// Verifica se todos os parâmetros são nulos
+		if (idConta == null && idEscola == null && rgNum == null && cpfNum == null && certNasc == null
+				&& certCasamento == null) {
+			return "Por favor, informe ao menos um parâmetro na requisição.";
+		}
+
+		// Verifica se idConta é nulo, pois ele é obrigatório
+		if (idConta == null) {
+			return "Por favor, informe o parâmetro idConta na requisição.";
+		}
+
+		List<Map<String, Object>> result = candidatoService.obtemListaReservaDeVagasPorDoc(idConta, idEscola, rgNum,
+				cpfNum, certNasc, certCasamento);
+
+		if (result.isEmpty()) {
+			return "Nenhum resultado encontrado para os parâmetros informados.";
+		}
+
+		return result;
+	}
+
+	@GetMapping("/excel/{idConta}")
+	public ResponseEntity<?> listarReservaDeVagasExcel(@PathVariable Long idConta) {
+		List<Map<String, Object>> result = candidatoService.listarReservaDeVagasExcel(idConta);
+		if (result.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("Nenhuma reserva encontrada para a conta informada.");
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	@PutMapping("/{idCandidato}/aprovar")
+	public ResponseEntity<?> ativar(@PathVariable Long idCandidato) {
+		candidatoService.aprovaReprova('S', idCandidato);
+		return ResponseEntity.ok().build();
+	}
+
+	@PutMapping("/{idCandidato}/reprovar")
+	public ResponseEntity<?> desativar(@PathVariable Long idCandidato) {
+		candidatoService.aprovaReprova('N', idCandidato);
+		return ResponseEntity.ok().build();
+	}
+
 }

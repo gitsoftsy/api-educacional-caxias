@@ -72,6 +72,12 @@ public class PessoaService {
     public PessoaDTO buscarPorCpf(String cpf) {
         return new PessoaDTO(repository.findByCpf(cpf));
     }
+    
+    @Transactional(readOnly = true)
+    public PessoaDTO buscarPorCpfEIdConta(String cpf, Long idConta) {
+        Pessoa pessoa = repository.findByCpfAndConta_IdConta(cpf, idConta);
+        return pessoa != null ? new PessoaDTO(pessoa) : null;
+    }
 
     @Transactional
     public CadastroPessoaDTO salvar(CadastroPessoaDTO dto) {
