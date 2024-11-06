@@ -38,10 +38,11 @@ public class OfertaConcurso {
     @ManyToOne
     @JoinColumn(name = "ID_TURNO", nullable = false)
     private Turno turno;
-
-    @Column(name = "SERIE", nullable = false)
-    private Integer serie;
-
+    
+    @ManyToOne
+    @JoinColumn(name = "ID_SERIE", nullable = false)
+    private Serie serie;
+    
     @Column(name = "DESCRICAO_OFERTA", length = 555, nullable = false)
     private String descricaoOferta;
 

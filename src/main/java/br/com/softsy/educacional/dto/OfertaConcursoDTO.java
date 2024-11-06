@@ -14,7 +14,7 @@ public class OfertaConcursoDTO {
     private CursoDTO curso;
     private EscolaDTO escola;
     private TurnoDTO turno;
-    private Integer serie;
+    private SerieDTO serie;
     private String descricaoOferta;
     private Integer vagas;
     private Integer minVagasAbertTurma;
@@ -27,7 +27,7 @@ public class OfertaConcursoDTO {
         this.curso = new CursoDTO(ofertaConcurso.getCurso());
         this.escola = new EscolaDTO(ofertaConcurso.getEscola());
         this.turno = new TurnoDTO(ofertaConcurso.getTurno());
-        this.serie = ofertaConcurso.getSerie();
+        this.serie = new SerieDTO(ofertaConcurso.getSerie());
         this.descricaoOferta = ofertaConcurso.getDescricaoOferta();
         this.vagas = ofertaConcurso.getVagas();
         this.minVagasAbertTurma = ofertaConcurso.getMinVagasAbertTurma();

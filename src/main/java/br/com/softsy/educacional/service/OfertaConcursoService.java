@@ -20,11 +20,13 @@ import br.com.softsy.educacional.model.Concurso;
 import br.com.softsy.educacional.model.Curso;
 import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.model.OfertaConcurso;
+import br.com.softsy.educacional.model.Serie;
 import br.com.softsy.educacional.model.Turno;
 import br.com.softsy.educacional.repository.ConcursoRepository;
 import br.com.softsy.educacional.repository.CursoRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
 import br.com.softsy.educacional.repository.OfertaConcursoRepository;
+import br.com.softsy.educacional.repository.SerieRepository;
 import br.com.softsy.educacional.repository.TurnoRepository;
 
 @Service
@@ -44,6 +46,9 @@ public class OfertaConcursoService {
 
     @Autowired
     private TurnoRepository turnoRepository;
+    
+    @Autowired
+    private SerieRepository serieRepository;
     
     @Autowired
     private EntityManager entityManager;
@@ -104,12 +109,14 @@ public class OfertaConcursoService {
                 .orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
         Turno turno = turnoRepository.findById(dto.getTurnoId())
                 .orElseThrow(() -> new IllegalArgumentException("Turno não encontrado"));
+        Serie serie = serieRepository.findById(dto.getSerieId())
+                .orElseThrow(() -> new IllegalArgumentException("Serie não encontrada"));
 
         oferta.setConcurso(concurso);
         oferta.setCurso(curso);
         oferta.setEscola(escola);
         oferta.setTurno(turno);
-        oferta.setSerie(dto.getSerie());
+        oferta.setSerie(serie);
         oferta.setDescricaoOferta(dto.getDescricaoOferta());
         oferta.setVagas(dto.getVagas());
         oferta.setMinVagasAbertTurma(dto.getMinVagasAbertTurma());
@@ -161,12 +168,15 @@ public class OfertaConcursoService {
                 .orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
         Turno turno = turnoRepository.findById(origem.getTurnoId())
                 .orElseThrow(() -> new IllegalArgumentException("Turno não encontrado"));
+        Serie serie = serieRepository.findById(origem.getSerieId())
+                .orElseThrow(() -> new IllegalArgumentException("Serie não encontrada"));
+        
 
         destino.setConcurso(concurso);
         destino.setCurso(curso);
         destino.setEscola(escola);
         destino.setTurno(turno);
-        destino.setSerie(origem.getSerie());
+        destino.setSerie(serie);
         destino.setDescricaoOferta(origem.getDescricaoOferta());
         destino.setVagas(origem.getVagas());
         destino.setMinVagasAbertTurma(origem.getMinVagasAbertTurma());
