@@ -15,5 +15,8 @@ public interface DisciplinaRepository extends JpaRepository<Disciplina, Long> {
 
 	@Query("select disciplina from Disciplina disciplina join disciplina.conta conta where conta.idConta = :idConta")
     Optional<List<Disciplina>> findByConta_IdConta(@Param("idConta") Long idConta);
+	
+	@Query("select disciplina from Disciplina disciplina join disciplina.areaConhecimento areaConhecimento where areaConhecimento.idAreaConhecimento = :idAreaConhecimento")
+    Optional<List<Disciplina>> findByAreaConhecimento_IdAreaConhecimento(@Param("idAreaConhecimento") Long idAreaConhecimento);
 
 }

@@ -43,6 +43,13 @@ public class DisciplinaService {
 				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar disciplinas por id de conta"));
 		return disciplinas.stream().map(DisciplinaDTO::new).collect(Collectors.toList());
 	}
+	
+	@Transactional(readOnly = true)
+	public List<DisciplinaDTO> buscarPorIdAreaConhecimento(Long id) {
+		List<Disciplina> disciplinas = disciplinaRepository.findByAreaConhecimento_IdAreaConhecimento(id)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar disciplinas por id de area conhecimento"));
+		return disciplinas.stream().map(DisciplinaDTO::new).collect(Collectors.toList());
+	}
 
 	@Transactional
 	public DisciplinaDTO salvar(CadastroDisciplinaDTO dto) {

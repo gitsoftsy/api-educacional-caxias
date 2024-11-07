@@ -47,12 +47,12 @@ public class TurnoController {
         return ResponseEntity.ok(turnoDTO);
     }
     
-    @GetMapping("/conta/{idConta}/curso/{idCurso}/escola/{idEscola}/serie/{serie}")
+    @GetMapping("/conta/{idConta}/curso/{idCurso}/escola/{idEscola}/serie/{series}")
     public List<Map<String, Object>> buscarTurnosPorIdContaAndIdCursoAndIdEscola(
             @PathVariable Long idConta,
             @PathVariable Long idCurso,
             @PathVariable Long idEscola,
-            @PathVariable Integer serie) {
+            @PathVariable Integer series) {
 
         List<Object[]> turnos = entityManager.createQuery(
                 "SELECT DISTINCT t.idTurno, t.turno, t.horaInicio, t.horaFim " +
@@ -65,11 +65,11 @@ public class TurnoController {
                         "AND c.conta.idConta = :idConta " +
                         "AND oc.curso.idCurso = :idCurso " +
                         "AND oc.escola.idEscola = :idEscola " +
-                        "AND oc.serie = :serie", Object[].class)
+                        "AND oc.series = :series", Object[].class)
                 .setParameter("idConta", idConta)
                 .setParameter("idCurso", idCurso)
                 .setParameter("idEscola", idEscola)
-                .setParameter("serie", serie)
+                .setParameter("series", series)
                 .getResultList();
 
         // TRANSFORMANDO EM JSON
@@ -122,7 +122,7 @@ public class TurnoController {
     @GetMapping("/series/conta/{idConta}/curso/{idCurso}/turno/{idTurno}")
     public List<Map<String, Object>> getSeriesOfertaConcurso(@PathVariable Long idConta, @PathVariable Long idCurso, @PathVariable Long idTurno) {
         List<Integer> series = entityManager.createQuery(
-                "SELECT DISTINCT oc.serie " +
+                "SELECT DISTINCT oc.series " +
                         "FROM OfertaConcurso oc " +
                         "JOIN oc.concurso c " +
                         "WHERE c.ativo = 'S' " +

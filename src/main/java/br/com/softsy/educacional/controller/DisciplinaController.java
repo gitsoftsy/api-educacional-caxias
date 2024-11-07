@@ -38,6 +38,12 @@ public class DisciplinaController {
         List<DisciplinaDTO> disciplinas = disciplinaService.buscarPorIdConta(idConta);
         return ResponseEntity.ok(disciplinas);
     }
+    
+    @GetMapping("/areaConhecimento/{idAreaConhecimento}")
+    public ResponseEntity<List<DisciplinaDTO>> buscarPorIdAreaConhecimento(@PathVariable Long idAreaConhecimento) {
+        List<DisciplinaDTO> disciplinas = disciplinaService.buscarPorIdAreaConhecimento(idAreaConhecimento);
+        return ResponseEntity.ok(disciplinas);
+    }
 
     @PostMapping
     public ResponseEntity<DisciplinaDTO> cadastrar(@RequestBody @Valid CadastroDisciplinaDTO dto) {

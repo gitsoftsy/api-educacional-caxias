@@ -118,6 +118,7 @@ public class OfertaConcursoService {
         oferta.setTurno(turno);
         oferta.setSerie(serie);
         oferta.setDescricaoOferta(dto.getDescricaoOferta());
+        oferta.setSeries(dto.getSeries());
         oferta.setVagas(dto.getVagas());
         oferta.setMinVagasAbertTurma(dto.getMinVagasAbertTurma());
         oferta.setDataCadastro(LocalDateTime.now());
@@ -178,6 +179,7 @@ public class OfertaConcursoService {
         destino.setEscola(escola);
         destino.setTurno(turno);
         destino.setSerie(serie);
+        destino.setSeries(origem.getSeries());
         destino.setDescricaoOferta(origem.getDescricaoOferta());
         destino.setVagas(origem.getVagas());
         destino.setMinVagasAbertTurma(origem.getMinVagasAbertTurma());

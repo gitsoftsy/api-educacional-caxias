@@ -113,30 +113,36 @@ public class CandidatoController {
 
 	@PostMapping("/pessoa-candidato")
 	public ResponseEntity<Object> cadastrarPessoaECandidato(@RequestBody CadastroCandidatoPessoaDTO dto) {
-		try {
+	    try {
+	        PessoaDTO pessoaCPF = null;
 
-			PessoaDTO pessoaCPF = pessoaService.buscarPorCpfEIdConta(dto.getPessoaDTO().getCpf(),
-					dto.getPessoaDTO().getContaId());
+	        // Apenas busca a pessoa pelo CPF se o CPF não for nulo
+	        if (dto.getPessoaDTO().getCpf() != null) {
+	            pessoaCPF = pessoaService.buscarPorCpfEIdConta(dto.getPessoaDTO().getCpf(),
+	                    dto.getPessoaDTO().getContaId());
+	        }
 
-			if (pessoaCPF != null && pessoaCPF.getIdPessoa() != null) {
-				dto.getCandidatoDTO().setPessoaId(pessoaCPF.getIdPessoa());
-			} else {
-				Pessoa pessoa = pessoaService.criarPessoaAPartirDTO(dto.getPessoaDTO());
-				pessoa.setSenha(encrypt.hashPassword(pessoa.getSenha()));
-				pessoa = pessoaRepository.save(pessoa);
-				
-				dto.getCandidatoDTO().setPessoaId(pessoa.getIdPessoa());
-			}
+	        if (pessoaCPF != null && pessoaCPF.getIdPessoa() != null) {
+	            // Pessoa encontrada com o CPF, atribui o ID dessa pessoa ao candidato
+	            dto.getCandidatoDTO().setPessoaId(pessoaCPF.getIdPessoa());
+	        } else {
+	            // Caso o CPF seja nulo ou não encontre uma pessoa com esse CPF, cria uma nova Pessoa
+	            Pessoa pessoa = pessoaService.criarPessoaAPartirDTO(dto.getPessoaDTO());
+	            pessoa.setSenha(encrypt.hashPassword(pessoa.getSenha()));
+	            pessoa = pessoaRepository.save(pessoa);
+	            
+	            dto.getCandidatoDTO().setPessoaId(pessoa.getIdPessoa());
+	        }
 
-			Candidato candidato = candidatoService.criarCandidatoAPartirDTO(dto.getCandidatoDTO());
-			candidato = candidatoRepository.save(candidato);
+	        Candidato candidato = candidatoService.criarCandidatoAPartirDTO(dto.getCandidatoDTO());
+	        candidato = candidatoRepository.save(candidato);
 
-			CadastroResponseDTO responseDTO = new CadastroResponseDTO(candidato.getCandidato(),
-					candidato.getIdCandidato());
-			return ResponseEntity.ok(responseDTO);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
-		}
+	        CadastroResponseDTO responseDTO = new CadastroResponseDTO(candidato.getCandidato(),
+	                candidato.getIdCandidato());
+	        return ResponseEntity.ok(responseDTO);
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
+	    }
 	}
 
 	@PutMapping("/pessoa-candidato")
