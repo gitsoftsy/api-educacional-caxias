@@ -50,12 +50,12 @@ public class AvisoController {
         List<AvisoDTO> aviso = service.buscarPorIdProfessor(idProfessor);
         return ResponseEntity.ok(aviso);
     }
+    
+	@GetMapping("/{id}/logo")
+    public ResponseEntity<String> getLogoById(@PathVariable("id") Long id) throws IOException {
+		String logo = service.getLogoById(id);
 
-    @GetMapping("/{id}/logo")
-    public ResponseEntity<String> getLogoById(@PathVariable("id") Long id, @RequestBody CaminhoImagemRequest request) throws IOException {
-        String caminho = request.getCaminho();
-        String logo = service.getLogoById(id, caminho);
-        return ResponseEntity.ok(logo);
+       return ResponseEntity.ok(logo);
     }
 
     @PostMapping

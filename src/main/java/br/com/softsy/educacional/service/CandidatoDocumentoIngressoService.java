@@ -62,11 +62,11 @@ public class CandidatoDocumentoIngressoService {
                 .collect(Collectors.toList());
     }
     
-	public String getLogoById(Long idCandidatoDocumentoIngresso, String caminho) throws IOException {
+	public String getLogoById(Long idCandidatoDocumentoIngresso) throws IOException {
 		Optional<CandidatoDocumentoIngresso> documentoOptional = repository.findById(idCandidatoDocumentoIngresso);
 
 		String imagemCarregada;
-		imagemCarregada = ImageManager.buscaImagem(caminho);
+		imagemCarregada = ImageManager.buscaImagem(documentoOptional.get().getDocFileServer());
 
 		if (documentoOptional.isPresent()) {
 			return imagemCarregada;

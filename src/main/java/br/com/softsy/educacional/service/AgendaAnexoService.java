@@ -45,11 +45,11 @@ public class AgendaAnexoService {
         return new AgendaAnexoDTO(repository.getReferenceById(id));
     }
     
-	public String getLogoById(Long idAgendaAnexo, String caminho) throws IOException {
+	public String getLogoById(Long idAgendaAnexo) throws IOException {
 		Optional<AgendaAnexo> agendaOptional = repository.findById(idAgendaAnexo);
 
 		String imagemCarregada;
-		imagemCarregada = ImageManager.buscaImagem(caminho);
+		imagemCarregada = ImageManager.buscaImagem(agendaOptional.get().getCaminhoArquivo());
 
 		if (agendaOptional.isPresent()) {
 			return imagemCarregada;

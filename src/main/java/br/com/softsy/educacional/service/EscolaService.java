@@ -98,11 +98,11 @@ public class EscolaService {
 		return new EscolaDTO(repository.getReferenceById(id));
 	}
 	
-	public String getLogoById(Long idEscola, String caminho) throws IOException {
+	public String getLogoById(Long idEscola) throws IOException {
         Optional<Escola> escolaOptional = repository.findById(idEscola);
         
         String imagemCarregada;
-        imagemCarregada = ImageManager.buscaImagem(caminho);
+        imagemCarregada = ImageManager.buscaImagem(escolaOptional.get().getLogoEscola());
 
       if (escolaOptional.isPresent()) {
             return imagemCarregada;

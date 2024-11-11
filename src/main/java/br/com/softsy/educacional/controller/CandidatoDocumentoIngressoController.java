@@ -55,11 +55,12 @@ public class CandidatoDocumentoIngressoController {
         return ResponseEntity.ok(documentos);
     }
     
-    @GetMapping("/{id}/arquivo")
-    public ResponseEntity<String> getLogoById(@PathVariable("id") Long id, @RequestBody CaminhoImagemRequest request) throws IOException {
-        String caminho = request.getCaminho();
-        String logo = service.getLogoById(id, caminho);
-        return ResponseEntity.ok(logo);
+    
+	@GetMapping("/{id}/logo")
+    public ResponseEntity<String> getLogoById(@PathVariable("id") Long id) throws IOException {
+		String logo = service.getLogoById(id);
+
+       return ResponseEntity.ok(logo);
     }
 
     @PostMapping

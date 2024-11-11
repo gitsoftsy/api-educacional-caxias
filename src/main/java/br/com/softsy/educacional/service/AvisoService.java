@@ -68,13 +68,13 @@ public class AvisoService {
 		return new AvisoDTO(repository.getReferenceById(id));
 	}
 	
-	public String getLogoById(Long idAviso, String caminho) throws IOException {
-		Optional<Aviso> contaOptional = repository.findById(idAviso);
+	public String getLogoById(Long idAviso) throws IOException {
+		Optional<Aviso> avisoOpcional = repository.findById(idAviso);
 
 		String imagemCarregada;
-		imagemCarregada = ImageManager.buscaImagem(caminho);
+		imagemCarregada = ImageManager.buscaImagem(avisoOpcional.get().getPathAnexo());
 
-		if (contaOptional.isPresent()) {
+		if (avisoOpcional.isPresent()) {
 			return imagemCarregada;
 		} else {
 			return null;

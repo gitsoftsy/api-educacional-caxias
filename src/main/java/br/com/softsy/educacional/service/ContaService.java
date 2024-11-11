@@ -33,11 +33,11 @@ public class ContaService {
 		return new ContaDTO(repository.getReferenceById(id));
 	}
 
-	public String getLogoById(Long idConta, String caminho) throws IOException {
+	public String getLogoById(Long idConta) throws IOException {
 		Optional<Conta> contaOptional = repository.findById(idConta);
 
 		String imagemCarregada;
-		imagemCarregada = ImageManager.buscaImagem(caminho);
+		imagemCarregada = ImageManager.buscaImagem(contaOptional.get().getLogoConta());
 
 		if (contaOptional.isPresent()) {
 			return imagemCarregada;

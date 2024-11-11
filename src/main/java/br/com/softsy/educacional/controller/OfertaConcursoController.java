@@ -51,15 +51,16 @@ public class OfertaConcursoController {
     @GetMapping("/series/conta/{idConta}/curso/{idCurso}/escola/{idEscola}")
     public List<Map<String, Object>> getSeries(@PathVariable Long idConta, @PathVariable Long idCurso, @PathVariable Long idEscola) {
         List<Object[]> series = entityManager.createQuery(
-                "SELECT oc.serie, cu.codCurso " +
-                        "FROM OfertaConcurso oc " +
-                        "JOIN oc.concurso c " +
-                        "JOIN oc.curso cu " +
-                        "WHERE c.ativo = 'S' " +
-                        "AND oc.ativo = 'S' " +
-                        "AND c.conta.idConta = :idConta " +
-                        "AND oc.curso.idCurso = :idCurso " +
-                        "AND oc.escola.idEscola = :idEscola", Object[].class)
+        		"SELECT oc.series, cu.codCurso, s.descricao " +
+        				"FROM OfertaConcurso oc " +
+        				"JOIN oc.concurso c " +
+        				"JOIN oc.curso cu " +
+        				"JOIN oc.serie s " + 
+        				"WHERE c.ativo = 'S' " +
+        				"AND oc.ativo = 'S' " +
+        				"AND c.conta.idConta = :idConta " +
+        				"AND oc.curso.idCurso = :idCurso " +
+        				"AND oc.escola.idEscola = :idEscola", Object[].class)
                 .setParameter("idConta", idConta)
                 .setParameter("idCurso", idCurso)
                 .setParameter("idEscola", idEscola)
@@ -71,6 +72,7 @@ public class OfertaConcursoController {
                     Map<String, Object> serieJson = new HashMap<>();
                     serieJson.put("serie", serie[0]);
                     serieJson.put("codCurso", serie[1]);
+                    serieJson.put("descricao", serie[2]);
                     return serieJson;
                 })
                 .collect(Collectors.toList());
@@ -78,11 +80,11 @@ public class OfertaConcursoController {
         return seriesJson;
     }
     
-    @GetMapping("/curso/{idCurso}/turno/{idTurno}/serie/{serie}/escola/{idEscola}")
+    @GetMapping("/curso/{idCurso}/turno/{idTurno}/serie/{series}/escola/{idEscola}")
     public ResponseEntity<Map<String, Object>> buscarIdOfertaConcurso(
         @PathVariable Long idCurso,
         @PathVariable Long idTurno,
-        @PathVariable Integer serie,
+        @PathVariable Integer series,
         @PathVariable Long idEscola
     ) {
     	Long idOfertaConcurso = (Long) entityManager.createQuery(
@@ -90,12 +92,12 @@ public class OfertaConcursoController {
             "FROM OfertaConcurso oc " +
             "WHERE oc.curso.idCurso = :idCurso " +
             "AND oc.turno.idTurno = :idTurno " +
-            "AND oc.serie = :serie " +
+            "AND oc.series = :series " +
             "AND oc.escola.idEscola = :idEscola"
         )
         .setParameter("idCurso", idCurso)
         .setParameter("idTurno", idTurno)
-        .setParameter("serie", serie)
+        .setParameter("series", series)
         .setParameter("idEscola", idEscola)
         .getSingleResult();
 

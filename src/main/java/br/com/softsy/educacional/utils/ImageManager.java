@@ -25,7 +25,7 @@ public class ImageManager {
 
 	public static String buscaImagem(String path) {
 		try {
-			String diretorio = ImageProperties.getImagePath() + path;
+			String diretorio = path;
 
 			byte[] loadedImage = loadImage(diretorio);
 			return byteToBase64(loadedImage);
@@ -83,7 +83,7 @@ public class ImageManager {
         // Decodifica a string base64 em um array de bytes
         byte[] imageBytes = Base64.getDecoder().decode(base64);
         
-        String directoryPath = ImageProperties.getImagePath();
+        String directoryPath = ImageProperties.getImagePath() +"/uploads/conta/"+contaId.toString();
  
         // Define o caminho para salvar a imagem
         Path diretorio = Paths.get(directoryPath);
