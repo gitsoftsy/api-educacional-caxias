@@ -99,13 +99,12 @@ public class AvisoService {
 		base64 = aviso.getPathAnexo();
 
 		aviso.setPathAnexo(null);
-		// Salvando a escola no banco de dados após tratar a imagem
 		aviso = repository.save(aviso);
 
-		// Manipulando a imagem e obtendo o caminho
+	
 		String caminhoIMG = ImageManager.salvaImagemAviso(base64, aviso.getIdAviso(),"anexoAviso" + dto.getTipoAvisoId());
 
-		// Setando a imagem diretamente no objeto escola
+		
 		aviso.setPathAnexo(caminhoIMG);
 		dto.setPathAnexo(caminhoIMG);
 		dto.setIdAviso(aviso.getIdAviso());
