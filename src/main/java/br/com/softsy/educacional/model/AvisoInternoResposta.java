@@ -26,7 +26,8 @@ public class AvisoInternoResposta {
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
 	
-	@Column(name = "ID_AVISO_INTERNO")
+	@ManyToOne
+	@JoinColumn(name = "ID_AVISO_INTERNO")
     private AvisoInterno avisoInterno;
 	
 	 @ManyToOne
@@ -42,7 +43,6 @@ public class AvisoInternoResposta {
 
 	  @Column(name = "PATH_ANEXO", length = 255)
 	  private String pathAnexo;
-	
 	
 	
 }
