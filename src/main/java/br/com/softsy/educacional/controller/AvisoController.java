@@ -49,6 +49,12 @@ public class AvisoController {
         return ResponseEntity.ok(aviso);
     }
     
+    @GetMapping("/aluno/{idAluno}")
+    public ResponseEntity<List<AvisoDTO>> buscarPorIdAluno(@PathVariable Long idAluno) {
+        List<AvisoDTO> aviso = service.buscarPorIdAluno(idAluno);
+        return ResponseEntity.ok(aviso);
+    }
+    
 	@GetMapping("/{id}/logo")
     public ResponseEntity<String> getLogoById(@PathVariable("id") Long id) throws IOException {
 		String logo = service.getLogoById(id);
