@@ -187,6 +187,40 @@ public class TurmaService {
         return mappedResultList;
     }
     
+    public List<Map<String, Object>> listarAlunosTurma(Long idTurma) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTAR_ALUNOS_TURMA(:pIdTurma)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdTurma", idTurma);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idAluno", result[0]);
+            resultMap.put("idConta", result[1]);
+            resultMap.put("idCurso", result[2]);
+            resultMap.put("idEscola", result[3]);
+            resultMap.put("idSerie", result[4]);
+            resultMap.put("idTurno", result[5]);
+            resultMap.put("idPessoa", result[6]);
+            resultMap.put("idCandidato", result[7]);
+            resultMap.put("idSituacaoAluno", result[8]);
+            resultMap.put("dataCadastro", result[9]);
+            resultMap.put("aluno", result[10]);
+            resultMap.put("emailInterno", result[11]);
+            resultMap.put("senha", result[12]);
+            resultMap.put("nomeCompleto", result[13]);
+            resultMap.put("nomeCurso", result[14]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
     public List<Map<String, Object>> listarTurmasSecretaria() {
         StringBuilder sql = new StringBuilder();
         sql.append("CALL PROC_LISTAR_TURMAS_SECRETARIA()");

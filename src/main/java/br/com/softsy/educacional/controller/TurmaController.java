@@ -71,6 +71,23 @@ public class TurmaController {
         return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
     }
     
+    @GetMapping("/alunos")
+    public ResponseEntity<AllResponse> listarAlunosTurma(
+            @RequestParam(value = "idTurma", required = false) Long idTurma
+    ) {
+        if (idTurma == null) {
+            return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+        }
+
+        List<Map<String, Object>> result = turmaService.listarAlunosTurma(idTurma);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+        }
+
+        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+    }
+    
     @GetMapping("/secretaria")
     public ResponseEntity<AllResponse> listarTurmasSecretaria() {
 

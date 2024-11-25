@@ -287,13 +287,11 @@ public class CandidatoService {
 
         Query query = entityManager.createNativeQuery(sql.toString());
 
-        // Definir os parâmetros
         query.setParameter("pIdUsuario", idUsuario);
 
         List<Object[]> resultList = query.getResultList();
         List<Map<String, Object>> mappedResultList = new ArrayList<>();
 
-        // Mapear os resultados para um formato de mapa
         for (Object[] result : resultList) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("idCandidato", result[0]);
