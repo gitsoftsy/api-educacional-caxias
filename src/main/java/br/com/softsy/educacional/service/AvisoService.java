@@ -79,6 +79,15 @@ public class AvisoService {
                 .map(AvisoDTO::new)
                 .collect(Collectors.toList());
     }
+    
+    @Transactional(readOnly = true)
+    public List<AvisoDTO> buscarPorIdAluno(Long idAluno) {
+        List<Aviso> aviso = repository.findByAluno_IdAluno(idAluno)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar concurso por ID do aluno"));
+        return aviso.stream()
+                .map(AvisoDTO::new)
+                .collect(Collectors.toList());
+    }
 	
 	@Transactional
 	public CadastroAvisoDTO salvar(CadastroAvisoDTO dto) throws IOException {

@@ -159,14 +159,12 @@ public class TurmaService {
 
         Query query = entityManager.createNativeQuery(sql.toString());
 
-        // Definir os parâmetros
         query.setParameter("pIdEscola", idEscola);
         query.setParameter("pIdDisciplina", idDisciplina);
 
         List<Object[]> resultList = query.getResultList();
         List<Map<String, Object>> mappedResultList = new ArrayList<>();
 
-        // Mapear os resultados para um formato de mapa
         for (Object[] result : resultList) {
         	Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("idTurma", result[0]);
