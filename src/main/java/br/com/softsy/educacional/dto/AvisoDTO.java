@@ -18,8 +18,8 @@ public class AvisoDTO {
     private LocalDateTime dataFim;
     private String titulo;
     private String mensagem;
-    private Long usuario;
-    private Long professor;
+    private UsuarioDTO usuario;
+    private ProfessorDTO professor;
     private LocalDateTime dataLeitura;
     private String pathAnexo;
     private Character respostasAbertas;
@@ -27,14 +27,28 @@ public class AvisoDTO {
     public AvisoDTO(Aviso aviso) {
         this.idAviso = aviso.getIdAviso();
         this.aluno = aviso.getAluno().getIdAluno();
+		
         this.tipoAviso = new TipoAvisoDTO(aviso.getTipoAviso());
         this.dataCadastro = aviso.getDataCadastro();
         this.dataInicio = aviso.getDataInicio();
         this.dataFim = aviso.getDataFim();
         this.titulo = aviso.getTitulo();
         this.mensagem = aviso.getMensagem();
-        this.usuario = aviso.getUsuario().getIdUsuario();
-        this.professor = aviso.getProfessor().getIdProfessor();
+
+        
+		if (aviso.getUsuario() != null) {
+			this.usuario = new UsuarioDTO(aviso.getUsuario());
+		} else {
+			this.usuario = null;
+		}
+        
+        
+		if (aviso.getProfessor() != null) {
+			this.professor = new ProfessorDTO(aviso.getProfessor());
+		} else {
+			this.professor = null;
+		}
+        
         this.dataLeitura = aviso.getDataLeitura();
         this.pathAnexo = aviso.getPathAnexo();
         this.respostasAbertas = aviso.getRespostasAbertas();

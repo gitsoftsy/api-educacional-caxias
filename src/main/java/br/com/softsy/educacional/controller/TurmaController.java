@@ -70,6 +70,18 @@ public class TurmaController {
 
         return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
     }
+    
+    @GetMapping("/secretaria")
+    public ResponseEntity<AllResponse> listarTurmasSecretaria() {
+
+        List<Map<String, Object>> result = turmaService.listarTurmasSecretaria();
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(new AllResponse("Nenhuma turma encontrada.", new ArrayList<>()));
+        }
+
+        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+    }
 
     @PutMapping
     public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroTurmaDTO dto) {

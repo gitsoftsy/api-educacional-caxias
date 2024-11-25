@@ -187,4 +187,34 @@ public class TurmaService {
         return mappedResultList;
     }
     
+    public List<Map<String, Object>> listarTurmasSecretaria() {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTAR_TURMAS_SECRETARIA()");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+        	Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idTurma", result[0]);
+            resultMap.put("nomeTurma", result[1]);
+            resultMap.put("idDisciplina", result[2]);
+            resultMap.put("codDisciplina", result[3]);
+            resultMap.put("nome", result[4]);
+            resultMap.put("ano", result[5]);
+            resultMap.put("periodo", result[6]);
+            resultMap.put("tipoPeriodicidade", result[7]);
+            resultMap.put("aulasPrevistas", result[8]);
+            resultMap.put("aulasDadas", result[9]);
+            resultMap.put("prematriculas", result[10]);
+            resultMap.put("matriculas", result[11]);
+            resultMap.put("idProfessor", result[11]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
 }
