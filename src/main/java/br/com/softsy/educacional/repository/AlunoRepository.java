@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +16,10 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long>{
 
 	@Query("select aluno from Aluno aluno join aluno.conta conta where conta.idConta = :idConta")
     Optional<List<Aluno>> findByConta_IdConta(@Param("idConta") Long idConta);
-	
+
+	   @Procedure(name = "PROC_LISTA_TURMAS_MATRICULA_ALUNO")
+	    List<Object[]> listarTurmasDisciplinaAluno(
+	            @Param("P_ID_ALUNO") Long idAluno
+	    );
+	    
 }

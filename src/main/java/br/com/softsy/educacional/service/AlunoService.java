@@ -1,10 +1,15 @@
 package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +62,9 @@ public class AlunoService {
     
 	@Autowired
 	private PasswordEncrypt encrypt;
+	
+	@Autowired
+    private EntityManager entityManager;
 
     @Transactional(readOnly = true)
     public List<AlunoDTO> listarTudo() {
@@ -154,4 +162,38 @@ public class AlunoService {
         	aluno.setSenha(encrypt.hashPassword(dto.getSenha()));
 		}
     }
+    
+    
+    public List<Map<String, Object>> listarTurmaDisciplinaAluno(Long idAluno) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTA_TURMAS_MATRICULA_ALUNO(:pIdAluno)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdAluno", idAluno);
+     
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idTurma", result[0]);
+            resultMap.put("nomeTurma", result[1]);
+            resultMap.put("idDisciplina", result[2]);
+            resultMap.put("codDisciplina", result[3]);
+            resultMap.put("nome", result[4]);
+            resultMap.put("ano", result[5]);
+            resultMap.put("periodo", result[6]);
+            resultMap.put("tipoPeriocidade", result[7]);
+            resultMap.put("aluasPrevistas", result[8]);
+            resultMap.put("aulasDadas", result[9]);
+            resultMap.put("idProfessor", result[10]);
+            resultMap.put("nomeCompleto", result[11]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
 }

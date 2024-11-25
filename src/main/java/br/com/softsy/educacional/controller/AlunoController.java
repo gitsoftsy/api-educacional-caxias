@@ -2,6 +2,7 @@ package br.com.softsy.educacional.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -65,4 +67,25 @@ public class AlunoController {
         alunoService.excluir(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @GetMapping("/turmaDisciplina")
+	public Object listarTurmaDiscipliaAluno(@RequestParam(value = "idAluno", required = false) Long idAluno) {
+		if (idAluno == null) {
+			return "Por favor, informe o parâmetro na requisição.";
+		}
+
+		List<Map<String, Object>> result = alunoService.listarTurmaDisciplinaAluno(idAluno);
+
+		if (result.isEmpty()) {
+			return "Nenhum resultado encontrado para os parâmetros informados.";
+		}
+
+		return result;
+	}
+
+    
+    
+    
+    
+    
 }

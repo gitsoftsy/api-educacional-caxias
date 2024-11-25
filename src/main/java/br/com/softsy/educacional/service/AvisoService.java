@@ -188,5 +188,15 @@ public class AvisoService {
     public void excluir(Long id) {
         repository.deleteById(id);
     }
+    
+    @Transactional
+    public AvisoDTO atualizarDataLeitura(Long idAviso, LocalDateTime dataLeitura) {
+    	Aviso aviso = repository.getReferenceById(idAviso);
+    	aviso.setDataLeitura(dataLeitura);
+
+        repository.save(aviso); 
+        return new AvisoDTO(aviso);
+    }
+
 	
 }

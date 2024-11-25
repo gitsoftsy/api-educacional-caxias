@@ -2,8 +2,10 @@ package br.com.softsy.educacional.controller;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.softsy.educacional.dto.AgendaDTO;
-import br.com.softsy.educacional.dto.AreaConhecimentoDTO;
 import br.com.softsy.educacional.dto.AvisoDTO;
 import br.com.softsy.educacional.dto.CadastroAvisoDTO;
-import br.com.softsy.educacional.dto.ContaDTO;
-import br.com.softsy.educacional.model.Aviso;
-import br.com.softsy.educacional.model.CaminhoImagemRequest;
 import br.com.softsy.educacional.service.AvisoService;
 
 @RestController
@@ -85,6 +83,25 @@ public class AvisoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+	
+	 @PutMapping("/atualizarDataLeitura/{idAviso}")
+	    public ResponseEntity<AvisoDTO> atualizarDataLeitura(
+	            @PathVariable Long idAviso,
+	            @RequestBody AvisoDTO dto) {
+
+	        try {
+	            AvisoDTO avisoAtualizado = service.atualizarDataLeitura(idAviso, dto.getDataLeitura());
+
+	            return ResponseEntity.ok(avisoAtualizado);
+
+	        } catch (EntityNotFoundException e) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                    .body(null);
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                    .body(null);
+	        }
+	    }
     
     @DeleteMapping("/{idAviso}")
     public ResponseEntity<Void> excluir(@PathVariable Long idAviso) {

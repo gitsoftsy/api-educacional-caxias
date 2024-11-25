@@ -251,4 +251,49 @@ public class TurmaService {
         return mappedResultList;
     }
     
+    
+    public List<Map<String, Object>> filtrarTurmaDisciplinas(Long idProfessor, Integer ano, Long idPeriodoLetivo,
+    		Long idEscola, Long idDisciplina, Long idTurno, Long idCurso) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_FILTRAR_TURMA_DISCIPLINAS(:pIdProfessor, :pAno, :pIdPeriodoLetivo, :pIdEscola, :pIdDisciplina, :pIdTurno, :pIdCurso)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdProfessor", idProfessor);
+        query.setParameter("pAno", ano);
+        query.setParameter("pIdPeriodoLetivo", idPeriodoLetivo);
+        query.setParameter("pIdEscola", idEscola);
+        query.setParameter("pIdDisciplina", idDisciplina);
+        query.setParameter("pIdTurno", idTurno);
+        query.setParameter("pIdCurso", idCurso);
+     
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idTurma", result[0]);
+            resultMap.put("nomeTurma", result[1]);
+            resultMap.put("idCurso", result[2]);
+            resultMap.put("nomeCurso", result[3]);
+            resultMap.put("idDisciplina", result[4]);
+            resultMap.put("codDisciplina", result[5]);
+            resultMap.put("nomeDisciplina", result[6]);
+            resultMap.put("ano", result[7]);
+            resultMap.put("periodo", result[8]);
+            resultMap.put("tipoPeriodicidade", result[9]);
+            resultMap.put("descricao", result[10]);
+            resultMap.put("dataInicio", result[11]);
+            resultMap.put("dataFim", result[12]);
+            resultMap.put("idEscola", result[13]);
+            resultMap.put("nomeEscola", result[14]);
+            resultMap.put("mnemonico", result[15]);
+            resultMap.put("turno", result[16]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
 }
