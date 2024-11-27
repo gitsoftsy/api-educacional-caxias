@@ -66,4 +66,6 @@ public class Aluno {
 
     @Column(name = "SENHA", length = 2500)
     private String senha;
+
+	
 }

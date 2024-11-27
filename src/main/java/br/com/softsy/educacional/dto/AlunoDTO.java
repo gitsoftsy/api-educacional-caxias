@@ -21,7 +21,10 @@ public class AlunoDTO {
     private LocalDateTime dataCadastro;
     private String aluno;
     private String emailInterno;
-    private String senha;
+    private String senha;	
+	private Character geraPrematricula;
+	private Long tipoMatricula;
+   
 
     public AlunoDTO(Aluno aluno) {
         this.idAluno = aluno.getIdAluno();
@@ -37,5 +40,6 @@ public class AlunoDTO {
         this.aluno = aluno.getAluno();
         this.emailInterno = aluno.getEmailInterno();
         this.senha = aluno.getSenha();
+      
     }
 }

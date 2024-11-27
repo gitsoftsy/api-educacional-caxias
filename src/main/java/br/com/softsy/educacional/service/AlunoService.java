@@ -28,6 +28,7 @@ import br.com.softsy.educacional.repository.EscolaRepository;
 import br.com.softsy.educacional.repository.PessoaRepository;
 import br.com.softsy.educacional.repository.SerieRepository;
 import br.com.softsy.educacional.repository.SituacaoAlunoRepository;
+import br.com.softsy.educacional.repository.TipoMatriculaRepository;
 import br.com.softsy.educacional.repository.TurnoRepository;
 
 @Service
@@ -59,6 +60,9 @@ public class AlunoService {
 
     @Autowired
     private SituacaoAlunoRepository situacaoAlunoRepository;
+    
+    @Autowired
+    private TipoMatriculaRepository tipoMatriculaRepository;
     
 	@Autowired
 	private PasswordEncrypt encrypt;
@@ -95,6 +99,9 @@ public class AlunoService {
         
         aluno.setSenha(encrypt.hashPassword(dto.getSenha()));
         aluno = alunoRepository.save(aluno);
+        
+        prematriculaAluno(aluno.getIdAluno(), dto.getTipoMatriculaId(), null);
+        
         return new AlunoDTO(aluno);
     }
 
@@ -130,10 +137,34 @@ public class AlunoService {
                 .orElseThrow(() -> new IllegalArgumentException("Candidato não encontrado")));
         aluno.setSituacaoAluno(situacaoAlunoRepository.findById(dto.getSituacaoAlunoId())
                 .orElseThrow(() -> new IllegalArgumentException("Situação do Aluno não encontrada")));
+        
+    
+        // Validações físicas
+        Character geraPreMatricula = dto.getGeraPrematricula();
+        Long tipoMatriculaId = dto.getTipoMatriculaId();
+
+        try {
+            validarGeraPrematricula(geraPreMatricula); 
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Erro: " + e.getMessage());
+        }
+
+        if ('S' == Character.toUpperCase(geraPreMatricula) && tipoMatriculaId == null) {
+            throw new IllegalArgumentException("O campo 'tipoMatriculaId' é obrigatório quando 'geraPreMatricula' é 'S'.");
+        }
+        if('S' == Character.toUpperCase(geraPreMatricula)) {
+        	tipoMatriculaRepository.findById(dto.getTipoMatriculaId())
+            .orElseThrow(() -> new IllegalArgumentException("Tipo de Matricula não encontrada"));
+        }
+       
+        
+
+        
         aluno.setDataCadastro(dto.getDataCadastro() != null ? dto.getDataCadastro() : LocalDateTime.now());
         aluno.setAluno(dto.getAluno());
         aluno.setEmailInterno(dto.getEmailInterno());
         aluno.setSenha(dto.getSenha());
+        
         return aluno;
     }
 
@@ -161,6 +192,12 @@ public class AlunoService {
         if(dto.getSenha() != null) {
         	aluno.setSenha(encrypt.hashPassword(dto.getSenha()));
 		}
+    }
+    
+    public void validarGeraPrematricula(Character geraPrematricula) {
+        if (geraPrematricula == null || (geraPrematricula != 'S' && geraPrematricula != 'N')) {
+            throw new IllegalArgumentException("O campo 'geraPrematricula' deve ser 'S' ou 'N'.");
+        }
     }
     
     
@@ -196,4 +233,21 @@ public class AlunoService {
         return mappedResultList;
     }
     
+    public void prematriculaAluno(Long idAluno, Long idTipoMatricula, Long idUsuario) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_PREMATRICULA_ALUNO(:pIdAluno, :pIdTipoMatricula, :pIdUsuario)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+      
+        query.setParameter("pIdAluno", idAluno);
+        query.setParameter("pIdTipoMatricula", idTipoMatricula);
+        query.setParameter("pIdUsuario", idUsuario);
+
+  
+        query.executeUpdate();
+    }
+
+    
+   
 }

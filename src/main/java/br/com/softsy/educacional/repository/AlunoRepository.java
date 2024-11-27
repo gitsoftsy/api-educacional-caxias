@@ -22,4 +22,10 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long>{
 	            @Param("P_ID_ALUNO") Long idAluno
 	    );
 	    
+	    @Procedure(name = "PROC_PREMATRICULA_ALUNO")
+	    List<Object[]> prematriculaAluno(
+	            @Param("P_ID_ALUNO") Long idAluno,
+	            @Param("P_ID_TIPO_MATRICULA") Long idTipoMatricula,
+	            @Param("P_ID_USUARIO") Long idUsuario
+	    );
 }
