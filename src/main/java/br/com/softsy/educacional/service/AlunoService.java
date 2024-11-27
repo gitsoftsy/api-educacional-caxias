@@ -91,10 +91,11 @@ public class AlunoService {
 
     @Transactional
     public AlunoDTO salvar(CadastroAlunoDTO dto) {
-        Aluno aluno = criarAlunoAPartirDTO(dto);
+    	Aluno aluno = criarAlunoAPartirDTO(dto);
         
         aluno.setSenha(encrypt.hashPassword(dto.getSenha()));
         aluno = alunoRepository.save(aluno);
+        
         return new AlunoDTO(aluno);
     }
 
@@ -130,6 +131,7 @@ public class AlunoService {
                 .orElseThrow(() -> new IllegalArgumentException("Candidato não encontrado")));
         aluno.setSituacaoAluno(situacaoAlunoRepository.findById(dto.getSituacaoAlunoId())
                 .orElseThrow(() -> new IllegalArgumentException("Situação do Aluno não encontrada")));
+        
         aluno.setDataCadastro(dto.getDataCadastro() != null ? dto.getDataCadastro() : LocalDateTime.now());
         aluno.setAluno(dto.getAluno());
         aluno.setEmailInterno(dto.getEmailInterno());

@@ -168,6 +168,9 @@ public class OfertaConcursoService {
             resultMap.put("idEscola", result[13]);
             resultMap.put("idTurno", result[14]);
             resultMap.put("idCurso", result[15]);
+            resultMap.put("idCurriculo", result[16]);
+            resultMap.put("curriculo", result[17]);
+            resultMap.put("descricaoCurriculo", result[18]);
             mappedResultList.add(resultMap);
         }
 
