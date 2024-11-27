@@ -17,12 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.CadastroOfertaConcursoDTO;
 import br.com.softsy.educacional.dto.OfertaConcursoDTO;
 import br.com.softsy.educacional.model.Concurso;
+import br.com.softsy.educacional.model.Curriculo;
 import br.com.softsy.educacional.model.Curso;
 import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.model.OfertaConcurso;
 import br.com.softsy.educacional.model.Serie;
+import br.com.softsy.educacional.model.SituacaoFuncionamento;
 import br.com.softsy.educacional.model.Turno;
 import br.com.softsy.educacional.repository.ConcursoRepository;
+import br.com.softsy.educacional.repository.CurriculoRepository;
 import br.com.softsy.educacional.repository.CursoRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
 import br.com.softsy.educacional.repository.OfertaConcursoRepository;
@@ -49,6 +52,9 @@ public class OfertaConcursoService {
     
     @Autowired
     private SerieRepository serieRepository;
+    
+    @Autowired
+    private CurriculoRepository curriculoRepository;
     
     @Autowired
     private EntityManager entityManager;
@@ -111,12 +117,19 @@ public class OfertaConcursoService {
                 .orElseThrow(() -> new IllegalArgumentException("Turno não encontrado"));
         Serie serie = serieRepository.findById(dto.getSerieId())
                 .orElseThrow(() -> new IllegalArgumentException("Serie não encontrada"));
+        
+		Curriculo curriculo = null;
+        if (dto.getCurriculoId() != null) {
+        	curriculo = curriculoRepository.findById(dto.getCurriculoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Currículo não encontradi"));
+        }
 
         oferta.setConcurso(concurso);
         oferta.setCurso(curso);
         oferta.setEscola(escola);
         oferta.setTurno(turno);
         oferta.setSerie(serie);
+        oferta.setCurriculo(curriculo);
         oferta.setDescricaoOferta(dto.getDescricaoOferta());
         oferta.setSeries(dto.getSeries());
         oferta.setVagas(dto.getVagas());
@@ -174,12 +187,18 @@ public class OfertaConcursoService {
         Serie serie = serieRepository.findById(origem.getSerieId())
                 .orElseThrow(() -> new IllegalArgumentException("Serie não encontrada"));
         
+		Curriculo curriculo = null;
+        if (origem.getCurriculoId() != null) {
+        	curriculo = curriculoRepository.findById(origem.getCurriculoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Currículo não encontrado"));
+        }
 
         destino.setConcurso(concurso);
         destino.setCurso(curso);
         destino.setEscola(escola);
         destino.setTurno(turno);
         destino.setSerie(serie);
+        destino.setCurriculo(curriculo);
         destino.setSeries(origem.getSeries());
         destino.setDescricaoOferta(origem.getDescricaoOferta());
         destino.setVagas(origem.getVagas());

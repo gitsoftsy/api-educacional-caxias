@@ -305,8 +305,10 @@ public class CandidatoService {
             resultMap.put("idTipoIngresso", result[8]);
             resultMap.put("tipoIngresso", result[9]);
             resultMap.put("aprovado", result[10]);
-            resultMap.put("documentos", result[11]);
-            resultMap.put("fichaMedica", result[12]);
+            resultMap.put("idCurso", result[11]);
+            resultMap.put("nomeCurso", result[12]);
+            resultMap.put("documentos", result[13]);
+            resultMap.put("fichaMedica", result[14]);
             mappedResultList.add(resultMap);
         }
 
