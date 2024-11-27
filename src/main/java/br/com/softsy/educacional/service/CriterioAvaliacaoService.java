@@ -65,6 +65,7 @@ public class CriterioAvaliacaoService {
                 .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada")));
         BeanUtils.copyProperties(origem, destino, "idCriterioAvaliacao", "ativo");
     }
+    
 
     @Transactional
     public void ativaDesativa(char status, Long id) {

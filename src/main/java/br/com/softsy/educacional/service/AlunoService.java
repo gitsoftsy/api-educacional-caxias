@@ -95,13 +95,14 @@ public class AlunoService {
 
     @Transactional
     public AlunoDTO salvar(CadastroAlunoDTO dto) {
-        Aluno aluno = criarAlunoAPartirDTO(dto);
+    	Aluno aluno = criarAlunoAPartirDTO(dto);
         
         aluno.setSenha(encrypt.hashPassword(dto.getSenha()));
         aluno = alunoRepository.save(aluno);
         
         prematriculaAluno(aluno.getIdAluno(), dto.getTipoMatriculaId(), null);
         
+
         return new AlunoDTO(aluno);
     }
 
@@ -137,7 +138,6 @@ public class AlunoService {
                 .orElseThrow(() -> new IllegalArgumentException("Candidato não encontrado")));
         aluno.setSituacaoAluno(situacaoAlunoRepository.findById(dto.getSituacaoAlunoId())
                 .orElseThrow(() -> new IllegalArgumentException("Situação do Aluno não encontrada")));
-        
     
         // Validações físicas
         Character geraPreMatricula = dto.getGeraPrematricula();
@@ -156,10 +156,7 @@ public class AlunoService {
         	tipoMatriculaRepository.findById(dto.getTipoMatriculaId())
             .orElseThrow(() -> new IllegalArgumentException("Tipo de Matricula não encontrada"));
         }
-       
-        
-
-        
+      
         aluno.setDataCadastro(dto.getDataCadastro() != null ? dto.getDataCadastro() : LocalDateTime.now());
         aluno.setAluno(dto.getAluno());
         aluno.setEmailInterno(dto.getEmailInterno());

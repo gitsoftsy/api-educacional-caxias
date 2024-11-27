@@ -40,6 +40,10 @@ public class OfertaConcurso {
     private Turno turno;
     
     @ManyToOne
+    @JoinColumn(name = "ID_CURRICULO")
+    private Curriculo curriculo;
+    
+    @ManyToOne
     @JoinColumn(name = "ID_SERIE", nullable = false)
     private Serie serie;
     
