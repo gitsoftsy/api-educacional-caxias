@@ -16,7 +16,6 @@ public class OfertaConcursoDTO {
     private TurnoDTO turno;
     private SerieDTO serie;
     private CurriculoDTO curriculo;
-    private Integer series;
     private String descricaoOferta;
     private Integer vagas;
     private Integer minVagasAbertTurma;
@@ -36,7 +35,6 @@ public class OfertaConcursoDTO {
 		} else {
 			this.curriculo = null;
 		}
-        this.series = ofertaConcurso.getSeries();
         this.descricaoOferta = ofertaConcurso.getDescricaoOferta();
         this.vagas = ofertaConcurso.getVagas();
         this.minVagasAbertTurma = ofertaConcurso.getMinVagasAbertTurma();

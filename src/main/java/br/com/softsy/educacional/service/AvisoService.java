@@ -74,7 +74,7 @@ public class AvisoService {
     @Transactional(readOnly = true)
     public List<AvisoDTO> buscarPorIdProfessor(Long idProfessor) {
         List<Aviso> aviso = repository.findByProfessor_IdProfessor(idProfessor)
-                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar concurso por ID do professor"));
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar aviso por ID do professor"));
         return aviso.stream()
                 .map(AvisoDTO::new)
                 .collect(Collectors.toList());
@@ -83,7 +83,7 @@ public class AvisoService {
     @Transactional(readOnly = true)
     public List<AvisoDTO> buscarPorIdAluno(Long idAluno) {
         List<Aviso> aviso = repository.findByAluno_IdAluno(idAluno)
-                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar concurso por ID do aluno"));
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar aviso por ID do aluno"));
         return aviso.stream()
                 .map(AvisoDTO::new)
                 .collect(Collectors.toList());

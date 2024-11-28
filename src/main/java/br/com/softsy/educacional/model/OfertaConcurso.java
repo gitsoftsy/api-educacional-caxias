@@ -49,9 +49,6 @@ public class OfertaConcurso {
     
     @Column(name = "DESCRICAO_OFERTA", length = 555, nullable = false)
     private String descricaoOferta;
-    
-    @Column(name = "SERIE", nullable = false)
-    private Integer series;
 
     @Column(name = "VAGAS", nullable = false)
     private Integer vagas;
