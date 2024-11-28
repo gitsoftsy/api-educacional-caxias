@@ -1,5 +1,9 @@
 package br.com.softsy.educacional.repository;
 
-public interface UsuarioTokenSenhaRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import br.com.softsy.educacional.model.UsuarioTokenSenha;
+
+public interface UsuarioTokenSenhaRepository  extends JpaRepository<UsuarioTokenSenha, Long>{
 
 }
