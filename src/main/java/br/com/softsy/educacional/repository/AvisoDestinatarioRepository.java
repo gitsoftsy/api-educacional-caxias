@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +17,8 @@ public interface AvisoDestinatarioRepository extends JpaRepository<AvisoDestinat
 	@Query("select avisoDestinatario from AvisoDestinatario join avisoDestinatario.aluno aluno where aluno.idAluno = :idAluno")
     Optional<List<AvisoDestinatario>> findByAluno_IdAluno(@Param("idAluno") Long idAluno);
 	
+    @Procedure(name = "PROC_LISTAR_DESTINATARIOS_AVISO")
+    List<Object[]> listaDestinatariosAviso(
+            @Param("P_ID_AVISO") Long idAviso
+    );
 }

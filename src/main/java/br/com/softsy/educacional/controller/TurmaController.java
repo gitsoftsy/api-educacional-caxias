@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.softsy.educacional.controller.ProfessorController.AllResponse;
 import br.com.softsy.educacional.dto.CadastroTurmaDTO;
 import br.com.softsy.educacional.dto.TurmaDTO;
+import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.service.TurmaService;
 
 @RestController
@@ -150,30 +150,5 @@ public class TurmaController {
         return ResponseEntity.ok().build();
     }
 
-    public class AllResponse {
-        private String message;
-        private List<Object> data;
-
-        public AllResponse(String message, List<Object> data) {
-            this.message = message;
-            this.data = data;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-        
-        public List<Object> getData() {
-            return data;
-        }
-
-        public void setData(List<Object> data) {
-            this.data = data;
-        }
-    }
     
 }

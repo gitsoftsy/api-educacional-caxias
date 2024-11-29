@@ -1,8 +1,14 @@
 package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +35,9 @@ public class AvisoDestinatarioService {
 	
 	@Autowired
 	private AlunoRepository alunoRepository;
+	
+    @Autowired
+    private EntityManager entityManager;
 	
     @Transactional(readOnly = true)
     public List<AvisoDestinatarioDTO> listarTudo() {
@@ -107,6 +116,38 @@ public class AvisoDestinatarioService {
  
         repository.save(avisoDestinatario);
         return new AvisoDestinatarioDTO(avisoDestinatario);
+    }
+    
+    public List<Map<String, Object>> listaDestinatariosAviso(Long idAviso) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTAR_DESTINATARIOS_AVISO(:pIdAviso)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdAviso", idAviso);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idAviso", result[0]);
+            resultMap.put("idAvisoDestinatario", result[1]);
+            resultMap.put("dataCadastro", result[2]);
+            resultMap.put("dataLeitura", result[3]);
+            resultMap.put("idAluno", result[4]);
+            resultMap.put("aluno", result[5]);
+            resultMap.put("nomeCompleto", result[6]);
+            resultMap.put("nomeSocial", result[7]);
+            resultMap.put("codigoCurso", result[8]);
+            resultMap.put("nomeCurso", result[9]);
+            resultMap.put("nomeEscola", result[10]);
+            resultMap.put("mnemonico", result[11]);
+            resultMap.put("turno", result[12]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
     }
 	
     @Transactional

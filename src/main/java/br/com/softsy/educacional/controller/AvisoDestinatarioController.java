@@ -2,7 +2,9 @@ package br.com.softsy.educacional.controller;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
@@ -17,11 +19,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.AvisoDestinatarioDTO;
 import br.com.softsy.educacional.dto.CadastroAvisoDestinatarioDTO;
+import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.service.AvisoDestinatarioService;
 
 @RestController
@@ -77,6 +81,23 @@ public class AvisoDestinatarioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(null);
         }
+    }
+    
+    @GetMapping("/listarDestinatarios")
+    public ResponseEntity<AllResponse> listarDestinatariosAviso(
+            @RequestParam(value = "idAviso", required = false) Long idAviso)
+    {
+        if (idAviso == null) {
+            return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+        }
+
+        List<Map<String, Object>> result = service.listaDestinatariosAviso(idAviso);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+        }
+
+        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
     }
     
     @DeleteMapping("/{idAvisoDestinatario}")
