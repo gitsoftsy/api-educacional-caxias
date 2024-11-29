@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 public class AvisoDTO {
 
     private Long idAviso;
-    private Long aluno;
     private TipoAvisoDTO tipoAviso;
     private LocalDateTime dataCadastro;
     private LocalDateTime dataInicio;
@@ -20,13 +19,11 @@ public class AvisoDTO {
     private String mensagem;
     private UsuarioDTO usuario;
     private ProfessorDTO professor;
-    private LocalDateTime dataLeitura;
     private String pathAnexo;
-    private Character respostasAbertas;
+    private Character permiteResposta;
 
     public AvisoDTO(Aviso aviso) {
         this.idAviso = aviso.getIdAviso();
-        this.aluno = aviso.getAluno().getIdAluno();
 		
         this.tipoAviso = new TipoAvisoDTO(aviso.getTipoAviso());
         this.dataCadastro = aviso.getDataCadastro();
@@ -49,8 +46,7 @@ public class AvisoDTO {
 			this.professor = null;
 		}
         
-        this.dataLeitura = aviso.getDataLeitura();
         this.pathAnexo = aviso.getPathAnexo();
-        this.respostasAbertas = aviso.getRespostasAbertas();
+        this.permiteResposta = aviso.getPermiteResposta();
     }
 }

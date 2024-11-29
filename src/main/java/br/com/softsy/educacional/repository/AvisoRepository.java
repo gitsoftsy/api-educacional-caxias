@@ -15,8 +15,6 @@ public interface AvisoRepository extends JpaRepository<Aviso, Long>{
 	
 	@Query("select aviso from Aviso join aviso.professor professor where professor.idProfessor = :idProfessor")
     Optional<List<Aviso>> findByProfessor_IdProfessor(@Param("idProfessor") Long idProfessor);
-	
-	@Query("select aviso from Aviso join aviso.aluno aluno where aluno.idAluno = :idAluno")
-    Optional<List<Aviso>> findByAluno_IdAluno(@Param("idAluno") Long idAluno);
+
 
 }

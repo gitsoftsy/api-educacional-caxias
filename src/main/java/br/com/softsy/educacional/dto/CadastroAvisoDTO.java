@@ -14,8 +14,6 @@ public class CadastroAvisoDTO {
 
     private Long idAviso;
     @NotNull
-    private Long alunoId;
-    @NotNull
     private Long tipoAvisoId;
     private LocalDateTime dataCadastro;
     private LocalDateTime dataInicio;
@@ -26,13 +24,11 @@ public class CadastroAvisoDTO {
     private String mensagem;
     private Long usuarioId;
     private Long professorId;
-    private LocalDateTime dataLeitura;
     private String pathAnexo;
-    private Character respostasAbertas;
+    private Character permiteResposta;
 
     public CadastroAvisoDTO(Aviso aviso) {
         this.idAviso = aviso.getIdAviso();
-        this.alunoId = aviso.getAluno().getIdAluno();
         this.tipoAvisoId = aviso.getTipoAviso().getIdTipoAviso();
         this.dataCadastro = aviso.getDataCadastro();
         this.dataInicio = aviso.getDataInicio();
@@ -41,8 +37,7 @@ public class CadastroAvisoDTO {
         this.mensagem = aviso.getMensagem();
         this.usuarioId = aviso.getUsuario().getIdUsuario();
         this.professorId = aviso.getProfessor().getIdProfessor();
-        this.dataLeitura = aviso.getDataLeitura();
         this.pathAnexo = aviso.getPathAnexo();
-        this.respostasAbertas = aviso.getRespostasAbertas();
+        this.permiteResposta = aviso.getPermiteResposta();
     }
 }

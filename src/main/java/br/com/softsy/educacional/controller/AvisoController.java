@@ -48,12 +48,7 @@ public class AvisoController {
         List<AvisoDTO> aviso = service.buscarPorIdProfessor(idProfessor);
         return ResponseEntity.ok(aviso);
     }
-    
-    @GetMapping("/aluno/{idAluno}")
-    public ResponseEntity<List<AvisoDTO>> buscarPorIdAluno(@PathVariable Long idAluno) {
-        List<AvisoDTO> aviso = service.buscarPorIdAluno(idAluno);
-        return ResponseEntity.ok(aviso);
-    }
+   
     
 	@GetMapping("/{id}/logo")
     public ResponseEntity<String> getLogoById(@PathVariable("id") Long id) throws IOException {
@@ -90,24 +85,6 @@ public class AvisoController {
         }
     }
 	
-	 @PutMapping("/atualizarDataLeitura/{idAviso}")
-	    public ResponseEntity<AvisoDTO> atualizarDataLeitura(
-	            @PathVariable Long idAviso,
-	            @RequestBody AvisoDTO dto) {
-
-	        try {
-	            AvisoDTO avisoAtualizado = service.atualizarDataLeitura(idAviso, dto.getDataLeitura());
-
-	            return ResponseEntity.ok(avisoAtualizado);
-
-	        } catch (EntityNotFoundException e) {
-	            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	                    .body(null);
-	        } catch (Exception e) {
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                    .body(null);
-	        }
-	    }
     
     @DeleteMapping("/{idAviso}")
     public ResponseEntity<Void> excluir(@PathVariable Long idAviso) {

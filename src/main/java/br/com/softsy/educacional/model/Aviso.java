@@ -22,11 +22,7 @@ public class Aviso {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID_AVISO")
     private Long idAviso;
-
-    @ManyToOne
-    @JoinColumn(name = "ID_ALUNO", nullable = false)
-    private Aluno aluno;
-
+    
     @ManyToOne
     @JoinColumn(name = "ID_TIPO_AVISO", nullable = false)
     private TipoAviso tipoAviso;
@@ -54,14 +50,11 @@ public class Aviso {
     @JoinColumn(name = "ID_PROFESSOR")
     private Professor professor;
 
-    @Column(name = "DT_LEITURA")
-    private LocalDateTime dataLeitura;
-
     @Column(name = "PATH_ANEXO", length = 255)
     private String pathAnexo;
 
-    @Column(name = "RESPOSTAS_ABERTAS", length = 1)
-    private Character respostasAbertas;
+    @Column(name = "PERMITE_RESPOSTA", length = 1)
+    private Character permiteResposta;
 	
 	
 }

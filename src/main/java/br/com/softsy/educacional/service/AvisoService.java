@@ -33,9 +33,6 @@ public class AvisoService {
 	private AvisoRepository repository;
 	
 	@Autowired
-	private AlunoRepository alunoRepository;
-	
-	@Autowired
 	private TipoAvisoRepository tipoAvisoRepository;
 	
 	@Autowired
@@ -47,8 +44,8 @@ public class AvisoService {
 
     @Transactional(readOnly = true)
     public List<AvisoDTO> listarTudo() {
-        List<Aviso> agendas = repository.findAll();
-        return agendas.stream()
+        List<Aviso> aviso = repository.findAll();
+        return aviso.stream()
                 .map(AvisoDTO::new)
                 .collect(Collectors.toList());
     }
@@ -80,14 +77,6 @@ public class AvisoService {
                 .collect(Collectors.toList());
     }
     
-    @Transactional(readOnly = true)
-    public List<AvisoDTO> buscarPorIdAluno(Long idAluno) {
-        List<Aviso> aviso = repository.findByAluno_IdAluno(idAluno)
-                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar aviso por ID do aluno"));
-        return aviso.stream()
-                .map(AvisoDTO::new)
-                .collect(Collectors.toList());
-    }
 	
 	@Transactional
 	public CadastroAvisoDTO salvar(CadastroAvisoDTO dto) throws IOException {
@@ -124,8 +113,6 @@ public class AvisoService {
 			throw new IllegalArgumentException("Pelo menos um dos campos usuarioId ou professorId deve ser preenchido");
 		}
 		
-		Aluno aluno = alunoRepository.findById(dto.getAlunoId())
-                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
 		
 		TipoAviso tipoAviso = tipoAvisoRepository.findById(dto.getTipoAvisoId())
                 .orElseThrow(() -> new IllegalArgumentException("Tipo do aviso não encontrado"));
@@ -137,7 +124,6 @@ public class AvisoService {
                 .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado"));
 		
 		aviso.setDataCadastro(LocalDateTime.now());
-		aviso.setAluno(aluno);
 		aviso.setTipoAviso(tipoAviso);
 		aviso.setUsuario(usuario);
 		aviso.setProfessor(professor);
@@ -174,8 +160,6 @@ public class AvisoService {
 	private void atualizaDados(Aviso destino, CadastroAvisoDTO origem) {
 		BeanUtils.copyProperties(origem, destino, "idAviso", "dataCadastro");
 		
-		Aluno aluno = alunoRepository.findById(origem.getAlunoId())
-                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
 		
 		TipoAviso tipoAviso = tipoAvisoRepository.findById(origem.getTipoAvisoId())
                 .orElseThrow(() -> new IllegalArgumentException("Tipo do aviso não encontrado"));
@@ -186,7 +170,6 @@ public class AvisoService {
 		Professor professor = professorRepository.findById(origem.getProfessorId())
                 .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado"));
 		
-		destino.setAluno(aluno);
 		destino.setTipoAviso(tipoAviso);
 		destino.setUsuario(usuario);
 		destino.setProfessor(professor);
@@ -198,14 +181,6 @@ public class AvisoService {
         repository.deleteById(id);
     }
     
-    @Transactional
-    public AvisoDTO atualizarDataLeitura(Long idAviso, LocalDateTime dataLeitura) {
-    	Aviso aviso = repository.getReferenceById(idAviso);
-    	aviso.setDataLeitura(dataLeitura);
-
-        repository.save(aviso); 
-        return new AvisoDTO(aviso);
-    }
 
 	
 }
