@@ -75,9 +75,9 @@ public class AvisoInternoController {
     }
 
     
-    @DeleteMapping("/{idAvisoInterno}")
-    public ResponseEntity<Void> excluir(@PathVariable Long idAvisoInterno) {
-        avisoInternoService.excluir(idAvisoInterno);
+    @DeleteMapping("/{idUsuarioTokenSenha}")
+    public ResponseEntity<Void> excluir(@PathVariable Long idUsuarioTokenSenha) {
+        avisoInternoService.excluir(idUsuarioTokenSenha);
         return ResponseEntity.ok().build();
     }
 }
