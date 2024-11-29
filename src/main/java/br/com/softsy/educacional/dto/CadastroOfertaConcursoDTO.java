@@ -16,7 +16,6 @@ public class CadastroOfertaConcursoDTO {
     private Long turnoId;
     private Long serieId;
     private Long curriculoId;
-    private Integer series;
     private String descricaoOferta;
     private Integer vagas;
     private Integer minVagasAbertTurma;
@@ -31,7 +30,6 @@ public class CadastroOfertaConcursoDTO {
         this.turnoId = ofertaConcurso.getTurno().getIdTurno();
         this.serieId = ofertaConcurso.getSerie().getIdSerie();
         this.curriculoId = ofertaConcurso.getCurriculo()!= null ? ofertaConcurso.getCurriculo().getIdCurriculo() : null;
-        this.series = ofertaConcurso.getSeries();
         this.descricaoOferta = ofertaConcurso.getDescricaoOferta();
         this.vagas = ofertaConcurso.getVagas();
         this.minVagasAbertTurma = ofertaConcurso.getMinVagasAbertTurma();
