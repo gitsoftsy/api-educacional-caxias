@@ -148,7 +148,7 @@ public class AvisoService {
 	        }
 	    }
 
-	    String novoCaminhoIMG = ImageManager.salvaImagemConta(novaImagemBase64, idAviso, "conta" + aviso.getTitulo());
+	    String novoCaminhoIMG = ImageManager.salvaImagemAviso(novaImagemBase64, idAviso, "aviso" + aviso.getTitulo());
 
 	    aviso.setPathAnexo(novoCaminhoIMG);
 	    repository.save(aviso);

@@ -45,9 +45,9 @@ public class AvisoDestinatarioController {
         return ResponseEntity.ok(service.buscarPorId(idAvisoDestinatario));
     }
     
-    @GetMapping("/aluno/{idAvisoDestinatario}")
-    public ResponseEntity<List<AvisoDestinatarioDTO>> buscarPorIdAluno(@PathVariable Long idAvisoDestinatario) {
-        List<AvisoDestinatarioDTO> aviso = service.buscarPorIdAluno(idAvisoDestinatario);
+    @GetMapping("/aluno/{idAluno}")
+    public ResponseEntity<List<AvisoDestinatarioDTO>> buscarPorIdAluno(@PathVariable Long idAluno) {
+        List<AvisoDestinatarioDTO> aviso = service.buscarPorIdAluno(idAluno);
         return ResponseEntity.ok(aviso);
     }
     

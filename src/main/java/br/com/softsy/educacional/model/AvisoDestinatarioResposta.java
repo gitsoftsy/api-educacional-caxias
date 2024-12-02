@@ -14,28 +14,29 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "TBL_AVISO_DESTINATARIO")
+@Table(name = "TBL_AVISO_DESTINATARIO_RESPOSTA")
 @Data
-public class AvisoDestinatario {
+public class AvisoDestinatarioResposta {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID_AVISO_DESTINATARIO")
-    private Long idAvisoDestinatario;
+    @Column(name = "ID_AVISO_DESTINATARIO_RESPOSTA")
+    private Long idAvisoDestinatarioResposta;
     
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
     
     @ManyToOne
-    @JoinColumn(name = "ID_AVISO", nullable = false)
-    private Aviso aviso;
+    @JoinColumn(name = "ID_AVISO_DESTINATARIO", nullable = false)
+    private AvisoDestinatario avisoDestinatario;
     
-    @ManyToOne
-    @JoinColumn(name = "ID_ALUNO", nullable = false)
-    private Aluno aluno;
-
+    @Column(name = "MENSAGEM", nullable = false)
+    private String mensagem;
+    
     @Column(name = "DT_LEITURA")
     private LocalDateTime dataLeitura;
-
+    
+    @Column(name = "PATH_ANEXO", length = 255)
+    private String pathAnexo;
 
 }
