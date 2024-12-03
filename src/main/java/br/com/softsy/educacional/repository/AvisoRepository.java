@@ -11,10 +11,8 @@ import org.springframework.stereotype.Repository;
 import br.com.softsy.educacional.model.Aviso;
 
 @Repository
-public interface AvisoRepository extends JpaRepository<Aviso, Long>{
-	
-	@Query("select aviso from Aviso join aviso.professor professor where professor.idProfessor = :idProfessor")
+public interface AvisoRepository extends JpaRepository<Aviso, Long> {
+    
+    @Query("select aviso from Aviso aviso join aviso.professor professor where professor.idProfessor = :idProfessor")
     Optional<List<Aviso>> findByProfessor_IdProfessor(@Param("idProfessor") Long idProfessor);
-
-
 }

@@ -16,10 +16,12 @@ import br.com.softsy.educacional.dto.AvisoDTO;
 import br.com.softsy.educacional.dto.CadastroAvisoDTO;
 import br.com.softsy.educacional.model.Aluno;
 import br.com.softsy.educacional.model.Aviso;
+import br.com.softsy.educacional.model.AvisoDestinatario;
 import br.com.softsy.educacional.model.Professor;
 import br.com.softsy.educacional.model.TipoAviso;
 import br.com.softsy.educacional.model.Usuario;
 import br.com.softsy.educacional.repository.AlunoRepository;
+import br.com.softsy.educacional.repository.AvisoDestinatarioRepository;
 import br.com.softsy.educacional.repository.AvisoRepository;
 import br.com.softsy.educacional.repository.ProfessorRepository;
 import br.com.softsy.educacional.repository.TipoAvisoRepository;
@@ -40,6 +42,13 @@ public class AvisoService {
 	
 	@Autowired
 	private ProfessorRepository professorRepository;
+	
+	
+	@Autowired
+	private AlunoRepository alunoRepository;
+	
+	@Autowired
+	private AvisoDestinatarioRepository avisoDestinatarioRepository;
 
 
     @Transactional(readOnly = true)
@@ -78,32 +87,45 @@ public class AvisoService {
     }
     
 	
-	@Transactional
-	public CadastroAvisoDTO salvar(CadastroAvisoDTO dto) throws IOException {
+    @Transactional
+    public CadastroAvisoDTO salvar(CadastroAvisoDTO dto) throws IOException {
 
-		String base64 = "";
-		Aviso aviso = criarAvisoAPartirDTO(dto);
+        String base64 = "";
+        Aviso aviso = criarAvisoAPartirDTO(dto);
 
-		base64 = aviso.getPathAnexo();
+  
+        List<Aluno> alunos = alunoRepository.findAllById(dto.getDestinatarios());
 
-		aviso.setPathAnexo(null);
-		aviso = repository.save(aviso);
+        base64 = aviso.getPathAnexo();
 
-	
-		String caminhoIMG = ImageManager.salvaImagemAviso(base64, aviso.getIdAviso(),"anexoAviso" + dto.getTipoAvisoId());
+        aviso.setPathAnexo(null);
+        aviso = repository.save(aviso); 
 
-		
-		aviso.setPathAnexo(caminhoIMG);
-		dto.setPathAnexo(caminhoIMG);
-		dto.setIdAviso(aviso.getIdAviso());
+       
+        String caminhoIMG = ImageManager.salvaImagemAviso(base64, aviso.getIdAviso(), "anexoAviso" + dto.getTipoAvisoId());
+        aviso.setPathAnexo(caminhoIMG);
+        dto.setPathAnexo(caminhoIMG);
+        dto.setIdAviso(aviso.getIdAviso());
 
-		atualizaDados(aviso, dto);
+        atualizaDados(aviso, dto);
 
-		// Criando o DTO com os dados atualizados da escola
-		CadastroAvisoDTO avisoCriado = new CadastroAvisoDTO(aviso);
+       
+        for (Aluno aluno : alunos) {
+            AvisoDestinatario avisoDestinatario = new AvisoDestinatario();
+            avisoDestinatario.setAviso(aviso);
+            avisoDestinatario.setAluno(aluno);  
+          
+            avisoDestinatario.setDataCadastro(LocalDateTime.now());
 
-		return avisoCriado;
-	}
+            avisoDestinatarioRepository.save(avisoDestinatario);  
+        }
+
+        // Criando o DTO com os dados atualizados
+        CadastroAvisoDTO avisoCriado = new CadastroAvisoDTO(aviso);
+
+        return avisoCriado;
+    }
+
 	
 	private Aviso criarAvisoAPartirDTO(CadastroAvisoDTO dto) {
 		Aviso aviso = new Aviso();

@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -26,6 +27,7 @@ public class CadastroAvisoDTO {
     private Long professorId;
     private String pathAnexo;
     private Character permiteResposta;
+    private List<Long> destinatario;
 
     public CadastroAvisoDTO(Aviso aviso) {
         this.idAviso = aviso.getIdAviso();
@@ -39,5 +41,13 @@ public class CadastroAvisoDTO {
         this.professorId = aviso.getProfessor().getIdProfessor();
         this.pathAnexo = aviso.getPathAnexo();
         this.permiteResposta = aviso.getPermiteResposta();
+    }
+
+    public List<Long> getDestinatarios() {
+        return this.destinatario;
+    }
+
+    public void setDestinatarios(List<Long> destinatarios) {
+        this.destinatario = destinatarios;
     }
 }

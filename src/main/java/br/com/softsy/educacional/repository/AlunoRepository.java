@@ -28,4 +28,8 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long>{
 	            @Param("P_ID_TIPO_MATRICULA") Long idTipoMatricula,
 	            @Param("P_ID_USUARIO") Long idUsuario
 	    );
+	    
+	    List<Aluno> findAllByIdAlunoIn(List<Long> ids);
+
+
 }
