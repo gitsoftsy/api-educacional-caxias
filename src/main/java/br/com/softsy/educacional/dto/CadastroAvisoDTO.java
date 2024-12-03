@@ -37,8 +37,12 @@ public class CadastroAvisoDTO {
         this.dataFim = aviso.getDataFim();
         this.titulo = aviso.getTitulo();
         this.mensagem = aviso.getMensagem();
-        this.usuarioId = aviso.getUsuario().getIdUsuario();
-        this.professorId = aviso.getProfessor().getIdProfessor();
+        if(aviso.getUsuario()!=null) {
+        	this.usuarioId = aviso.getUsuario().getIdUsuario();
+        }
+        if(aviso.getProfessor()!=null) {
+        	this.professorId = aviso.getProfessor().getIdProfessor();
+        }
         this.pathAnexo = aviso.getPathAnexo();
         this.permiteResposta = aviso.getPermiteResposta();
     }

@@ -46,11 +46,11 @@ public class Aviso {
     private String mensagem;
 
     @ManyToOne
-    @JoinColumn(name = "ID_USUARIO")
+    @JoinColumn(name = "ID_USUARIO", nullable = true)
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "ID_PROFESSOR")
+    @JoinColumn(name = "ID_PROFESSOR", nullable = true)
     private Professor professor;
 
     @Column(name = "PATH_ANEXO", length = 255)

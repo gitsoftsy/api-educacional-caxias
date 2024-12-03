@@ -101,14 +101,16 @@ public class AvisoService {
         aviso.setPathAnexo(null);
         aviso = repository.save(aviso); 
 
-       
-        String caminhoIMG = ImageManager.salvaImagemAviso(base64, aviso.getIdAviso(), "anexoAviso" + dto.getTipoAvisoId());
-        aviso.setPathAnexo(caminhoIMG);
-        dto.setPathAnexo(caminhoIMG);
-        dto.setIdAviso(aviso.getIdAviso());
+		if (aviso.getPathAnexo() != null) {
+			String caminhoIMG = ImageManager.salvaImagemAviso(base64, aviso.getIdAviso(),
+					"anexoAviso" + dto.getTipoAvisoId());
 
-        atualizaDados(aviso, dto);
+			aviso.setPathAnexo(caminhoIMG);
+			dto.setPathAnexo(caminhoIMG);
+			dto.setIdAviso(aviso.getIdAviso());
 
+			atualizaDados(aviso, dto);
+		}
        
         for (Aluno aluno : alunos) {
             AvisoDestinatario avisoDestinatario = new AvisoDestinatario();
@@ -120,7 +122,6 @@ public class AvisoService {
             avisoDestinatarioRepository.save(avisoDestinatario);  
         }
 
-        // Criando o DTO com os dados atualizados
         CadastroAvisoDTO avisoCriado = new CadastroAvisoDTO(aviso);
 
         return avisoCriado;
@@ -134,21 +135,33 @@ public class AvisoService {
 		if(dto.getUsuarioId() == null && dto.getProfessorId() == null) {
 			throw new IllegalArgumentException("Pelo menos um dos campos usuarioId ou professorId deve ser preenchido");
 		}
+		if(dto.getUsuarioId() != null && dto.getProfessorId() != null) {
+			throw new IllegalArgumentException("Informe apenas um dos campos, usuarioId ou professorId.");
+		}
 		
 		
+	
 		TipoAviso tipoAviso = tipoAvisoRepository.findById(dto.getTipoAvisoId())
                 .orElseThrow(() -> new IllegalArgumentException("Tipo do aviso não encontrado"));
 		
-		Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 		
-		Professor professor = professorRepository.findById(dto.getProfessorId())
-                .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado"));
+		if(dto.getUsuarioId() != null ) {
+			Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+	                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+			aviso.setUsuario(usuario);
+		}
+		
+		else {
+			Professor professor = professorRepository.findById(dto.getProfessorId())
+	                .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado"));
+			aviso.setProfessor(professor);
+		}
+		
 		
 		aviso.setDataCadastro(LocalDateTime.now());
 		aviso.setTipoAviso(tipoAviso);
-		aviso.setUsuario(usuario);
-		aviso.setProfessor(professor);
+	
+	
 		return aviso;
 	}
 	
