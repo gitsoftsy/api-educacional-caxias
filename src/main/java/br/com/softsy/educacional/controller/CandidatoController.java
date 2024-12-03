@@ -8,7 +8,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,12 +26,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroCandidatoDTO;
 import br.com.softsy.educacional.dto.CadastroCandidatoPessoaDTO;
-import br.com.softsy.educacional.dto.CadastroResponsavelDTO;
 import br.com.softsy.educacional.dto.CandidatoDTO;
-import br.com.softsy.educacional.dto.CandidatoRelacionamentoDTO;
 import br.com.softsy.educacional.dto.PessoaDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.model.Candidato;
+import br.com.softsy.educacional.model.ErrorResponse;
 import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.repository.CandidatoRepository;
 import br.com.softsy.educacional.repository.PessoaRepository;
@@ -113,36 +114,37 @@ public class CandidatoController {
 
 	@PostMapping("/pessoa-candidato")
 	public ResponseEntity<Object> cadastrarPessoaECandidato(@RequestBody CadastroCandidatoPessoaDTO dto) {
-	    try {
-	        PessoaDTO pessoaCPF = null;
+		try {
+			PessoaDTO pessoaCPF = null;
 
-	        // Apenas busca a pessoa pelo CPF se o CPF não for nulo
-	        if (dto.getPessoaDTO().getCpf() != null) {
-	            pessoaCPF = pessoaService.buscarPorCpfEIdConta(dto.getPessoaDTO().getCpf(),
-	                    dto.getPessoaDTO().getContaId());
-	        }
+			// Apenas busca a pessoa pelo CPF se o CPF não for nulo
+			if (dto.getPessoaDTO().getCpf() != null) {
+				pessoaCPF = pessoaService.buscarPorCpfEIdConta(dto.getPessoaDTO().getCpf(),
+						dto.getPessoaDTO().getContaId());
+			}
 
-	        if (pessoaCPF != null && pessoaCPF.getIdPessoa() != null) {
-	            // Pessoa encontrada com o CPF, atribui o ID dessa pessoa ao candidato
-	            dto.getCandidatoDTO().setPessoaId(pessoaCPF.getIdPessoa());
-	        } else {
-	            // Caso o CPF seja nulo ou não encontre uma pessoa com esse CPF, cria uma nova Pessoa
-	            Pessoa pessoa = pessoaService.criarPessoaAPartirDTO(dto.getPessoaDTO());
-	            pessoa.setSenha(encrypt.hashPassword(pessoa.getSenha()));
-	            pessoa = pessoaRepository.save(pessoa);
-	            
-	            dto.getCandidatoDTO().setPessoaId(pessoa.getIdPessoa());
-	        }
+			if (pessoaCPF != null && pessoaCPF.getIdPessoa() != null) {
+				// Pessoa encontrada com o CPF, atribui o ID dessa pessoa ao candidato
+				dto.getCandidatoDTO().setPessoaId(pessoaCPF.getIdPessoa());
+			} else {
+				// Caso o CPF seja nulo ou não encontre uma pessoa com esse CPF, cria uma nova
+				// Pessoa
+				Pessoa pessoa = pessoaService.criarPessoaAPartirDTO(dto.getPessoaDTO());
+				pessoa.setSenha(encrypt.hashPassword(pessoa.getSenha()));
+				pessoa = pessoaRepository.save(pessoa);
 
-	        Candidato candidato = candidatoService.criarCandidatoAPartirDTO(dto.getCandidatoDTO());
-	        candidato = candidatoRepository.save(candidato);
+				dto.getCandidatoDTO().setPessoaId(pessoa.getIdPessoa());
+			}
 
-	        CadastroResponseDTO responseDTO = new CadastroResponseDTO(candidato.getCandidato(),
-	                candidato.getIdCandidato());
-	        return ResponseEntity.ok(responseDTO);
-	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
-	    }
+			Candidato candidato = candidatoService.criarCandidatoAPartirDTO(dto.getCandidatoDTO());
+			candidato = candidatoRepository.save(candidato);
+
+			CadastroResponseDTO responseDTO = new CadastroResponseDTO(candidato.getCandidato(),
+					candidato.getIdCandidato());
+			return ResponseEntity.ok(responseDTO);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar: " + e.getMessage());
+		}
 	}
 
 	@PutMapping("/pessoa-candidato")
@@ -185,7 +187,7 @@ public class CandidatoController {
 	}
 
 	@PostMapping
-	public ResponseEntity<CandidatoDTO> cadastrar(@RequestBody @Valid CadastroCandidatoDTO dto) {
+	public ResponseEntity<?> cadastrar(@RequestBody @Valid CadastroCandidatoDTO dto) {
 		CandidatoDTO candidatoDTO = candidatoService.salvar(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(candidatoDTO.getIdCandidato()).toUri();
@@ -210,7 +212,7 @@ public class CandidatoController {
 			@RequestParam(value = "cpfNum", required = false) String cpfNum,
 			@RequestParam(value = "certNasc", required = false) String certNasc,
 			@RequestParam(value = "certCasamento", required = false) String certCasamento) {
-		// Verifica se todos os parâmetros são nulos
+
 		if (idCandidato == null && candidato == null && rgNum == null && cpfNum == null && certNasc == null
 				&& certCasamento == null) {
 			return "Por favor, informe ao menos um parâmetro na requisição.";
