@@ -64,6 +64,7 @@ public class AvisoService {
 		return new AvisoDTO(repository.getReferenceById(id));
 	}
 	
+
 	public String getLogoById(Long idAviso) throws IOException {
 		Optional<Aviso> avisoOpcional = repository.findById(idAviso);
 
@@ -86,46 +87,56 @@ public class AvisoService {
                 .collect(Collectors.toList());
     }
     
+	   @Transactional(readOnly = true)
+	    public List<AvisoDTO> buscarPorIdConta(Long idConta) {
+	        List<Aviso> aviso = repository.findByConta_IdConta(idConta)
+	                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar tipo de aviso por ID da conta"));
+	        return aviso.stream()
+	                .map(AvisoDTO::new)
+	                .collect(Collectors.toList());
+	   }
+    
 	
-    @Transactional
-    public CadastroAvisoDTO salvar(CadastroAvisoDTO dto) throws IOException {
+	   @Transactional
+	   public CadastroAvisoDTO salvar(CadastroAvisoDTO dto) throws IOException {
 
-        String base64 = "";
-        Aviso aviso = criarAvisoAPartirDTO(dto);
+	       Aviso aviso = criarAvisoAPartirDTO(dto);
 
-  
-        List<Aluno> alunos = alunoRepository.findAllById(dto.getDestinatarios());
+	       List<Aluno> alunos = alunoRepository.findAllById(dto.getDestinatarios());
 
-        base64 = aviso.getPathAnexo();
+	       String base64 = aviso.getPathAnexo();
+	       aviso.setPathAnexo(null);
 
-        aviso.setPathAnexo(null);
-        aviso = repository.save(aviso); 
+	       aviso = repository.save(aviso);
+	       if (aviso.getIdAviso() == null) {
+	           throw new IllegalStateException("Erro ao salvar o aviso: ID não foi gerado.");
+	       }
 
-		if (aviso.getPathAnexo() != null) {
-			String caminhoIMG = ImageManager.salvaImagemAviso(base64, aviso.getIdAviso(),
-					"anexoAviso" + dto.getTipoAvisoId());
+	 
+	       if (base64 != null && !base64.isEmpty()) {
+	           String caminhoIMG = ImageManager.salvaImagemAviso(base64, aviso.getIdAviso(),
+	                   "anexoAviso" + dto.getTipoAvisoId());
 
-			aviso.setPathAnexo(caminhoIMG);
-			dto.setPathAnexo(caminhoIMG);
-			dto.setIdAviso(aviso.getIdAviso());
+	           aviso.setPathAnexo(caminhoIMG);
+	           aviso = repository.save(aviso);
 
-			atualizaDados(aviso, dto);
-		}
-       
-        for (Aluno aluno : alunos) {
-            AvisoDestinatario avisoDestinatario = new AvisoDestinatario();
-            avisoDestinatario.setAviso(aviso);
-            avisoDestinatario.setAluno(aluno);  
-          
-            avisoDestinatario.setDataCadastro(LocalDateTime.now());
+	          
+	           dto.setPathAnexo(caminhoIMG);
+	           dto.setIdAviso(aviso.getIdAviso());
+	       }
 
-            avisoDestinatarioRepository.save(avisoDestinatario);  
-        }
+	       // Criar e salvar os destinatários do aviso
+	       for (Aluno aluno : alunos) {
+	           AvisoDestinatario avisoDestinatario = new AvisoDestinatario();
+	           avisoDestinatario.setAviso(aviso);
+	           avisoDestinatario.setAluno(aluno);
+	           avisoDestinatario.setDataCadastro(LocalDateTime.now());
 
-        CadastroAvisoDTO avisoCriado = new CadastroAvisoDTO(aviso);
+	           avisoDestinatarioRepository.save(avisoDestinatario);
+	       }
 
-        return avisoCriado;
-    }
+	       return new CadastroAvisoDTO(aviso);
+	   }
 
 	
 	private Aviso criarAvisoAPartirDTO(CadastroAvisoDTO dto) {

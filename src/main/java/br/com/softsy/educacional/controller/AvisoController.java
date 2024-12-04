@@ -24,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.AvisoDTO;
 import br.com.softsy.educacional.dto.CadastroAvisoDTO;
+import br.com.softsy.educacional.dto.TipoAvisoDTO;
 import br.com.softsy.educacional.service.AvisoService;
 
 @RestController
@@ -36,6 +37,12 @@ public class AvisoController {
     @GetMapping
     public ResponseEntity<List<AvisoDTO>> listar() {
         return ResponseEntity.ok(service.listarTudo());
+    }
+    
+    @GetMapping("/conta/{idConta}")
+    public ResponseEntity<List<AvisoDTO>> buscarPorIdConta(@PathVariable Long idConta) {
+        List<AvisoDTO> aviso = service.buscarPorIdConta(idConta);
+        return ResponseEntity.ok(aviso);
     }
 
     @GetMapping("/{idAviso}")

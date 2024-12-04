@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class CadastroAvisoDTO {
 
     private Long idAviso;
+    private Long contaId;
     @NotNull
     private Long tipoAvisoId;
     private LocalDateTime dataCadastro;
@@ -31,6 +32,7 @@ public class CadastroAvisoDTO {
 
     public CadastroAvisoDTO(Aviso aviso) {
         this.idAviso = aviso.getIdAviso();
+        this.contaId = aviso.getConta().getIdConta();
         this.tipoAvisoId = aviso.getTipoAviso().getIdTipoAviso();
         this.dataCadastro = aviso.getDataCadastro();
         this.dataInicio = aviso.getDataInicio();

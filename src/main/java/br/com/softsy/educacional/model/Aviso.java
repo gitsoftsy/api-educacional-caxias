@@ -26,6 +26,10 @@ public class Aviso {
     @Column(name = "ID_AVISO")
     private Long idAviso;
     
+	@ManyToOne
+	@JoinColumn(name = "ID_CONTA")
+	private Conta conta;
+	
     @ManyToOne
     @JoinColumn(name = "ID_TIPO_AVISO", nullable = false)
     private TipoAviso tipoAviso;
