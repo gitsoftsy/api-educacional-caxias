@@ -89,9 +89,11 @@ public class TurmaController {
     }
     
     @GetMapping("/secretaria")
-    public ResponseEntity<AllResponse> listarTurmasSecretaria() {
+    public ResponseEntity<AllResponse> listarTurmasSecretaria(
+    		@RequestParam(value = "idConta", required = false) Long idConta) 
+    {
 
-        List<Map<String, Object>> result = turmaService.listarTurmasSecretaria();
+        List<Map<String, Object>> result = turmaService.listarTurmasSecretaria(idConta);
 
         if (result.isEmpty()) {
             return ResponseEntity.ok(new AllResponse("Nenhuma turma encontrada.", new ArrayList<>()));

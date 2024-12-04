@@ -22,7 +22,7 @@ public interface TurmaRepository extends JpaRepository<Turma, Long>{
     );
     
     @Procedure(name = "PROC_LISTAR_TURMAS_SECRETARIA")
-    List<Object[]> listarTurmasSecretaria();
+    List<Object[]> listarTurmasSecretaria(@Param("P_ID_CONTA") Long idConta);
     
     @Procedure(name = "PROC_LISTAR_ALUNOS_TURMA")
     List<Object[]> listarAlunosTurma(

@@ -219,11 +219,12 @@ public class TurmaService {
         return mappedResultList;
     }
     
-    public List<Map<String, Object>> listarTurmasSecretaria() {
+    public List<Map<String, Object>> listarTurmasSecretaria(Long idConta) {
         StringBuilder sql = new StringBuilder();
-        sql.append("CALL PROC_LISTAR_TURMAS_SECRETARIA()");
+        sql.append("CALL PROC_LISTAR_TURMAS_SECRETARIA(:pIdConta)");
 
         Query query = entityManager.createNativeQuery(sql.toString());
+        query.setParameter("pIdConta", idConta);
 
         List<Object[]> resultList = query.getResultList();
         List<Map<String, Object>> mappedResultList = new ArrayList<>();
@@ -239,10 +240,11 @@ public class TurmaService {
             resultMap.put("periodo", result[6]);
             resultMap.put("tipoPeriodicidade", result[7]);
             resultMap.put("aulasPrevistas", result[8]);
-            resultMap.put("aulasDadas", result[9]);
-            resultMap.put("prematriculas", result[10]);
-            resultMap.put("matriculas", result[11]);
-            resultMap.put("idProfessor", result[11]);
+            resultMap.put("idConta", result[9]);
+            resultMap.put("aulasDadas", result[10]);
+            resultMap.put("prematriculas", result[11]);
+            resultMap.put("matriculas", result[12]);
+            resultMap.put("idProfessor", result[13]);
             mappedResultList.add(resultMap);
         }
 
