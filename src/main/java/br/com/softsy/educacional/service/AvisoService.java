@@ -17,12 +17,14 @@ import br.com.softsy.educacional.dto.CadastroAvisoDTO;
 import br.com.softsy.educacional.model.Aluno;
 import br.com.softsy.educacional.model.Aviso;
 import br.com.softsy.educacional.model.AvisoDestinatario;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.Professor;
 import br.com.softsy.educacional.model.TipoAviso;
 import br.com.softsy.educacional.model.Usuario;
 import br.com.softsy.educacional.repository.AlunoRepository;
 import br.com.softsy.educacional.repository.AvisoDestinatarioRepository;
 import br.com.softsy.educacional.repository.AvisoRepository;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.ProfessorRepository;
 import br.com.softsy.educacional.repository.TipoAvisoRepository;
 import br.com.softsy.educacional.repository.UsuarioRepository;
@@ -43,6 +45,8 @@ public class AvisoService {
 	@Autowired
 	private ProfessorRepository professorRepository;
 	
+	 @Autowired
+	 private ContaRepository contaRepository;
 	
 	@Autowired
 	private AlunoRepository alunoRepository;
@@ -143,6 +147,8 @@ public class AvisoService {
 		Aviso aviso = new Aviso();
 		BeanUtils.copyProperties(dto, aviso, "idAviso", "dataCadastro");
 		
+		
+		
 		if(dto.getUsuarioId() == null && dto.getProfessorId() == null) {
 			throw new IllegalArgumentException("Pelo menos um dos campos usuarioId ou professorId deve ser preenchido");
 		}
@@ -151,11 +157,15 @@ public class AvisoService {
 		}
 		
 		
-	
+		
 		TipoAviso tipoAviso = tipoAvisoRepository.findById(dto.getTipoAvisoId())
                 .orElseThrow(() -> new IllegalArgumentException("Tipo do aviso não encontrado"));
 		
-		
+		 Conta conta = contaRepository.findById(dto.getContaId())
+	                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+		 aviso.setConta(conta);
+
+			
 		if(dto.getUsuarioId() != null ) {
 			Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
 	                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
