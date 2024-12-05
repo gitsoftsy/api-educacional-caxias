@@ -214,23 +214,32 @@ public class AvisoInternoService {
     }
 
     private void atualizaDados(AvisoInterno destino, CadastroAvisoInternoDTO origem) {
-	BeanUtils.copyProperties(origem, destino, "idAvisoInterno", "dataCadastro");
-		
-
-		TipoAviso tipoAviso = tipoAvisoRepository.findById(origem.getTipoAvisoId())
+        BeanUtils.copyProperties(origem, destino, "idAvisoInterno", "dataCadastro");
+        
+        TipoAviso tipoAviso = tipoAvisoRepository.findById(origem.getTipoAvisoId())
                 .orElseThrow(() -> new IllegalArgumentException("Tipo do aviso não encontrado"));
-		
-		Usuario usuario = usuarioRepository.findById(origem.getUsuarioId())
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
-		
-		Professor professor = professorRepository.findById(origem.getProfessorId())
-                .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado"));
-		
-		destino.setTipoAviso(tipoAviso);
-		destino.setUsuario(usuario);
-		destino.setProfessor(professor);
-		destino.setPathAnexo(origem.getPathAnexo());
+        
+        if (origem.getUsuarioId() != null) {
+            Usuario usuario = usuarioRepository.findById(origem.getUsuarioId())
+                    .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+            destino.setUsuario(usuario);
+        } else {
+            destino.setUsuario(null); 
+        }
+ 
+        if (origem.getProfessorId() != null) {
+            Professor professor = professorRepository.findById(origem.getProfessorId())
+                    .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado"));
+            destino.setProfessor(professor);
+        } else {
+            destino.setProfessor(null); 
+        }
+        
+        destino.setTipoAviso(tipoAviso);
+        destino.setPathAnexo(origem.getPathAnexo());
     }
+
+
 
     @Transactional
     public void excluir(Long id) {

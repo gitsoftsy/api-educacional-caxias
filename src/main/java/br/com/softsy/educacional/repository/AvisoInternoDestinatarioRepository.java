@@ -13,14 +13,14 @@ import br.com.softsy.educacional.model.AvisoInternoDestinatario;
 
 public interface AvisoInternoDestinatarioRepository extends JpaRepository<AvisoInternoDestinatario, Long>{
 
-//	@Query("select avisoInternoDestinatario from AvisoInternoDestinatario join avisoInternoDestinatario.usuario usuario where usuario.idUsuario = :idUsuario")
-//    Optional<List<AvisoInternoDestinatario>> findByUsuario_IdUsuario(@Param("idUsuario") Long idUsuario);
-//	
-//	@Query("select avisoInternoDestinatario from AvisoInternoDestinatario join avisoInternoDestinatario.usuario professor where professor.idProfessor = :idProfessor")
-//    Optional<List<AvisoInternoDestinatario>> findByProfessor_IdProfessor(@Param("idProfessor") Long idProfessor);
+	 @Query("SELECT a FROM AvisoInternoDestinatario a JOIN a.usuarioDestinatario u WHERE u.idUsuario = :idUsuario")
+	    Optional<List<AvisoInternoDestinatario>> findByUsuarioDestinatario_IdUsuario(@Param("idUsuario") Long idUsuario);
+
+	    @Query("SELECT a FROM AvisoInternoDestinatario a JOIN a.professorDestinatario p WHERE p.idProfessor = :idProfessor")
+	    Optional<List<AvisoInternoDestinatario>> findByProfessorDestinatario_IdProfessor(@Param("idProfessor") Long idProfessor);
 	
-//	  @Procedure(name = "PROC_LISTAR_DESTINATARIOS_AVISO_INTERNO")
-//	    List<Object[]> listaDestinatariosAvisoInterno(
-//	            @Param("P_ID_AVISO_INTERNO") Long idAvisointerno
-//	    );
+	  @Procedure(name = "PROC_AVISO_LISTA_DESTINATARIO_INTERNO")
+	    List<Object[]> listaDestinatariosAvisoInterno(
+	            @Param("P_ID_AVISO_INTERNO") Long idAvisointerno
+	    );
 }
