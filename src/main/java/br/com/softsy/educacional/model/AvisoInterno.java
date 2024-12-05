@@ -23,17 +23,15 @@ public class AvisoInterno {
     @Column(name = "ID_AVISO_INTERNO")
     private Long idAvisoInterno;
 
-    @Column(name = "ID_USUARIO_ENVIO")
-    private Long idUsuarioEnvio;
-
-    @Column(name = "ID_PROFESSOR_ENVIO")
-    private Long idProfessorEnvio;
-    
+	@ManyToOne
+	@JoinColumn(name = "ID_CONTA")
+	private Conta conta;
+	
     @ManyToOne
     @JoinColumn(name = "ID_TIPO_AVISO", nullable = false)
     private TipoAviso tipoAviso;
 
-    @Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
 
     @Column(name = "DTINI")
@@ -48,19 +46,17 @@ public class AvisoInterno {
     @Column(name = "MENSAGEM")
     private String mensagem;
 
-    @Column(name = "ID_USUARIO_RECEBIMENTO")
-    private Long idUsuarioRecebimento;
+    @ManyToOne
+    @JoinColumn(name = "ID_USUARIO", nullable = true)
+    private Usuario usuario;
 
-    @Column(name = "ID_PROFESSOR_RECEBIMENTO")
-    private Long idProfessorRecebimento;
-
-    @Column(name = "DT_LEITURA")
-    private LocalDateTime dataLeitura;
+    @ManyToOne
+    @JoinColumn(name = "ID_PROFESSOR", nullable = true)
+    private Professor professor;
 
     @Column(name = "PATH_ANEXO", length = 255)
     private String pathAnexo;
 
-    @Column(name = "RESPOSTAS_ABERTAS", length = 1)
-    private Character respostasAbertas;
-
+    @Column(name = "PERMITE_RESPOSTA", length = 1)
+    private Character permiteResposta;
 }

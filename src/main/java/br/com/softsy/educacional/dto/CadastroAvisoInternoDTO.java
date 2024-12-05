@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -14,8 +15,7 @@ public class CadastroAvisoInternoDTO {
 	
 	
     private Long idAvisoInterno;
-    private Long idUsuarioEnvio;
-    private Long idProfessorEnvio;
+    private Long contaId;
     @NotNull
     private Long tipoAvisoId;
     private LocalDateTime dataCadastro;
@@ -25,31 +25,35 @@ public class CadastroAvisoInternoDTO {
     private String titulo;
     @NotNull
     private String mensagem;
-    private Long idUsuarioRecebimento;
-    private Long idProfessorRecebimento;
-    private LocalDateTime dataLeitura;
+    private Long usuarioId;
+    private Long professorId;
     private String pathAnexo;
-    private Character respostasAbertas;
+    private Character permiteResposta;
+
+    // Listas separadas para usuários e professores
+    private List<Long> destinatarioUsuario;
+    private List<Long> destinatarioProfessor;
 
     public CadastroAvisoInternoDTO( AvisoInterno avisoInterno ) {
     	
     	this.idAvisoInterno = avisoInterno.getIdAvisoInterno();
-        this.idUsuarioEnvio = avisoInterno.getIdUsuarioEnvio();
-        this.idProfessorEnvio = avisoInterno.getIdProfessorEnvio();
-        this.tipoAvisoId = avisoInterno.getTipoAviso().getIdTipoAviso();
-        this.dataCadastro = avisoInterno.getDataCadastro();
-        this.dataInicio = avisoInterno.getDataInicio();
-        this.dataFim = avisoInterno.getDataFim();
-        this.titulo = avisoInterno.getTitulo();
-        this.mensagem = avisoInterno.getMensagem();
-        this.idUsuarioRecebimento = avisoInterno.getIdUsuarioRecebimento();
-        this.idProfessorRecebimento = avisoInterno.getIdProfessorRecebimento();
-        this.dataLeitura = avisoInterno.getDataLeitura();
-        this.pathAnexo = avisoInterno.getPathAnexo();
-        this.respostasAbertas = avisoInterno.getRespostasAbertas();
-    	
-    }
+    	 this.contaId = avisoInterno.getConta().getIdConta();
+         this.tipoAvisoId = avisoInterno.getTipoAviso().getIdTipoAviso();
+         this.dataCadastro = avisoInterno.getDataCadastro();
+         this.dataInicio = avisoInterno.getDataInicio();
+         this.dataFim = avisoInterno.getDataFim();
+         this.titulo = avisoInterno.getTitulo();
+         this.mensagem = avisoInterno.getMensagem();
+         if(avisoInterno.getUsuario()!=null) {
+         	this.usuarioId = avisoInterno.getUsuario().getIdUsuario();
+         }
+         if(avisoInterno.getProfessor()!=null) {
+         	this.professorId = avisoInterno.getProfessor().getIdProfessor();
+         }
+         this.pathAnexo = avisoInterno.getPathAnexo();
+         this.permiteResposta = avisoInterno.getPermiteResposta();
+     }
 
 
-
+    
 }
