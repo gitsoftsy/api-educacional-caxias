@@ -35,7 +35,7 @@ public class AvisoInternoDestinatario {
 	 private Usuario usuarioDestinatario;
 	 
 	 @ManyToOne
-	 @JoinColumn(name = "ID_PROFESSRO_DESTINATARIO", nullable = true)
+	 @JoinColumn(name = "ID_PROFESSOR_DESTINATARIO", nullable = true)
 	 private Professor professorDestinatario;
 
 	 @Column(name = "DT_LEITURA")

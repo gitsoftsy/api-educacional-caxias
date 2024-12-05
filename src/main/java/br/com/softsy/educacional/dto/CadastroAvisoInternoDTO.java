@@ -52,6 +52,8 @@ public class CadastroAvisoInternoDTO {
          }
          this.pathAnexo = avisoInterno.getPathAnexo();
          this.permiteResposta = avisoInterno.getPermiteResposta();
+         this.destinatarioUsuario = destinatarioUsuario;
+         this.destinatarioProfessor = destinatarioProfessor;
      }
 
 

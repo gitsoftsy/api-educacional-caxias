@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -59,4 +62,20 @@ public class AvisoInterno {
 
     @Column(name = "PERMITE_RESPOSTA", length = 1)
     private Character permiteResposta;
+    
+    @ManyToMany
+    @JoinTable(
+        name = "TBL_AVISO_INTERNO_DESTINATARIO",
+        joinColumns = @JoinColumn(name = "ID_AVISO_INTERNO"),
+        inverseJoinColumns = @JoinColumn(name = "ID_USUARIO_DESTINATARIO")
+    )
+    private List<Usuario> destinatariosUsuarios;
+
+    @ManyToMany
+    @JoinTable(
+        name = "TBL_AVISO_INTERNO_DESTINATARIO",
+        joinColumns = @JoinColumn(name = "ID_AVISO_INTERNO"),
+        inverseJoinColumns = @JoinColumn(name = "ID_PROFESSOR_DESTINATARIO")
+    )
+    private List<Professor> destinatariosProfessores;
 }

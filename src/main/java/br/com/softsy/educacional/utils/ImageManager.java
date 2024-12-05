@@ -292,8 +292,11 @@ public class ImageManager {
 	    
 	    Path diretorio = Paths.get(directoryPath);
 	    
+	    // Verifique se o arquivo é PDF ou PNG baseado no conteúdo
+	    String fileExtension = getFileExtension(imageBytes);
+	    
 	    String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
-	    String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + ".png"; // ou outra extensão
+	    String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + fileExtension;
 	    
 	    File directory = new File(directoryPath);
 	    if (!directory.exists()) {
@@ -306,6 +309,16 @@ public class ImageManager {
 	    
 	    return caminhoArquivo;
 	}
+
+	// Método para detectar a extensão do arquivo
+	private static String getFileExtension(byte[] imageBytes) throws IOException {
+	    if (imageBytes.length > 4 && imageBytes[0] == 0x25 && imageBytes[1] == 0x50 && imageBytes[2] == 0x44 && imageBytes[3] == 0x46) {
+	        return ".pdf"; // PDF
+	    } 
+	   
+	    return ".png"; // PNG
+	}
+
 	
 
 	/// ************************ TRATAMENTO DE IMAGENS DE AVISO INTERNO RESPOSTA /// *********************************///
