@@ -27,8 +27,8 @@ public class CadastroAvisoInternoDestinatarioDTO {
 		this.idAvisoInternoDestinatario = avisoInternoDestinatario.getIdAvisoInternoDestinatario();
 		this.dataCadastro = avisoInternoDestinatario.getDataCadastro();
 		this.avisoInternoId = avisoInternoDestinatario.getAvisoInterno().getIdAvisoInterno();
-		this.usuarioDestinatarioId = avisoInternoDestinatario.getUsuarioDestinatario().getIdUsuario();
-		this.professorDestinatarioId = avisoInternoDestinatario.getProfessorDestinatario().getIdProfessor();
+		this.usuarioDestinatarioId = avisoInternoDestinatario.getUsuarioDestinatario() != null ? avisoInternoDestinatario.getUsuarioDestinatario().getIdUsuario() : null;
+		this.professorDestinatarioId = avisoInternoDestinatario.getProfessorDestinatario() != null ? avisoInternoDestinatario.getProfessorDestinatario().getIdProfessor()  : null;
 		this.dataLeitura = avisoInternoDestinatario.getDataLeitura();
 	}
 }

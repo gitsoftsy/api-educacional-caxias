@@ -93,7 +93,7 @@ public class AvisoInternoDestinatarioController {
     
     @GetMapping("/listarDestinatarios")
     public ResponseEntity<AllResponse> listarDestinatariosAviso(
-            @RequestParam(value = "idAviso", required = false) Long idAvisoInterno)
+            @RequestParam(value = "idAvisoInterno", required = false) Long idAvisoInterno)
     {
         if (idAvisoInterno == null) {
             return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
