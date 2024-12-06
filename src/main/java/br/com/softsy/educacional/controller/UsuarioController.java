@@ -2,8 +2,12 @@ package br.com.softsy.educacional.controller;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,10 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService service;
+    
+    
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @GetMapping
     public ResponseEntity<List<Usuario>> listar() {
@@ -104,5 +112,21 @@ public class UsuarioController {
 
         AllResponse response = new AllResponse("Senha do usuário atualizada com sucesso", new ArrayList<>());
         return ResponseEntity.ok(response);
+    }
+    
+    @GetMapping("/avisos-usuario/{idUsuario}")
+    public Map<String, Object> contarMensagensUsuario(@PathVariable Long idUsuario) {
+        Long qtdMensagens = (Long) entityManager.createQuery(
+                "SELECT COUNT(DISTINCT ad.idAvisoDestinatario) " +
+                        "FROM AvisoDestinatario ad " +
+                        "JOIN ad.aviso a " +
+                        "WHERE a.usuario.idUsuario = :idUsuario " +
+                        "AND CURRENT_TIMESTAMP BETWEEN a.dataInicio AND a.dataFim")
+                .setParameter("idUsuario", idUsuario)
+                .getSingleResult();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("qtdMensagens", qtdMensagens);
+        return response;
     }
 }
