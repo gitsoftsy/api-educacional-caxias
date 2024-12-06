@@ -16,6 +16,7 @@ import br.com.softsy.educacional.dto.UsuarioDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.infra.exception.NegocioException;
 import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.model.Aluno;
 import br.com.softsy.educacional.model.Usuario;
 import br.com.softsy.educacional.model.UsuarioConta;
 import br.com.softsy.educacional.repository.UsuarioContaRepository;
@@ -134,5 +135,18 @@ public class UsuarioService {
 		if(origem.getSenha() != null) {
 			destino.setSenha(encrypt.hashPassword(origem.getSenha()));
 		}
+    }
+    
+    @Transactional
+    public void atualizarSenhaUsuario(Long idUsuario, String senhaAntiga, String senhaNova) {
+    	Usuario usuario = repository.findById(idUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+
+        if (!encrypt.checkPass(senhaAntiga, usuario.getSenha())) {
+            throw new IllegalArgumentException("Senha antiga incorreta");
+        }
+
+        usuario.setSenha(encrypt.hashPassword(senhaNova));
+        repository.save(usuario);
     }
 }

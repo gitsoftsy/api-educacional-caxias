@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.softsy.educacional.dto.AtualizarSenhaDTO;
 import br.com.softsy.educacional.dto.ListaUsuarioContaDTO;
 import br.com.softsy.educacional.dto.UsuarioDTO;
+import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.model.Usuario;
 import br.com.softsy.educacional.service.UsuarioService;
 
@@ -90,5 +93,16 @@ public class UsuarioController {
     public ResponseEntity<?> desativar(@PathVariable Long idUsuario) {
         service.ativaDesativa('N', idUsuario);
         return ResponseEntity.ok().build();
+    }
+    
+    @PutMapping("/{id}/atualizar-senha")
+    public ResponseEntity<AllResponse> atualizarSenhaUsuario(
+            @PathVariable Long id,
+            @RequestBody AtualizarSenhaDTO atualizarSenhaDTO) {
+
+    	service.atualizarSenhaUsuario(id, atualizarSenhaDTO.getSenhaAntiga(), atualizarSenhaDTO.getSenhaNova());
+
+        AllResponse response = new AllResponse("Senha do usuário atualizada com sucesso", new ArrayList<>());
+        return ResponseEntity.ok(response);
     }
 }
