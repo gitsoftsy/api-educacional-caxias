@@ -238,9 +238,8 @@ public class AvisoInternoService {
         destino.setTipoAviso(tipoAviso);
         destino.setPathAnexo(origem.getPathAnexo());
     }
-
-
-
+    
+    
     @Transactional
     public void excluir(Long id) {
         avisoInternoRepository.deleteById(id);

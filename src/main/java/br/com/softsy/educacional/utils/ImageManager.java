@@ -371,5 +371,30 @@ public class ImageManager {
         return caminhoArquivo;
     }
 	
+	/// ************************ TRATAMENTO DE IMAGENS DE AVISO DESTINATARIO RESPOSTA /// *********************************///
+	
+	public static String salvaImagemAvisoInternoDestinatarioResposta(String base64, Long avisoDestinatarioRespostaId, String nomeArquivo) throws IOException {
+        byte[] imageBytes = Base64.getDecoder().decode(base64);
+        
+        String directoryPath = ImageProperties.getImagePath() +"/uploads/avisoDestinatarioResposta/"+avisoDestinatarioRespostaId.toString();
+ 
+        Path diretorio = Paths.get(directoryPath);
+
+        String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+        String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + ".png"; 
+ 
+
+        File directory = new File(directoryPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+ 
+        // Salva a imagem no disco
+        try (FileOutputStream fos = new FileOutputStream(caminhoArquivo)) {
+            fos.write(imageBytes);
+        }
+ 
+        return caminhoArquivo;
+    }
 
 }
