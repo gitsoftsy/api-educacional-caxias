@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,9 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +29,6 @@ import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.dto.PessoaDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.model.Candidato;
-import br.com.softsy.educacional.model.ErrorResponse;
 import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.repository.CandidatoRepository;
 import br.com.softsy.educacional.repository.PessoaRepository;
@@ -304,9 +302,17 @@ public class CandidatoController {
 	}
 
 	@PutMapping("/{idCandidato}/reprovar")
-	public ResponseEntity<?> desativar(@PathVariable Long idCandidato) {
-		candidatoService.aprovaReprova('N', idCandidato);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<?> reprovarCandidato(
+	        @PathVariable Long idCandidato,
+	        @RequestBody CadastroCandidatoDTO candidatoDTO) {
+
+	    candidatoService.reprovarCandidato(idCandidato, candidatoDTO);
+
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("message", "Candidato reprovado com sucesso!");
+	    response.put("idCandidato", idCandidato);
+
+	    return ResponseEntity.ok(response);
 	}
 
 }

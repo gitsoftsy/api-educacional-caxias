@@ -218,6 +218,24 @@ public class CandidatoService {
     }
     
     @Transactional
+    public void reprovarCandidato(Long idCandidato, CadastroCandidatoDTO candidatoDTO) {
+        Candidato candidato = candidatoRepository.getReferenceById(idCandidato);
+
+        candidato.setAprovado('N');
+        
+        if (candidatoDTO.getMotivoReprovacaoCandidatoId() != null) {
+            MotivoReprovacaoCandidato motivo = motivoReprovacaoRepository
+                    .findById(candidatoDTO.getMotivoReprovacaoCandidatoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Motivo não encontrado."));
+            candidato.setMotivoReprovacaoCandidato(motivo);
+        }
+
+        if (candidatoDTO.getDescricaoReprovacao() != null) {
+            candidato.setDescricaoReprovacao(candidatoDTO.getDescricaoReprovacao());
+        }
+    }
+    
+    @Transactional
     public void remover(Long idCandidato) {
     	candidatoRepository.deleteById(idCandidato);
     }
