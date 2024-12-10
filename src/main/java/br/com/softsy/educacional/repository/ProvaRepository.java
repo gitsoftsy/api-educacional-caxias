@@ -1,5 +1,11 @@
 package br.com.softsy.educacional.repository;
 
-public interface ProvaRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import br.com.softsy.educacional.model.Prova;
+
+public interface ProvaRepository extends JpaRepository<Prova, Long>{
+	
+	
 
 }

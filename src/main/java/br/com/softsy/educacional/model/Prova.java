@@ -25,8 +25,8 @@ public class Prova {
     private Long idProva;
 
     @ManyToOne
-    @JoinColumn(name = "ID_TURMA", nullable = false)
-    private Turma idTurma;
+    @JoinColumn(name = "ID_TURMA")
+    private Turma turma;
 
     @Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime dataCadastro;
