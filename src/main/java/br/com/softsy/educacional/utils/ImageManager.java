@@ -227,86 +227,119 @@ public class ImageManager {
 	/// ************************ TRATAMENTO DE IMAGENS DE AVISO/// ******************************///
 
 	public static String salvaImagemAviso(String base64, Long avisoId, String nomeArquivo) throws IOException {
-        // Decodifica a string base64 em um array de bytes
-        byte[] imageBytes = Base64.getDecoder().decode(base64);
-        
-        String directoryPath = ImageProperties.getImagePath() +"/uploads/aviso/"+avisoId.toString();
- 
-        // Define o caminho para salvar a imagem
-        Path diretorio = Paths.get(directoryPath);
-        // Adiciona um timestamp para garantir um nome de arquivo único
-        String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
-        String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + ".png"; // ou outra extensão
- 
-        // Cria o diretório, se não existir
-        File directory = new File(directoryPath);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
- 
-        // Salva a imagem no disco
-        try (FileOutputStream fos = new FileOutputStream(caminhoArquivo)) {
-            fos.write(imageBytes);
-        }
- 
-        return caminhoArquivo;
+		byte[] fileBytes = Base64.getDecoder().decode(base64);
+	    
+	    // Identifica o tipo MIME do arquivo
+	    Path tempFile = Files.createTempFile("temp", ".tmp");
+	    Files.write(tempFile, fileBytes);
+	    String mimeType = Files.probeContentType(tempFile);
+
+	    // Define o caminho para salvar o arquivo
+	    String directoryPath = ImageProperties.getImagePath() + "/uploads/aviso/" + avisoId.toString();
+	    Path diretorio = Paths.get(directoryPath);
+
+	    // Adiciona um timestamp para garantir um nome de arquivo único
+	    String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+	    
+	    // Verifica o tipo MIME para definir a extensão correta
+	    String fileExtension = ".png";  // Default para imagem
+	    if ("application/pdf".equals(mimeType)) {
+	        fileExtension = ".pdf";  // Caso seja PDF
+	    }
+
+	    String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + fileExtension;
+
+	    // Cria o diretório, se não existir
+	    File directory = new File(directoryPath);
+	    if (!directory.exists()) {
+	        directory.mkdirs();
+	    }
+
+	    // Salva o arquivo no disco
+	    try (FileOutputStream fos = new FileOutputStream(caminhoArquivo)) {
+	        fos.write(fileBytes);
+	    }
+
+	    return caminhoArquivo;
     }
 	
 
 	/// ************************ TRATAMENTO DE IMAGENS DE AVISO RESPOSTA /// *********************************///
 	
 	public static String salvaImagemAvisoResposta(String base64, Long avisoRespostaId, String nomeArquivo) throws IOException {
-	    // Decodifica a string base64 em um array de bytes
-	    byte[] imageBytes = Base64.getDecoder().decode(base64);
+	   
+		byte[] fileBytes = Base64.getDecoder().decode(base64);
 	    
-	    // Define o diretório para salvar a imagem com o ID de 'avisoResposta'
-	    String directoryPath = ImageProperties.getImagePath() + "/uploads/avisoResposta/" + avisoRespostaId.toString();
-	    
-	    // Define o caminho completo para salvar a imagem
+	    // Identifica o tipo MIME do arquivo
+	    Path tempFile = Files.createTempFile("temp", ".tmp");
+	    Files.write(tempFile, fileBytes);
+	    String mimeType = Files.probeContentType(tempFile);
+
+	    // Define o caminho para salvar o arquivo
+	    String directoryPath = ImageProperties.getImagePath() + "/uploads/aviso/" + avisoRespostaId.toString();
 	    Path diretorio = Paths.get(directoryPath);
-	    
+
 	    // Adiciona um timestamp para garantir um nome de arquivo único
 	    String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
-	    String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + ".png"; // ou outra extensão
 	    
+	    // Verifica o tipo MIME para definir a extensão correta
+	    String fileExtension = ".png";  // Default para imagem
+	    if ("application/pdf".equals(mimeType)) {
+	        fileExtension = ".pdf";  // Caso seja PDF
+	    }
+
+	    String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + fileExtension;
+
 	    // Cria o diretório, se não existir
 	    File directory = new File(directoryPath);
 	    if (!directory.exists()) {
 	        directory.mkdirs();
 	    }
-	    
-	    // Salva a imagem no disco
+
+	    // Salva o arquivo no disco
 	    try (FileOutputStream fos = new FileOutputStream(caminhoArquivo)) {
-	        fos.write(imageBytes);
+	        fos.write(fileBytes);
 	    }
-	    
+
 	    return caminhoArquivo;
 	}
 
 	/// ************************ TRATAMENTO DE IMAGENS DE AVISO INTERNO /// *********************************///
 	
 	public static String salvaImagemAvisoInterno(String base64, Long avisoRespostaId, String nomeArquivo) throws IOException {
-	    byte[] imageBytes = Base64.getDecoder().decode(base64);
+		byte[] fileBytes = Base64.getDecoder().decode(base64);
 	    
-	    String directoryPath = ImageProperties.getImagePath() + "/uploads/avisoResposta/" + avisoRespostaId.toString();
-	    
+	    // Identifica o tipo MIME do arquivo
+	    Path tempFile = Files.createTempFile("temp", ".tmp");
+	    Files.write(tempFile, fileBytes);
+	    String mimeType = Files.probeContentType(tempFile);
+
+	    // Define o caminho para salvar o arquivo
+	    String directoryPath = ImageProperties.getImagePath() + "/uploads/aviso/" + avisoRespostaId.toString();
 	    Path diretorio = Paths.get(directoryPath);
-	    
-	    // Verifique se o arquivo é PDF ou PNG baseado no conteúdo
-	    String fileExtension = getFileExtension(imageBytes);
-	    
+
+	    // Adiciona um timestamp para garantir um nome de arquivo único
 	    String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
-	    String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + fileExtension;
 	    
+	    // Verifica o tipo MIME para definir a extensão correta
+	    String fileExtension = ".png";  // Default para imagem
+	    if ("application/pdf".equals(mimeType)) {
+	        fileExtension = ".pdf";  // Caso seja PDF
+	    }
+
+	    String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + fileExtension;
+
+	    // Cria o diretório, se não existir
 	    File directory = new File(directoryPath);
 	    if (!directory.exists()) {
 	        directory.mkdirs();
 	    }
-	    
+
+	    // Salva o arquivo no disco
 	    try (FileOutputStream fos = new FileOutputStream(caminhoArquivo)) {
-	        fos.write(imageBytes);
+	        fos.write(fileBytes);
 	    }
-	    
+
 	    return caminhoArquivo;
 	}
 
