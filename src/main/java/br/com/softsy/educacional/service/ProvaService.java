@@ -49,16 +49,13 @@ public class ProvaService {
 	private Prova criarProvaAPartirDTO(CadastroProvaDTO dto) {
 	    Prova prova = new Prova();
 
-	    // Obtém a turma usando o ID do DTO (agora usando dto.getTurmaId())
-	    Turma turma = turmaRepository.findById(dto.getTurmaId())  // Alterado para dto.getTurmaId()
+	    Turma turma = turmaRepository.findById(dto.getTurmaId())  
 	            .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada"));
 
-	    // Copia as propriedades do DTO para a entidade Prova, ignorando "idProva" e "dataCadastro"
 	    BeanUtils.copyProperties(dto, prova, "idProva", "dataCadastro");
 
-	    // Associa a turma à prova
-	    prova.setTurma(turma);  // Aqui associamos a turma
-	    prova.setDataCadastro(LocalDateTime.now());  // Define a data de cadastro como o momento atual
+	    prova.setTurma(turma); 
+	    prova.setDataCadastro(LocalDateTime.now()); 
 
 	    return prova;
 	}
@@ -76,14 +73,11 @@ public class ProvaService {
 	    }
 
 	    private void atualizaDados(Prova destino, CadastroProvaDTO origem) {
-	        // Usando o método correto para acessar o ID da turma
-	        Turma turma = turmaRepository.findById(origem.getTurmaId())  // Alterado para getTurmaId()
+	        Turma turma = turmaRepository.findById(origem.getTurmaId())
 	                .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada"));
 
-	        // Copiando as propriedades do DTO para a entidade Prova, ignorando "idProva" e "dataCadastro"
 	        BeanUtils.copyProperties(origem, destino, "idProva", "dataCadastro");
 
-	        // Associando a turma à Prova
 	        destino.setTurma(turma);
 	    }
 
