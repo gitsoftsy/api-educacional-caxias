@@ -52,6 +52,7 @@ public class AvisoInternoDestinatarioRespostaService {
 	    @Transactional
 	    public CadastroAvisoInternoDestinatarioRespostaDTO salvar(CadastroAvisoInternoDestinatarioRespostaDTO dto) throws IOException {
 
+	        
 	        AvisoInternoDestinatarioResposta avisoInternoDestinatarioResp = criarAvisoInternoDestRespostaAPartirDTO(dto);
 
 	        String base64 = avisoInternoDestinatarioResp.getPathAnexo();
@@ -62,21 +63,22 @@ public class AvisoInternoDestinatarioRespostaService {
 	            String caminhoIMG = ImageManager.salvaImagemAvisoInternoDestinatarioResposta(
 	                base64,
 	                avisoInternoDestinatarioResp.getIdAvisoInternoDestinatarioResposta(),
-	                "anexoAviso" + dto.getIdAvisoInternoDestinatarioResposta()
+	                "anexoAviso" + avisoInternoDestinatarioResp.getIdAvisoInternoDestinatarioResposta()
 	            );
 
-	           
 	            avisoInternoDestinatarioResp.setPathAnexo(caminhoIMG);
 	            dto.setPathAnexo(caminhoIMG);  
-
 	            avisoInternoDestinatarioResp = repository.save(avisoInternoDestinatarioResp);
 	        }
 
+	        // Atualiza o ID no DTO
 	        dto.setIdAvisoInternoDestinatarioResposta(avisoInternoDestinatarioResp.getIdAvisoInternoDestinatarioResposta());
-	        atualizaDados(avisoInternoDestinatarioResp, dto);
-	        CadastroAvisoInternoDestinatarioRespostaDTO avisoCriado = new CadastroAvisoInternoDestinatarioRespostaDTO(avisoInternoDestinatarioResp);
 
-	        return avisoCriado;
+	        // Atualiza outros dados se necessário
+	        atualizaDados(avisoInternoDestinatarioResp, dto);
+
+	        // Cria o DTO final a partir do objeto atualizado
+	        return new CadastroAvisoInternoDestinatarioRespostaDTO(avisoInternoDestinatarioResp);
 	    }
 
 		
