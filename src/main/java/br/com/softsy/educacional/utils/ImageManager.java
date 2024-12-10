@@ -228,41 +228,34 @@ public class ImageManager {
 
 	public static String salvaImagemAviso(String base64, Long avisoId, String nomeArquivo) throws IOException {
 		byte[] fileBytes = Base64.getDecoder().decode(base64);
-	    
-	    // Identifica o tipo MIME do arquivo
-	    Path tempFile = Files.createTempFile("temp", ".tmp");
-	    Files.write(tempFile, fileBytes);
-	    String mimeType = Files.probeContentType(tempFile);
 
-	    // Define o caminho para salvar o arquivo
-	    String directoryPath = ImageProperties.getImagePath() + "/uploads/aviso/" + avisoId.toString();
-	    Path diretorio = Paths.get(directoryPath);
+	     String fileType;
+	     if (base64.startsWith("iVBORw0KGgo")) {
+	         fileType = "png";
+	     } else if (base64.startsWith("JVBERi0xLj")) {
+	         fileType = "pdf";
+	     } else {
+	         throw new IllegalArgumentException("Tipo de arquivo não suportado. Somente PNG e PDF são aceitos.");
+	     }
 
-	    // Adiciona um timestamp para garantir um nome de arquivo único
-	    String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
-	    
-	    // Verifica o tipo MIME para definir a extensão correta
-	    String fileExtension = ".png";  // Default para imagem
-	    if ("application/pdf".equals(mimeType)) {
-	        fileExtension = ".pdf";  // Caso seja PDF
-	    }
+	     String directoryPath = ImageProperties.getImagePath() + "/uploads/aviso/" + avisoId.toString();
+	     Path diretorio = Paths.get(directoryPath);
 
-	    String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + fileExtension;
+	     String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+	     String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + "." + fileType;
 
-	    // Cria o diretório, se não existir
-	    File directory = new File(directoryPath);
-	    if (!directory.exists()) {
-	        directory.mkdirs();
-	    }
+	     File directory = new File(directoryPath);
+	     if (!directory.exists()) {
+	         directory.mkdirs();
+	     }
 
-	    // Salva o arquivo no disco
-	    try (FileOutputStream fos = new FileOutputStream(caminhoArquivo)) {
-	        fos.write(fileBytes);
-	    }
+	     try (FileOutputStream fos = new FileOutputStream(caminhoArquivo)) {
+	         fos.write(fileBytes);
+	     }
 
-	    return caminhoArquivo;
-    }
-	
+	     return caminhoArquivo;
+	 }
+	 
 
 	/// ************************ TRATAMENTO DE IMAGENS DE AVISO RESPOSTA /// *********************************///
 	
@@ -341,15 +334,6 @@ public class ImageManager {
 	    }
 
 	    return caminhoArquivo;
-	}
-
-	// Método para detectar a extensão do arquivo
-	private static String getFileExtension(byte[] imageBytes) throws IOException {
-	    if (imageBytes.length > 4 && imageBytes[0] == 0x25 && imageBytes[1] == 0x50 && imageBytes[2] == 0x44 && imageBytes[3] == 0x46) {
-	        return ".pdf"; // PDF
-	    } 
-	   
-	    return ".png"; // PNG
 	}
 
 	
