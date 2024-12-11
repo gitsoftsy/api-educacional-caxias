@@ -2,6 +2,8 @@ package br.com.softsy.educacional.dto;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotNull;
+
 import br.com.softsy.educacional.model.Nota;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +19,9 @@ public class CadastroNotaDTO {
     private String nota;
     private Character compareceu;
     private Integer ordem;
+    
+    private Long professorId;
+    private Long usuarioId; 
     
     public CadastroNotaDTO(Nota nota) {
         this.idNota = nota.getIdNota();

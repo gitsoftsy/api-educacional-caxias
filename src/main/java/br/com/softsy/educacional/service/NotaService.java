@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.softsy.educacional.dto.AlunoDTO;
 import br.com.softsy.educacional.dto.CadastroNotaDTO;
+import br.com.softsy.educacional.dto.CadastroNotaLogDTO;
 import br.com.softsy.educacional.dto.NotaDTO;
 import br.com.softsy.educacional.model.Aluno;
 import br.com.softsy.educacional.model.Nota;
@@ -30,6 +31,9 @@ public class NotaService {
 
     @Autowired
     private ProvaRepository provaRepository;
+    
+    @Autowired
+    private NotaLogService notaLogService;
 
     @Transactional(readOnly = true)
     public List<NotaDTO> listarTudo() {
@@ -57,9 +61,10 @@ public class NotaService {
 
 
     @Transactional
-    public NotaDTO salvar(CadastroNotaDTO dto) {
+    public NotaDTO salvar(CadastroNotaDTO dto) throws IOException {
         Nota nota = criarNotaAPartirDTO(dto);
         nota = repository.save(nota);
+
         return new NotaDTO(nota);
     }
 
@@ -81,7 +86,7 @@ public class NotaService {
     }
 
     @Transactional
-    public NotaDTO atualizar(CadastroNotaDTO dto) {
+    public NotaDTO atualizar(CadastroNotaDTO dto) throws IOException {
         Nota nota = repository.findById(dto.getIdNota())
                 .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada"));
 
@@ -91,6 +96,7 @@ public class NotaService {
 
         return new NotaDTO(nota);
     }
+    
 
     private void atualizaDados(Nota destino, CadastroNotaDTO origem) {
         Aluno aluno = alunoRepository.findById(origem.getAlunoId())

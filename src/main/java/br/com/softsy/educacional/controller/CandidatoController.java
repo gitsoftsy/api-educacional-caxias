@@ -115,18 +115,15 @@ public class CandidatoController {
 		try {
 			PessoaDTO pessoaCPF = null;
 
-			// Apenas busca a pessoa pelo CPF se o CPF não for nulo
 			if (dto.getPessoaDTO().getCpf() != null) {
 				pessoaCPF = pessoaService.buscarPorCpfEIdConta(dto.getPessoaDTO().getCpf(),
 						dto.getPessoaDTO().getContaId());
 			}
 
 			if (pessoaCPF != null && pessoaCPF.getIdPessoa() != null) {
-				// Pessoa encontrada com o CPF, atribui o ID dessa pessoa ao candidato
 				dto.getCandidatoDTO().setPessoaId(pessoaCPF.getIdPessoa());
 			} else {
-				// Caso o CPF seja nulo ou não encontre uma pessoa com esse CPF, cria uma nova
-				// Pessoa
+
 				Pessoa pessoa = pessoaService.criarPessoaAPartirDTO(dto.getPessoaDTO());
 				pessoa.setSenha(encrypt.hashPassword(pessoa.getSenha()));
 				pessoa = pessoaRepository.save(pessoa);

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -83,13 +84,13 @@ public class NotaLogService {
 
 
 	    @Transactional(readOnly = true)
-	    public List<NotaLogDTO> buscarPorIdNota(Long idNota) {
+	    public List<CadastroNotaLogDTO> buscarPorIdNota(Long idNota) {
 	        List<NotaLog> notaLog = repository.findByNota_IdNota(idNota).orElse(Collections.emptyList());
 	        if (notaLog.isEmpty()) {
 	            throw new NoSuchElementException("Não há notas registradas para o ID: " + idNota);
 	        }
 	        return notaLog.stream()
-	                .map(NotaLogDTO::new)
+	                .map(CadastroNotaLogDTO::new)
 	                .collect(Collectors.toList());
 	    }
 
@@ -123,7 +124,6 @@ public class NotaLogService {
 	        Nota nota = notaRepository.findById(dto.getNota())
 	                .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada"));
 	        
-	        // Validar e configurar o Usuário ou Professor
 	        if (dto.getUsuarioId() != null) {
 	            Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
 	                    .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
@@ -145,4 +145,34 @@ public class NotaLogService {
 	        return notaLog;
 	    }   
 	    
+	    @Transactional
+	    public void atualizar(CadastroNotaLogDTO dto) throws IOException {
+	        Optional<List<NotaLog>> optionalNotaLog = repository.findByNota_IdNota(dto.getNota());
+
+	        if (!optionalNotaLog.isPresent() || optionalNotaLog.get().isEmpty()) {
+	            throw new IllegalArgumentException("NotaLog não encontrado para a nota: " + dto.getNota());
+	        }
+
+
+	        NotaLog notaLog = optionalNotaLog.get().get(0);
+
+	        notaLog.setNotaAnterior(dto.getNotaAnterior());
+	        notaLog.setNotaAtual(dto.getNotaAtual());
+
+	        notaLog.setOperacao('A');
+
+	        if (dto.getProfessorId() != null) {
+	            Professor professor = professorRepository.findById(dto.getProfessorId())
+	                    .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado"));
+	            notaLog.setProfessor(professor);
+	        }
+
+	        if (dto.getUsuarioId() != null) {
+	            Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+	                    .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+	            notaLog.setUsuario(usuario);
+	        }
+
+	        repository.save(notaLog);
+	    }
 }

@@ -45,19 +45,10 @@ public class NotaLogController {
 
 	   
 	    @GetMapping("/nota/{idNota}")
-	    public ResponseEntity<List<NotaLogDTO>> buscarPorIdNota(@PathVariable Long idNota) {
-	        List<NotaLogDTO> notaLogs = service.buscarPorIdNota(idNota);
+	    public ResponseEntity<List<CadastroNotaLogDTO>> buscarPorIdNota(@PathVariable Long idNota) {
+	        List<CadastroNotaLogDTO> notaLogs = service.buscarPorIdNota(idNota);
 	        return ResponseEntity.ok(notaLogs);
 	    }
 
 	
-	    @PostMapping
-	    public ResponseEntity<NotaLogDTO> salvar(@RequestBody CadastroNotaLogDTO dto) {
-	        try {
-	            NotaLogDTO notaLogDTO = service.salvar(dto);
-	            return new ResponseEntity<>(notaLogDTO, HttpStatus.CREATED);
-	        } catch (IOException | IllegalArgumentException e) {
-	            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-	        }
-	    }
 }

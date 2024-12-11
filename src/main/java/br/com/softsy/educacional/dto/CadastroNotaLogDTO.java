@@ -36,8 +36,8 @@ public class CadastroNotaLogDTO {
 		    this.operacao = notaLog.getOperacao();
 		    this.notaAnterior = notaLog.getNotaAnterior();
 		    this.notaAtual = notaLog.getNotaAtual();
-		    this.professorId = notaLog.getProfessor().getIdProfessor();
-		    this.usuarioId = notaLog.getUsuario().getIdUsuario();
+			this.professorId = notaLog.getProfessor()!= null ? notaLog.getProfessor().getIdProfessor() : null;
+			this.usuarioId = notaLog.getUsuario()!= null ? notaLog.getUsuario().getIdUsuario() : null;
 		    
 			 
 		 }
