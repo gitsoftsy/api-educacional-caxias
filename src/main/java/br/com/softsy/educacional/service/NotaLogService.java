@@ -146,20 +146,23 @@ public class NotaLogService {
 	    }   
 	    
 	    @Transactional
-	    public void atualizar(CadastroNotaLogDTO dto) throws IOException {
-	        Optional<List<NotaLog>> optionalNotaLog = repository.findByNota_IdNota(dto.getNota());
-
-	        if (!optionalNotaLog.isPresent() || optionalNotaLog.get().isEmpty()) {
-	            throw new IllegalArgumentException("NotaLog não encontrado para a nota: " + dto.getNota());
-	        }
-
-
-	        NotaLog notaLog = optionalNotaLog.get().get(0);
-
+	    public void criarNovoRegistro(CadastroNotaLogDTO dto) throws IOException {
+	        NotaLog notaLog = new NotaLog();
 	        notaLog.setNotaAnterior(dto.getNotaAnterior());
 	        notaLog.setNotaAtual(dto.getNotaAtual());
+	        notaLog.setOperacao('I');
 
-	        notaLog.setOperacao('A');
+	        Nota nota = notaRepository.findById(dto.getNota())
+	                .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada"));
+	        notaLog.setNota(nota);
+	        
+	        Aluno aluno = alunoRepository.findById(dto.getAlunoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
+            notaLog.setAluno(aluno);
+            
+	        Prova prova = provaRepository.findById(dto.getProva())
+                    .orElseThrow(() -> new IllegalArgumentException("Prova não encontrada"));
+            notaLog.setProva(prova);
 
 	        if (dto.getProfessorId() != null) {
 	            Professor professor = professorRepository.findById(dto.getProfessorId())
@@ -167,11 +170,13 @@ public class NotaLogService {
 	            notaLog.setProfessor(professor);
 	        }
 
+
 	        if (dto.getUsuarioId() != null) {
 	            Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
 	                    .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 	            notaLog.setUsuario(usuario);
 	        }
+
 
 	        repository.save(notaLog);
 	    }

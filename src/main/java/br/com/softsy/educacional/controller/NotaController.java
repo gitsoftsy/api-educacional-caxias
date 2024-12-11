@@ -78,10 +78,9 @@ public class NotaController {
 
     @PutMapping
     public ResponseEntity<NotaDTO> atualizar(@RequestBody @Valid CadastroNotaDTO dto) throws IOException {
-        NotaDTO notaExistente = service.buscarPorId(dto.getIdNota()); 
+        NotaDTO notaExistente = service.buscarPorId(dto.getIdNota());
 
         NotaDTO notaDTO = service.atualizar(dto);
-
 
         CadastroNotaLogDTO notaLogDTO = new CadastroNotaLogDTO();
         notaLogDTO.setNota(dto.getIdNota());
@@ -92,7 +91,7 @@ public class NotaController {
         notaLogDTO.setUsuarioId(dto.getUsuarioId());
         notaLogDTO.setProfessorId(dto.getProfessorId());
 
-        notaLogService.atualizar(notaLogDTO);
+        notaLogService.criarNovoRegistro(notaLogDTO);
 
         return ResponseEntity.ok(notaDTO);
     }
