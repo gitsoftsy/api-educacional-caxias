@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -55,13 +56,21 @@ public class AvisoService {
 	private AvisoDestinatarioRepository avisoDestinatarioRepository;
 
 
-    @Transactional(readOnly = true)
-    public List<AvisoDTO> listarTudo() {
-        List<Aviso> aviso = repository.findAll();
-        return aviso.stream()
-                .map(AvisoDTO::new)
-                .collect(Collectors.toList());
-    }
+	@Transactional(readOnly = true)
+	public List<AvisoDTO> listarTudo() {
+	    List<Aviso> avisos = repository.findAll();
+	    return avisos.stream()
+	            .map(aviso -> {
+	                try {
+	                    return new AvisoDTO(aviso);
+	                } catch (NullPointerException e) {
+	                    System.err.println("Erro ao processar aviso: " + aviso.getIdAviso());
+	                    return null;
+	                }
+	            })
+	            .filter(Objects::nonNull)
+	            .collect(Collectors.toList());
+	}
 	
 	@Transactional(readOnly = true)
 	public AvisoDTO buscarPorId(Long id) {

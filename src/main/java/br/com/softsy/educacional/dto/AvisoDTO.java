@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.dto;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 import br.com.softsy.educacional.model.Aviso;
@@ -14,8 +15,8 @@ public class AvisoDTO {
     private Long idConta;
     private TipoAvisoDTO tipoAviso;
     private LocalDateTime dataCadastro;
-    private LocalDateTime dataInicio;
-    private LocalDateTime dataFim;
+    private Date dataInicio;
+    private Date dataFim;
     private String titulo;
     private String mensagem;
     private UsuarioDTO usuario;
@@ -24,30 +25,17 @@ public class AvisoDTO {
     private Character permiteResposta;
 
     public AvisoDTO(Aviso aviso) {
-        this.idAviso = aviso.getIdAviso();
-		this.idConta = aviso.getConta().getIdConta();
-        this.tipoAviso = new TipoAvisoDTO(aviso.getTipoAviso());
-        this.dataCadastro = aviso.getDataCadastro();
-        this.dataInicio = aviso.getDataInicio();
-        this.dataFim = aviso.getDataFim();
-        this.titulo = aviso.getTitulo();
-        this.mensagem = aviso.getMensagem();
-
-        
-		if (aviso.getUsuario() != null) {
-			this.usuario = new UsuarioDTO(aviso.getUsuario());
-		} else {
-			this.usuario = null;
-		}
-        
-        
-		if (aviso.getProfessor() != null) {
-			this.professor = new ProfessorDTO(aviso.getProfessor());
-		} else {
-			this.professor = null;
-		}
-        
-        this.pathAnexo = aviso.getPathAnexo();
-        this.permiteResposta = aviso.getPermiteResposta();
+    	 this.idAviso = aviso.getIdAviso();
+    	    this.idConta = (aviso.getConta() != null) ? aviso.getConta().getIdConta() : null;
+    	    this.tipoAviso = (aviso.getTipoAviso() != null) ? new TipoAvisoDTO(aviso.getTipoAviso()) : null;
+    	    this.dataCadastro = aviso.getDataCadastro();
+    	    this.dataInicio = aviso.getDataInicio() != null ? new Date(aviso.getDataInicio().getTime()) : null;
+    	    this.dataFim = aviso.getDataFim() != null ? new Date(aviso.getDataFim().getTime()) : null;
+    	    this.titulo = aviso.getTitulo();
+    	    this.mensagem = aviso.getMensagem();
+    	    this.usuario = (aviso.getUsuario() != null) ? new UsuarioDTO(aviso.getUsuario()) : null;
+    	    this.professor = (aviso.getProfessor() != null) ? new ProfessorDTO(aviso.getProfessor()) : null;
+    	    this.pathAnexo = aviso.getPathAnexo();
+    	    this.permiteResposta = aviso.getPermiteResposta();
     }
 }

@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.dto;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,8 +19,8 @@ public class CadastroAvisoDTO {
     @NotNull
     private Long tipoAvisoId;
     private LocalDateTime dataCadastro;
-    private LocalDateTime dataInicio;
-    private LocalDateTime dataFim;
+    private Date dataInicio;
+    private Date dataFim;
     @NotNull
     private String titulo;
     @NotNull
@@ -35,8 +36,8 @@ public class CadastroAvisoDTO {
         this.contaId = aviso.getConta().getIdConta();
         this.tipoAvisoId = aviso.getTipoAviso().getIdTipoAviso();
         this.dataCadastro = aviso.getDataCadastro();
-        this.dataInicio = aviso.getDataInicio();
-        this.dataFim = aviso.getDataFim();
+        this.dataInicio = (Date) aviso.getDataInicio();
+        this.dataFim = (Date) aviso.getDataFim();
         this.titulo = aviso.getTitulo();
         this.mensagem = aviso.getMensagem();
         if(aviso.getUsuario()!=null) {

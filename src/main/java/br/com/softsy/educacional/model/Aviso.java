@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.model;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -38,10 +39,10 @@ public class Aviso {
 	private LocalDateTime dataCadastro;
 
     @Column(name = "DTINI")
-    private LocalDateTime dataInicio;
+    private Date dataInicio;
 
     @Column(name = "DTFIM")
-    private LocalDateTime dataFim;
+    private Date dataFim;
 
     @Column(name = "TITULO", length = 255, nullable = false)
     private String titulo;
