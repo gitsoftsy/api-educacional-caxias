@@ -2,6 +2,7 @@ package br.com.softsy.educacional.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -150,40 +151,51 @@ public class AvisoInternoService {
         AvisoInterno avisoInterno = new AvisoInterno();
         BeanUtils.copyProperties(dto, avisoInterno, "idAvisoInterno", "dataCadastro");
 
-        if(dto.getUsuarioId() == null && dto.getProfessorId() == null) {
-			throw new IllegalArgumentException("Pelo menos um dos campos usuarioId ou professorId deve ser preenchido");
-		}
-		if(dto.getUsuarioId() != null && dto.getProfessorId() != null) {
-			throw new IllegalArgumentException("Informe apenas um dos campos, usuarioId ou professorId.");
-		}
-		
-		
-		TipoAviso tipoAviso = tipoAvisoRepository.findById(dto.getTipoAvisoId())
-                .orElseThrow(() -> new IllegalArgumentException("Tipo do aviso não encontrado"));
-		
-		 Conta conta = contaRepository.findById(dto.getContaId())
-	                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
-		 avisoInterno.setConta(conta);
+        // Validação de `usuarioId` e `professorId`
+        if (dto.getUsuarioId() == null && dto.getProfessorId() == null) {
+            throw new IllegalArgumentException("Pelo menos um dos campos usuarioId ou professorId deve ser preenchido.");
+        }
+        if (dto.getUsuarioId() != null && dto.getProfessorId() != null) {
+            throw new IllegalArgumentException("Informe apenas um dos campos, usuarioId ou professorId.");
+        }
+        
+        LocalDate hoje = LocalDate.now();
 
-			
-		if(dto.getUsuarioId() != null ) {
-			Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-	                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
-			avisoInterno.setUsuario(usuario);
+		LocalDate dataInicio = dto.getDataInicio().toLocalDate();
+		LocalDate dataFim = dto.getDataFim() != null ? dto.getDataFim().toLocalDate() : null;
+
+		if (dataInicio.isBefore(hoje)) {
+		    throw new IllegalArgumentException("A data de início deve ser a partir de hoje.");
 		}
-		
-		else {
-			Professor professor = professorRepository.findById(dto.getProfessorId())
-	                .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado"));
-			avisoInterno.setProfessor(professor);
+
+		if (dataFim != null && dataFim.isBefore(dataInicio)) {
+		    throw new IllegalArgumentException("A data de fim não pode ser anterior à data de início.");
 		}
-		
+
+
+        // Busca e associações
+        TipoAviso tipoAviso = tipoAvisoRepository.findById(dto.getTipoAvisoId())
+                .orElseThrow(() -> new IllegalArgumentException("Tipo do aviso não encontrado."));
+        Conta conta = contaRepository.findById(dto.getContaId())
+                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada."));
+        avisoInterno.setConta(conta);
+
+        if (dto.getUsuarioId() != null) {
+            Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+                    .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+            avisoInterno.setUsuario(usuario);
+        } else {
+            Professor professor = professorRepository.findById(dto.getProfessorId())
+                    .orElseThrow(() -> new IllegalArgumentException("Professor não encontrado."));
+            avisoInterno.setProfessor(professor);
+        }
+
         avisoInterno.setDataCadastro(LocalDateTime.now());
         avisoInterno.setTipoAviso(tipoAviso);
 
         return avisoInterno;
     }
-    
+
   
 
     @Transactional

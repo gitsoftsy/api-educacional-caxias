@@ -2,6 +2,7 @@ package br.com.softsy.educacional.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -165,7 +166,19 @@ public class AvisoService {
 			throw new IllegalArgumentException("Informe apenas um dos campos, usuarioId ou professorId.");
 		}
 		
-		
+		LocalDate hoje = LocalDate.now();
+
+		LocalDate dataInicio = dto.getDataInicio().toLocalDate();
+		LocalDate dataFim = dto.getDataFim() != null ? dto.getDataFim().toLocalDate() : null;
+
+		if (dataInicio.isBefore(hoje)) {
+		    throw new IllegalArgumentException("A data de início deve ser a partir de hoje.");
+		}
+
+		if (dataFim != null && dataFim.isBefore(dataInicio)) {
+		    throw new IllegalArgumentException("A data de fim não pode ser anterior à data de início.");
+		}
+
 		
 		TipoAviso tipoAviso = tipoAvisoRepository.findById(dto.getTipoAvisoId())
                 .orElseThrow(() -> new IllegalArgumentException("Tipo do aviso não encontrado"));
