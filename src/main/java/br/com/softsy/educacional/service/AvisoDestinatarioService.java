@@ -135,15 +135,19 @@ public class AvisoDestinatarioService {
             resultMap.put("idAvisoDestinatario", result[1]);
             resultMap.put("dataCadastro", result[2]);
             resultMap.put("dataLeitura", result[3]);
-            resultMap.put("idAluno", result[4]);
-            resultMap.put("aluno", result[5]);
-            resultMap.put("nomeCompleto", result[6]);
-            resultMap.put("nomeSocial", result[7]);
-            resultMap.put("codigoCurso", result[8]);
-            resultMap.put("nomeCurso", result[9]);
-            resultMap.put("nomeEscola", result[10]);
-            resultMap.put("mnemonico", result[11]);
-            resultMap.put("turno", result[12]);
+            resultMap.put("idAvisoDestinatarioResposta", result[4]);
+            resultMap.put("mensagem", result[5]);
+            resultMap.put("pathAnexo", result[6]);
+            resultMap.put("dtEnvioResposta", result[7]);
+            resultMap.put("idAluno", result[8]);
+            resultMap.put("aluno", result[9]);
+            resultMap.put("nomeCompleto", result[10]);
+            resultMap.put("nomeSocial", result[11]);
+            resultMap.put("codigoCurso", result[12]);
+            resultMap.put("nomeCurso", result[13]);
+            resultMap.put("nomeEscola", result[14]);
+            resultMap.put("mnemonico", result[15]);
+            resultMap.put("turno", result[16]);
             mappedResultList.add(resultMap);
         }
 
