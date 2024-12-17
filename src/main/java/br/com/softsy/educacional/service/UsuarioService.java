@@ -1,9 +1,15 @@
 package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +22,6 @@ import br.com.softsy.educacional.dto.UsuarioDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.infra.exception.NegocioException;
 import br.com.softsy.educacional.infra.exception.UniqueException;
-import br.com.softsy.educacional.model.Aluno;
 import br.com.softsy.educacional.model.Usuario;
 import br.com.softsy.educacional.model.UsuarioConta;
 import br.com.softsy.educacional.repository.UsuarioContaRepository;
@@ -30,8 +35,12 @@ public class UsuarioService {
     
     @Autowired
     private UsuarioContaRepository usuarioContarepository;
+    
 	@Autowired
 	private PasswordEncrypt encrypt;
+	
+    @Autowired
+    private EntityManager entityManager;
 
     public List<Usuario> listarTudo() {
         return repository.findAll();
@@ -149,4 +158,36 @@ public class UsuarioService {
         usuario.setSenha(encrypt.hashPassword(senhaNova));
         repository.save(usuario);
     }
+    
+    public List<Map<String, Object>> listarUsuariosConta(Long idConta) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTAR_USUARIOS_CONTA(:pIdConta)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdConta", idConta);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idUsuario", result[0]);
+            resultMap.put("dataCadastro", result[1]);
+            resultMap.put("usuario", result[2]);
+            resultMap.put("nomeCompleto", result[3]);
+            resultMap.put("email", result[4]);
+            resultMap.put("emailVerificado", result[5]);
+            resultMap.put("cpf", result[6]);
+            resultMap.put("dataNascimento", result[7]);
+            resultMap.put("senha", result[8]);
+            resultMap.put("ativo", result[9]);
+            resultMap.put("celular", result[10]);
+            resultMap.put("celularVerificado", result[11]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
 }

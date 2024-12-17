@@ -65,7 +65,6 @@ public class CandidatoController {
 			this.idCandidato = idCandidato;
 		}
 
-		// Getters e Setters
 		public String getCandidato() {
 			return candidato;
 		}
@@ -240,7 +239,6 @@ public class CandidatoController {
 
 	@GetMapping("/listaReservaDeVagas")
 	public Object obtemListaReservaDeVagas(@RequestParam(value = "idUsuario", required = false) Long idUsuario) {
-		// Verifica se idConta é nulo, pois ele é obrigatório
 		if (idUsuario == null) {
 			return "Por favor, informe o parâmetro idUsuario na requisição.";
 		}
@@ -261,13 +259,11 @@ public class CandidatoController {
 			@RequestParam(value = "cpfNum", required = false) String cpfNum,
 			@RequestParam(value = "certNasc", required = false) String certNasc,
 			@RequestParam(value = "certCasamento", required = false) String certCasamento) {
-		// Verifica se todos os parâmetros são nulos
 		if (idConta == null && idEscola == null && rgNum == null && cpfNum == null && certNasc == null
 				&& certCasamento == null) {
 			return "Por favor, informe ao menos um parâmetro na requisição.";
 		}
 
-		// Verifica se idConta é nulo, pois ele é obrigatório
 		if (idConta == null) {
 			return "Por favor, informe o parâmetro idConta na requisição.";
 		}
