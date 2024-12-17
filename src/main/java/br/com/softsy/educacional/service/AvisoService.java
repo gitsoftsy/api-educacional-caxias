@@ -166,19 +166,17 @@ public class AvisoService {
 			throw new IllegalArgumentException("Informe apenas um dos campos, usuarioId ou professorId.");
 		}
 		
+		
 		LocalDate hoje = LocalDate.now();
-
-		LocalDate dataInicio = dto.getDataInicio().toLocalDate();
+		
+		LocalDate dataInicio = dto.getDataInicio() != null ? dto.getDataInicio().toLocalDate() : null;
 		LocalDate dataFim = dto.getDataFim() != null ? dto.getDataFim().toLocalDate() : null;
 
-		if (dataInicio.isBefore(hoje)) {
+		if (dataInicio != null && dataInicio.isBefore(hoje)) {
 		    throw new IllegalArgumentException("A data de início deve ser a partir de hoje.");
-		}
-
-		if (dataFim != null && dataFim.isBefore(dataInicio)) {
+		} else if (dataInicio != null && dataFim != null && dataFim.isBefore(dataInicio)) {
 		    throw new IllegalArgumentException("A data de fim não pode ser anterior à data de início.");
 		}
-
 		
 		TipoAviso tipoAviso = tipoAvisoRepository.findById(dto.getTipoAvisoId())
                 .orElseThrow(() -> new IllegalArgumentException("Tipo do aviso não encontrado"));
