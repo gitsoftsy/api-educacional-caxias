@@ -129,4 +129,22 @@ public class UsuarioController {
         response.put("qtdMensagens", qtdMensagens);
         return response;
     }
+    
+    @GetMapping("/conta")
+    public ResponseEntity<AllResponse> listarAlunosTurma(
+            @RequestParam(value = "idConta", required = false) Long idConta
+    ) {
+        if (idConta == null) {
+            return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+        }
+
+        List<Map<String, Object>> result = service.listarUsuariosConta(idConta);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+        }
+
+        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+    }
+    
 }
