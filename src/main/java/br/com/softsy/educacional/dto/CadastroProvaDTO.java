@@ -2,11 +2,11 @@ package br.com.softsy.educacional.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
 import br.com.softsy.educacional.model.Prova;
-import br.com.softsy.educacional.model.Turma;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +22,7 @@ public class CadastroProvaDTO {
 	private String nomeAbreviado;
 	@NotNull
 	private String descricao;
-	private LocalDate dataDivulgacao;
+	private Date dataDivulgacao;
 	private LocalDateTime dataAgendaProva;
 	@NotNull
 	private Character ativo;

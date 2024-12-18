@@ -25,7 +25,7 @@ public class AvisoDTO {
     private Character permiteResposta;
 
     public AvisoDTO(Aviso aviso) {
-    	 this.idAviso = aviso.getIdAviso();
+    		this.idAviso = aviso.getIdAviso();
     	    this.idConta = (aviso.getConta() != null) ? aviso.getConta().getIdConta() : null;
     	    this.tipoAviso = (aviso.getTipoAviso() != null) ? new TipoAvisoDTO(aviso.getTipoAviso()) : null;
     	    this.dataCadastro = aviso.getDataCadastro();

@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.model;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -38,7 +39,7 @@ public class Prova {
     private String descricao;
 
     @Column(name = "DT_DIVULGACAO")
-    private LocalDate dataDivulgacao;
+    private Date dataDivulgacao;
 
     @Column(name = "DT_AGENDA_PROVA")
     private LocalDateTime dataAgendaProva;

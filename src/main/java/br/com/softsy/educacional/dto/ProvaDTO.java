@@ -2,9 +2,9 @@ package br.com.softsy.educacional.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import br.com.softsy.educacional.model.Prova;
-import br.com.softsy.educacional.model.Turma;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +17,7 @@ public class ProvaDTO {
 	private LocalDateTime dataCadastro;
 	private String nomeAbreviado;
 	private String descricao;
-	private LocalDate dataDivulgacao;
+	private Date dataDivulgacao;
 	private LocalDateTime dataAgendaProva;
 	private Character ativo;
 	private Integer ordem;
