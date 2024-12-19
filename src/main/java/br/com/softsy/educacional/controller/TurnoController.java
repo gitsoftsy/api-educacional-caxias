@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.TurnoDTO;
+import br.com.softsy.educacional.model.Serie;
 import br.com.softsy.educacional.service.TurnoService;
 
 @RestController
@@ -121,15 +121,15 @@ public class TurnoController {
 
     @GetMapping("/series/conta/{idConta}/curso/{idCurso}/turno/{idTurno}")
     public List<Map<String, Object>> getSeriesOfertaConcurso(@PathVariable Long idConta, @PathVariable Long idCurso, @PathVariable Long idTurno) {
-        List<Integer> series = entityManager.createQuery(
-                "SELECT DISTINCT oc.series " +
+        List<Serie> series = entityManager.createQuery(
+                "SELECT DISTINCT oc.serie " +
                         "FROM OfertaConcurso oc " +
                         "JOIN oc.concurso c " +
                         "WHERE c.ativo = 'S' " +
                         "AND oc.ativo = 'S' " +
                         "AND c.conta.idConta = :idConta " +
                         "AND oc.curso.idCurso = :idCurso " +
-                        "AND oc.turno.idTurno = :idTurno", Integer.class)
+                        "AND oc.turno.idTurno = :idTurno", Serie.class)
                 .setParameter("idConta", idConta)
                 .setParameter("idCurso", idCurso)
                 .setParameter("idTurno", idTurno)
