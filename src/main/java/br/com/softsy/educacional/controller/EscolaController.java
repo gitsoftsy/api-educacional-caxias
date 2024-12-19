@@ -20,14 +20,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroEscolaDTO;
-import br.com.softsy.educacional.dto.ContaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
-import br.com.softsy.educacional.model.CaminhoImagemRequest;
 import br.com.softsy.educacional.service.EscolaService;
 
 @RestController
@@ -54,12 +52,14 @@ public class EscolaController {
        return ResponseEntity.ok(logo);
     }
 	
-    @GetMapping("/conta/{idConta}/curso/{idCurso}/turno/{idTurno}/serie/{serie}")
+    @GetMapping("/conta/{idConta}/curso/{idCurso}/turno/{idTurno}/serie/{idSerie}")
     public List<Map<String, Object>> getEscolasOfertaConcurso(
             @PathVariable Long idConta,
             @PathVariable Long idCurso,
             @PathVariable Long idTurno,
-            @PathVariable Integer serie) {
+            @PathVariable Long idSerie) {
+    	
+    	
 
         List<Object[]> escolas = entityManager.createQuery(
                 "SELECT DISTINCT e.idEscola, e.nomeEscola " +
@@ -72,13 +72,14 @@ public class EscolaController {
                         "AND c.conta.idConta = :idConta " +
                         "AND oc.curso.idCurso = :idCurso " +
                         "AND oc.turno.idTurno = :idTurno " +
-                        "AND oc.serie = :serie", Object[].class)
+                        "AND oc.serie.idSerie = :idSerie", Object[].class)
                 .setParameter("idConta", idConta)
                 .setParameter("idCurso", idCurso)
                 .setParameter("idTurno", idTurno)
-                .setParameter("serie", serie)
+                .setParameter("idSerie", idSerie)
                 .getResultList();
-
+        
+ 
         // Mapeando os resultados para objetos JSON
         List<Map<String, Object>> escolasJson = escolas.stream()
                 .map(escola -> {
