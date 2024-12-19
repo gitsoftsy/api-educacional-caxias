@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.softsy.educacional.dto.AvisoDTO;
 import br.com.softsy.educacional.dto.CadastroProvaDTO;
 import br.com.softsy.educacional.dto.ProvaDTO;
 import br.com.softsy.educacional.service.ProvaService;
@@ -35,6 +36,12 @@ public class ProvaController {
 	    @GetMapping("/{idProva}")
 	    public ResponseEntity<ProvaDTO> buscarPorId(@PathVariable Long idProva) {
 	        return ResponseEntity.ok(service.buscarPorId(idProva));
+	    }
+	    
+	    @GetMapping("/turma/{idTurma}")
+	    public ResponseEntity<List<ProvaDTO>> buscarPorIdTurma(@PathVariable Long idTurma) {
+	        List<ProvaDTO> prova = service.buscarPorIdTurma(idTurma);
+	        return ResponseEntity.ok(prova);
 	    }
 
 	    
