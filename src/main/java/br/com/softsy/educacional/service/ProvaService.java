@@ -1,11 +1,17 @@
 package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +30,9 @@ public class ProvaService {
 	
 	@Autowired
     private TurmaRepository turmaRepository;
+	
+    @Autowired
+    private EntityManager entityManager;
 	
 	
 	@Transactional(readOnly = true)
@@ -68,6 +77,47 @@ public class ProvaService {
 
 	    return prova;
 	}
+	
+	@Transactional(readOnly = true)
+    public List<Map<String, Object>> listarProvas(
+            Long idEscola, Integer ano, Integer periodoLetivo,
+            Long idTurno, Long idTurma, Long idDisciplina) {
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTAR_PROVAS(:pIdEscola, :pAno, :pPeriodoLetivo, :pIdTurno, :pIdTurma, :pIdDisciplina)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdEscola", idEscola);
+        query.setParameter("pAno", ano);
+        query.setParameter("pPeriodoLetivo", periodoLetivo);
+        query.setParameter("pIdTurno", idTurno);
+        query.setParameter("pIdTurma", idTurma);
+        query.setParameter("pIdDisciplina", idDisciplina);
+
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idProva", result[0]);
+            resultMap.put("idTurma", result[1]);	
+            resultMap.put("nomeAbreviado", result[2]);
+            resultMap.put("descricao", result[3]);
+            resultMap.put("dtDivulgacao", result[4]);
+            resultMap.put("dtAgendaProva", result[5]);
+            resultMap.put("ativo", result[6]);
+            resultMap.put("tipoConceito", result[7]);
+            resultMap.put("conceitoMax", result[8]);
+            resultMap.put("dtLimiteRevisao", result[9]);
+            resultMap.put("ehSimulado", result[10]);
+            resultMap.put("formula", result[11]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
 
 	    @Transactional
 	    public ProvaDTO atualizar(CadastroProvaDTO dto) {
