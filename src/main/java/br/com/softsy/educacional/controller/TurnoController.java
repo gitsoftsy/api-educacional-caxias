@@ -47,13 +47,13 @@ public class TurnoController {
         return ResponseEntity.ok(turnoDTO);
     }
     
-    @GetMapping("/conta/{idConta}/curso/{idCurso}/escola/{idEscola}/serie/{series}")
+    @GetMapping("/conta/{idConta}/curso/{idCurso}/escola/{idEscola}/serie/{idSerie}")
     public List<Map<String, Object>> buscarTurnosPorIdContaAndIdCursoAndIdEscola(
             @PathVariable Long idConta,
             @PathVariable Long idCurso,
             @PathVariable Long idEscola,
-            @PathVariable Integer series) {
-
+            @PathVariable Long idSerie) {
+ 
         List<Object[]> turnos = entityManager.createQuery(
                 "SELECT DISTINCT t.idTurno, t.turno, t.horaInicio, t.horaFim " +
                         "FROM Turno t " +
@@ -65,14 +65,13 @@ public class TurnoController {
                         "AND c.conta.idConta = :idConta " +
                         "AND oc.curso.idCurso = :idCurso " +
                         "AND oc.escola.idEscola = :idEscola " +
-                        "AND oc.series = :series", Object[].class)
+                        "AND oc.serie.idSerie = :idSerie", Object[].class)
                 .setParameter("idConta", idConta)
                 .setParameter("idCurso", idCurso)
                 .setParameter("idEscola", idEscola)
-                .setParameter("series", series)
+                .setParameter("idSerie", idSerie)
                 .getResultList();
-
-        // TRANSFORMANDO EM JSON
+ 
         List<Map<String, Object>> turnosJson = turnos.stream()
                 .map(turno -> {
                     Map<String, Object> turnoJson = new HashMap<>();
@@ -83,7 +82,7 @@ public class TurnoController {
                     return turnoJson;
                 })
                 .collect(Collectors.toList());
-
+ 
         return turnosJson;
     }
     

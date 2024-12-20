@@ -36,6 +36,12 @@ public class ProvaController {
 	    public ResponseEntity<ProvaDTO> buscarPorId(@PathVariable Long idProva) {
 	        return ResponseEntity.ok(service.buscarPorId(idProva));
 	    }
+	    
+	    @GetMapping("/turma/{idTurma}")
+	    public ResponseEntity<List<ProvaDTO>> buscarPorIdTurma(@PathVariable Long idTurma) {
+	        List<ProvaDTO> prova = service.buscarPorIdTurma(idTurma);
+	        return ResponseEntity.ok(prova);
+	    }
 
 	    
 	    @PostMapping

@@ -38,6 +38,15 @@ public class ProvaService {
     public ProvaDTO buscarPorId(Long id) {
         return new ProvaDTO(repository.getReferenceById(id));
     }
+	
+	@Transactional(readOnly = true)
+    public List<ProvaDTO> buscarPorIdTurma(Long idTurma) {
+        List<Prova> prova = repository.findByTurma_IdTurma(idTurma)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar prova por ID do turma"));
+        return prova.stream()
+                .map(ProvaDTO::new)
+                .collect(Collectors.toList());
+    }
 		
 	@Transactional
 	public ProvaDTO salvar(CadastroProvaDTO dto) {
