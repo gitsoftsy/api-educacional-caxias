@@ -80,17 +80,17 @@ public class ProvaService {
 	
 	@Transactional(readOnly = true)
     public List<Map<String, Object>> listarProvas(
-            Long idEscola, Integer ano, Integer periodoLetivo,
+            Long idEscola, Integer ano, Long idPeriodoLetivo,
             Long idTurno, Long idTurma, Long idDisciplina) {
 
         StringBuilder sql = new StringBuilder();
-        sql.append("CALL PROC_LISTAR_PROVAS(:pIdEscola, :pAno, :pPeriodoLetivo, :pIdTurno, :pIdTurma, :pIdDisciplina)");
+        sql.append("CALL PROC_LISTAR_PROVAS(:pIdEscola, :pAno, :pIdPeriodoLetivo, :pIdTurno, :pIdTurma, :pIdDisciplina)");
 
         Query query = entityManager.createNativeQuery(sql.toString());
 
         query.setParameter("pIdEscola", idEscola);
         query.setParameter("pAno", ano);
-        query.setParameter("pPeriodoLetivo", periodoLetivo);
+        query.setParameter("pIdPeriodoLetivo", idPeriodoLetivo);
         query.setParameter("pIdTurno", idTurno);
         query.setParameter("pIdTurma", idTurma);
         query.setParameter("pIdDisciplina", idDisciplina);

@@ -19,7 +19,7 @@ public interface ProvaRepository extends JpaRepository<Prova, Long>{
 	  List<Object[]> listarProvas(
 	          @Param("P_ID_ESCOLA") Long idEscola,
 	          @Param("P_ANO") Integer ano,
-	          @Param("P_PERIODO_LETIVO") Integer periodoLetivo,
+	          @Param("P_ID_PERIODO_LETIVO") Long idPeriodoLetivo,
 	          @Param("P_ID_TURNO") Long idTurno,
 	          @Param("P_ID_TURMA") Long idTurma,
 	          @Param("P_ID_DISCIPLINA") Long idDisciplina

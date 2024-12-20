@@ -64,13 +64,13 @@ public class ProvaController {
 	    public ResponseEntity<List<Map<String, Object>>> listarProvas(
 	            @RequestParam (value = "idEscola", required = false) Long idEscola,
 	            @RequestParam (value = "ano", required = false) Integer ano,
-	            @RequestParam (value = "periodoLetivo", required = false) Integer periodoLetivo,
+	            @RequestParam (value = "idPeriodoLetivo", required = false) Long idPeriodoLetivo,
 	            @RequestParam (value = "idTurno", required = false) Long idTurno,
 	            @RequestParam (value = "idTurma", required = false) Long idTurma,
 	            @RequestParam (value = "idDisciplina", required = false) Long idDisciplina)
 	    {
  
-	        List<Map<String, Object>> provas = service.listarProvas(idEscola, ano, periodoLetivo, idTurno, idTurma, idDisciplina);
+	        List<Map<String, Object>> provas = service.listarProvas(idEscola, ano, idPeriodoLetivo, idTurno, idTurma, idDisciplina);
 	        return ResponseEntity.ok(provas);
 	    }
 
