@@ -382,7 +382,7 @@ public class CandidatoService {
 
         Query query = entityManager.createNativeQuery(sql.toString());
 
-        // Definir os parâmetros
+      
         query.setParameter("pIdConta", idConta);
         query.setParameter("pIdEscola", idEscola);
         query.setParameter("pRgNum", rgNum);
@@ -393,7 +393,7 @@ public class CandidatoService {
         List<Object[]> resultList = query.getResultList();
         List<Map<String, Object>> mappedResultList = new ArrayList<>();
 
-        // Mapear os resultados para um formato de mapa
+       
         for (Object[] result : resultList) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("idCandidato", result[0]);
@@ -414,6 +414,51 @@ public class CandidatoService {
 
         return mappedResultList;
     }
+    
+    
+    public List<Map<String, Object>> filtrarReservasDeVagas (Long idUsuario, Long idConcurso, Long idOfertaConcurso, Long idEscola) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_FILTRAR_RESERVA_DE_VAGAS(:pIdUsuario, :pIdConcurso, :pIdOfertaConcurso, :pIdEscola)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+      
+        query.setParameter("pIdUsuario", idUsuario);
+        query.setParameter("pIdConcurso", idConcurso);
+        query.setParameter("pIdOfertaConcurso",idOfertaConcurso);
+        query.setParameter("pIdEscola", idEscola);
+        
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+       
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idCandidato", result[0]);
+            resultMap.put("candidato", result[1]);
+            resultMap.put("nomeCompleto", result[2]);
+            resultMap.put("idEscola", result[3]);
+            resultMap.put("nomeEscola", result[4]);
+            resultMap.put("idTurno", result[5]);
+            resultMap.put("turno", result[6]);
+            resultMap.put("serie", result[7]);
+            resultMap.put("idTipoIngresso", result[8]);
+            resultMap.put("tipoIngresso", result[9]);
+            resultMap.put("aprovado", result[10]);
+            resultMap.put("idCurso", result[11]);
+            resultMap.put("codigoCurso", result[12]);
+            resultMap.put("nome", result[13]);
+            resultMap.put("documentos", result[14]);
+            resultMap.put("fichasMedica", result[15]);
+            
+              
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
 
     
 }

@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.softsy.educacional.dto.AvisoDTO;
 import br.com.softsy.educacional.dto.CadastroProvaDTO;
 import br.com.softsy.educacional.dto.ProvaDTO;
-import br.com.softsy.educacional.model.Aviso;
 import br.com.softsy.educacional.model.Prova;
 import br.com.softsy.educacional.model.Turma;
 import br.com.softsy.educacional.repository.ProvaRepository;
@@ -40,16 +38,6 @@ public class ProvaService {
     public ProvaDTO buscarPorId(Long id) {
         return new ProvaDTO(repository.getReferenceById(id));
     }
-	
-	 @Transactional(readOnly = true)
-	    public List<ProvaDTO> buscarPorIdTurma(Long idTurma) {
-	        List<Prova> prova = repository.findByTurma_IdTurma(idTurma)
-	                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar prova por ID do turma"));
-	        return prova.stream()
-	                .map(ProvaDTO::new)
-	                .collect(Collectors.toList());
-	    }
-	
 		
 	@Transactional
 	public ProvaDTO salvar(CadastroProvaDTO dto) {

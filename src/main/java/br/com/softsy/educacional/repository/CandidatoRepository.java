@@ -51,6 +51,15 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Long> {
     
     @Procedure(name = "PROC_LISTA_RESERVA_DE_VAGAS_EXCEL")
     List<Object[]> listaReservaDeVagasExcel(@Param("P_ID_CONTA") Long idConta);
+    
+    @Procedure(name = "PROC_FILTRAR_RESERVA_DE_VAGAS")
+    List<Object[]> filtrarReservas(
+            @Param("P_ID_USUARIO") Long idUsuario,
+            @Param("P_ID_CONCURSO") Long idConcurso,
+            @Param("P_ID_OFERTA_CONCURSO") Long idOfertaConcurso,
+            @Param("P_ID_ESCOLA") Long idEscola
+                     
+    );
 	
 	@Query("select candidato from Candidato join candidato.conta conta where conta.idConta = :idConta")
     Optional<List<Candidato>> findByConta_IdConta(@Param("idConta") Long idConta);

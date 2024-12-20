@@ -19,4 +19,8 @@ public interface AvisoRepository extends JpaRepository<Aviso, Long> {
     
     @Query("select aviso from Aviso join aviso.conta conta where conta.idConta = :idConta")
     Optional<List<Aviso>> findByConta_IdConta(@Param("idConta") Long idConta);
+    
+   
 }
+
+

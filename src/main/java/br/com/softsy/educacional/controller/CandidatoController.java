@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import br.com.softsy.educacional.dto.CadastroCandidatoPessoaDTO;
 import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.dto.PessoaDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
+import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.repository.CandidatoRepository;
@@ -295,17 +297,37 @@ public class CandidatoController {
 	}
 
 	@PutMapping("/{idCandidato}/reprovar")
-	public ResponseEntity<?> reprovarCandidato(
-	        @PathVariable Long idCandidato,
-	        @RequestBody CadastroCandidatoDTO candidatoDTO) {
+	public ResponseEntity<?> reprovarCandidato(@PathVariable Long idCandidato,
+			@RequestBody CadastroCandidatoDTO candidatoDTO) {
 
-	    candidatoService.reprovarCandidato(idCandidato, candidatoDTO);
+		candidatoService.reprovarCandidato(idCandidato, candidatoDTO);
 
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("message", "Candidato reprovado com sucesso!");
-	    response.put("idCandidato", idCandidato);
+		Map<String, Object> response = new HashMap<>();
+		response.put("message", "Candidato reprovado com sucesso!");
+		response.put("idCandidato", idCandidato);
 
-	    return ResponseEntity.ok(response);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/filtrar")
+	public Object filtrarPainelDeVagas(@RequestParam(value = "idUsuario", required = false) Long idUsuario,
+			@RequestParam(value = "idConcurso", required = false) Long idConcurso,
+			@RequestParam(value = "idOfertaConcurso", required = false) Long idOfertaConcurso,
+			@RequestParam(value = "idEscola", required = false) Long idEscola
+) {
+
+		if (idUsuario == null && idConcurso == null ) {
+			
+	        return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+		}
+
+		List<Map<String, Object>> result = candidatoService.filtrarReservasDeVagas(idUsuario, idConcurso, idOfertaConcurso,idEscola);
+				
+			    if (result.isEmpty()) {
+			        return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+			    }
+
+	    return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
 	}
 
 }
