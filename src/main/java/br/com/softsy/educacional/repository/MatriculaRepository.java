@@ -14,7 +14,7 @@ public interface MatriculaRepository extends JpaRepository<Matricula, Long> {
     @Query("select matricula from Matricula matricula join matricula.conta conta where conta.idConta = :idConta")
     Optional<List<Matricula>> findByConta_IdConta(@Param("idConta") Long idConta);
 
-    List<Matricula> findByAtivo(Character ativo);
+    Optional<List<Matricula>> findByAlunoAluno(String aluno);
 
     List<Matricula> findByAlunoIdAluno(Long idAluno);
 

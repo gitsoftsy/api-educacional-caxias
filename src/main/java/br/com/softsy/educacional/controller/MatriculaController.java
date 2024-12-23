@@ -46,6 +46,12 @@ public class MatriculaController {
         List<MatriculaDTO> matriculaDTO = matriculaService.buscarPorIdConta(idConta);
         return ResponseEntity.ok(matriculaDTO);
     }
+    
+    @GetMapping("/matricula/{aluno}")
+    public ResponseEntity<List<MatriculaDTO>> buscarPorMatricula(@PathVariable String aluno) {
+        List<MatriculaDTO> matriculaDTO = matriculaService.buscarPorMatricula(aluno);
+        return ResponseEntity.ok(matriculaDTO);
+    }
 
     @PostMapping
     public ResponseEntity<MatriculaDTO> cadastrar(@RequestBody @Valid CadastroMatriculaDTO dto) {

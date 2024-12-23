@@ -280,6 +280,25 @@ public class CandidatoController {
 		return result;
 	}
 
+	@GetMapping("/listarReservaPorConcurso")
+	public Object listarReservasPorConcurso(@RequestParam(value = "concurso", required = false) String concurso) {
+
+		if (concurso == null) {
+
+			return ResponseEntity.badRequest().body(
+					new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+		}
+
+		List<Map<String, Object>> result = candidatoService.listarReservaDeVagasConcurso(concurso);
+
+		if (result.isEmpty()) {
+			return ResponseEntity.ok(
+					new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+		}
+
+		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+	}
+
 	@GetMapping("/excel/{idConta}")
 	public ResponseEntity<?> listarReservaDeVagasExcel(@PathVariable Long idConta) {
 		List<Map<String, Object>> result = candidatoService.listarReservaDeVagasExcel(idConta);
@@ -313,21 +332,23 @@ public class CandidatoController {
 	public Object filtrarPainelDeVagas(@RequestParam(value = "idUsuario", required = false) Long idUsuario,
 			@RequestParam(value = "idConcurso", required = false) Long idConcurso,
 			@RequestParam(value = "idOfertaConcurso", required = false) Long idOfertaConcurso,
-			@RequestParam(value = "idEscola", required = false) Long idEscola
-) {
+			@RequestParam(value = "idEscola", required = false) Long idEscola) {
 
-		if (idUsuario == null && idConcurso == null ) {
-			
-	        return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+		if (idUsuario == null && idConcurso == null) {
+
+			return ResponseEntity.badRequest().body(
+					new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
 		}
 
-		List<Map<String, Object>> result = candidatoService.filtrarReservasDeVagas(idUsuario, idConcurso, idOfertaConcurso,idEscola);
-				
-			    if (result.isEmpty()) {
-			        return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
-			    }
+		List<Map<String, Object>> result = candidatoService.filtrarReservasDeVagas(idUsuario, idConcurso,
+				idOfertaConcurso, idEscola);
 
-	    return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+		if (result.isEmpty()) {
+			return ResponseEntity.ok(
+					new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+		}
+
+		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
 	}
 
 }

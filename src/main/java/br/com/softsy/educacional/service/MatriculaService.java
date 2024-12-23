@@ -73,6 +73,15 @@ public class MatriculaService {
                 .map(MatriculaDTO::new)
                 .collect(Collectors.toList());
     }
+    
+    @Transactional(readOnly = true)
+    public List<MatriculaDTO> buscarPorMatricula(String aluno) {
+        List<Matricula> matricula = repository.findByAlunoAluno(aluno)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar concurso por ID da conta"));
+        return matricula.stream()
+                .map(MatriculaDTO::new)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public MatriculaDTO salvar(CadastroMatriculaDTO dto) {

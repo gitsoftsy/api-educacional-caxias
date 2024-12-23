@@ -213,6 +213,8 @@ public class TurmaService {
             resultMap.put("senha", result[12]);
             resultMap.put("nomeCompleto", result[13]);
             resultMap.put("nomeCurso", result[14]);
+            resultMap.put("situacaoAluno", result[15]);
+            resultMap.put("tipoIngresso", result[16]);
             mappedResultList.add(resultMap);
         }
 
