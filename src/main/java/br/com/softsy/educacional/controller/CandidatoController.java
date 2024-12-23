@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.softsy.educacional.dto.AtualizarResponseDTO;
 import br.com.softsy.educacional.dto.CadastroCandidatoDTO;
 import br.com.softsy.educacional.dto.CadastroCandidatoPessoaDTO;
+import br.com.softsy.educacional.dto.CadastroResponseDTO;
 import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.dto.PessoaDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
@@ -57,59 +59,6 @@ public class CandidatoController {
 
 	@PersistenceContext
 	private EntityManager entityManager;
-
-	private static class CadastroResponseDTO {
-		private String candidato;
-		private Long idCandidato;
-
-		public CadastroResponseDTO(String candidato, Long idCandidato) {
-			this.candidato = candidato;
-			this.idCandidato = idCandidato;
-		}
-
-		public String getCandidato() {
-			return candidato;
-		}
-
-		public void setCandidato(String candidato) {
-			this.candidato = candidato;
-		}
-
-		public Long getIdCandidato() {
-			return idCandidato;
-		}
-
-		public void setIdCandidato(Long idCandidato) {
-			this.idCandidato = idCandidato;
-		}
-	}
-
-	private static class AtualizarResponseDTO {
-		private Long idPessoa;
-		private Long idCandidato;
-
-		public AtualizarResponseDTO(Long idPessoa, Long idCandidato) {
-			this.idPessoa = idPessoa;
-			this.idCandidato = idCandidato;
-		}
-
-		// Getters e Setters
-		public Long getIdPessoa() {
-			return idPessoa;
-		}
-
-		public void setIdPessoa(Long idPessoa) {
-			this.idPessoa = idPessoa;
-		}
-
-		public Long getIdCandidato() {
-			return idCandidato;
-		}
-
-		public void setIdCandidato(Long idCandidato) {
-			this.idCandidato = idCandidato;
-		}
-	}
 
 	@PostMapping("/pessoa-candidato")
 	public ResponseEntity<Object> cadastrarPessoaECandidato(@RequestBody CadastroCandidatoPessoaDTO dto) {
@@ -211,49 +160,50 @@ public class CandidatoController {
 
 		if (idCandidato == null && candidato == null && rgNum == null && cpfNum == null && certNasc == null
 				&& certCasamento == null) {
-			return "Por favor, informe ao menos um parâmetro na requisição.";
+			return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
 		}
 
 		List<Map<String, Object>> result = candidatoService.obtemStepCandidato(idCandidato, candidato, rgNum, cpfNum,
 				certNasc, certCasamento);
 
 		if (result.isEmpty()) {
-			return "Nenhum resultado encontrado para os parâmetros informados.";
+			return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
 		}
 
-		return result;
+		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
 	}
 
 	@GetMapping("/reservaFinal")
 	public Object listaDadosReservaFinal(@RequestParam(value = "candidato", required = false) String candidato) {
 		if (candidato == null) {
-			return "Por favor, informe o parâmetro na requisição.";
+			return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
 		}
 
 		List<Map<String, Object>> result = candidatoService.obtemStepCandidato(candidato);
 
 		if (result.isEmpty()) {
-			return "Nenhum resultado encontrado para os parâmetros informados.";
+			return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
 		}
 
-		return result;
+		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
 	}
 
 	@GetMapping("/listaReservaDeVagas")
 	public Object obtemListaReservaDeVagas(@RequestParam(value = "idUsuario", required = false) Long idUsuario) {
 		if (idUsuario == null) {
-			return "Por favor, informe o parâmetro idUsuario na requisição.";
+			return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
 		}
 
 		List<Map<String, Object>> result = candidatoService.obtemListaReservaDeVagas(idUsuario);
 
 		if (result.isEmpty()) {
-			return "Nenhum resultado encontrado para os parâmetros informados.";
+			return ResponseEntity.ok(
+					new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
 		}
 
-		return result;
+		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
 	}
-
+	
 	@GetMapping("/listarReservasPorDocumento")
 	public Object obtemListaReservaDeVagasPorDocumento(@RequestParam(value = "idConta") Long idConta,
 			@RequestParam(value = "idEscola", required = false) Long idEscola,
@@ -263,33 +213,15 @@ public class CandidatoController {
 			@RequestParam(value = "certCasamento", required = false) String certCasamento) {
 		if (idConta == null && idEscola == null && rgNum == null && cpfNum == null && certNasc == null
 				&& certCasamento == null) {
-			return "Por favor, informe ao menos um parâmetro na requisição.";
+			return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
 		}
 
 		if (idConta == null) {
-			return "Por favor, informe o parâmetro idConta na requisição.";
+			return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
 		}
 
 		List<Map<String, Object>> result = candidatoService.obtemListaReservaDeVagasPorDoc(idConta, idEscola, rgNum,
 				cpfNum, certNasc, certCasamento);
-
-		if (result.isEmpty()) {
-			return "Nenhum resultado encontrado para os parâmetros informados.";
-		}
-
-		return result;
-	}
-
-	@GetMapping("/listarReservaPorConcurso")
-	public Object listarReservasPorConcurso(@RequestParam(value = "concurso", required = false) String concurso) {
-
-		if (concurso == null) {
-
-			return ResponseEntity.badRequest().body(
-					new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
-		}
-
-		List<Map<String, Object>> result = candidatoService.listarReservaDeVagasConcurso(concurso);
 
 		if (result.isEmpty()) {
 			return ResponseEntity.ok(

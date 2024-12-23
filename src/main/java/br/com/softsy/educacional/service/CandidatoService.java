@@ -334,40 +334,6 @@ public class CandidatoService {
         return mappedResultList;
     }
     
-    public List<Map<String, Object>> listarReservaDeVagasConcurso(String concurso) {
-        StringBuilder sql = new StringBuilder();
-        sql.append("CALL PROC_LISTA_RESERVA_DE_VAGAS_CONCURSO(:pConcurso)");
-
-        Query query = entityManager.createNativeQuery(sql.toString());
-
-        query.setParameter("pConcurso", concurso);
-
-        List<Object[]> resultList = query.getResultList();
-        List<Map<String, Object>> mappedResultList = new ArrayList<>();
-
-        for (Object[] result : resultList) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("idCandidato", result[0]);
-            resultMap.put("candidato", result[1]);
-            resultMap.put("nomeCompleto", result[2]);
-            resultMap.put("idEscola", result[3]);
-            resultMap.put("nomeEscola", result[4]);
-            resultMap.put("idTurno", result[5]);
-            resultMap.put("turno", result[6]);
-            resultMap.put("serie", result[7]);
-            resultMap.put("idTipoIngresso", result[8]);
-            resultMap.put("tipoIngresso", result[9]);
-            resultMap.put("aprovado", result[10]);
-            resultMap.put("idCurso", result[11]);
-            resultMap.put("codigoCurso", result[12]);
-            resultMap.put("nomeCurso", result[13]);
-            resultMap.put("documentos", result[14]);
-            resultMap.put("fichaMedica", result[15]);
-            mappedResultList.add(resultMap);
-        }
-
-        return mappedResultList;
-    }
     
     public List<Map<String, Object>> listarReservaDeVagasExcel(Long idConta) {
         StringBuilder sql = new StringBuilder();

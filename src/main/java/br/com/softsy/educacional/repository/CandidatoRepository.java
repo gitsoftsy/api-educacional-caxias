@@ -38,10 +38,6 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Long> {
             @Param("P_ID_USUARIO") Long idUsuario
     );
     
-    @Procedure(name = "PROC_LISTA_RESERVA_DE_VAGAS_CONCURSO")
-    List<Object[]> listarReservasConcurso(
-            @Param("P_CONCURSO") String concurso
-    );
     
     @Procedure(name = "PROC_LISTA_RESERVA_DE_VAGAS_FILTRO_DOC")
     List<Object[]> listarReservasPorDoc(
