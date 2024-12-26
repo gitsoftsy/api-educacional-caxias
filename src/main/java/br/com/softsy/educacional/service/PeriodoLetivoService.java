@@ -122,7 +122,15 @@ public class PeriodoLetivoService {
         return resposta;
     }
 
+    public List<PeriodoLetivoDTO> consultarPorContaEAno(Long idConta, Integer ano) {
+        Optional<List<PeriodoLetivo>> periodosLetivos = periodoLetivoRepository
+            .findByConta_IdContaAndAno(idConta, ano); // Consultar com o idConta e ano
 
-
+        return periodosLetivos
+                .map(list -> list.stream()
+                                 .map(PeriodoLetivoDTO::new) // Converter para DTO
+                                 .collect(Collectors.toList()))
+                .orElseThrow(() -> new RuntimeException("Nenhum período letivo encontrado para o ano " + ano));
+    }
 
 }

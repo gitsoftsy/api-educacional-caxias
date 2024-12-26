@@ -50,6 +50,14 @@ public class PeriodoLetivoController {
         Map<String, List<Integer>> anos = periodoLetivoService.buscarAnosPorIdConta(idConta);
         return ResponseEntity.ok(anos); 
     }
+    
+    @GetMapping("/conta/{idConta}/ano/{ano}")
+    public ResponseEntity<List<PeriodoLetivoDTO>> consultarPeriodoLetivoPorContaEAno(
+            @PathVariable Long idConta, 
+            @PathVariable Integer ano) {
+        List<PeriodoLetivoDTO> periodosLetivos = periodoLetivoService.consultarPorContaEAno(idConta, ano);
+        return ResponseEntity.ok(periodosLetivos);
+    }
 
 
     @PostMapping
