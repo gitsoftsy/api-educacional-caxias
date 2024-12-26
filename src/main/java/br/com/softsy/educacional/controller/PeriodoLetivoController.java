@@ -2,6 +2,7 @@ package br.com.softsy.educacional.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -16,9 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.softsy.educacional.dto.AreaConhecimentoDTO;
 import br.com.softsy.educacional.dto.CadastroPeriodoLetivoDTO;
-import br.com.softsy.educacional.dto.CargoProfessorDTO;
 import br.com.softsy.educacional.dto.PeriodoLetivoDTO;
 import br.com.softsy.educacional.service.PeriodoLetivoService;
 
@@ -45,6 +44,13 @@ public class PeriodoLetivoController {
     public ResponseEntity<PeriodoLetivoDTO> buscarPorId(@PathVariable Long idPeriodoLetivo) {
         return ResponseEntity.ok(periodoLetivoService.buscarPorId(idPeriodoLetivo));
     }
+    
+    @GetMapping("/conta/{idConta}/ano")
+    public ResponseEntity<Map<String, List<Integer>>> buscarAnosPorIdConta(@PathVariable Long idConta) {
+        Map<String, List<Integer>> anos = periodoLetivoService.buscarAnosPorIdConta(idConta);
+        return ResponseEntity.ok(anos); // Retorna a resposta no formato esperado
+    }
+
 
     @PostMapping
     public ResponseEntity<PeriodoLetivoDTO> cadastrar(@RequestBody @Valid CadastroPeriodoLetivoDTO dto) {

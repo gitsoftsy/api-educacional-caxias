@@ -16,4 +16,6 @@ public interface PeriodoLetivoRepository extends JpaRepository<PeriodoLetivo, Lo
 	
 	@Query("select periodoLetivo from PeriodoLetivo periodoLetivo join periodoLetivo.conta conta where conta.idConta = :idConta")
     Optional<List<PeriodoLetivo>> findByConta_IdConta(@Param("idConta") Long idConta);
+	
+	
 }

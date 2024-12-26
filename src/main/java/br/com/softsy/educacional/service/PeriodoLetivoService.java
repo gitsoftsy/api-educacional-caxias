@@ -1,7 +1,9 @@
 package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -9,18 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.softsy.educacional.dto.AreaConhecimentoDTO;
 import br.com.softsy.educacional.dto.CadastroPeriodoLetivoDTO;
-import br.com.softsy.educacional.dto.CargoProfessorDTO;
 import br.com.softsy.educacional.dto.PeriodoLetivoDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
-import br.com.softsy.educacional.model.AreaConhecimento;
 import br.com.softsy.educacional.model.Conta;
-import br.com.softsy.educacional.model.DependenciaAdministrativa;
-import br.com.softsy.educacional.model.Disciplina;
 import br.com.softsy.educacional.model.PeriodoLetivo;
 import br.com.softsy.educacional.repository.ContaRepository;
-import br.com.softsy.educacional.repository.DependenciaAdministrativaRepository;
 import br.com.softsy.educacional.repository.PeriodoLetivoRepository;
 
 @Service
@@ -112,4 +108,25 @@ public class PeriodoLetivoService {
         destino.setDescricao(origem.getDescricao());
         destino.setTipoPeriodicidade(origem.getTipoPeriodicidade());
     }
+    
+    @Transactional(readOnly = true)
+    public Map<String, List<Integer>> buscarAnosPorIdConta(Long idConta) {
+        List<PeriodoLetivo> periodosLetivos = periodoLetivoRepository.findByConta_IdConta(idConta)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar periodo letivo por ID da conta"));
+        
+        // Cria uma lista de anos, retirando duplicatas
+        List<Integer> anos = periodosLetivos.stream()
+                .map(PeriodoLetivo::getAno)
+                .distinct() // Remove duplicatas
+                .collect(Collectors.toList());
+        
+        // Retorna um mapa com a chave "anos" e a lista de anos
+        Map<String, List<Integer>> resposta = new HashMap<>();
+        resposta.put("anos", anos);
+        return resposta;
+    }
+
+
+
+
 }
