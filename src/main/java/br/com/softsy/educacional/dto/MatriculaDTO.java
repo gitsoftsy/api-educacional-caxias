@@ -14,7 +14,7 @@ public class MatriculaDTO {
     private Long idConta;
     private Character ativo;
     private LocalDateTime dataCadastro;
-    private Long idTipoMatricula;
+    private TipoMatriculaDTO tipoMatricula;
     private Long idAluno;
     private Long idPeriodoLetivo;
     private TurmaDTO turma;
@@ -30,7 +30,7 @@ public class MatriculaDTO {
         this.idConta = matricula.getConta().getIdConta();
         this.ativo = matricula.getAtivo();
         this.dataCadastro = matricula.getDataCadastro();
-        this.idTipoMatricula = matricula.getTipoMatricula().getIdTipoMatricula();
+        this.tipoMatricula = new TipoMatriculaDTO(matricula.getTipoMatricula()); 
         this.idAluno = matricula.getAluno().getIdAluno();
         this.idPeriodoLetivo = matricula.getPeriodoLetivo().getIdPeriodoLetivo();
         this.turma = new TurmaDTO(matricula.getTurma());
