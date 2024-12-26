@@ -39,5 +39,20 @@ public interface TurmaRepository extends JpaRepository<Turma, Long>{
         @Param("P_ID_TRURNO") Long idTurno,
         @Param("P_ID_CURSO") Long idCurso
     );
-
+    
+    
+    @Procedure(name = "PROC_FILTRAR_AVALIACAO")
+    List<Object[]> filtrarTurmaAvaliacao(
+        @Param("P_ID_ESCOLA") Long idEscola,
+        @Param("P_ID_PERIODO_LETIVO") Long idPeriodoLetivo,
+        @Param("P_ID_TRURNO") Long idTurno,
+        @Param("P_ID_DISCIPLINA") Long idDisciplin
+  
+    );
+    
+    
+  
+    
 }
+
+

@@ -2,6 +2,7 @@ package br.com.softsy.educacional.controller;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -125,8 +126,23 @@ public class TurmaController {
 
 		return result;
 	}
-
     
+    
+    @GetMapping("/filtroAvaliacao")
+    public ResponseEntity<Object> filtrarTurmaAvaliacao(
+        @RequestParam(value = "idEscola") Long idEscola,
+        @RequestParam(value = "idPeriodoLetivo") Long idPeriodoLetivo,
+        @RequestParam(value = "idTurno") Long idTurno,
+        @RequestParam(value = "idDisciplina") Long idDisciplina
+    ) {
+        List<Map<String, Object>> result = turmaService.filtrarTurmaAvaliacao(idEscola, idPeriodoLetivo, idTurno, idDisciplina);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(Collections.singletonMap("mensagem", "Nenhum resultado encontrado para os parâmetros informados."));
+        }
+
+        return ResponseEntity.ok(result.get(0));
+    }
     
 
     @PutMapping

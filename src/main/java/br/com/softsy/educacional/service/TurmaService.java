@@ -298,4 +298,39 @@ public class TurmaService {
         return mappedResultList;
     }
     
+    
+
+    public List<Map<String, Object>> filtrarTurmaAvaliacao(Long idEscola, Long idPeriodoLetivo, Long idTurno, Long idDisciplina) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_FILTRAR_AVALIACAO(:pIdEscola, :pIdPeriodoLetivo, :pIdTurno, :pIdDisciplina)");
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdEscola", idEscola);
+        query.setParameter("pIdPeriodoLetivo", idPeriodoLetivo);
+        query.setParameter("pIdTurno", idTurno);
+        query.setParameter("pIdDisciplina", idDisciplina);
+        
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idTurma", result[0]);
+            resultMap.put("idEscola", result[1]);
+            resultMap.put("idPeriodoLetivo", result[2]);
+            resultMap.put("idTurno", result[3]);
+            resultMap.put("nomeTurma", result[4]);
+            resultMap.put("codTurmaInep", result[5]);
+            resultMap.put("idGradeCurricular", result[6]);
+            resultMap.put("libras", result[7]);
+            resultMap.put("dtCadastro", result[8]);
+            resultMap.put("ativo", result[9]);
+            resultMap.put("vagas", result[10]);
+            resultMap.put("controlaVagas", result[11]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
 }
