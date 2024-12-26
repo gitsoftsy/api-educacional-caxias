@@ -48,7 +48,7 @@ public class PeriodoLetivoController {
     @GetMapping("/conta/{idConta}/ano")
     public ResponseEntity<Map<String, List<Integer>>> buscarAnosPorIdConta(@PathVariable Long idConta) {
         Map<String, List<Integer>> anos = periodoLetivoService.buscarAnosPorIdConta(idConta);
-        return ResponseEntity.ok(anos); // Retorna a resposta no formato esperado
+        return ResponseEntity.ok(anos); 
     }
 
 

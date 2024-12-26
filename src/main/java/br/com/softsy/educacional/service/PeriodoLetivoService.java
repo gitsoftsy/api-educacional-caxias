@@ -113,14 +113,10 @@ public class PeriodoLetivoService {
     public Map<String, List<Integer>> buscarAnosPorIdConta(Long idConta) {
         List<PeriodoLetivo> periodosLetivos = periodoLetivoRepository.findByConta_IdConta(idConta)
                 .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar periodo letivo por ID da conta"));
-        
-        // Cria uma lista de anos, retirando duplicatas
         List<Integer> anos = periodosLetivos.stream()
                 .map(PeriodoLetivo::getAno)
-                .distinct() // Remove duplicatas
+                .distinct() 
                 .collect(Collectors.toList());
-        
-        // Retorna um mapa com a chave "anos" e a lista de anos
         Map<String, List<Integer>> resposta = new HashMap<>();
         resposta.put("anos", anos);
         return resposta;
