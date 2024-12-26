@@ -327,10 +327,74 @@ public class TurmaService {
             resultMap.put("ativo", result[9]);
             resultMap.put("vagas", result[10]);
             resultMap.put("controlaVagas", result[11]);
+            
             mappedResultList.add(resultMap);
         }
 
         return mappedResultList;
     }
+    
+    public List<Map<String, Object>> filtrarTurmaDisciplina(Long idEscola, Long idPeriodoLetivo, Long idTurno) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_FILTRAR_DISCIPLINA(:pIdEscola, :pIdPeriodoLetivo, :pIdTurno)");
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdEscola", idEscola);
+        query.setParameter("pIdPeriodoLetivo", idPeriodoLetivo);
+        query.setParameter("pIdTurno", idTurno);
+        
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idDiciplina", result[0]);
+            resultMap.put("dtCadastro", result[1]);
+            resultMap.put("idConta", result[2]);
+            resultMap.put("idAreaConhecimento", result[3]);
+            resultMap.put("codDiscip", result[4]);
+            resultMap.put("nome", result[5]);
+            resultMap.put("creditos", result[6]);
+            resultMap.put("horasAula", result[7]);
+            resultMap.put("horasLab", result[8]);
+            resultMap.put("horasEstagio", result[9]);
+            resultMap.put("horasAtiv", result[10]);
+            resultMap.put("HorasAno", result[11]);
+            resultMap.put("horasSemanal", result[12]);
+            resultMap.put("ativo", result[13]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
+    public List<Map<String, Object>> filtrarTurmaTurno(Long idEscola, Long idPeriodoLetivo) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_FILTRAR_TURNO(:pIdEscola, :pIdPeriodoLetivo)");
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdEscola", idEscola);
+        query.setParameter("pIdPeriodoLetivo", idPeriodoLetivo);
+        
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idTurno", result[0]);
+            resultMap.put("idConta", result[1]);
+            resultMap.put("mnemonico", result[2]);
+            resultMap.put("turno", result[3]);
+            resultMap.put("horaInicio", result[4]);
+            resultMap.put("horaFim", result[5]);
+            resultMap.put("dtCadastro", result[6]);
+            resultMap.put("ativo", result[7]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
+    
     
 }

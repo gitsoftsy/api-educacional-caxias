@@ -145,6 +145,37 @@ public class TurmaController {
     }
     
 
+    @GetMapping("/filtroDisciplina")
+    public ResponseEntity<Object> filtrarTurmaDisciplina(
+        @RequestParam(value = "idEscola") Long idEscola,
+        @RequestParam(value = "idPeriodoLetivo") Long idPeriodoLetivo,
+        @RequestParam(value = "idTurno") Long idTurno
+    ) {
+        List<Map<String, Object>> result = turmaService.filtrarTurmaDisciplina(idEscola, idPeriodoLetivo, idTurno);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(Collections.singletonMap("mensagem", "Nenhum resultado encontrado para os parâmetros informados."));
+        }
+
+        return ResponseEntity.ok(result.get(0));
+    }
+    
+    @GetMapping("/filtroTurno")
+    public ResponseEntity<Object> filtrarTurmaTurno(
+        @RequestParam(value = "idEscola") Long idEscola,
+        @RequestParam(value = "idPeriodoLetivo") Long idPeriodoLetivo
+    
+    ) {
+        List<Map<String, Object>> result = turmaService.filtrarTurmaTurno(idEscola, idPeriodoLetivo);
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(Collections.singletonMap("mensagem", "Nenhum resultado encontrado para os parâmetros informados."));
+        }
+
+        return ResponseEntity.ok(result.get(0));
+    }
+    
+    
     @PutMapping
     public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroTurmaDTO dto) {
         return ResponseEntity.ok(turmaService.atualizar(dto));
