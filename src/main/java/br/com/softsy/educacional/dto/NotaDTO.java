@@ -14,7 +14,7 @@ public class NotaDTO {
     private Long alunoId;
     private String aluno;
     private String nomeAluno;
-    private Long prova;
+    private ProvaDTO prova;
     private LocalDateTime dataCadastro;
     private String nota;
     private Character compareceu;
@@ -25,7 +25,7 @@ public class NotaDTO {
         this.alunoId = nota.getAluno().getIdAluno();
         this.aluno = nota.getAluno().getAluno();
         this.nomeAluno = nota.getAluno().getPessoa().getNomeCompleto();
-        this.prova = nota.getProva().getIdProva();
+        this.prova = new ProvaDTO(nota.getProva());
         this.dataCadastro = nota.getDataCadastro();
         this.nota = nota.getNota();
         this.compareceu = nota.getCompareceu();
