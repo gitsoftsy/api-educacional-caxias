@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.softsy.educacional.dto.CadastroAlunoDTO;
 import br.com.softsy.educacional.dto.CadastroCandidatoDTO;
 import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.model.Aluno;
@@ -217,36 +218,16 @@ public class CandidatoService {
     
     @Transactional
     public void aprovaReprova(char status, Long idCandidato) {
-        
-        if (idCandidato == null) {
-            throw new IllegalArgumentException("O ID do candidato não pode ser nulo.");
-        }
-
-        Candidato candidato = candidatoRepository.findById(idCandidato)
-                .orElseThrow(() -> new IllegalStateException("Candidato não encontrado."));
-
-        if (candidato.getAprovado() != null && candidato.getAprovado() == 'N') {
-            throw new IllegalStateException("Candidato já foi reprovado e não pode ser aprovado novamente.");
-        }
-
-        if (status == 'S') { // 'S' para aprovado
-            if (candidato.getAprovado() == null || candidato.getAprovado() == 'S') {
-                Aluno aluno = alunoRepository.findById(candidato.getAluno())
-                        .orElseThrow(() -> new IllegalStateException("Aluno não encontrado."));
-                
-                candidato.setAluno(aluno.getIdAluno());
-                candidatoRepository.save(candidato);
-            }
-        }
-
+    	Candidato candidato = candidatoRepository.getReferenceById(idCandidato);
+    	
+    	candidato.setDescricaoReprovacao(null);
+    	candidato.setMotivoReprovacaoCandidato(null);
+    	
         candidato.setAprovado(status);
         candidatoRepository.save(candidato);
     }
 
 
- 
-
-    
     @Transactional
     public void reprovarCandidato(Long idCandidato, CadastroCandidatoDTO candidatoDTO) {
         Candidato candidato = candidatoRepository.getReferenceById(idCandidato);

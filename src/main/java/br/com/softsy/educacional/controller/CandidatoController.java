@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.AtualizarResponseDTO;
+import br.com.softsy.educacional.dto.CadastroAlunoDTO;
 import br.com.softsy.educacional.dto.CadastroCandidatoDTO;
 import br.com.softsy.educacional.dto.CadastroCandidatoPessoaDTO;
 import br.com.softsy.educacional.dto.CadastroResponseDTO;
@@ -160,14 +161,16 @@ public class CandidatoController {
 
 		if (idCandidato == null && candidato == null && rgNum == null && cpfNum == null && certNasc == null
 				&& certCasamento == null) {
-			return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+			return ResponseEntity.badRequest().body(
+					new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
 		}
 
 		List<Map<String, Object>> result = candidatoService.obtemStepCandidato(idCandidato, candidato, rgNum, cpfNum,
 				certNasc, certCasamento);
 
 		if (result.isEmpty()) {
-			return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+			return ResponseEntity.ok(
+					new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
 		}
 
 		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
@@ -176,13 +179,15 @@ public class CandidatoController {
 	@GetMapping("/reservaFinal")
 	public Object listaDadosReservaFinal(@RequestParam(value = "candidato", required = false) String candidato) {
 		if (candidato == null) {
-			return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+			return ResponseEntity.badRequest().body(
+					new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
 		}
 
 		List<Map<String, Object>> result = candidatoService.obtemStepCandidato(candidato);
 
 		if (result.isEmpty()) {
-			return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+			return ResponseEntity.ok(
+					new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
 		}
 
 		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
@@ -191,7 +196,8 @@ public class CandidatoController {
 	@GetMapping("/listaReservaDeVagas")
 	public Object obtemListaReservaDeVagas(@RequestParam(value = "idUsuario", required = false) Long idUsuario) {
 		if (idUsuario == null) {
-			return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+			return ResponseEntity.badRequest().body(
+					new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
 		}
 
 		List<Map<String, Object>> result = candidatoService.obtemListaReservaDeVagas(idUsuario);
@@ -203,7 +209,7 @@ public class CandidatoController {
 
 		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
 	}
-	
+
 	@GetMapping("/listarReservasPorDocumento")
 	public Object obtemListaReservaDeVagasPorDocumento(@RequestParam(value = "idConta") Long idConta,
 			@RequestParam(value = "idEscola", required = false) Long idEscola,
@@ -213,11 +219,13 @@ public class CandidatoController {
 			@RequestParam(value = "certCasamento", required = false) String certCasamento) {
 		if (idConta == null && idEscola == null && rgNum == null && cpfNum == null && certNasc == null
 				&& certCasamento == null) {
-			return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+			return ResponseEntity.badRequest().body(
+					new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
 		}
 
 		if (idConta == null) {
-			return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+			return ResponseEntity.badRequest().body(
+					new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
 		}
 
 		List<Map<String, Object>> result = candidatoService.obtemListaReservaDeVagasPorDoc(idConta, idEscola, rgNum,
@@ -242,17 +250,16 @@ public class CandidatoController {
 	}
 
 	@PutMapping("/{idCandidato}/aprovar")
-	public ResponseEntity<?> ativar(@PathVariable Long idCandidato) {
-	    if (idCandidato == null) {
-	        return ResponseEntity.badRequest().body("O ID do candidato não pode ser nulo.");
-	    }
-	    
-	    System.out.println("ID do Candidato recebido: " + idCandidato);
-	    
-	    candidatoService.aprovaReprova('S', idCandidato);
-	    return ResponseEntity.ok().build();
-	}
+	public ResponseEntity<?> ativar(@RequestBody @PathVariable Long idCandidato) {
+		if (idCandidato == null) {
+			return ResponseEntity.badRequest().body("O ID do candidato não pode ser nulo.");
+		}
 
+		System.out.println("ID do Candidato recebido: " + idCandidato);
+
+		candidatoService.aprovaReprova('S', idCandidato);
+		return ResponseEntity.ok().build();
+	}
 
 	@PutMapping("/{idCandidato}/reprovar")
 	public ResponseEntity<?> reprovarCandidato(@PathVariable Long idCandidato,
