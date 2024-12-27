@@ -141,7 +141,7 @@ public class TurmaController {
             return ResponseEntity.ok(Collections.singletonMap("mensagem", "Nenhum resultado encontrado para os parâmetros informados."));
         }
 
-        return ResponseEntity.ok(result.get(0));
+        return ResponseEntity.ok(result);
     }
     
 
@@ -157,7 +157,7 @@ public class TurmaController {
             return ResponseEntity.ok(Collections.singletonMap("mensagem", "Nenhum resultado encontrado para os parâmetros informados."));
         }
 
-        return ResponseEntity.ok(result.get(0));
+        return ResponseEntity.ok(result);
     }
     
     @GetMapping("/filtroTurno")
@@ -172,7 +172,7 @@ public class TurmaController {
             return ResponseEntity.ok(Collections.singletonMap("mensagem", "Nenhum resultado encontrado para os parâmetros informados."));
         }
 
-        return ResponseEntity.ok(result.get(0));
+        return ResponseEntity.ok(result);
     }
     
     

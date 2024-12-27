@@ -18,14 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroCandidatoDTO;
 import br.com.softsy.educacional.dto.CandidatoDTO;
+import br.com.softsy.educacional.model.Aluno;
 import br.com.softsy.educacional.model.Candidato;
-import br.com.softsy.educacional.model.CandidatoRelacionamento;
 import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.MotivoReprovacaoCandidato;
 import br.com.softsy.educacional.model.OfertaConcurso;
 import br.com.softsy.educacional.model.Pessoa;
 import br.com.softsy.educacional.model.TipoIngresso;
 import br.com.softsy.educacional.model.Usuario;
+import br.com.softsy.educacional.repository.AlunoRepository;
 import br.com.softsy.educacional.repository.CandidatoRepository;
 import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.MotivoReprovacaoCandidatoRepository;
@@ -57,6 +58,9 @@ public class CandidatoService {
     
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private AlunoRepository alunoRepository;
     
     @Autowired
     private MotivoReprovacaoCandidatoRepository motivoReprovacaoRepository;
@@ -213,9 +217,35 @@ public class CandidatoService {
     
     @Transactional
     public void aprovaReprova(char status, Long idCandidato) {
-        Candidato candidato = candidatoRepository.getReferenceById(idCandidato);
+        
+        if (idCandidato == null) {
+            throw new IllegalArgumentException("O ID do candidato não pode ser nulo.");
+        }
+
+        Candidato candidato = candidatoRepository.findById(idCandidato)
+                .orElseThrow(() -> new IllegalStateException("Candidato não encontrado."));
+
+        if (candidato.getAprovado() != null && candidato.getAprovado() == 'N') {
+            throw new IllegalStateException("Candidato já foi reprovado e não pode ser aprovado novamente.");
+        }
+
+        if (status == 'S') { // 'S' para aprovado
+            if (candidato.getAprovado() == null || candidato.getAprovado() == 'S') {
+                Aluno aluno = alunoRepository.findById(candidato.getAluno())
+                        .orElseThrow(() -> new IllegalStateException("Aluno não encontrado."));
+                
+                candidato.setAluno(aluno.getIdAluno());
+                candidatoRepository.save(candidato);
+            }
+        }
+
         candidato.setAprovado(status);
+        candidatoRepository.save(candidato);
     }
+
+
+ 
+
     
     @Transactional
     public void reprovarCandidato(Long idCandidato, CadastroCandidatoDTO candidatoDTO) {

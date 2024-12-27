@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import br.com.softsy.educacional.model.Aluno;
 import br.com.softsy.educacional.model.AreaConhecimento;
+import br.com.softsy.educacional.model.Candidato;
 @Repository
 public interface AlunoRepository extends JpaRepository<Aluno, Long>{
 
@@ -31,5 +32,11 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long>{
 	    
 	    List<Aluno> findAllByIdAlunoIn(List<Long> ids);
 
+	    @Query("select aluno from Aluno aluno join aluno.candidato candidato where candidato.idCandidato = :idCandidato")
+	    Optional<Aluno> findByCandidato_IdCandidato(@Param("idCandidato") Long idCandidato);
+
+		
+
+	
 
 }

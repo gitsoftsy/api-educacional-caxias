@@ -17,6 +17,7 @@ public interface CandidatoRepository extends JpaRepository<Candidato, Long> {
 	
 	List<Candidato> findByCandidato(String candidato);
 	
+	
     @Procedure(name = "PROC_OBTEM_STEP_CANDIDATO")
     List<Object[]> obtemStepCandidato(
             @Param("P_ID_CANDIDATO") Long idCandidato,

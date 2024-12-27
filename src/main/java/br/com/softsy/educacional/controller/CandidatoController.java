@@ -243,9 +243,16 @@ public class CandidatoController {
 
 	@PutMapping("/{idCandidato}/aprovar")
 	public ResponseEntity<?> ativar(@PathVariable Long idCandidato) {
-		candidatoService.aprovaReprova('S', idCandidato);
-		return ResponseEntity.ok().build();
+	    if (idCandidato == null) {
+	        return ResponseEntity.badRequest().body("O ID do candidato não pode ser nulo.");
+	    }
+	    
+	    System.out.println("ID do Candidato recebido: " + idCandidato);
+	    
+	    candidatoService.aprovaReprova('S', idCandidato);
+	    return ResponseEntity.ok().build();
 	}
+
 
 	@PutMapping("/{idCandidato}/reprovar")
 	public ResponseEntity<?> reprovarCandidato(@PathVariable Long idCandidato,

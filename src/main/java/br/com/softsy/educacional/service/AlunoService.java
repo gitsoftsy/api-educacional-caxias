@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -20,6 +21,7 @@ import br.com.softsy.educacional.dto.AlunoDTO;
 import br.com.softsy.educacional.dto.CadastroAlunoDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
 import br.com.softsy.educacional.model.Aluno;
+import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.repository.AlunoRepository;
 import br.com.softsy.educacional.repository.CandidatoRepository;
 import br.com.softsy.educacional.repository.ContaRepository;
@@ -102,7 +104,13 @@ public class AlunoService {
         
         prematriculaAluno(aluno.getIdAluno(), dto.getTipoMatriculaId(), null);
         
+        //salva o Id do ALuno na TBL_CANDIDATO
+        Optional<Candidato> candidatos = candidatoRepository.findById(dto.getCandidatoId());
+        Candidato candidato = candidatos.get();
+        candidato.setAluno(aluno.getIdAluno());
 
+        candidatoRepository.save(candidato);
+        
         return new AlunoDTO(aluno);
     }
 
