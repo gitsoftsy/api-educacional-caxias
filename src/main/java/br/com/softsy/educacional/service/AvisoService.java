@@ -139,7 +139,6 @@ public class AvisoService {
 	           dto.setIdAviso(aviso.getIdAviso());
 	       }
 
-	       // Criar e salvar os destinatários do aviso
 	       for (Aluno aluno : alunos) {
 	           AvisoDestinatario avisoDestinatario = new AvisoDestinatario();
 	           avisoDestinatario.setAviso(aviso);

@@ -104,7 +104,6 @@ public class AlunoService {
         
         prematriculaAluno(aluno.getIdAluno(), dto.getTipoMatriculaId(), null);
         
-        //salva o Id do ALuno na TBL_CANDIDATO
         Optional<Candidato> candidatos = candidatoRepository.findById(dto.getCandidatoId());
         Candidato candidato = candidatos.get();
         candidato.setAluno(aluno.getIdAluno());
@@ -147,7 +146,6 @@ public class AlunoService {
         aluno.setSituacaoAluno(situacaoAlunoRepository.findById(dto.getSituacaoAlunoId())
                 .orElseThrow(() -> new IllegalArgumentException("Situação do Aluno não encontrada")));
     
-        // Validações físicas
         Character geraPreMatricula = dto.getGeraPrematricula();
         Long tipoMatriculaId = dto.getTipoMatriculaId();
 

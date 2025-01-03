@@ -120,21 +120,20 @@ public class TurnoController {
 
     @GetMapping("/series/conta/{idConta}/curso/{idCurso}/turno/{idTurno}")
     public List<Map<String, Object>> getSeriesOfertaConcurso(@PathVariable Long idConta, @PathVariable Long idCurso, @PathVariable Long idTurno) {
-        List<Integer> series = entityManager.createQuery(
-                "SELECT DISTINCT oc.series " +
+        List<Object> series = entityManager.createQuery(
+                "SELECT DISTINCT oc.serie " +
                         "FROM OfertaConcurso oc " +
                         "JOIN oc.concurso c " +
                         "WHERE c.ativo = 'S' " +
                         "AND oc.ativo = 'S' " +
                         "AND c.conta.idConta = :idConta " +
                         "AND oc.curso.idCurso = :idCurso " +
-                        "AND oc.turno.idTurno = :idTurno", Integer.class)
+                        "AND oc.turno.idTurno = :idTurno", Object.class)
                 .setParameter("idConta", idConta)
                 .setParameter("idCurso", idCurso)
                 .setParameter("idTurno", idTurno)
                 .getResultList();
 
-        // TRANSFORMANDO EM JSON
         List<Map<String, Object>> seriesJson = series.stream()
                 .map(serie -> {
                     Map<String, Object> serieJson = new HashMap<>();

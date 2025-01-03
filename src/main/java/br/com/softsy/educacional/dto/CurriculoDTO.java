@@ -16,6 +16,8 @@ public class CurriculoDTO {
 	
 	@NotNull
 	private Long cursoId;
+	private String nomeCurso;
+	private String codCurso;
 	
 	@NotNull
 	private Long contaId;
@@ -45,6 +47,8 @@ public class CurriculoDTO {
 	public CurriculoDTO(Curriculo curriculo) {
 		this.idCurriculo = curriculo.getIdCurriculo();
 		this.cursoId = curriculo.getCurso().getIdCurso();
+		this.nomeCurso = curriculo.getCurso().getNome();
+		this.codCurso = curriculo.getCurso().getCodCurso();
 		this.contaId = curriculo.getConta().getIdConta();
 		this.curriculo = curriculo.getCurriculo();
 		this.descricao = curriculo.getDescricao();

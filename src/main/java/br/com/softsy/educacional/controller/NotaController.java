@@ -2,6 +2,7 @@ package br.com.softsy.educacional.controller;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -90,6 +91,7 @@ public class NotaController {
         notaLogDTO.setProva(dto.getProvaId());
         notaLogDTO.setUsuarioId(dto.getUsuarioId());
         notaLogDTO.setProfessorId(dto.getProfessorId());
+        notaLogDTO.setDataCadastro(LocalDateTime.now());
 
         notaLogService.criarNovoRegistro(notaLogDTO);
 

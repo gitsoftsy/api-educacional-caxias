@@ -150,7 +150,8 @@ public class NotaLogService {
 	        NotaLog notaLog = new NotaLog();
 	        notaLog.setNotaAnterior(dto.getNotaAnterior());
 	        notaLog.setNotaAtual(dto.getNotaAtual());
-	        notaLog.setOperacao('I');
+	        notaLog.setOperacao('A');
+	        notaLog.setDataCadastro(LocalDateTime.now());
 
 	        Nota nota = notaRepository.findById(dto.getNota())
 	                .orElseThrow(() -> new IllegalArgumentException("Nota não encontrada"));

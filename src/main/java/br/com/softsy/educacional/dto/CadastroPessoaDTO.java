@@ -25,7 +25,6 @@ public class CadastroPessoaDTO {
 
     private String nomeSocial;
 
-    @CPF
     private String cpf;
 
     private String rgNumero;

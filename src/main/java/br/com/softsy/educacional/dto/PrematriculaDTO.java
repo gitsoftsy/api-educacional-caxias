@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import br.com.softsy.educacional.model.Prematricula;
 import lombok.Data;
@@ -37,11 +38,11 @@ public class PrematriculaDTO {
 	        this.idAluno = prematricula.getAluno().getIdAluno();
 	        this.idPeriodoLetivo = prematricula.getPeriodoLetivo().getIdPeriodoLetivo();
 	        this.idDisciplina = prematricula.getDisciplina().getIdDisciplina();
-	        this.idTurma = prematricula.getTurma().getIdTurma();
-	        this.idSerie = prematricula.getSerie().getIdSerie();
+			this.idTurma = prematricula.getTurma()!= null ? prematricula.getTurma().getIdTurma() : null;
+	        this.idSerie = prematricula.getSerie()!= null ? prematricula.getSerie().getIdSerie() : null;
 	        this.mensagemErro = prematricula.getMensagemErro();
 	        this.manual = prematricula.getManual();
-	        this.idUsuario = prematricula.getUsuario().getIdUsuario();
+	        this.idUsuario = prematricula.getUsuario()!= null ? prematricula.getUsuario().getIdUsuario() : null;
 	        this.dataAtualizacao = prematricula.getDataAtualizacao();
 	        this.dataConfirmacao = prematricula.getDataConfirmacao();
 	        this.observacao = prematricula.getObservacao();

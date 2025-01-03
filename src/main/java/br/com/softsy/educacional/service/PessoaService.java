@@ -314,12 +314,13 @@ public class PessoaService {
 	    pessoa.setCelular(dto.getCelular());
 	    pessoa.setEmail(dto.getEmail());
 
-	    if (dto.getCpf() != null && !dto.getCpf().equals(pessoa.getCpf())) {
+	    if (dto.getCpf() != null && !dto.getCpf().isEmpty() && !dto.getCpf().equals(pessoa.getCpf())) {
 	        Pessoa pessoaComMesmoCpf = repository.findByCpfAndConta_IdConta(dto.getCpf(), pessoa.getConta().getIdConta());
-	        if (pessoaComMesmoCpf != null && !pessoaComMesmoCpf.getIdPessoa().equals(pessoa.getIdPessoa())) {
-	            pessoa.setCpf(dto.getCpf());
+	        if (pessoaComMesmoCpf != null && pessoaComMesmoCpf.getCpf() != null && !pessoaComMesmoCpf.getCpf().isEmpty() 
+	            && !pessoaComMesmoCpf.getIdPessoa().equals(pessoa.getIdPessoa())) {
+	            throw new IllegalArgumentException("Já existe uma pessoa com este CPF");
 	        }
-	        throw new IllegalArgumentException("Já existe uma pessoa com este CPF");
+	        pessoa.setCpf(dto.getCpf());
 	    }
 
 	    pessoa.setEmpresa(dto.getEmpresa());

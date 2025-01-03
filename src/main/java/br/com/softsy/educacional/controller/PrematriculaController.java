@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.softsy.educacional.dto.CadastroPrematriculaArrayDTO;
 import br.com.softsy.educacional.dto.CadastroPrematriculaDTO;
 import br.com.softsy.educacional.dto.PrematriculaDTO;
 import br.com.softsy.educacional.service.PrematriculaService;
@@ -48,11 +49,11 @@ public class PrematriculaController {
     }
 
     @PostMapping
-    public ResponseEntity<PrematriculaDTO> cadastrar(@RequestBody @Valid CadastroPrematriculaDTO dto) {
-        PrematriculaDTO prematriculaDTO = prematriculaService.salvar(dto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idPrematricula}")
-                .buildAndExpand(prematriculaDTO.getIdPrematricula()).toUri();
-        return ResponseEntity.created(uri).body(prematriculaDTO);
+    public ResponseEntity<List<PrematriculaDTO>> cadastrar(@RequestBody @Valid CadastroPrematriculaArrayDTO dto) {
+        List<PrematriculaDTO> prematriculasDTO = prematriculaService.salvar(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .build().toUri();
+        return ResponseEntity.created(uri).body(prematriculasDTO);
     }
 
     @PutMapping
