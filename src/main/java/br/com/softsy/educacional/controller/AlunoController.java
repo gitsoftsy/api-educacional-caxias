@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.softsy.educacional.dto.AlunoDTO;
 import br.com.softsy.educacional.dto.CadastroAlunoDTO;
 import br.com.softsy.educacional.dto.UsuarioDTO;
+import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.service.AlunoService;
 
 @RestController
@@ -66,6 +68,18 @@ public class AlunoController {
     public ResponseEntity<?> excluir(@PathVariable Long id) {
         alunoService.excluir(id);
         return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/semPrematricula")
+    public ResponseEntity<AllResponse> listarAlunosSemPrematricula() {
+
+        List<Map<String, Object>> result = alunoService.listarAlunosSemPrematricula();
+
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(new AllResponse("Não existem resultados para essa requisição.", new ArrayList<>()));
+        }
+
+        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
     }
     
     @GetMapping("/turmaDisciplina")

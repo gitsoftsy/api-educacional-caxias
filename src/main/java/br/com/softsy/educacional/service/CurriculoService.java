@@ -80,6 +80,16 @@ public class CurriculoService {
 		Conta conta = contaRepository.findById(dto.getContaId())
 				.orElseThrow(() -> new IllegalArgumentException("Conta não encontrado"));
 		
+	    if (dto.getDtHomologacao() != null && dto.getDtExtincao() != null &&
+	            dto.getDtHomologacao().isAfter(dto.getDtExtincao())) {
+	        throw new IllegalArgumentException("A data de homologação não pode ser maior que a data de extinção.");
+	    }
+
+	    if (dto.getPrazoIdeal() != null && dto.getPrazoMax() != null &&
+	            dto.getPrazoIdeal() > dto.getPrazoMax()) {
+	        throw new IllegalArgumentException("O prazo ideal não pode ser maior que o prazo máximo.");
+	    }
+		
 		curriculo.setCurso(curso);
 		curriculo.setConta(conta);
 		curriculo.setCurriculo(dto.getCurriculo());

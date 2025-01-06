@@ -2,8 +2,13 @@ package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +66,9 @@ public class PrematriculaService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private EntityManager entityManager;
 
     @Transactional(readOnly = true)
     public List<PrematriculaDTO> listarTudo() {
@@ -78,7 +86,16 @@ public class PrematriculaService {
     @Transactional(readOnly = true)
     public List<PrematriculaDTO> buscarPorIdConta(Long idConta) {
         List<Prematricula> prematricula = repository.findByConta_IdConta(idConta)
-                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar concurso por ID da conta"));
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar prématricula por ID da conta"));
+        return prematricula.stream()
+                .map(PrematriculaDTO::new)
+                .collect(Collectors.toList());
+    }
+    
+    @Transactional(readOnly = true)
+    public List<PrematriculaDTO> buscarPorIdTurma(Long idTurma) {
+        List<Prematricula> prematricula = repository.findByTurma_IdTurma(idTurma)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar prématricula por ID da turma"));
         return prematricula.stream()
                 .map(PrematriculaDTO::new)
                 .collect(Collectors.toList());
@@ -172,6 +189,7 @@ public class PrematriculaService {
         destino.setSerie(serie);
         destino.setUsuario(usuario);
     }
+    
 
     @Transactional
     public void ativaDesativa(char status, Long idPrematricula) {
