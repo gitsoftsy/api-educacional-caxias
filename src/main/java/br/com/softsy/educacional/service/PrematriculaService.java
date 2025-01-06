@@ -100,6 +100,16 @@ public class PrematriculaService {
                 .map(PrematriculaDTO::new)
                 .collect(Collectors.toList());
     }
+    
+    @Transactional(readOnly = true)
+    public List<PrematriculaDTO> buscarPorIdAluno(Long idAluno) {
+        List<Prematricula> prematricula = repository.findByAluno_IdAluno(idAluno)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar prématricula por ID do aluno"));
+        return prematricula.stream()
+                .map(PrematriculaDTO::new)
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public List<PrematriculaDTO> salvar(CadastroPrematriculaArrayDTO dto) {

@@ -57,6 +57,12 @@ public class PrematriculaController {
         List<PrematriculaDTO> prematricula = prematriculaService.buscarPorIdTurma(idTurma);
         return ResponseEntity.ok(prematricula);
     }
+    
+    @GetMapping("/aluno/{idAluno}")
+    public ResponseEntity<List<PrematriculaDTO>> buscarPorIdAluno(@PathVariable Long idAluno) {
+        List<PrematriculaDTO> prematricula = prematriculaService.buscarPorIdAluno(idAluno);
+        return ResponseEntity.ok(prematricula);
+    }
 
     @PostMapping
     public ResponseEntity<List<PrematriculaDTO>> cadastrar(@RequestBody @Valid CadastroPrematriculaArrayDTO dto) {

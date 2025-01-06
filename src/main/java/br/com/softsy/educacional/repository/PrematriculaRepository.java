@@ -17,6 +17,9 @@ public interface PrematriculaRepository extends JpaRepository<Prematricula, Long
 
 	@Query("select prematricula from Prematricula prematricula join prematricula.turma turma where turma.idTurma = :idTurma")
 	Optional<List<Prematricula>> findByTurma_IdTurma(@Param("idTurma") Long idTurma);
+	
+	@Query("select prematricula from Prematricula prematricula join prematricula.aluno aluno where aluno.idAluno = :idAluno")
+	Optional<List<Prematricula>> findByAluno_IdAluno(@Param("idAluno") Long idAluno);
 
 	List<Prematricula> findByAtivo(Character ativo);
 

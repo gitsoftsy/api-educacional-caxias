@@ -113,6 +113,7 @@ public class ProvaService {
             resultMap.put("dtLimiteRevisao", result[9]);
             resultMap.put("ehSimulado", result[10]);
             resultMap.put("formula", result[11]);
+            resultMap.put("ordem", result[12]);
             mappedResultList.add(resultMap);
         }
 

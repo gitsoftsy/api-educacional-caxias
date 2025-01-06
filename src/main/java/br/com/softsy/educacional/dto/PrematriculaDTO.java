@@ -17,6 +17,10 @@ public class PrematriculaDTO {
 	 private LocalDateTime dataCadastro;
 	 private Long idTipoMatricula;
 	 private Long idAluno;
+	 private String matriculaAluno;
+	 private String situacaoAluno;
+	 private String nomeCompleto;
+	 private String tipoIngresso;
 	 private Long idPeriodoLetivo;
 	 private Long idDisciplina;
 	 private Long idTurma;
@@ -36,6 +40,10 @@ public class PrematriculaDTO {
 	        this.dataCadastro = prematricula.getDataCadastro();
 	        this.idTipoMatricula = prematricula.getTipoMatricula().getIdTipoMatricula();
 	        this.idAluno = prematricula.getAluno().getIdAluno();
+	        this.matriculaAluno = prematricula.getAluno().getAluno();
+	        this.situacaoAluno = prematricula.getAluno().getSituacaoAluno().getSituacaoAluno();
+	        this.nomeCompleto = prematricula.getAluno().getPessoa().getNomeCompleto();
+	        this.tipoIngresso = prematricula.getAluno().getCandidato().getTipoIngresso().getTipoIngresso();
 	        this.idPeriodoLetivo = prematricula.getPeriodoLetivo().getIdPeriodoLetivo();
 	        this.idDisciplina = prematricula.getDisciplina().getIdDisciplina();
 			this.idTurma = prematricula.getTurma()!= null ? prematricula.getTurma().getIdTurma() : null;
