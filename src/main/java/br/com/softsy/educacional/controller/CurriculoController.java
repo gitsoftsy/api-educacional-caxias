@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.dto.CurriculoDTO;
+import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.service.CurriculoService;
 
 @RestController
@@ -26,6 +27,35 @@ public class CurriculoController {
 
     @Autowired
     private CurriculoService curriculoService;
+    
+    @GetMapping("/ativos/curso/{idCurso}/conta/{}")
+    public ResponseEntity<?> listarCurriculosAtivos(@PathVariable String idConta, @PathVariable String idCurso) {
+        try {
+            Long contaId = Long.parseLong(idConta);
+            if (contaId <= 0) {
+                return ResponseEntity.badRequest().body(
+                    new AllResponse("O idConta não pode ser um número negativo ou zero!", new ArrayList<>())
+                );
+            }
+            Long cursoId = Long.parseLong(idCurso);
+            if (cursoId <= 0) {
+                return ResponseEntity.badRequest().body(
+                    new AllResponse("O idCurso não pode ser um número negativo ou zero!", new ArrayList<>())
+                );
+            }
+            List<CurriculoDTO> curriculos = curriculoService.listarCurriculosAtivosPorContaECurso(contaId, cursoId);
+            return ResponseEntity.ok(curriculos);
+
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(
+                new AllResponse("O valor de idConta e idCurso devem ser números válidos.", new ArrayList<>())
+            );
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(
+                new AllResponse(e.getMessage(), new ArrayList<>())
+            );
+        }
+    }
 
     @GetMapping
     public ResponseEntity<List<CurriculoDTO>> listar() {

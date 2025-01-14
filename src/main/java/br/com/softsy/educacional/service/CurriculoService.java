@@ -29,6 +29,24 @@ public class CurriculoService {
 	
 	@Autowired
 	private CurriculoRepository curriculoRepository;
+	
+	 @Transactional(readOnly = true)
+	    public List<CurriculoDTO> listarCurriculosAtivosPorContaECurso(Long idConta, Long idCurso) {
+	        if (idConta == null || idCurso == null) {
+	            throw new IllegalArgumentException("O ID da conta e o ID do curso são obrigatórios.");
+	        }
+
+	        Character ativo = 'S';  // Filtrar somente os currículos ativos
+
+	        List<Curriculo> curriculos = curriculoRepository.findByConta_IdContaAndCurso_IdCursoAndAtivo(idConta, idCurso, ativo)
+	            .orElseThrow(() -> new IllegalArgumentException(
+	                "Nenhum currículo ativo encontrado para a conta e curso informados."
+	            ));
+
+	        return curriculos.stream()
+	                .map(CurriculoDTO::new)  // Converter para DTO
+	                .collect(Collectors.toList());
+	    }
 
 	@Transactional(readOnly = true)
 	public List<CurriculoDTO> listarTudo() {

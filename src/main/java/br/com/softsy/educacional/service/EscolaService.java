@@ -80,9 +80,29 @@ public class EscolaService {
 	
 	@Autowired
 	private OrgaoPublicoRepository orgaoRepository;
+	
+	@Transactional(readOnly = true)
+	public List<EscolaDTO> listarEscolasAtivasPorConta(Long idConta) {
+	   
+	    if (idConta == null) {
+	        throw new IllegalArgumentException("O ID da conta é obrigatório.");
+	    }
+	    Character ativo = 'S'; 
+	    List<Escola> escolas = repository.findActiveSchoolsByConta_IdContaAndAtivo(idConta, ativo)
+	        .orElseThrow(() -> new IllegalArgumentException(
+	            "Nenhuma escola ativa encontrada para a conta informada."
+	        ));
 
-	
-	
+	    if (escolas.isEmpty()) {
+	        throw new IllegalArgumentException("Nenhuma escola ativa encontrada para a conta informada.");
+	    }
+
+	    return escolas.stream()
+	            .map(EscolaDTO::new)
+	            .collect(Collectors.toList());
+	}
+
+
 	@Transactional(readOnly = true)
 		public List<EscolaDTO> buscarPorIdConta(Long id) {
 			List<Escola> escola = repository.findByConta_IdConta(id)

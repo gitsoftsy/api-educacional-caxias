@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 
 import br.com.softsy.educacional.model.Concurso;
+import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.model.Serie;
 
 public interface SerieRepository extends JpaRepository<Serie, Long>{
@@ -15,4 +16,6 @@ public interface SerieRepository extends JpaRepository<Serie, Long>{
 	@Query("select serie from Serie serie join serie.conta conta where conta.idConta = :idConta")
     Optional<List<Serie>> findByConta_IdConta(@Param("idConta") Long idConta);
 	
+	Optional<List<Serie>> findActiveSerieByConta_IdContaAndAtivo(Long idConta, Character ativo);
+
 }

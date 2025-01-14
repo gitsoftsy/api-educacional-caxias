@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.ConcursoDTO;
+import br.com.softsy.educacional.dto.EscolaDTO;
 import br.com.softsy.educacional.dto.SerieDTO;
+import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.service.SerieService;
 
 @RestController
@@ -26,6 +29,29 @@ public class SerieController {
 
     @Autowired
     private SerieService serieService;
+    
+    @GetMapping("ativos/conta/{idConta}")
+    public ResponseEntity<?> listarSeriesAtivas(@PathVariable String idConta) {
+        try {
+            Long id = Long.parseLong(idConta);
+            if (id <= 0) {
+                return ResponseEntity.badRequest().body(
+                    new AllResponse("O idConta não pode ser um número negativo ou zero!", new ArrayList<>())
+                );
+            }
+            List<SerieDTO> series = serieService.listarSeriesAtivasPorConta(id);
+            return ResponseEntity.ok(series);
+
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(
+                new AllResponse("O valor de idConta deve ser um número válido.", new ArrayList<>())
+            );
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(
+                new AllResponse(e.getMessage(), new ArrayList<>())
+            );
+        }
+    }
 
     @GetMapping
     public ResponseEntity<List<SerieDTO>> listar() {

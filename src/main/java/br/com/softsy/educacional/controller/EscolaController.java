@@ -2,6 +2,7 @@ package br.com.softsy.educacional.controller;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,14 +21,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroEscolaDTO;
-import br.com.softsy.educacional.dto.ContaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
-import br.com.softsy.educacional.model.CaminhoImagemRequest;
+import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.service.EscolaService;
 
 @RestController
@@ -39,7 +38,30 @@ public class EscolaController {
 	
     @PersistenceContext
     private EntityManager entityManager;
-	
+    
+    @GetMapping("ativos/conta/{idConta}")
+    public ResponseEntity<?> listarEscolasAtivas(@PathVariable String idConta) {
+        try {
+            Long id = Long.parseLong(idConta);
+            if (id <= 0) {
+                return ResponseEntity.badRequest().body(
+                    new AllResponse("O idConta não pode ser um número negativo ou zero!", new ArrayList<>())
+                );
+            }
+            List<EscolaDTO> escolas = service.listarEscolasAtivasPorConta(id);
+            return ResponseEntity.ok(escolas);
+
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(
+                new AllResponse("O valor de idConta deve ser um número válido.", new ArrayList<>())
+            );
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(
+                new AllResponse(e.getMessage(), new ArrayList<>())
+            );
+        }
+    }
+
 	
 	@GetMapping("/conta/{idConta}")
 	public ResponseEntity<List<EscolaDTO>> buscarPorIdConta(@PathVariable Long idConta){

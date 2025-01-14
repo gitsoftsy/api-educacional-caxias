@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.ConcursoDTO;
+import br.com.softsy.educacional.dto.EscolaDTO;
 import br.com.softsy.educacional.dto.SerieDTO;
 import br.com.softsy.educacional.model.Concurso;
 import br.com.softsy.educacional.model.Conta;
+import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.model.Serie;
 import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.SerieRepository;
@@ -25,6 +27,25 @@ public class SerieService {
 
     @Autowired
     private SerieRepository serieRepository;
+    
+    @Transactional(readOnly = true)
+	public List<SerieDTO> listarSeriesAtivasPorConta(Long idConta) {
+	    if (idConta == null) {
+	        throw new IllegalArgumentException("O ID da conta é obrigatório.");
+	    }
+	    Character ativo = 'S'; 
+	    List<Serie> series = serieRepository.findActiveSerieByConta_IdContaAndAtivo(idConta, ativo)
+	        .orElseThrow(() -> new IllegalArgumentException(
+	            "Nenhuma serie ativa encontrada para a conta informada."
+	        ));
+	    if (series.isEmpty()) {
+	        throw new IllegalArgumentException("Nenhuma serie ativa encontrada para a conta informada.");
+	    }
+
+	    return series.stream()
+	            .map(SerieDTO::new)
+	            .collect(Collectors.toList());
+	}
 
     @Transactional(readOnly = true)
     public List<SerieDTO> listarTudo() {
