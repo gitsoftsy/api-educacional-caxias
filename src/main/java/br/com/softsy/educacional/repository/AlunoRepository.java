@@ -32,6 +32,6 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 	Optional<Aluno> findByCandidato_IdCandidato(@Param("idCandidato") Long idCandidato);
 
 	@Procedure(name = "PROC_LISTAR_ALUNOS_SEM_PREMATRICULA")
-	List<Object[]> listarAlunosSemPrematricula();
+	List<Object[]> listarAlunosSemPrematricula(@Param("P_ID_TURMA") Long idTurma);
 
 }

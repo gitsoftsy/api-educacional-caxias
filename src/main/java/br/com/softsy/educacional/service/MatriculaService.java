@@ -1,8 +1,14 @@
 package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +57,9 @@ public class MatriculaService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
+	@Autowired
+    private EntityManager entityManager;
 
     @Transactional(readOnly = true)
     public List<MatriculaDTO> listarTudo() {
@@ -68,16 +77,16 @@ public class MatriculaService {
     @Transactional(readOnly = true)
     public List<MatriculaDTO> buscarPorIdConta(Long idConta) {
         List<Matricula> matricula = repository.findByConta_IdConta(idConta)
-                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar concurso por ID da conta"));
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar matricula por ID da conta"));
         return matricula.stream()
                 .map(MatriculaDTO::new)
                 .collect(Collectors.toList());
     }
     
     @Transactional(readOnly = true)
-    public List<MatriculaDTO> buscarPorMatricula(String aluno) {
-        List<Matricula> matricula = repository.findByAlunoAluno(aluno)
-                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar concurso por ID da conta"));
+    public List<MatriculaDTO> buscarPorMatriculaAluno(String aluno) {
+        List<Matricula> matricula = repository.findByAluno_Aluno(aluno)
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar matricula por identificação do aluno"));
         return matricula.stream()
                 .map(MatriculaDTO::new)
                 .collect(Collectors.toList());
@@ -149,6 +158,45 @@ public class MatriculaService {
         destino.setPeriodoLetivo(periodoLetivo);
         destino.setTurma(turma);
         destino.setUsuario(usuario);
+    }
+    
+    public List<Map<String, Object>> dadosMatriculaAluno(Long idAluno) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_DADOS_ACAD_MAT_ALUNO(:pIdAluno)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+        query.setParameter("pIdAluno", idAluno);
+     
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("tipo", result[0]);
+            resultMap.put("idPrematricula", result[1]);
+            resultMap.put("idTipoMatricula", result[2]);
+            resultMap.put("tipoMatricula", result[3]);
+            resultMap.put("idAluno", result[4]);
+            resultMap.put("idPeriodoLetivo", result[5]);
+            resultMap.put("ano", result[6]);
+            resultMap.put("periodo", result[7]);
+            resultMap.put("tipoPeriodicidade", result[8]);
+            resultMap.put("descricao", result[9]);
+            resultMap.put("idDisciplina", result[10]);
+            resultMap.put("nomeDisciplina", result[11]);
+            resultMap.put("codigoDisciplina", result[12]);
+            resultMap.put("idTurma", result[13]);
+            resultMap.put("nomeTurma", result[14]);
+            resultMap.put("idSerie", result[15]);
+            resultMap.put("descricaoSerie", result[16]);
+            resultMap.put("serie", result[17]);
+            resultMap.put("ativo", result[18]);
+            resultMap.put("dataCadastro", result[19]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
     }
 
     @Transactional

@@ -71,9 +71,14 @@ public class AlunoController {
     }
     
     @GetMapping("/semPrematricula")
-    public ResponseEntity<AllResponse> listarAlunosSemPrematricula() {
+    public ResponseEntity<AllResponse> listarAlunosSemPrematricula(@RequestParam(value = "idTurma", required = false) Long idTurma) {
 
-        List<Map<String, Object>> result = alunoService.listarAlunosSemPrematricula();
+    	if (idTurma == null) {
+			return ResponseEntity.badRequest().body(
+					new AllResponse("Por favor, informe o parâmetro na requisição.", new ArrayList<>()));
+		}
+    	
+        List<Map<String, Object>> result = alunoService.listarAlunosSemPrematricula(idTurma);
 
         if (result.isEmpty()) {
             return ResponseEntity.ok(new AllResponse("Não existem resultados para essa requisição.", new ArrayList<>()));

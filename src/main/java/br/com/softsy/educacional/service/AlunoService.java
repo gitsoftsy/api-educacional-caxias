@@ -203,11 +203,12 @@ public class AlunoService {
         }
     }
     
-    public List<Map<String, Object>> listarAlunosSemPrematricula() {
+    public List<Map<String, Object>> listarAlunosSemPrematricula(Long idTurma) {
         StringBuilder sql = new StringBuilder();
-        sql.append("CALL PROC_LISTAR_ALUNOS_SEM_PREMATRICULA()");
+        sql.append("CALL PROC_LISTAR_ALUNOS_SEM_PREMATRICULA(:pIdTurma)");
 
         Query query = entityManager.createNativeQuery(sql.toString());
+        query.setParameter("pIdTurma", idTurma);
      
 
         List<Object[]> resultList = query.getResultList();
@@ -222,11 +223,10 @@ public class AlunoService {
             resultMap.put("idSerie", result[4]);
             resultMap.put("idTurno", result[5]);
             resultMap.put("idPessoa", result[6]);
-            resultMap.put("nomeCompleto", result[7]);
-            resultMap.put("idCandidato", result[8]);
-            resultMap.put("idSituacaoAluno", result[9]);
-            resultMap.put("dataCadastro", result[10]);
-            resultMap.put("aluno", result[11]);
+            resultMap.put("idCandidato", result[7]);
+            resultMap.put("idSituacaoAluno", result[8]);
+            resultMap.put("dataCadastro", result[9]);
+            resultMap.put("aluno", result[10]);
             resultMap.put("emailInterno", result[11]);
             mappedResultList.add(resultMap);
         }

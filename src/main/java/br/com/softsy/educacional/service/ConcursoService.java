@@ -54,6 +54,16 @@ public class ConcursoService {
                 .map(ConcursoDTO::new)
                 .collect(Collectors.toList());
     }
+    
+    
+    @Transactional(readOnly = true)
+    public List<ConcursoDTO> buscarPorIdContaEAtivo(Long idConta) {
+        List<Concurso> curso = concursoRepository.findByConta_IdContaAndAtivo(idConta, 'S')
+                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar concurso ativo por ID da conta"));
+        return curso.stream()
+                .map(ConcursoDTO::new)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public ConcursoDTO salvar(CadastroConcursoDTO dto) {

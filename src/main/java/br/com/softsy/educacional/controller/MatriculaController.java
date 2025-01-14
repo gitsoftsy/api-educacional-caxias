@@ -1,7 +1,9 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -14,12 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroMatriculaDTO;
 import br.com.softsy.educacional.dto.MatriculaDTO;
-import br.com.softsy.educacional.dto.PrematriculaDTO;
+import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.service.MatriculaService;
 
 @RestController
@@ -47,11 +50,27 @@ public class MatriculaController {
         return ResponseEntity.ok(matriculaDTO);
     }
     
-    @GetMapping("/matricula/{aluno}")
+    @GetMapping("/alunoMatricula/{aluno}")
     public ResponseEntity<List<MatriculaDTO>> buscarPorMatricula(@PathVariable String aluno) {
-        List<MatriculaDTO> matriculaDTO = matriculaService.buscarPorMatricula(aluno);
+        List<MatriculaDTO> matriculaDTO = matriculaService.buscarPorMatriculaAluno(aluno);
         return ResponseEntity.ok(matriculaDTO);
     }
+    
+    @GetMapping("/dadosMatricula")
+	public Object dadosMatriculaAluno(@RequestParam(value = "idAluno", required = false) Long idAluno) {
+		if (idAluno == null) {
+			return ResponseEntity.badRequest().body(
+					new AllResponse("Por favor, informe o parâmetro na requisição.", new ArrayList<>()));
+		}
+
+		List<Map<String, Object>> result = matriculaService.dadosMatriculaAluno(idAluno);
+
+		if (result.isEmpty()) {
+			return ResponseEntity.ok(new AllResponse("Não existem resultados para essa requisição.", new ArrayList<>()));
+		}
+
+		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+	}
 
     @PostMapping
     public ResponseEntity<MatriculaDTO> cadastrar(@RequestBody @Valid CadastroMatriculaDTO dto) {

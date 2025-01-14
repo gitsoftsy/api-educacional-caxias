@@ -15,4 +15,5 @@ public interface ConcursoRepository extends JpaRepository<Concurso, Long>{
 	@Query("select concurso from Concurso concurso join concurso.conta conta where conta.idConta = :idConta")
     Optional<List<Concurso>> findByConta_IdConta(@Param("idConta") Long idConta);
 	
+	Optional<List<Concurso>> findByConta_IdContaAndAtivo(Long idConta, Character ativo);
 }
