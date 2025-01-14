@@ -28,7 +28,7 @@ public class CurriculoController {
     @Autowired
     private CurriculoService curriculoService;
     
-    @GetMapping("/ativos/curso/{idCurso}/conta/{}")
+    @GetMapping("/ativos/curso/{idCurso}/conta/{idConta}")
     public ResponseEntity<?> listarCurriculosAtivos(@PathVariable String idConta, @PathVariable String idCurso) {
         try {
             Long contaId = Long.parseLong(idConta);
@@ -56,7 +56,8 @@ public class CurriculoController {
             );
         }
     }
-
+    
+    
     @GetMapping
     public ResponseEntity<List<CurriculoDTO>> listar() {
         List<CurriculoDTO> curriculos = curriculoService.listarTudo();

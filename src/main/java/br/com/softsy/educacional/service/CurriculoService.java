@@ -2,15 +2,14 @@ package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.softsy.educacional.dto.CandidatoDTO;
 import br.com.softsy.educacional.dto.CurriculoDTO;
-import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.Curriculo;
 import br.com.softsy.educacional.model.Curso;
@@ -30,23 +29,23 @@ public class CurriculoService {
 	@Autowired
 	private CurriculoRepository curriculoRepository;
 	
-	 @Transactional(readOnly = true)
-	    public List<CurriculoDTO> listarCurriculosAtivosPorContaECurso(Long idConta, Long idCurso) {
-	        if (idConta == null || idCurso == null) {
-	            throw new IllegalArgumentException("O ID da conta e o ID do curso são obrigatórios.");
-	        }
-
-	        Character ativo = 'S';  // Filtrar somente os currículos ativos
-
-	        List<Curriculo> curriculos = curriculoRepository.findByConta_IdContaAndCurso_IdCursoAndAtivo(idConta, idCurso, ativo)
-	            .orElseThrow(() -> new IllegalArgumentException(
-	                "Nenhum currículo ativo encontrado para a conta e curso informados."
-	            ));
-
-	        return curriculos.stream()
-	                .map(CurriculoDTO::new)  // Converter para DTO
-	                .collect(Collectors.toList());
+	@Transactional(readOnly = true)
+	public List<CurriculoDTO> listarCurriculosAtivosPorContaECurso(Long idConta, Long idCurso) {
+	    if (idConta == null || idCurso == null) {
+	        throw new IllegalArgumentException("Os IDs da conta e do curso são obrigatórios.");
 	    }
+	    List<Curriculo> curriculos = curriculoRepository.findByConta_IdContaAndCurso_IdCursoAndAtivo(idConta, idCurso, 'S')
+	            .orElseThrow(() -> new IllegalArgumentException(
+	                    "Nenhum currículo ativo encontrado para a conta e curso informados."));
+
+	    if (curriculos.isEmpty()) {
+	        throw new IllegalArgumentException("Nenhum currículo ativo encontrado para a conta e curso informados.");
+	    }
+	    return curriculos.stream()
+	            .map(CurriculoDTO::new)
+	            .collect(Collectors.toList());
+	}
+
 
 	@Transactional(readOnly = true)
 	public List<CurriculoDTO> listarTudo() {

@@ -17,6 +17,7 @@ public interface CurriculoRepository extends JpaRepository<Curriculo, Long>{
 	@Query("select curriculo from Curriculo join curriculo.curso curso where curso.idCurso = :idCurso")
     Optional<List<Curriculo>> findByCurso_IdCurso(@Param("idCurso") Long idCurso);
 	
-	 Optional<List<Curriculo>> findByConta_IdContaAndCurso_IdCursoAndAtivo(Long idConta, Long idCurso, Character ativo);
+	Optional<List<Curriculo>> findByConta_IdContaAndCurso_IdCursoAndAtivo(Long idConta, Long idCurso, Character ativo);
+
 }
 
