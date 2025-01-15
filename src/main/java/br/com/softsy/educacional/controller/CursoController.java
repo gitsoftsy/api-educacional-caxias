@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +19,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroCursoDTO;
 import br.com.softsy.educacional.dto.CursoDTO;
+import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.service.CursoService;
 
 @RestController
@@ -81,6 +82,29 @@ public class CursoController {
     public ResponseEntity<List<CursoDTO>> buscarPorIdConta(@PathVariable Long idConta) {
         List<CursoDTO> curso = cursoService.buscarPorIdConta(idConta);
         return ResponseEntity.ok(curso);
+    }
+    
+    @GetMapping("ativos/conta/{idConta}")
+    public ResponseEntity<?> listarCursosContaAtiva(@PathVariable String idConta) {
+        try {
+            Long id = Long.parseLong(idConta);
+            if (id <= 0) {
+                return ResponseEntity.badRequest().body(
+                    new AllResponse("O idConta não pode ser um número negativo ou zero!", new ArrayList<>())
+                );
+            }
+            List<CursoDTO> cursos = cursoService.buscarCursosAtivosPorIdConta(id);
+            return ResponseEntity.ok(cursos);
+ 
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(
+                new AllResponse("O valor de idConta deve ser um número válido.", new ArrayList<>())
+            );
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(
+                new AllResponse(e.getMessage(), new ArrayList<>())
+            );
+        }
     }
 
     @PostMapping

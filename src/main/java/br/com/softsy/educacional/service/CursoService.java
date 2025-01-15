@@ -47,6 +47,27 @@ public class CursoService {
     }
     
     
+  	@Transactional(readOnly = true)
+	public List<CursoDTO> buscarCursosAtivosPorIdConta(Long idConta) {
+		if (idConta == null) {
+			throw new IllegalArgumentException("O ID da conta é obrigatório.");
+		}
+		Character ativo = 'S';
+ 
+		List<Curso> cursos = cursoRepository.findActiveCursoByConta_IdContaAndAtivo(idConta, ativo)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar cursos ativos por ID da conta"));
+ 
+		if (cursos.isEmpty()) {
+			throw new IllegalArgumentException("Nenhuma curso ativo encontrado para a conta informada.");
+		}
+		return cursos.stream().map(CursoDTO::new).collect(Collectors.toList());
+	}
+    
+  	
+  	
+  	
+  	
+    
 	@Transactional(readOnly = true)
 	public CursoDTO buscarPorId(Long id) {
 		Curso curso = cursoRepository.getReferenceById(id);

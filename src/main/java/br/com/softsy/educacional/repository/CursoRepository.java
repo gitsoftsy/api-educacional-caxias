@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import br.com.softsy.educacional.dto.CursoDTO;
 import br.com.softsy.educacional.model.Curso;
+import br.com.softsy.educacional.model.Turno;
 
 public interface CursoRepository extends JpaRepository<Curso, Long>{
 	
@@ -18,5 +19,7 @@ public interface CursoRepository extends JpaRepository<Curso, Long>{
 	@Query("select curso from Curso curso join curso.conta conta where conta.idConta = :idConta")
     Optional<List<Curso>> findByConta_IdConta(@Param("idConta") Long idConta);
 	
-
+	Optional<List<Curso>> findActiveCursoByConta_IdContaAndAtivo(Long idConta, Character ativo);
+	
+	
 }
