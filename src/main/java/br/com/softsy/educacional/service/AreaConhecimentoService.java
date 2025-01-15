@@ -20,76 +20,83 @@ import br.com.softsy.educacional.repository.ContaRepository;
 @Service
 public class AreaConhecimentoService {
 
-    @Autowired
-    private AreaConhecimentoRepository repository;
-    
-	@Autowired 
+	@Autowired
+	private AreaConhecimentoRepository repository;
+
+	@Autowired
 	private ContaRepository contaRepository;
 
-    public List<AreaConhecimentoDTO> listarTudo() {
-        List<AreaConhecimento> areaConhecimentoList = repository.findAll();
-        return areaConhecimentoList.stream()
-                .map(AreaConhecimentoDTO::new)
-                .collect(Collectors.toList());
-    }
-    
-    @Transactional(readOnly = true)
-    public AreaConhecimentoDTO buscarPorId(Long id) {
-        return new AreaConhecimentoDTO(repository.getReferenceById(id));
-    }
-    
-    @Transactional(readOnly = true)
-    public List<AreaConhecimentoDTO> buscarPorIdConta(Long idConta) {
-        List<AreaConhecimento> areaConhecimento = repository.findByConta_IdConta(idConta)
-                .orElseThrow(() -> new IllegalArgumentException("Erro ao buscar área de conhecimento por ID da conta"));
-        return areaConhecimento.stream()
-                .map(AreaConhecimentoDTO::new)
-                .collect(Collectors.toList());
-    }
+	public List<AreaConhecimentoDTO> listarTudo() {
+		List<AreaConhecimento> areaConhecimentoList = repository.findAll();
+		return areaConhecimentoList.stream().map(AreaConhecimentoDTO::new).collect(Collectors.toList());
+	}
 
-    @Transactional
-    public AreaConhecimentoDTO salvar(AreaConhecimentoDTO dto) {
-        validarAreaConhecimento(dto.getAreaConhecimento());
+	@Transactional(readOnly = true)
+	public AreaConhecimentoDTO buscarPorId(Long id) {
+		return new AreaConhecimentoDTO(repository.getReferenceById(id));
+	}
 
-        AreaConhecimento areaConhecimento = criarAreaConhecimentoAPartirDTO(dto);
+	@Transactional(readOnly = true)
+	public List<AreaConhecimentoDTO> buscarPorIdConta(Long idConta) {
+		List<AreaConhecimento> areaConhecimento = repository.findByConta_IdConta(idConta)
+				.orElseThrow(() -> new IllegalArgumentException("Erro ao buscar área de conhecimento por ID da conta"));
+		return areaConhecimento.stream().map(AreaConhecimentoDTO::new).collect(Collectors.toList());
+	}
 
-        areaConhecimento = repository.save(areaConhecimento);
-        return new AreaConhecimentoDTO(areaConhecimento);
-    }
+	@Transactional
+	public AreaConhecimentoDTO salvar(AreaConhecimentoDTO dto) {
+		validarAreaConhecimento(dto.getAreaConhecimento());
 
-    @Transactional
-    public AreaConhecimentoDTO atualizar(AreaConhecimentoDTO dto) {
-        AreaConhecimento areaConhecimento = repository.getReferenceById(dto.getIdAreaConhecimento());
-            atualizarDados(areaConhecimento, dto);
-            return new AreaConhecimentoDTO(areaConhecimento);
-    }
+		AreaConhecimento areaConhecimento = criarAreaConhecimentoAPartirDTO(dto);
 
-    @Transactional
-    public void excluir(Long id) {
-        repository.deleteById(id);
-    }
+		areaConhecimento = repository.save(areaConhecimento);
+		return new AreaConhecimentoDTO(areaConhecimento);
+	}
 
-    private AreaConhecimento criarAreaConhecimentoAPartirDTO(AreaConhecimentoDTO dto) {
-        AreaConhecimento areaConhecimento = new AreaConhecimento();
-        Conta conta = contaRepository.findById(dto.getContaId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-        areaConhecimento.setConta(conta);
-        areaConhecimento.setAreaConhecimento(dto.getAreaConhecimento());
-        areaConhecimento.setDataCadastro(LocalDateTime.now());
-        return areaConhecimento;
-    }
+	@Transactional
+	public AreaConhecimentoDTO atualizar(AreaConhecimentoDTO dto) {
+		AreaConhecimento areaConhecimento = repository.findById(dto.getIdAreaConhecimento())
+				.orElseThrow(() -> new IllegalArgumentException("Área de conhecimento não encontrada"));
 
-    private void validarAreaConhecimento(String areaConhecimento) {
-        Optional<AreaConhecimento> areaConhecimentoExistente = repository.findByAreaConhecimento(areaConhecimento).stream().findFirst();
-        if (areaConhecimentoExistente.isPresent()) {
-            throw new UniqueException("Essa área de conhecimento já existe.");
-        }
-    }
+		atualizarDados(areaConhecimento, dto);
 
-    private void atualizarDados(AreaConhecimento destino, AreaConhecimentoDTO origem) {
-        destino.setAreaConhecimento(origem.getAreaConhecimento());
-        Conta conta = contaRepository.findById(origem.getContaId())
-                .orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
-        destino.setConta(conta);
-    }
+		AreaConhecimento areaAtualizada = repository.save(areaConhecimento);
+
+		return new AreaConhecimentoDTO(areaAtualizada);
+	}
+
+	@Transactional
+	public void excluir(Long id) {
+		repository.deleteById(id);
+	}
+
+	private AreaConhecimento criarAreaConhecimentoAPartirDTO(AreaConhecimentoDTO dto) {
+		AreaConhecimento areaConhecimento = new AreaConhecimento();
+		Conta conta = contaRepository.findById(dto.getContaId())
+				.orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		areaConhecimento.setConta(conta);
+		areaConhecimento.setAreaConhecimento(dto.getAreaConhecimento());
+		areaConhecimento.setAtivo(dto.getAtivo());
+		areaConhecimento.setDataCadastro(LocalDateTime.now());
+		return areaConhecimento;
+	}
+
+	private void validarAreaConhecimento(String areaConhecimento) {
+		Optional<AreaConhecimento> areaConhecimentoExistente = repository.findByAreaConhecimento(areaConhecimento)
+				.stream().findFirst();
+		if (areaConhecimentoExistente.isPresent()) {
+			throw new UniqueException("Essa área de conhecimento já existe.");
+		}
+	}
+
+	private void atualizarDados(AreaConhecimento destino, AreaConhecimentoDTO origem) {
+		destino.setAreaConhecimento(origem.getAreaConhecimento());
+		if (origem.getAtivo() != null) {
+			destino.setAtivo(origem.getAtivo());
+		}
+		Conta conta = contaRepository.findById(origem.getContaId())
+				.orElseThrow(() -> new IllegalArgumentException("Dependência administrativa não encontrada"));
+		destino.setConta(conta);
+	}
+
 }

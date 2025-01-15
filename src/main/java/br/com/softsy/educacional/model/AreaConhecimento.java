@@ -37,5 +37,7 @@ public class AreaConhecimento {
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
 	
+	@Column(name = "ATIVO", nullable = false)
+	private String ativo;
 	
 }

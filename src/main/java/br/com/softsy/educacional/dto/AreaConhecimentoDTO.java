@@ -21,10 +21,13 @@ public class AreaConhecimentoDTO {
 
 	private LocalDateTime dataCadastro;
 	
+	private String ativo;
+	
     public AreaConhecimentoDTO(AreaConhecimento areaConhecimento) {
         this.idAreaConhecimento = areaConhecimento.getIdAreaConhecimento();
         this.areaConhecimento = areaConhecimento.getAreaConhecimento();
         this.dataCadastro = areaConhecimento.getDataCadastro();
+        this.ativo = areaConhecimento.getAtivo();
         this.contaId = areaConhecimento.getConta().getIdConta();
     }
 
