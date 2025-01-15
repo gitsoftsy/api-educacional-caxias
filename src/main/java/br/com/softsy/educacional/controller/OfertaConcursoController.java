@@ -1,6 +1,7 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +19,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroOfertaConcursoDTO;
 import br.com.softsy.educacional.dto.OfertaConcursoDTO;
+import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.service.OfertaConcursoService;
 
 @RestController
@@ -46,6 +47,23 @@ public class OfertaConcursoController {
     public ResponseEntity<CadastroOfertaConcursoDTO> buscarPorId(@PathVariable Long idOfertaConcurso) {
         CadastroOfertaConcursoDTO ofertaDto = ofertaConcursoService.buscarPorId(idOfertaConcurso);
         return ResponseEntity.ok(ofertaDto);
+    }
+        
+    @GetMapping("/conta/{idConta}/escolas/{idEscola}/podeDesativar")
+    public ResponseEntity<Object> verificarOfertaETurmaAtiva(@PathVariable(value = "idEscola") Long idEscola,
+    		@PathVariable(value = "idConta") Long idConta) {
+
+        if (idEscola == null || idConta == null) {
+            return ResponseEntity.badRequest().body(new AllResponse("Por favor, informe os parâmetros 'idEscola' e 'idConta'.", new ArrayList<>()));
+        }
+
+        Map<String, String> resultado = ofertaConcursoService.verificaOfertaETurmaAtiva(idEscola, idConta);
+
+        if (resultado.isEmpty()) {
+            return ResponseEntity.ok(new AllResponse("Nenhum resultado encontrado para os parâmetros informados.", new ArrayList<>()));
+        }
+
+        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(List.of(resultado))));
     }
     
     @GetMapping("/series/conta/{idConta}/curso/{idCurso}/escola/{idEscola}")
