@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.softsy.educacional.dto.CadastroOfertaConcursoDTO;
 import br.com.softsy.educacional.dto.OfertaConcursoDTO;
 import br.com.softsy.educacional.model.Concurso;
+import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.Curriculo;
 import br.com.softsy.educacional.model.Curso;
 import br.com.softsy.educacional.model.Escola;
 import br.com.softsy.educacional.model.OfertaConcurso;
 import br.com.softsy.educacional.model.Serie;
-import br.com.softsy.educacional.model.SituacaoFuncionamento;
 import br.com.softsy.educacional.model.Turno;
 import br.com.softsy.educacional.repository.ConcursoRepository;
+import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.CurriculoRepository;
 import br.com.softsy.educacional.repository.CursoRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
@@ -43,6 +45,10 @@ public class OfertaConcursoService {
 
     @Autowired
     private CursoRepository cursoRepository;
+    
+    @Autowired
+    private ContaRepository contaRepository;
+
 
     @Autowired
     private EscolaRepository escolaRepository;
@@ -76,6 +82,31 @@ public class OfertaConcursoService {
                 .map(OfertaConcursoDTO::new)
                 .collect(Collectors.toList());
     }
+    
+    public Map<String, String> verificaOfertaETurmaAtiva(Long idEscola, Long idConta) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_PODE_DESATIVAR_ESCOLA(:pIdEscola, :pIdConta)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdEscola", idEscola);
+        query.setParameter("pIdConta", idConta);
+
+        Object[] result = (Object[]) query.getSingleResult();
+
+        String podeDesativar = (String) result[0];
+        String ofertaAtiva = (String) result[1];
+        String turmaAtiva = (String) result[2];
+
+        Map<String, String> resultado = new HashMap<>();
+        resultado.put("podeDesativar", podeDesativar);
+        resultado.put("ofertaAtiva", ofertaAtiva);
+        resultado.put("turmaAtiva", turmaAtiva);
+
+        return resultado;
+    }
+
+
     
     @Transactional(readOnly = true)
     public CadastroOfertaConcursoDTO buscarPorId(Long id) {

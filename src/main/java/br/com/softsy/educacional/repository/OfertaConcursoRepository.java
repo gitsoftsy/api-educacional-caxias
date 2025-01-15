@@ -16,6 +16,13 @@ public interface OfertaConcursoRepository extends JpaRepository<OfertaConcurso, 
 
 	@Query("select ofertaConcurso from OfertaConcurso ofertaConcurso join ofertaConcurso.concurso concurso where concurso.idConcurso = :idConcurso")
     Optional<List<OfertaConcurso>> findByConcurso_idConcurso(@Param("idConcurso") Long idConcurso);
+	
+    @Procedure(name = "PROC_PODE_DESATIVAR_ESCOLA")
+    void verificarOfertaETurmaAtiva(@Param("P_ID_ESCOLA") Long idEscola,
+                                    @Param("P_ID_CONTA") Long idConta,
+                                    @Param("PODE_DESATIVAR") String podeDesativar,
+                                    @Param("OFERTA_ATIVA") String ofertaAtiva,
+                                    @Param("TURMA_ATIVA") String turmaAtiva);
 
     @Procedure(name = "PROC_LISTA_OFERTA_CURSO_USUARIO")
     List<Object[]> listaOfertaCursoUsuario(
