@@ -24,6 +24,7 @@ public class AlunoDTO {
     private String senha;	
 	private Character geraPrematricula;
 	private Long tipoMatricula;
+	private Long curriculoId;
    
 
     public AlunoDTO(Aluno aluno) {
@@ -40,6 +41,7 @@ public class AlunoDTO {
         this.aluno = aluno.getAluno();
         this.emailInterno = aluno.getEmailInterno();
         this.senha = aluno.getSenha();
+        this.curriculoId = aluno.getCurriculo().getIdCurriculo();
       
     }
 }

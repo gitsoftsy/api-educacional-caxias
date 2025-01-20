@@ -25,6 +25,7 @@ import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.repository.AlunoRepository;
 import br.com.softsy.educacional.repository.CandidatoRepository;
 import br.com.softsy.educacional.repository.ContaRepository;
+import br.com.softsy.educacional.repository.CurriculoRepository;
 import br.com.softsy.educacional.repository.CursoRepository;
 import br.com.softsy.educacional.repository.EscolaRepository;
 import br.com.softsy.educacional.repository.PessoaRepository;
@@ -65,6 +66,9 @@ public class AlunoService {
     
     @Autowired
     private TipoMatriculaRepository tipoMatriculaRepository;
+    
+    @Autowired
+    private CurriculoRepository curriculoRepository;
     
 	@Autowired
 	private PasswordEncrypt encrypt;
@@ -145,6 +149,8 @@ public class AlunoService {
                 .orElseThrow(() -> new IllegalArgumentException("Candidato não encontrado")));
         aluno.setSituacaoAluno(situacaoAlunoRepository.findById(dto.getSituacaoAlunoId())
                 .orElseThrow(() -> new IllegalArgumentException("Situação do Aluno não encontrada")));
+        aluno.setCurriculo(curriculoRepository.findById(dto.getCurriculoId())
+                .orElseThrow(() -> new IllegalArgumentException("Currículo não encontrado.")));
     
         Character geraPreMatricula = dto.getGeraPrematricula();
         Long tipoMatriculaId = dto.getTipoMatriculaId();
@@ -188,6 +194,8 @@ public class AlunoService {
                 .orElseThrow(() -> new IllegalArgumentException("Candidato não encontrado")));
         aluno.setSituacaoAluno(situacaoAlunoRepository.findById(dto.getSituacaoAlunoId())
                 .orElseThrow(() -> new IllegalArgumentException("Situação do Aluno não encontrada")));
+        aluno.setCurriculo(curriculoRepository.findById(dto.getCurriculoId())
+                .orElseThrow(() -> new IllegalArgumentException("Currículo não encontrado.")));
         
         BeanUtils.copyProperties(dto, aluno, "idUsuario", "ativo", "dataCadastro", "senha", "emailInterno");
         aluno.setAluno(dto.getAluno());

@@ -66,6 +66,10 @@ public class Aluno {
 
     @Column(name = "SENHA", length = 2500)
     private String senha;
+    
+    @ManyToOne
+    @JoinColumn(name = "ID_CURRICULO", nullable = false)
+    private Curriculo curriculo;
 
 	
 }
