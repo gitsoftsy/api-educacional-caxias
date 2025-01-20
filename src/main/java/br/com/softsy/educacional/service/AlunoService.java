@@ -83,6 +83,8 @@ public class AlunoService {
                 .map(AlunoDTO::new)
                 .collect(Collectors.toList());
     }
+    
+    
 
     @Transactional(readOnly = true)
     public AlunoDTO buscarPorId(Long id) {
@@ -288,6 +290,46 @@ public class AlunoService {
 
   
         query.executeUpdate();
+    }
+
+    
+    public List<Map<String, Object>> filtrarAlunos(Long matricula, String nome, String cpf, Long idEscola, Long idCurso) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_FILTRAR_ALUNOS(:pMatricula, :pNome, :pCpf, :pIdEscola, :pIdCurso)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+      
+        query.setParameter("pMatricula", matricula != null ? matricula : null);
+        query.setParameter("pNome", nome != null ? nome : null);
+        query.setParameter("pCpf", cpf != null ? cpf : null);
+        query.setParameter("pIdEscola", idEscola != null ? idEscola : null);
+        query.setParameter("pIdCurso", idCurso != null ? idCurso : null);
+
+        
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idAluno", result[0]);
+            resultMap.put("nomeCompleto", result[1]);
+            resultMap.put("idConta", result[2]);
+            resultMap.put("idCurso", result[3]);
+            resultMap.put("idEscola", result[4]);
+            resultMap.put("idSerie", result[5]);
+            resultMap.put("idTurno", result[6]);
+            resultMap.put("idPessoa", result[7]);
+            resultMap.put("idCandidato", result[8]);
+            resultMap.put("idSituacaoAluno", result[9]);
+            resultMap.put("dtCadastro", result[10]);
+            resultMap.put("nomeAluno", result[11]);
+            resultMap.put("emailInterno", result[12]);
+            resultMap.put("idCurriculo", result[13]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
     }
 
     

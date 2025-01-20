@@ -24,8 +24,5 @@ public interface PeriodoLetivoRepository extends JpaRepository<PeriodoLetivo, Lo
 	           "and periodoLetivo.ativo = 'S' " + // Filtrando por ativo
 	           "order by periodoLetivo.ano desc")
 	    Optional<List<PeriodoLetivo>> findByConta_IdContaAndAno(@Param("idConta") Long idConta, @Param("ano") Integer ano);
-	
-
-	
-	
+		
 }

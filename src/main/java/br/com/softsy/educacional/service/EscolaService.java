@@ -137,6 +137,23 @@ public class EscolaService {
 		return repository.findEscolaByAtivo('S').stream().map(EscolaDTO::new).collect(Collectors.toList());
 	}
 	
+	//certa
+	@Transactional(readOnly = true)
+	public List<EscolaDTO> buscarEscolasPorContaEPeriodoLetivo(Long idConta, Long idPeriodoLetivo) {
+	    if (idConta == null || idConta <= 0) {
+	        throw new IllegalArgumentException("O ID da conta é obrigatório e deve ser maior que zero.");
+	    }
+	    if (idPeriodoLetivo == null || idPeriodoLetivo <= 0) {
+	        throw new IllegalArgumentException("O ID do período letivo é obrigatório e deve ser maior que zero.");
+	    }
+
+	    List<Escola> escolas = repository.findByConta_IdContaAndTurma_PeriodoLetivo_IdPeriodoLetivo(idConta, idPeriodoLetivo)
+	        .orElseThrow(() -> new IllegalArgumentException("Nenhuma escola encontrada para os filtros informados."));
+
+	    return escolas.stream().map(EscolaDTO::new).collect(Collectors.toList());
+	}
+
+	
 	@Transactional
 	public CadastroEscolaDTO salvar(CadastroEscolaDTO dto) throws IOException {
 //	    validarCnpjUnico(dto.getCnpj());

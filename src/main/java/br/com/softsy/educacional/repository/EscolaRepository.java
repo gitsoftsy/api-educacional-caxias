@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import br.com.softsy.educacional.model.Curso;
 import br.com.softsy.educacional.model.Escola;
 
 @Repository
@@ -27,7 +28,8 @@ public interface EscolaRepository extends JpaRepository<Escola, Long>{
     List<Object[]> listaEscolasUsuario(@Param("pIdUsuario") Long idUsuario, @Param("pIdConta") Long idConta);
 
     Optional<List<Escola>> findActiveSchoolsByConta_IdContaAndAtivo(Long idConta, Character ativo);
+    
 
-
-
+    Optional<List<Escola>> findByConta_IdContaAndTurma_PeriodoLetivo_IdPeriodoLetivo(Long idConta, Long idPeriodoLetivo);
+    
 }

@@ -28,6 +28,7 @@ import br.com.softsy.educacional.dto.CadastroEscolaDTO;
 import br.com.softsy.educacional.dto.EscolaDTO;
 import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.service.EscolaService;
+import br.com.softsy.educacional.repository.PeriodoLetivoRepository;
 
 @RestController
 @RequestMapping("/escolas")
@@ -35,6 +36,9 @@ public class EscolaController {
 	
 	@Autowired
 	private EscolaService service;
+	
+	@Autowired
+    private PeriodoLetivoRepository periodoLetivoRepository;
 	
     @PersistenceContext
     private EntityManager entityManager;
@@ -201,5 +205,41 @@ public class EscolaController {
         }
         return ResponseEntity.ok(result);
     }
+    
+
+    //certa
+    @GetMapping("/{idConta}/porPeriodoLetivo/{idPeriodoLetivo}")
+    public ResponseEntity<?> listarEscolasPorContaEPeriodoLetivo(
+        @PathVariable String idConta,
+        @PathVariable String idPeriodoLetivo
+    ) {
+        try {
+            Long contaId = Long.parseLong(idConta);
+            Long periodoId = Long.parseLong(idPeriodoLetivo);
+
+            if (contaId <= 0 || periodoId <= 0) {
+                return ResponseEntity.badRequest().body(
+                    new AllResponse("Os IDs não podem ser negativos ou zero!", new ArrayList<>())
+                );
+            }
+
+            List<EscolaDTO> escolas = service.buscarEscolasPorContaEPeriodoLetivo(contaId, periodoId);
+            return ResponseEntity.ok(escolas);
+
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(
+                new AllResponse("Os IDs devem ser números válidos.", new ArrayList<>())
+            );
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(
+                new AllResponse(e.getMessage(), new ArrayList<>())
+            );
+        }
+    }
+
+
+
+
+    
 
 }

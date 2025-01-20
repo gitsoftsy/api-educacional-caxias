@@ -30,64 +30,66 @@ import br.com.softsy.educacional.service.AlunoService;
 @RequestMapping("/alunos")
 public class AlunoController {
 
-    @Autowired
-    private AlunoService alunoService;
+	@Autowired
+	private AlunoService alunoService;
 
-    @GetMapping
-    public ResponseEntity<List<AlunoDTO>> listar() {
-        List<AlunoDTO> alunos = alunoService.listarTudo();
-        return ResponseEntity.ok(alunos);
-    }
+	@GetMapping
+	public ResponseEntity<List<AlunoDTO>> listar() {
+		List<AlunoDTO> alunos = alunoService.listarTudo();
+		return ResponseEntity.ok(alunos);
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<AlunoDTO> buscarPorId(@PathVariable Long id) {
-        AlunoDTO alunoDTO = alunoService.buscarPorId(id);
-        return ResponseEntity.ok(alunoDTO);
-    }
-    
-    @GetMapping("/conta/{idConta}")
-    public ResponseEntity<List<AlunoDTO>> buscarPorIdConta(@PathVariable Long idConta) {
-        List<AlunoDTO> alunos = alunoService.buscarPorIdConta(idConta);
-        return ResponseEntity.ok(alunos);
-    }
+	@GetMapping("/{id}")
+	public ResponseEntity<AlunoDTO> buscarPorId(@PathVariable Long id) {
+		AlunoDTO alunoDTO = alunoService.buscarPorId(id);
+		return ResponseEntity.ok(alunoDTO);
+	}
 
-    @PostMapping
-    public ResponseEntity<AlunoDTO> cadastrar(@RequestBody @Valid CadastroAlunoDTO dto) {
-        AlunoDTO alunoDTO = alunoService.salvar(dto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(alunoDTO.getIdAluno()).toUri();
-        return ResponseEntity.created(uri).body(alunoDTO);
-    }
-    
-    @PutMapping
-    public ResponseEntity<AlunoDTO> atualizar(@RequestBody @Valid CadastroAlunoDTO dto) {
-        return ResponseEntity.ok(alunoService.atualizar(dto));
-    }
+	@GetMapping("/conta/{idConta}")
+	public ResponseEntity<List<AlunoDTO>> buscarPorIdConta(@PathVariable Long idConta) {
+		List<AlunoDTO> alunos = alunoService.buscarPorIdConta(idConta);
+		return ResponseEntity.ok(alunos);
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> excluir(@PathVariable Long id) {
-        alunoService.excluir(id);
-        return ResponseEntity.noContent().build();
-    }
-    
-    @GetMapping("/semPrematricula")
-    public ResponseEntity<AllResponse> listarAlunosSemPrematricula(@RequestParam(value = "idTurma", required = false) Long idTurma) {
+	@PostMapping
+	public ResponseEntity<AlunoDTO> cadastrar(@RequestBody @Valid CadastroAlunoDTO dto) {
+		AlunoDTO alunoDTO = alunoService.salvar(dto);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(alunoDTO.getIdAluno())
+				.toUri();
+		return ResponseEntity.created(uri).body(alunoDTO);
+	}
 
-    	if (idTurma == null) {
-			return ResponseEntity.badRequest().body(
-					new AllResponse("Por favor, informe o parâmetro na requisição.", new ArrayList<>()));
+	@PutMapping
+	public ResponseEntity<AlunoDTO> atualizar(@RequestBody @Valid CadastroAlunoDTO dto) {
+		return ResponseEntity.ok(alunoService.atualizar(dto));
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> excluir(@PathVariable Long id) {
+		alunoService.excluir(id);
+		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/semPrematricula")
+	public ResponseEntity<AllResponse> listarAlunosSemPrematricula(
+			@RequestParam(value = "idTurma", required = false) Long idTurma) {
+
+		if (idTurma == null) {
+			return ResponseEntity.badRequest()
+					.body(new AllResponse("Por favor, informe o parâmetro na requisição.", new ArrayList<>()));
 		}
-    	
-        List<Map<String, Object>> result = alunoService.listarAlunosSemPrematricula(idTurma);
 
-        if (result.isEmpty()) {
-            return ResponseEntity.ok(new AllResponse("Não existem resultados para essa requisição.", new ArrayList<>()));
-        }
+		List<Map<String, Object>> result = alunoService.listarAlunosSemPrematricula(idTurma);
 
-        return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
-    }
-    
-    @GetMapping("/turmaDisciplina")
+		if (result.isEmpty()) {
+			return ResponseEntity
+					.ok(new AllResponse("Não existem resultados para essa requisição.", new ArrayList<>()));
+		}
+
+		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+	}
+
+	@GetMapping("/turmaDisciplina")
 	public Object listarTurmaDiscipliaAluno(@RequestParam(value = "idAluno", required = false) Long idAluno) {
 		if (idAluno == null) {
 			return "Por favor, informe o parâmetro na requisição.";
@@ -101,6 +103,42 @@ public class AlunoController {
 
 		return result;
 	}
- 
-    
+
+	@GetMapping("/filtrar")
+	public ResponseEntity<AllResponse> filtrarAlunos(
+			@RequestParam(value = "matricula", required = false) Long matricula,
+			@RequestParam(value = "nome", required = false) String nome,
+			@RequestParam(value = "cpf", required = false) String cpf,
+			@RequestParam(value = "idEscola", required = false) Long idEscola,
+			@RequestParam(value = "idCurso", required = false) Long idCurso) {
+
+		if (matricula == null && nome == null && cpf == null && idEscola == null && idCurso == null) {
+			return ResponseEntity.badRequest().body(
+					new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
+		}
+
+		if (nome != null && nome.trim().length() < 3) {
+			return ResponseEntity.badRequest()
+					.body(new AllResponse("O nome deve ter ao menos 3 caracteres para o filtro.", new ArrayList<>()));
+		}
+
+		if (cpf != null) {
+			String cpfLimpo = cpf.replaceAll("[^\\d]", "");
+			if (cpfLimpo.length() < 5) {
+				return ResponseEntity.badRequest().body(
+						new AllResponse("O CPF deve ter ao menos 5 caracteres para o filtro.", new ArrayList<>()));
+			}
+			cpf = cpfLimpo;
+		}
+
+		List<Map<String, Object>> result = alunoService.filtrarAlunos(matricula, nome, cpf, idEscola, idCurso);
+
+		if (result.isEmpty()) {
+			return ResponseEntity
+					.ok(new AllResponse("Não existem resultados para essa requisição.", new ArrayList<>()));
+		}
+
+		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+	}
+
 }
