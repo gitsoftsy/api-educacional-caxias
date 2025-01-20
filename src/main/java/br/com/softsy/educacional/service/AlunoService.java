@@ -332,6 +332,88 @@ public class AlunoService {
         return mappedResultList;
     }
 
-    
+    public List<Map<String, Object>> listarDisciplinasDisponivesPrematrcula(Long idAluno, Long idSerie, Long idPeriodoLetivo, Long idEscola) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_DISCIPLINAS_DISPONIVEIS_PREMATRICULA(:pIdAluno, :pIdSerie, :pIdPeriodoLetivo, :pIdEscola)");
+ 
+        Query query = entityManager.createNativeQuery(sql.toString());
+ 
+        query.setParameter("pIdAluno", idAluno);
+        query.setParameter("pIdSerie", idSerie);
+        query.setParameter("pIdPeriodoLetivo", idPeriodoLetivo);
+        query.setParameter("pIdEscola", idEscola);
+     
+ 
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+ 
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idEscola", result[0]);
+            resultMap.put("nomeEscola", result[1]);
+            resultMap.put("idTurma", result[2]);
+            resultMap.put("nomeTurma", result[3]);
+            resultMap.put("idDisciplina", result[4]);
+            resultMap.put("codDiscip", result[5]);
+            resultMap.put("nomeDisciplina", result[6]);
+            resultMap.put("idGradeCurricular", result[7]);
+            resultMap.put("obs", result[8]);
+            mappedResultList.add(resultMap);
+        }
+ 
+        return mappedResultList;
+    }
+ 
+    public List<Map<String, Object>> filtrarDadosAluno(Long idConta, String cpf, String matricula, String nome, Long idCurso, Long idEscola) {
+        if ((cpf == null && matricula == null && nome == null && idEscola == null && idCurso == null)) {
+            throw new IllegalArgumentException("É necessário informar ao menos um filtro adicional (cpf, matricula, nome, idEscola, ou idCurso).");
+        }
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_FILTRAR_DADOS_ALUNO(:pIdConta, :pCpf, :pMatricula, :pNome, :pIdCurso, :pIdEscola)");
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdConta", idConta);
+        query.setParameter("pCpf", cpf != null && !cpf.trim().isEmpty() ? limparCaracteresEspeciais(cpf) : null);
+        query.setParameter("pMatricula", matricula != null && !matricula.trim().isEmpty() ? limparCaracteresEspeciais(matricula) : null);
+        query.setParameter("pNome", nome != null && !nome.trim().isEmpty() ? limparCaracteresEspeciais(nome) : null);
+        query.setParameter("pIdCurso", idCurso);
+        query.setParameter("pIdEscola", idEscola);
+
+        List<Object[]> resultList = query.getResultList();
+        return mapResults(resultList);
+    }
+
+    private List<Map<String, Object>> mapResults(List<Object[]> resultList) {
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idAuno", result[0]);
+            resultMap.put("aluno", result[1]);
+            resultMap.put("nomeCompleto", result[2]);
+            resultMap.put("cpf", result[3]);
+            resultMap.put("idEscola", result[4]);
+            resultMap.put("nomeEscola", result[5]);
+            resultMap.put("idCurso", result[6]);
+            resultMap.put("nome", result[7]);
+            resultMap.put("idSerie", result[8]);
+            resultMap.put("serie", result[9]);
+            resultMap.put("idTurno", result[10]);
+            resultMap.put("turno", result[11]);
+            resultMap.put("idSituacaoAluno", result[12]);
+            resultMap.put("situacaoAluno", result[13]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+
+    public String limparCaracteresEspeciais(String valor) {
+        if (valor != null) {
+            return valor.replaceAll("[^a-zA-Z0-9]", "").trim();
+        }
+        return null;
+    }
    
 }

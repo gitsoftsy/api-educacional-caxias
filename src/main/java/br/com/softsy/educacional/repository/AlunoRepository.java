@@ -37,5 +37,20 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 	@Procedure(name = "PROC_FILTRAR_ALUNOS")
 	List<Object[]> filtrarAlunos(@Param("P_MATRICULA") Long matricula, @Param("P_NOME") String nome,
 			@Param("P_CPF") String cpf, @Param("P_ID_ESCOLA") Long idEscola, @Param("P_ID_CURSO") Long idCurso);
+	
+	@Procedure(name = "PROC_DISCIPLINAS_DISPONIVEIS_PREMATRICULA")
+	List<Object[]> listarDisciplinasDisponivesPrematrcula(@Param("P_ID_ALUNO") Long idAluno,
+			@Param("P_ID_SERIE ") Long idSerie,
+			@Param("P_ID_PERIODO_LETIVO ") Long idPeriodoLetivo,
+			@Param("P_ID_ESCOLA  ") Long idEscola);
+	
+	@Procedure(name = "PROC_FILTRAR_DADOS_ALUNO")
+	List<Object[]> filtrarDadosAluno(@Param("P_ID_CONTA") Long idConta,
+			@Param("P_CPF") String cpf,
+			@Param("P_MATRICULA") String matricula,
+			@Param("P_NOME") String nome,
+			@Param("P_ID_CURSO") Long idCurso,
+			@Param("P_ID_ESCOLA") Long  idEscola);
+ 
 
 }
