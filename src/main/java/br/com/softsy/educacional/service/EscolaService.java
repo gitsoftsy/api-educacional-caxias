@@ -292,13 +292,6 @@ public class EscolaService {
 		
 	}
 	
-//	@Transactional
-//	private void validarCnpjUnico(String cnpj) {
-//		Optional<Escola> cnpjExistente = repository.findEscolaByCnpj(cnpj).stream().findFirst();
-//		if(cnpjExistente.isPresent()) {
-//			throw new UniqueException("Já existe uma escola com esse CNPJ");
-//		}
-//	}
 	
 	@Transactional
 	private void validarCodigoInepUnico(String codigoInep) {
@@ -309,12 +302,71 @@ public class EscolaService {
 	}
 	
 	public void atualizaDados(Escola destino, CadastroEscolaDTO origem) {
-		BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro", "idEscola","localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
-		Conta conta = contaRepository.findById(origem.getContaId())
-                .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
-		destino.setConta(conta);
-		destino.setLogoEscola(origem.getLogoEscola());
+	    Localizacao localizacao = null;
+	    if (origem.getLocalizacaoId() != null) {
+	        localizacao = localizacaoRepository.findById(origem.getLocalizacaoId())
+	                .orElseThrow(() -> new IllegalArgumentException("Localização não encontrada"));
+	    }
+
+	    DependenciaAdministrativa dependenciaAdm = null;
+	    if (origem.getDependenciaAdmId() != null) {
+	        dependenciaAdm = dependenciaRepository.findById(origem.getDependenciaAdmId())
+	                .orElseThrow(() -> new IllegalArgumentException("Dependência ADM não encontrada"));
+	    }
+
+	    Conta conta = contaRepository.findById(origem.getContaId())
+	            .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+
+	    SituacaoFuncionamento situacaoFuncionamento = null;
+	    if (origem.getSituacaoFuncionamentoId() != null) {
+	        situacaoFuncionamento = situacaoRepository.findById(origem.getSituacaoFuncionamentoId())
+	                .orElseThrow(() -> new IllegalArgumentException("Situação de funcionamento não encontrada"));
+	    }
+
+	    FormaOcupacaoPredio formaOcupacao = null;
+	    if (origem.getFormaOcupacaoPredioId() != null) {
+	        formaOcupacao = formaRepository.findById(origem.getFormaOcupacaoPredioId())
+	                .orElseThrow(() -> new IllegalArgumentException("Forma de ocupação não encontrada"));
+	    }
+
+	    Zoneamento zoneamento = null;
+	    if (origem.getZoneamentoId() != null) {
+	        zoneamento = zoneamentoRepository.findById(origem.getZoneamentoId())
+	                .orElseThrow(() -> new IllegalArgumentException("Zoneamento não encontrado"));
+	    }
+
+	    CategoriaEscolaPrivada categoriaEscolaPrivada = null;
+	    if (origem.getCategoriaEscolaPrivadaId() != null) {
+	        categoriaEscolaPrivada = categoriaEscolaPrivadaRepository.findById(origem.getCategoriaEscolaPrivadaId())
+	                .orElseThrow(() -> new IllegalArgumentException("Categoria de escola privada não encontrada"));
+	    }
+
+	    EntidadeSuperior entidadeSuperior = null;
+	    if (origem.getEntidadeSuperiorId() != null) {
+	        entidadeSuperior = entidadeSuperiorRepository.findById(origem.getEntidadeSuperiorId())
+	                .orElseThrow(() -> new IllegalArgumentException("Entidade superior não encontrada"));
+	    }
+
+	    OrgaoPublico orgaoPublico = null;
+	    if (origem.getOrgaoPublicoId() != null) {
+	        orgaoPublico = orgaoRepository.findById(origem.getOrgaoPublicoId())
+	                .orElseThrow(() -> new IllegalArgumentException("Órgão público não encontrado"));
+	    }
+
+	    BeanUtils.copyProperties(origem, destino, "ativo", "dataCadastro", "idEscola", "localizacaoId", "dependenciaAdmId", "situacaoFuncionamentoId", "formaOcupacaoPredioId", "entidadeSuperiorId", "zoneamentoId", "categoriaEscolaPrivadaId", "orgaoPublicoId");
+
+	    destino.setLocalizacao(localizacao);
+	    destino.setDependenciaAdm(dependenciaAdm);
+	    destino.setSituacaoFuncionamento(situacaoFuncionamento);
+	    destino.setFormaOcupacaoPredio(formaOcupacao);
+	    destino.setZoneamento(zoneamento);
+	    destino.setCategoriaEscolaPrivada(categoriaEscolaPrivada);
+	    destino.setEntidadeSuperior(entidadeSuperior);
+	    destino.setOrgaoPublico(orgaoPublico);
+	    destino.setConta(conta);
+	    destino.setLogoEscola(origem.getLogoEscola());
 	}
+
 	
 	public List<Map<String, Object>> listaEscolasUsuario(Long idUsuario, Long idConta) {
         List<Object[]> resultList = repository.listaEscolasUsuario(idUsuario, idConta);

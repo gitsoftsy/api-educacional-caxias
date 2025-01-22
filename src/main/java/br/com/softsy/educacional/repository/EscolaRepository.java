@@ -29,7 +29,6 @@ public interface EscolaRepository extends JpaRepository<Escola, Long>{
 
     Optional<List<Escola>> findActiveSchoolsByConta_IdContaAndAtivo(Long idConta, Character ativo);
     
-
     Optional<List<Escola>> findByConta_IdContaAndTurma_PeriodoLetivo_IdPeriodoLetivo(Long idConta, Long idPeriodoLetivo);
     
 }

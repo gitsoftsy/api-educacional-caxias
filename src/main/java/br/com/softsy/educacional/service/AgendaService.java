@@ -1,7 +1,13 @@
 package br.com.softsy.educacional.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +28,9 @@ public class AgendaService {
 
     @Autowired
     private TurmaRepository turmaRepository;
+    
+    @Autowired
+    private EntityManager entityManager;
 
     @Transactional(readOnly = true)
     public List<AgendaDTO> listarTudo() {
@@ -58,6 +67,36 @@ public class AgendaService {
         agenda.setTurma(turma);
         agenda.setAtivo('S');
         return agenda;
+    }
+    
+    public List<Map<String, Object>> listarAgendaPorTurmaEConta(Long idTurma, Long idConta) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTAR_AGENDA_POR_TURMA_E_CONTA(:pIdTurma, :pIdConta)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdTurma", idTurma);
+        query.setParameter("pIdConta", idConta);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idAgenda", result[0]);
+            resultMap.put("idTurma", result[1]);
+            resultMap.put("dataAgenda", result[2]);
+            resultMap.put("horaInicio", result[3]);
+            resultMap.put("horaFim", result[4]);
+            resultMap.put("realizada", result[5]);
+            resultMap.put("tituloAula", result[6]);
+            resultMap.put("resumoAula", result[7]);
+            resultMap.put("ativo", result[8]);
+            resultMap.put("observacao", result[9]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
     }
 
     private void atualizaDados(Agenda destino, AgendaDTO origem) {
