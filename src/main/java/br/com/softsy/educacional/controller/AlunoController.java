@@ -104,8 +104,8 @@ public class AlunoController {
 		return result;
 	}
 
-	@GetMapping("/filtrar")
-	public ResponseEntity<AllResponse> filtrarAlunos(
+	@GetMapping("/{idConta}/filtrar")
+	public ResponseEntity<AllResponse> filtrarAlunos(@PathVariable(value = "idConta") Long idConta,
 			@RequestParam(value = "matricula", required = false) Long matricula,
 			@RequestParam(value = "nome", required = false) String nome,
 			@RequestParam(value = "cpf", required = false) String cpf,
@@ -141,54 +141,26 @@ public class AlunoController {
 		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
 	}
 	
-	  @GetMapping("/disciplinasDispPreMatr")
-	    public Object listarDisciplinasDisponiveisPreMatricula(
-	            @RequestParam(value = "idAluno", required = false) Long idAluno,
-	            @RequestParam(value = "idSerie", required = false) Long idSerie,
-	            @RequestParam(value = "idPeriodoLetivo", required = false) Long idPeriodoLetivo,
-	            @RequestParam(value = "idEscola", required = false) Long idEscola) {
-	 
-	        if (idAluno == null || idSerie == null || idPeriodoLetivo == null) {
-	            return "Por favor, informe todos os parâmetros obrigatórios na requisição: idAluno, idSerie e idPeriodoLetivo.";
-	        }
-	 
-	        List<Map<String, Object>> result = alunoService.listarDisciplinasDisponivesPrematrcula(
-	                idAluno, idSerie, idPeriodoLetivo, idEscola);
-	 
-	        if (result.isEmpty()) {
-	            return "Nenhum resultado encontrado para os parâmetros informados.";
-	        }
-	 
-	        return result;
-	    }
-	  
-	  @GetMapping("busca")
-	  public Object filtrarDadosAluno(
-	          @RequestParam(value = "idConta", required = true) Long idConta,
-	          @RequestParam(value = "cpf", required = false) String cpf,
-	          @RequestParam(value = "matricula", required = false) String matricula,
-	          @RequestParam(value = "nome", required = false) String nome,
-	          @RequestParam(value = "idCurso", required = false) Long idCurso,
-	          @RequestParam(value = "idEscola", required = false) Long idEscola) {
 
-	      boolean hasAdditionalFilter = 
-	          (cpf != null && !cpf.trim().isEmpty()) ||
-	          (matricula != null && !matricula.trim().isEmpty()) ||
-	          (nome != null && !nome.trim().isEmpty()) ||
-	          idEscola != null ||
-	          idCurso != null;
+	@GetMapping("/disciplinasDispPreMatr")
+	public Object listarDisciplinasDisponiveisPreMatricula(
+			@RequestParam(value = "idAluno", required = false) Long idAluno,
+			@RequestParam(value = "idSerie", required = false) Long idSerie,
+			@RequestParam(value = "idPeriodoLetivo", required = false) Long idPeriodoLetivo,
+			@RequestParam(value = "idEscola", required = false) Long idEscola) {
 
-	      if (!hasAdditionalFilter) {
-	          return ResponseEntity.badRequest().body("É necessário informar ao menos um filtro adicional além de idConta.");
-	      }
+		if (idAluno == null || idSerie == null || idPeriodoLetivo == null) {
+			return "Por favor, informe todos os parâmetros obrigatórios na requisição: idAluno, idSerie e idPeriodoLetivo.";
+		}
 
-	      List<Map<String, Object>> result = alunoService.filtrarDadosAluno(idConta, cpf, matricula, nome, idCurso, idEscola);
+		List<Map<String, Object>> result = alunoService.listarDisciplinasDisponivesPrematrcula(idAluno, idSerie,
+				idPeriodoLetivo, idEscola);
 
-	      if (result.isEmpty()) {
-	            return "Nenhum resultado encontrado para os parâmetros informados.";
-	        }
-	 
-	        return result;
-	  }
+		if (result.isEmpty()) {
+			return "Nenhum resultado encontrado para os parâmetros informados.";
+		}
+
+		return result;
+	}
 
 }

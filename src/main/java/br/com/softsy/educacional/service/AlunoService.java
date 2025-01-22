@@ -292,7 +292,7 @@ public class AlunoService {
         query.executeUpdate();
     }
 
-    
+  
     public List<Map<String, Object>> filtrarAlunos(Long matricula, String nome, String cpf, Long idEscola, Long idCurso) {
         StringBuilder sql = new StringBuilder();
         sql.append("CALL PROC_FILTRAR_ALUNOS(:pMatricula, :pNome, :pCpf, :pIdEscola, :pIdCurso)");
@@ -363,26 +363,7 @@ public class AlunoService {
  
         return mappedResultList;
     }
- 
-    public List<Map<String, Object>> filtrarDadosAluno(Long idConta, String cpf, String matricula, String nome, Long idCurso, Long idEscola) {
-        if ((cpf == null && matricula == null && nome == null && idEscola == null && idCurso == null)) {
-            throw new IllegalArgumentException("É necessário informar ao menos um filtro adicional (cpf, matricula, nome, idEscola, ou idCurso).");
-        }
 
-        StringBuilder sql = new StringBuilder();
-        sql.append("CALL PROC_FILTRAR_DADOS_ALUNO(:pIdConta, :pCpf, :pMatricula, :pNome, :pIdCurso, :pIdEscola)");
-        Query query = entityManager.createNativeQuery(sql.toString());
-
-        query.setParameter("pIdConta", idConta);
-        query.setParameter("pCpf", cpf != null && !cpf.trim().isEmpty() ? limparCaracteresEspeciais(cpf) : null);
-        query.setParameter("pMatricula", matricula != null && !matricula.trim().isEmpty() ? limparCaracteresEspeciais(matricula) : null);
-        query.setParameter("pNome", nome != null && !nome.trim().isEmpty() ? limparCaracteresEspeciais(nome) : null);
-        query.setParameter("pIdCurso", idCurso);
-        query.setParameter("pIdEscola", idEscola);
-
-        List<Object[]> resultList = query.getResultList();
-        return mapResults(resultList);
-    }
 
     private List<Map<String, Object>> mapResults(List<Object[]> resultList) {
         List<Map<String, Object>> mappedResultList = new ArrayList<>();
