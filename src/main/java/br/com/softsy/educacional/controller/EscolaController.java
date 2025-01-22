@@ -207,7 +207,6 @@ public class EscolaController {
     }
     
 
-    //certa
     @GetMapping("/{idConta}/porPeriodoLetivo/{idPeriodoLetivo}")
     public ResponseEntity<?> listarEscolasPorContaEPeriodoLetivo(
         @PathVariable String idConta,
