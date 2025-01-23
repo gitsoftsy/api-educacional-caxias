@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -53,6 +54,17 @@ public class NotaController {
     public ResponseEntity<List<NotaDTO>> buscarPorIdAluno(@PathVariable Long idAluno) {
         List<NotaDTO> alunos = service.buscarPorIdAluno(idAluno);
         return ResponseEntity.ok(alunos);
+    }
+    
+    @GetMapping("/conta/{idConta}/matricula/{idAluno}")
+    public Object listarNotasAluno(@PathVariable Long idAluno, Long idConta) throws Exception {
+    	List<Map<String, Object>> result = service.listarNotasAluno(idAluno, idConta);
+		if (result.isEmpty()) {
+			return "Nenhum resultado encontrado para os parâmetros informados.";
+		}
+
+		return result;
+	
     }
 
     @PostMapping
