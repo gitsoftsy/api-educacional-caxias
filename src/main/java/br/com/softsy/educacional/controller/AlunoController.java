@@ -106,7 +106,7 @@ public class AlunoController {
 
 	@GetMapping("/{idConta}/filtrar")
 	public ResponseEntity<AllResponse> filtrarAlunos(@PathVariable(value = "idConta") Long idConta,
-			@RequestParam(value = "matricula", required = false) Long matricula,
+			@RequestParam(value = "matricula", required = false) String matricula,
 			@RequestParam(value = "nome", required = false) String nome,
 			@RequestParam(value = "cpf", required = false) String cpf,
 			@RequestParam(value = "idEscola", required = false) Long idEscola,

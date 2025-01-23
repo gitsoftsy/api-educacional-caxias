@@ -293,7 +293,7 @@ public class AlunoService {
     }
 
   
-    public List<Map<String, Object>> filtrarAlunos(Long matricula, String nome, String cpf, Long idEscola, Long idCurso) {
+    public List<Map<String, Object>> filtrarAlunos(String matricula, String nome, String cpf, Long idEscola, Long idCurso) {
         StringBuilder sql = new StringBuilder();
         sql.append("CALL PROC_FILTRAR_ALUNOS(:pMatricula, :pNome, :pCpf, :pIdEscola, :pIdCurso)");
 
