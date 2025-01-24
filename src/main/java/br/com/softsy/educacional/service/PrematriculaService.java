@@ -20,6 +20,7 @@ import br.com.softsy.educacional.dto.CadastroPrematriculaDTO;
 import br.com.softsy.educacional.dto.PrematriculaDTO;
 import br.com.softsy.educacional.model.Aluno;
 import br.com.softsy.educacional.model.Conta;
+import br.com.softsy.educacional.model.DependenciaAdministrativa;
 import br.com.softsy.educacional.model.Disciplina;
 import br.com.softsy.educacional.model.PeriodoLetivo;
 import br.com.softsy.educacional.model.Prematricula;
@@ -131,8 +132,11 @@ public class PrematriculaService {
                 .orElseThrow(() -> new IllegalArgumentException("Período Letivo não encontrado"));
         Disciplina disciplina = disciplinaRepository.findById(dto.getDisciplinaId())
                 .orElseThrow(() -> new IllegalArgumentException("Disciplina não encontrada"));
-        Turma turma = turmaRepository.findById(dto.getTurmaId())
-                .orElseThrow(() -> new IllegalArgumentException("Turma não encontrada"));
+        Turma turma = null;
+		if (dto.getTurmaId() != null) {
+			turma = turmaRepository.findById(dto.getTurmaId())
+					.orElseThrow(() -> new IllegalArgumentException("Turma não encontrada"));
+		}
         Serie serie = serieRepository.findById(dto.getSerieId())
                 .orElseThrow(() -> new IllegalArgumentException("Série não encontrada"));
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())

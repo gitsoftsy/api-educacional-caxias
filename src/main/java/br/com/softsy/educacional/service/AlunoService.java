@@ -14,12 +14,14 @@ import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.AlunoDTO;
 import br.com.softsy.educacional.dto.CadastroAlunoDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
+import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.model.Aluno;
 import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.repository.AlunoRepository;
@@ -33,6 +35,7 @@ import br.com.softsy.educacional.repository.SerieRepository;
 import br.com.softsy.educacional.repository.SituacaoAlunoRepository;
 import br.com.softsy.educacional.repository.TipoMatriculaRepository;
 import br.com.softsy.educacional.repository.TurnoRepository;
+
 
 @Service
 public class AlunoService {
@@ -244,6 +247,34 @@ public class AlunoService {
         return mappedResultList;
     }
     
+    public List<Map<String, Object>> listarAlunosTurmaProva(Long idTurma) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTAR_ALUNOS_TURMA_PROVAS(:pIdTurma)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+        query.setParameter("pIdTurma", idTurma);
+     
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idAluno", result[0]);
+            resultMap.put("aluno", result[1]);
+            resultMap.put("nomeCompleto", result[2]);
+            resultMap.put("emailInterno", result[3]);
+            resultMap.put("idProva", result[4]);
+            resultMap.put("nomeAbreviado", result[5]);
+            resultMap.put("descricao", result[6]);
+            resultMap.put("conceitoMax", result[7]);
+            resultMap.put("tipoConceito", result[8]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+    
     
     public List<Map<String, Object>> listarTurmaDisciplinaAluno(Long idAluno) {
         StringBuilder sql = new StringBuilder();
@@ -293,7 +324,7 @@ public class AlunoService {
     }
 
   
-    public List<Map<String, Object>> filtrarAlunos(String matricula, String nome, String cpf, Long idEscola, Long idCurso) {
+    public List<Map<String, Object>> filtrarAlunos(String matricula, String nome, String cpf, Long idEscola, Long idCurso) throws Exception {
         StringBuilder sql = new StringBuilder();
         sql.append("CALL PROC_FILTRAR_ALUNOS(:pMatricula, :pNome, :pCpf, :pIdEscola, :pIdCurso)");
 
@@ -304,6 +335,22 @@ public class AlunoService {
         query.setParameter("pCpf", cpf != null ? cpf : null);
         query.setParameter("pIdEscola", idEscola != null ? idEscola : null);
         query.setParameter("pIdCurso", idCurso != null ? idCurso : null);
+        
+		if (matricula == null && nome == null && cpf == null && idEscola == null && idCurso == null) {
+			throw new Exception("É necessário informar ao menos um parâmetro na requisição.");
+		}
+
+		if (nome != null && nome.trim().length() < 3) {
+			throw new Exception("O nome deve ter ao menos 3 caracteres para o filtro.");
+		}
+
+		if (cpf != null) {
+			String cpfLimpo = cpf.replaceAll("[^\\d]", "");
+			if (cpfLimpo.length() < 5) {
+				throw new Exception("O CPF deve ter ao menos 5 caracteres para o filtro.");
+			}
+			cpf = cpfLimpo;
+		}
 
         
         List<Object[]> resultList = query.getResultList();
@@ -314,18 +361,24 @@ public class AlunoService {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("idAluno", result[0]);
             resultMap.put("nomeCompleto", result[1]);
-            resultMap.put("idConta", result[2]);
-            resultMap.put("idCurso", result[3]);
-            resultMap.put("idEscola", result[4]);
-            resultMap.put("idSerie", result[5]);
-            resultMap.put("idTurno", result[6]);
-            resultMap.put("idPessoa", result[7]);
-            resultMap.put("idCandidato", result[8]);
-            resultMap.put("idSituacaoAluno", result[9]);
-            resultMap.put("dtCadastro", result[10]);
-            resultMap.put("nomeAluno", result[11]);
-            resultMap.put("emailInterno", result[12]);
-            resultMap.put("idCurriculo", result[13]);
+            resultMap.put("cpf", result[2]);
+            resultMap.put("idConta", result[3]);
+            resultMap.put("idCurso", result[4]);
+            resultMap.put("idEscola", result[5]);
+            resultMap.put("idSerie", result[6]);
+            resultMap.put("idTurno", result[7]);
+            resultMap.put("idPessoa", result[8]);
+            resultMap.put("idCandidato", result[9]);
+            resultMap.put("idSituacaoAluno", result[10]);
+            resultMap.put("dataCadastro", result[11]);
+            resultMap.put("aluno", result[12]);
+            resultMap.put("emailInterno", result[13]);
+            resultMap.put("idCurriculo", result[14]);
+            resultMap.put("nomeEscola", result[15]);
+            resultMap.put("nomeCurso", result[16]);
+            resultMap.put("serie", result[17]);
+            resultMap.put("turno", result[18]);
+            resultMap.put("situacaoAluno", result[19]);
             mappedResultList.add(resultMap);
         }
 

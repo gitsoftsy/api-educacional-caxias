@@ -88,6 +88,25 @@ public class AlunoController {
 
 		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
 	}
+	
+	@GetMapping("/prova/listarAluno")
+	public ResponseEntity<AllResponse> listarAlunoTurmaProva(
+			@RequestParam(value = "idTurma", required = false) Long idTurma) {
+
+		if (idTurma == null) {
+			return ResponseEntity.badRequest()
+					.body(new AllResponse("Por favor, informe o parâmetro na requisição.", new ArrayList<>()));
+		}
+
+		List<Map<String, Object>> result = alunoService.listarAlunosTurmaProva(idTurma);
+
+		if (result.isEmpty()) {
+			return ResponseEntity
+					.ok(new AllResponse("Não existem resultados para essa requisição.", new ArrayList<>()));
+		}
+
+		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+	}
 
 	@GetMapping("/turmaDisciplina")
 	public Object listarTurmaDiscipliaAluno(@RequestParam(value = "idAluno", required = false) Long idAluno) {
@@ -110,26 +129,8 @@ public class AlunoController {
 			@RequestParam(value = "nome", required = false) String nome,
 			@RequestParam(value = "cpf", required = false) String cpf,
 			@RequestParam(value = "idEscola", required = false) Long idEscola,
-			@RequestParam(value = "idCurso", required = false) Long idCurso) {
+			@RequestParam(value = "idCurso", required = false) Long idCurso) throws Exception {
 
-		if (matricula == null && nome == null && cpf == null && idEscola == null && idCurso == null) {
-			return ResponseEntity.badRequest().body(
-					new AllResponse("Por favor, informe ao menos um parâmetro na requisição.", new ArrayList<>()));
-		}
-
-		if (nome != null && nome.trim().length() < 3) {
-			return ResponseEntity.badRequest()
-					.body(new AllResponse("O nome deve ter ao menos 3 caracteres para o filtro.", new ArrayList<>()));
-		}
-
-		if (cpf != null) {
-			String cpfLimpo = cpf.replaceAll("[^\\d]", "");
-			if (cpfLimpo.length() < 5) {
-				return ResponseEntity.badRequest().body(
-						new AllResponse("O CPF deve ter ao menos 5 caracteres para o filtro.", new ArrayList<>()));
-			}
-			cpf = cpfLimpo;
-		}
 
 		List<Map<String, Object>> result = alunoService.filtrarAlunos(matricula, nome, cpf, idEscola, idCurso);
 
@@ -144,23 +145,21 @@ public class AlunoController {
 
 	@GetMapping("/disciplinasDispPreMatr")
 	public Object listarDisciplinasDisponiveisPreMatricula(
-			@RequestParam(value = "idAluno", required = false) Long idAluno,
-			@RequestParam(value = "idSerie", required = false) Long idSerie,
-			@RequestParam(value = "idPeriodoLetivo", required = false) Long idPeriodoLetivo,
+			@RequestParam(value = "idAluno", required = true) Long idAluno,
+			@RequestParam(value = "idSerie", required = true) Long idSerie,
+			@RequestParam(value = "idPeriodoLetivo", required = true) Long idPeriodoLetivo,
 			@RequestParam(value = "idEscola", required = false) Long idEscola) {
 
-		if (idAluno == null || idSerie == null || idPeriodoLetivo == null) {
-			return "Por favor, informe todos os parâmetros obrigatórios na requisição: idAluno, idSerie e idPeriodoLetivo.";
-		}
 
 		List<Map<String, Object>> result = alunoService.listarDisciplinasDisponivesPrematrcula(idAluno, idSerie,
 				idPeriodoLetivo, idEscola);
 
 		if (result.isEmpty()) {
-			return "Nenhum resultado encontrado para os parâmetros informados.";
+			return ResponseEntity
+			.ok(new AllResponse("Não existem resultados para essa requisição.", new ArrayList<>()));
 		}
 
-		return result;
+		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
 	}
 
 }

@@ -199,4 +199,28 @@ public class TurnoController {
 		service.ativarDesativar('N', idTurno);
 		return ResponseEntity.ok().build();
 	}
+	
+	@GetMapping("/prematricula")
+	public ResponseEntity<AllResponse> listarTurnoPorPeriodoSerieDisciplinaEscola(
+			@RequestParam(value = "idPeriodoLetivo", required = false) Long idPeriodoLetivo,
+			@RequestParam(value = "idEscola", required = false) Long idEscola,
+			@RequestParam(value = "idDisciplina", required = false) Long idDisciplina,
+			@RequestParam(value = "idSerie", required = false) Long idSerie
+	)
+	{
+ 
+		if (idPeriodoLetivo == null && idEscola == null && idDisciplina == null && idSerie == null) {
+			return ResponseEntity.badRequest()
+					.body(new AllResponse("Por favor, informe o parâmetro na requisição.", new ArrayList<>()));
+		}
+ 
+		List<Map<String, Object>> result = service.listarTurnoPorPeriodoSerieDisciplinaEscola(idPeriodoLetivo, idEscola, idDisciplina, idSerie);
+ 
+		if (result.isEmpty()) {
+			return ResponseEntity
+					.ok(new AllResponse("Não existem resultados para essa requisição.", new ArrayList<>()));
+		}
+ 
+		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+	}
 }

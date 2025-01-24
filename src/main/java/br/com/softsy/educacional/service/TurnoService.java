@@ -1,8 +1,14 @@
 package br.com.softsy.educacional.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +36,9 @@ public class TurnoService {
 
 	@Autowired
 	private ContaRepository contaRepository;
+	
+	@Autowired
+	private EntityManager entityManager;
 
 	public List<TurnoDTO> listarTudo() {
 		List<Turno> turnos = repository.findAll();
@@ -99,6 +108,33 @@ public class TurnoService {
 		Conta conta = contaRepository.findById(origem.getContaId())
 				.orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
 		destino.setConta(conta);
+	}
+	
+	public List<Map<String, Object>> listarTurnoPorPeriodoSerieDisciplinaEscola(Long idPeriodoLetivo, Long idEscola, Long idDisciplina, Long idSerie) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("CALL PROC_LSA_TURNO_POR_PERIODO_SERIE_DISCIPLINA_ESCOLA(:pIdPeriodoLetivo, :pIdEscola, :pIdDisciplina, :pIdSerie)");
+ 
+		Query query = entityManager.createNativeQuery(sql.toString());
+ 
+		query.setParameter("pIdPeriodoLetivo", idPeriodoLetivo);
+		query.setParameter("pIdEscola", idEscola);
+		query.setParameter("pIdDisciplina", idDisciplina);
+		query.setParameter("pIdSerie", idSerie);
+ 
+ 
+		List<Object[]> resultList = query.getResultList();
+		List<Map<String, Object>> mappedResultList = new ArrayList<>();
+ 
+		for (Object[] result : resultList) {
+			Map<String, Object> resultMap = new HashMap<>();
+			resultMap.put("idTurno", result[0]);
+			resultMap.put("mnemonico", result[1]);
+			resultMap.put("turno", result[2]);
+ 
+			mappedResultList.add(resultMap);
+		}
+ 
+		return mappedResultList;
 	}
 
 }

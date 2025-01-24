@@ -35,5 +35,13 @@ public interface EscolaRepository extends JpaRepository<Escola, Long> {
 	@Procedure(name = "PROC_LISTAR_ESCOLAS_CONTA_PERIODO_LETIVO")
 	List<Object[]> filtrarEscolaPorPeriodoLetivo(@Param("P_ID_CONTA") Long idConta,
 			@Param("P_ID_PERIODO_LETIVO") Long idPeriodoLetivo);
+	
+	@Procedure(name = "PROC_LSA_ESCOLA_POR_PERIODO_SERIE_DISCIPLINA_TURNO")
+	List<Object[]> listarEscolaporPeriodoSerieDisciplinaTurno(
+			@Param("P_ID_PERIODO_LETIVO") Long idPeriodoLetivo,
+			@Param("P_ID_TURNO") Long idTurno,
+			@Param("P_ID_DISCIPLINA") Long idDisciplina,
+			@Param("P_ID_SERIE") Long idSerie
+			);
 
 }

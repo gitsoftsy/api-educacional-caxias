@@ -48,7 +48,7 @@ public class CadastroPrematriculaDTO {
 	        this.alunoId = prematricula.getAluno().getIdAluno();
 	        this.periodoLetivoId = prematricula.getPeriodoLetivo().getIdPeriodoLetivo();
 	        this.disciplinaId = prematricula.getDisciplina().getIdDisciplina();
-	        this.turmaId = prematricula.getTurma().getIdTurma();
+	        this.turmaId = prematricula.getTurma()!= null ? prematricula.getTurma().getIdTurma() : null;
 	        this.serieId = prematricula.getSerie().getIdSerie();
 	        this.mensagemErro = prematricula.getMensagemErro();
 	        this.manual = prematricula.getManual();

@@ -188,6 +188,32 @@ public class EscolaService {
 
 		return mappedResultList;
 	}
+	
+	public List<Map<String, Object>> listarEscolaporPeriodoSerieDisciplinaTurno(Long idPeriodoLetivo, Long idTurno, Long idDisciplina, Long idSerie) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("CALL PROC_LSA_ESCOLA_POR_PERIODO_SERIE_DISCIPLINA_TURNO(:pIdPeriodoLetivo, :pIdTurno, :pIdDisciplina, :pIdSerie)");
+
+		Query query = entityManager.createNativeQuery(sql.toString());
+
+		query.setParameter("pIdPeriodoLetivo", idPeriodoLetivo);
+		query.setParameter("pIdTurno", idTurno);
+		query.setParameter("pIdDisciplina", idDisciplina);
+		query.setParameter("pIdSerie", idSerie);
+
+
+		List<Object[]> resultList = query.getResultList();
+		List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+		for (Object[] result : resultList) {
+			Map<String, Object> resultMap = new HashMap<>();
+			resultMap.put("idEscola", result[0]); 
+			resultMap.put("nomeEscola", result[1]); 
+
+			mappedResultList.add(resultMap);
+		}
+
+		return mappedResultList;
+	}
 
 	@Transactional
 	public CadastroEscolaDTO salvar(CadastroEscolaDTO dto) throws IOException {

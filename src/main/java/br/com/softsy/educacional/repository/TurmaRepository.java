@@ -50,5 +50,14 @@ public interface TurmaRepository extends JpaRepository<Turma, Long> {
 
 	@Procedure(name = "PROC_LISTA_TURNO_PERIODO_LETIVO")
 	List<Object[]> listarTurnosPorPeriodoLetivo(@Param("P_ID_PERIODO_LETIVO") Long idPeriodoLetivo);
+	
+	@Procedure(name = "PROC_LST_TURMA_POR_PERIODO_TURNO_ESCOLA_DISCI_SERIE")
+	List<Object[]> listarTurmaPorPeriodoTurnoEscolaDisciSerie(
+			@Param("P_ID_PERIODO_LETIVO") Long idPeriodoLetivo,
+			@Param("P_ID_SERIE ") Long idSerie,
+			@Param("P_ID_DISCIPLINA ") Long idDisciplina,
+			@Param("P_ID_ESCOLA  ") Long idEscola,
+			@Param("P_ID_TURNO  ") Long idTurno
+			);
 
 }

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -213,4 +214,29 @@ public class EscolaController {
 		response.put("data", result);
 		return ResponseEntity.ok(response);
 	}
+	
+	@GetMapping("/prematricula")
+	public ResponseEntity<AllResponse> listarEscolaporPeriodoSerieDisciplinaTurno(
+			@RequestParam(value = "idPeriodoLetivo", required = false) Long idPeriodoLetivo,
+			@RequestParam(value = "idTurno", required = false) Long idTurno,
+			@RequestParam(value = "idDisciplina", required = false) Long idDisciplina,
+			@RequestParam(value = "idSerie", required = false) Long idSerie
+	)
+	{
+
+		if (idPeriodoLetivo == null && idTurno == null && idDisciplina == null && idSerie == null) {
+			return ResponseEntity.badRequest()
+					.body(new AllResponse("Por favor, informe o parâmetro na requisição.", new ArrayList<>()));
+		}
+
+		List<Map<String, Object>> result = service.listarEscolaporPeriodoSerieDisciplinaTurno(idPeriodoLetivo, idTurno, idDisciplina, idSerie);
+
+		if (result.isEmpty()) {
+			return ResponseEntity
+					.ok(new AllResponse("Não existem resultados para essa requisição.", new ArrayList<>()));
+		}
+
+		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+	}
+
 }
