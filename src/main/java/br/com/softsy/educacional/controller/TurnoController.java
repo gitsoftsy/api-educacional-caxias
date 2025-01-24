@@ -27,6 +27,7 @@ import br.com.softsy.educacional.dto.CursoDTO;
 import br.com.softsy.educacional.dto.TurnoDTO;
 import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.service.TurnoService;
+import br.com.softsy.educacional.service.TurmaService;
 
 @RestController
 @RequestMapping("/turno")
@@ -34,6 +35,9 @@ public class TurnoController {
 
 	@Autowired
 	private TurnoService service;
+
+	@Autowired
+	private TurmaService turmaService;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -123,7 +127,6 @@ public class TurnoController {
 		return ResponseEntity.ok(turno);
 	}
 
-	
 	@GetMapping("ativos/conta/{idConta}")
 	public ResponseEntity<?> listarTurnosContaAtiva(@PathVariable String idConta) {
 		try {
@@ -142,7 +145,34 @@ public class TurnoController {
 			return ResponseEntity.badRequest().body(new AllResponse(e.getMessage(), new ArrayList<>()));
 		}
 	}
-	
+
+	@GetMapping("porPeriodoLetivo/{idPeriodoLetivo}")
+	public ResponseEntity<?> listarTurnosPorPeriodoLetivo(@PathVariable String idPeriodoLetivo) {
+		try {
+
+			Long id = Long.parseLong(idPeriodoLetivo);
+			if (id <= 0) {
+				return ResponseEntity.badRequest().body(new AllResponse(
+						"O idPeriodoLetivo não pode ser um número negativo ou zero!", new ArrayList<>()));
+			}
+
+			List<Map<String, Object>> turnos = turmaService.listarTurnosPorPeriodoLetivo(id);
+
+			return ResponseEntity.ok(turnos);
+
+		} catch (NumberFormatException e) {
+
+			return ResponseEntity.badRequest()
+					.body(new AllResponse("O valor de idPeriodoLetivo deve ser um número válido.", new ArrayList<>()));
+		} catch (IllegalArgumentException e) {
+
+			return ResponseEntity.badRequest().body(new AllResponse(e.getMessage(), new ArrayList<>()));
+		} catch (Exception e) {
+
+			return ResponseEntity.status(500)
+					.body(new AllResponse("Ocorreu um erro inesperado ao processar a solicitação.", new ArrayList<>()));
+		}
+	}
 
 	@PostMapping
 	public ResponseEntity<TurnoDTO> cadastrar(@RequestBody @Valid TurnoDTO dto) {

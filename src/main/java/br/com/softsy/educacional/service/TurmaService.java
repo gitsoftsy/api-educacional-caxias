@@ -395,6 +395,31 @@ public class TurmaService {
         return mappedResultList;
     }
     
+    public List<Map<String, Object>> listarTurnosPorPeriodoLetivo(Long idPeriodoLetivo) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_LISTA_TURNO_PERIODO_LETIVO(:pIdPeriodoLetivo)");
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pIdPeriodoLetivo", idPeriodoLetivo);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idTurno", result[0]);
+            resultMap.put("mnemonico", result[1]);
+            resultMap.put("turno", result[2]);
+            resultMap.put("horaInicio", result[3]);
+            resultMap.put("horaFim", result[4]);
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+
+    
+    
     
     
 }
