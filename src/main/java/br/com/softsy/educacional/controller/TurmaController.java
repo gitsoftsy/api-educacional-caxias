@@ -199,30 +199,29 @@ public class TurmaController {
         return ResponseEntity.ok().build();
     }
     
-	@GetMapping("/prematricula")
-	public ResponseEntity<AllResponse> listarTurmaPorPeriodoTurnoEscolaDisciSerie(
-			@RequestParam(value = "idPeriodoLetivo", required = false) Long idPeriodoLetivo,
-			@RequestParam(value = "idSerie", required = false) Long idSerie,
-			@RequestParam(value = "idDisciplina", required = false) Long idDisciplina,
-			@RequestParam(value = "idEscola", required = false) Long idEscola,
-			@RequestParam(value = "idTurno", required = false) Long idTurno
-	)
-	{
+    @GetMapping("/filtroTurma")
+    public ResponseEntity<Object> listarTurmaPorPeriodoTurnoEscolaDisciSerie(
+            @RequestParam(value = "ano", required = false) Integer ano, 
+            @RequestParam(value = "idPeriodoLetivo", required = false) Long idPeriodoLetivo,
+            @RequestParam(value = "idEscola", required = false) Long idEscola,
+            @RequestParam(value = "idDisciplina", required = false) Long idDisciplina
+    ) {
+        if (ano == null && idPeriodoLetivo == null && idEscola == null && idDisciplina == null) {
+            return ResponseEntity.badRequest()
+                    .body(Collections.singletonMap("mensagem", "Por favor, informe ao menos um parâmetro na requisição."));
+        }
 
-		if (idPeriodoLetivo == null && idEscola == null && idDisciplina == null && idSerie == null && idTurno == null) {
-			return ResponseEntity.badRequest()
-					.body(new AllResponse("Por favor, informe o parâmetro na requisição.", new ArrayList<>()));
-		}
+        List<Map<String, Object>> result = turmaService.listarTurmaPorAnoPeriodoLetivoEscolaDisciplina(
+                ano, idEscola, idPeriodoLetivo, idDisciplina);
 
-		List<Map<String, Object>> result = turmaService.listarTurmaPorPeriodoTurnoEscolaDisciSerie(idPeriodoLetivo, idSerie, idDisciplina, idEscola, idTurno);
+        if (result.isEmpty()) {
+            return ResponseEntity.ok(Collections.singletonMap("mensagem", "Nenhum resultado encontrado para os parâmetros informados."));
+        }
 
-		if (result.isEmpty()) {
-			return ResponseEntity
-					.ok(new AllResponse("Não existem resultados para essa requisição.", new ArrayList<>()));
-		}
+        return ResponseEntity.ok(result);
+    }
 
-		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
-	}
+
 
     
 }

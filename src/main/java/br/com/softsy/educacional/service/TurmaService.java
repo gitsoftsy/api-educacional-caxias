@@ -438,6 +438,34 @@ public class TurmaService {
 		return mappedResultList;
 	}
     
+    public List<Map<String, Object>> listarTurmaPorAnoPeriodoLetivoEscolaDisciplina(
+            Integer ano, Long idEscola, Long idPeriodoLetivo, Long idDisciplina) {
+        StringBuilder sql = new StringBuilder();
+        sql.append("CALL PROC_FILTRAR_TURMA_DISCIPLINAS_ANO(:pAno, :pIdEscola, :pIdPeriodoLetivo, :pIdDisciplina)");
+
+        Query query = entityManager.createNativeQuery(sql.toString());
+
+        query.setParameter("pAno", ano);
+        query.setParameter("pIdEscola", idEscola);
+        query.setParameter("pIdPeriodoLetivo", idPeriodoLetivo);
+        query.setParameter("pIdDisciplina", idDisciplina);
+
+        List<Object[]> resultList = query.getResultList();
+        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+
+        for (Object[] result : resultList) {
+            Map<String, Object> resultMap = new HashMap<>();
+            resultMap.put("idTurma", result[0]);
+            resultMap.put("nomeTurma", result[1]);
+            resultMap.put("codTurmaInep", result[2]);
+
+            mappedResultList.add(resultMap);
+        }
+
+        return mappedResultList;
+    }
+
+    
     
     
 }
