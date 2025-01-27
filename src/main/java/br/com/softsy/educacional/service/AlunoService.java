@@ -3,6 +3,7 @@ package br.com.softsy.educacional.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,14 +15,12 @@ import javax.persistence.Query;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.AlunoDTO;
 import br.com.softsy.educacional.dto.CadastroAlunoDTO;
 import br.com.softsy.educacional.infra.config.PasswordEncrypt;
-import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.model.Aluno;
 import br.com.softsy.educacional.model.Candidato;
 import br.com.softsy.educacional.repository.AlunoRepository;
@@ -253,26 +252,36 @@ public class AlunoService {
 
         Query query = entityManager.createNativeQuery(sql.toString());
         query.setParameter("pIdTurma", idTurma);
-     
 
         List<Object[]> resultList = query.getResultList();
-        List<Map<String, Object>> mappedResultList = new ArrayList<>();
+        Map<Long, Map<String, Object>> alunoMap = new LinkedHashMap<>();
 
         for (Object[] result : resultList) {
-            Map<String, Object> resultMap = new HashMap<>();
-            resultMap.put("idAluno", result[0]);
-            resultMap.put("aluno", result[1]);
-            resultMap.put("nomeCompleto", result[2]);
-            resultMap.put("emailInterno", result[3]);
-            resultMap.put("idProva", result[4]);
-            resultMap.put("nomeAbreviado", result[5]);
-            resultMap.put("descricao", result[6]);
-            resultMap.put("conceitoMax", result[7]);
-            resultMap.put("tipoConceito", result[8]);
-            mappedResultList.add(resultMap);
+            Long idAluno = ((Number) result[0]).longValue();
+
+            if (!alunoMap.containsKey(idAluno)) {
+                Map<String, Object> alunoData = new LinkedHashMap<>();
+                alunoData.put("idAluno", idAluno);
+                alunoData.put("aluno", result[1]);
+                alunoData.put("nomeCompleto", result[2]);
+                alunoData.put("emailInterno", result[3]);
+                alunoData.put("lstProva", new ArrayList<Map<String, Object>>());
+                alunoMap.put(idAluno, alunoData);
+            }
+
+            Map<String, Object> prova = new LinkedHashMap<>();
+            prova.put("idProva", result[4]);
+            prova.put("nota", result[5]);
+            prova.put("nomeAbreviado", result[6]);
+            prova.put("descricao", result[7]);
+            prova.put("conceitoMax", result[8]);
+            prova.put("tipoConceito", result[9]);
+
+
+            ((List<Map<String, Object>>) alunoMap.get(idAluno).get("lstProva")).add(prova);
         }
 
-        return mappedResultList;
+        return new ArrayList<>(alunoMap.values());
     }
     
     
