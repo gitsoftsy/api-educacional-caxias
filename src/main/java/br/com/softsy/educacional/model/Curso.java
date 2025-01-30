@@ -56,5 +56,7 @@ public class Curso {
 	@JsonIgnore
 	@OneToMany(mappedBy = "curso", cascade = CascadeType.ALL)
 	private Set<OfertaConcurso> ofertaConcurso = new HashSet<>();
+
+
 	
 }

@@ -48,12 +48,6 @@ public class SerieService {
 	}
 
     @Transactional(readOnly = true)
-    public List<SerieDTO> listarTudo() {
-        List<Serie> series = serieRepository.findAll();
-        return series.stream().map(SerieDTO::new).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
     public SerieDTO buscarPorId(Long id) {
         Serie serie = serieRepository.getReferenceById(id);
         return new SerieDTO(serie);

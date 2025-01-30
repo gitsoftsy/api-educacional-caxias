@@ -53,11 +53,6 @@ public class SerieController {
         }
     }
 
-    @GetMapping
-    public ResponseEntity<List<SerieDTO>> listar() {
-        List<SerieDTO> series = serieService.listarTudo();
-        return ResponseEntity.ok(series);
-    }
     
     @GetMapping("/{idSerie}")
     public ResponseEntity<SerieDTO> buscarPorId(@PathVariable Long idSerie) {

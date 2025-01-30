@@ -5,14 +5,12 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.CursoImg;
 
 @Repository
-public interface ContaRepository extends JpaRepository<Conta, Long>{
+public interface CursoImgRepository extends JpaRepository<CursoImg, Long>{
 
-	List<Conta> findByConta (String conta);
-	
-
-	
+	  List<CursoImg> findByCurso_IdCursoAndOrdem(Long idCurso, Integer ordem);
+	  
+	  List<CursoImg> findByCurso_IdCursoAndConta(Long idCurso, Long idConta);
 }
