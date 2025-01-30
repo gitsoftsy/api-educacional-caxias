@@ -1,5 +1,6 @@
 package br.com.softsy.educacional.controller;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +14,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroConcursoDTO;
 import br.com.softsy.educacional.dto.ConcursoDTO;
+import br.com.softsy.educacional.dto.EditalDTO;
 import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.service.ConcursoService;
 
@@ -68,18 +71,28 @@ public class ConcursoController {
         List<ConcursoDTO> concursos = concursoService.buscarPorIdConta(idConta);
         return ResponseEntity.ok(concursos);
     }
+    
+    @GetMapping("/editais")
+    public ResponseEntity<?> buscarEditaisAtivosPorConta(@RequestHeader("idConta") Long idConta) {
+        try {
+            List<EditalDTO> editais = concursoService.buscarEditaisAtivosPorConta(idConta);
+            return ResponseEntity.ok(editais);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new AllResponse(e.getMessage(), new ArrayList<>()));
+        }
+    }
 
     @PostMapping
-    public ResponseEntity<ConcursoDTO> cadastrar(@RequestBody @Valid CadastroConcursoDTO dto) {
-        ConcursoDTO concursoDTO = concursoService.salvar(dto);
+    public ResponseEntity<CadastroConcursoDTO> cadastrar(@RequestBody @Valid CadastroConcursoDTO dto) throws IOException {
+    	CadastroConcursoDTO concursoDTO = concursoService.salvar(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(concursoDTO.getIdConcurso()).toUri();
         return ResponseEntity.created(uri).body(concursoDTO);
     }
 
     @PutMapping
-    public ResponseEntity<ConcursoDTO> atualizar(@RequestBody @Valid CadastroConcursoDTO dto) {
-        ConcursoDTO concursoDTO = concursoService.atualizar(dto);
+    public ResponseEntity<CadastroConcursoDTO> atualizar(@RequestBody @Valid CadastroConcursoDTO dto) throws IOException {
+        CadastroConcursoDTO concursoDTO = concursoService.atualizar(dto);
         return ResponseEntity.ok(concursoDTO);
     }
 

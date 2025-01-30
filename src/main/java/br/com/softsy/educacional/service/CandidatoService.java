@@ -41,7 +41,7 @@ public class CandidatoService {
 	
     @Autowired
     private CandidatoRepository candidatoRepository;
-
+	
     @Autowired
     private ContaRepository contaRepository;
     

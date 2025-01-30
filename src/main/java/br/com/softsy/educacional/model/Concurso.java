@@ -56,6 +56,10 @@ public class Concurso {
     @Column(name = "ATIVO", nullable = false)
     private Character ativo;
     
+	@Column(name = "PATH_EDITAL", nullable = false)
+	private String pathEdital;
+
+    
 	@OneToMany(mappedBy = "concurso", cascade = CascadeType.ALL)
 	private Set<OfertaConcurso> ofertaConcurso = new HashSet<>();
 

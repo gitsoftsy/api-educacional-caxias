@@ -18,6 +18,7 @@ public class CadastroConcursoDTO {
     private LocalDate dataFechamento;
     private LocalDateTime dataCadastro;
     private Character ativo;
+    private String pathEdital;
 
     public CadastroConcursoDTO(Concurso concurso) {
         this.idConcurso = concurso.getIdConcurso();
@@ -28,5 +29,6 @@ public class CadastroConcursoDTO {
         this.dataFechamento = concurso.getDataFechamento();
         this.dataCadastro = concurso.getDataCadastro();
         this.ativo = concurso.getAtivo();
+        this.pathEdital = concurso.getPathEdital();
     }
 }

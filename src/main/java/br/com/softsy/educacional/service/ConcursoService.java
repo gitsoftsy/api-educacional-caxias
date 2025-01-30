@@ -1,6 +1,9 @@
 package br.com.softsy.educacional.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,15 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroConcursoDTO;
 import br.com.softsy.educacional.dto.ConcursoDTO;
-import br.com.softsy.educacional.dto.CursoDTO;
-import br.com.softsy.educacional.infra.exception.UniqueException;
+import br.com.softsy.educacional.dto.EditalDTO;
 import br.com.softsy.educacional.model.Concurso;
 import br.com.softsy.educacional.model.Conta;
-import br.com.softsy.educacional.model.Curso;
 import br.com.softsy.educacional.model.PeriodoLetivo;
 import br.com.softsy.educacional.repository.ConcursoRepository;
 import br.com.softsy.educacional.repository.ContaRepository;
 import br.com.softsy.educacional.repository.PeriodoLetivoRepository;
+import br.com.softsy.educacional.utils.ImageManager;
 
 @Service
 public class ConcursoService {
@@ -46,6 +48,25 @@ public class ConcursoService {
         return new ConcursoDTO(concursoRepository.getReferenceById(id));
     }
     
+    public List<EditalDTO> buscarEditaisAtivosPorConta(Long idConta) {
+        Optional<List<Concurso>> concursosAtivosOptional = concursoRepository.findByConta_IdContaAndAtivo(idConta, 'S');
+        
+        if (concursosAtivosOptional.isEmpty() || concursosAtivosOptional.get().isEmpty()) {
+            throw new IllegalArgumentException("Nenhum concurso ativo encontrado para o idConta fornecido.");
+        }
+
+        List<Concurso> concursosAtivos = concursosAtivosOptional.get();
+        List<EditalDTO> editaisDTO = new ArrayList<>();
+
+        for (Concurso concurso : concursosAtivos) {
+            EditalDTO editalDTO = new EditalDTO(concurso.getIdConcurso(), concurso.getConcurso(), concurso.getPathEdital());
+            editaisDTO.add(editalDTO);
+        }
+
+        return editaisDTO;
+    }
+
+    
     @Transactional(readOnly = true)
     public List<ConcursoDTO> buscarPorIdConta(Long idConta) {
         List<Concurso> curso = concursoRepository.findByConta_IdConta(idConta)
@@ -66,20 +87,57 @@ public class ConcursoService {
     }
 
     @Transactional
-    public ConcursoDTO salvar(CadastroConcursoDTO dto) {
-
+    public CadastroConcursoDTO salvar(CadastroConcursoDTO dto) throws IOException {
+    	
+    	String base64 = "";
         Concurso concurso = criarConcursoAPartirDTO(dto);
+        
+        base64 = concurso.getPathEdital();
+        
+        concurso.setPathEdital(null);
         concurso = concursoRepository.save(concurso);
-        return new ConcursoDTO(concurso);
-    }
+        
+		String caminhoIMG = ImageManager.salvaArquivoConcurso(base64, concurso.getIdConcurso(),"docConcurso" + dto.getIdConcurso());
 
+		
+		concurso.setPathEdital(caminhoIMG);
+		dto.setPathEdital(caminhoIMG);
+		dto.setIdConcurso(concurso.getIdConcurso());
+        
+		atualizarDados(concurso, dto);
+		
+		CadastroConcursoDTO concursoCriado = new CadastroConcursoDTO(concurso);
+
+		return concursoCriado;
+    }
+    
+    
     @Transactional
-    public ConcursoDTO atualizar(CadastroConcursoDTO dto) {
+    public CadastroConcursoDTO atualizar(CadastroConcursoDTO dto) throws IOException {
         Concurso concurso = concursoRepository.findById(dto.getIdConcurso())
                 .orElseThrow(() -> new IllegalArgumentException("Concurso não encontrado"));
+
+        if (dto.getPathEdital() != null && !dto.getPathEdital().isEmpty()) {
+            if (concurso.getPathEdital() != null) {
+                File arquivoExistente = new File(concurso.getPathEdital());
+                if (arquivoExistente.exists()) {
+                    arquivoExistente.delete();
+                }
+            }
+
+            String caminhoIMG = ImageManager.salvaArquivoConcurso(dto.getPathEdital(), concurso.getIdConcurso(), "docConcurso" + dto.getIdConcurso());
+            concurso.setPathEdital(caminhoIMG);
+            dto.setPathEdital(caminhoIMG);
+        } else {
+            concurso.setPathEdital(null);
+        }
+
         atualizarDados(concurso, dto);
+
         concurso = concursoRepository.save(concurso);
-        return new ConcursoDTO(concurso);
+
+        CadastroConcursoDTO concursoAtualizado = new CadastroConcursoDTO(concurso);
+        return concursoAtualizado;
     }
 
     private Concurso criarConcursoAPartirDTO(CadastroConcursoDTO dto) {
@@ -97,6 +155,7 @@ public class ConcursoService {
         concurso.setDataFechamento(dto.getDataFechamento());
         concurso.setDataCadastro(LocalDateTime.now());
         concurso.setAtivo('S');
+        concurso.setPathEdital(dto.getPathEdital());
         return concurso;
     }
 
@@ -119,5 +178,6 @@ public class ConcursoService {
         destino.setPeriodoLetivo(periodoLetivo);
         destino.setDataAbertura(origem.getDataAbertura());
         destino.setDataFechamento(origem.getDataFechamento());
+        destino.setPathEdital(origem.getPathEdital());
     }
 }

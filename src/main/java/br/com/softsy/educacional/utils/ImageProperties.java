@@ -9,6 +9,10 @@ public class ImageProperties {
 	public static String getImagePath() {
 		return getPropertyValue("image.directory");
 	}
+	
+	public static String getLogPath() {
+		return getPropertyValue("log.directory");
+	}
 
 	private static String getPropertyValue(String property) {
 

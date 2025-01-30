@@ -149,7 +149,7 @@ public class TurmaController {
     public ResponseEntity<Object> filtrarTurmaDisciplina(
         @RequestParam(value = "idEscola") Long idEscola,
         @RequestParam(value = "idPeriodoLetivo") Long idPeriodoLetivo,
-        @RequestParam(value = "idTurno") Long idTurno
+        @RequestParam(value = "idTurno", required = false) Long idTurno
     ) {
         List<Map<String, Object>> result = turmaService.filtrarTurmaDisciplina(idEscola, idPeriodoLetivo, idTurno);
 
@@ -220,6 +220,30 @@ public class TurmaController {
 
         return ResponseEntity.ok(result);
     }
+    
+	@GetMapping("/prematricula")
+	public ResponseEntity<AllResponse> listarTurmaPorPeriodoTurnoEscolaDisciSerie(
+			@RequestParam(value = "idPeriodoLetivo", required = false) Long idPeriodoLetivo,
+			@RequestParam(value = "idSerie", required = false) Long idSerie,
+			@RequestParam(value = "idDisciplina", required = false) Long idDisciplina,
+			@RequestParam(value = "idEscola", required = false) Long idEscola,
+			@RequestParam(value = "idTurno", required = false) Long idTurno
+	)
+	{
+		if (idPeriodoLetivo == null && idEscola == null && idDisciplina == null && idSerie == null && idTurno == null) {
+			return ResponseEntity.badRequest()
+					.body(new AllResponse("Por favor, informe o parâmetro na requisição.", new ArrayList<>()));
+		}
+
+		List<Map<String, Object>> result = turmaService.listarTurmaPorPeriodoTurnoEscolaDisciSerie(idPeriodoLetivo, idSerie, idDisciplina, idEscola, idTurno);
+
+		if (result.isEmpty()) {
+			return ResponseEntity
+					.ok(new AllResponse("Não existem resultados para essa requisição.", new ArrayList<>()));
+		}
+
+		return ResponseEntity.ok(new AllResponse("Encontrado!", new ArrayList<>(result)));
+	}
 
 
 

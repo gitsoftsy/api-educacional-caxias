@@ -454,6 +454,34 @@ public class ImageManager {
 
 }
 	
+	 /// ************************ TRATAMENTO DE ARQUIVOS DE CONCURSO /// *********************************///
+    
+ 	public static String salvaArquivoConcurso(String base64, Long concursoId, String nomeArquivo) throws IOException {
+		byte[] fileBytes = Base64.getDecoder().decode(base64);
+
+	     String fileType;
+	     if (base64.startsWith("JVBERi0xLj")) {
+	         fileType = "pdf";
+	     } else {
+	         throw new IllegalArgumentException("Tipo de arquivo não suportado. Somente arquivos PDF são aceitos.");
+	     }
+
+	     String directoryPath = ImageProperties.getImagePath() + "/uploads/concurso/" + concursoId.toString();
+	     Path diretorio = Paths.get(directoryPath);
+
+	     String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+	     String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + "." + fileType;
+
+	     File directory = new File(directoryPath);
+	     if (!directory.exists()) {
+	         directory.mkdirs();
+	     }
+
+	     try (FileOutputStream fos = new FileOutputStream(caminhoArquivo)) {
+	         fos.write(fileBytes);
+	     }
+
+	     return caminhoArquivo;
 	
-	
+ 	}
 }

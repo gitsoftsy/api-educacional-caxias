@@ -16,4 +16,6 @@ public interface ConcursoRepository extends JpaRepository<Concurso, Long>{
     Optional<List<Concurso>> findByConta_IdConta(@Param("idConta") Long idConta);
 	
 	Optional<List<Concurso>> findByConta_IdContaAndAtivo(Long idConta, Character ativo);
+	
+
 }

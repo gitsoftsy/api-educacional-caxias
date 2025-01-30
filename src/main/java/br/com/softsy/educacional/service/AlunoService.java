@@ -271,11 +271,12 @@ public class AlunoService {
 
             Map<String, Object> prova = new LinkedHashMap<>();
             prova.put("idProva", result[4]);
-            prova.put("nota", result[5]);
-            prova.put("nomeAbreviado", result[6]);
-            prova.put("descricao", result[7]);
-            prova.put("conceitoMax", result[8]);
-            prova.put("tipoConceito", result[9]);
+            prova.put("idNota", result[5]);
+            prova.put("nota", result[6]);
+            prova.put("nomeAbreviado", result[7]);
+            prova.put("descricao", result[8]);
+            prova.put("conceitoMax", result[9]);
+            prova.put("tipoConceito", result[10]);
 
 
             ((List<Map<String, Object>>) alunoMap.get(idAluno).get("lstProva")).add(prova);
