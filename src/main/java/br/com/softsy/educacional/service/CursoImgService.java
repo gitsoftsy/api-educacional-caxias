@@ -3,7 +3,7 @@ package br.com.softsy.educacional.service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.softsy.educacional.dto.CadastroCursoImgDTO;
+import br.com.softsy.educacional.dto.CursoImgDTO;
 import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.model.Curso;
 import br.com.softsy.educacional.model.CursoImg;
@@ -37,11 +38,29 @@ public class CursoImgService {
     private UsuarioRepository usuarioRepository;
     
     @Transactional
-    public List<CursoImg> listarImagensCurso(Long idCurso, Long idConta) {
+    public List<CursoImgDTO> listarImagensCurso(Long idCurso, Long idConta) {
+        // Verifica se o curso existe
+        Curso curso = cursoRepository.findById(idCurso)
+                .orElseThrow(() -> new IllegalArgumentException("O curso com ID " + idCurso + " não existe."));
 
-        return cursoImgRepository.findByCurso_IdCursoAndConta(idCurso, idConta);
+        // Verifica se a conta está associada ao curso
+        if (!curso.getConta().getIdConta().equals(idConta)) {
+            throw new IllegalArgumentException("A conta com ID " + idConta + " não está associada ao curso com ID " + idCurso + ".");
+        }
+
+        // Busca as imagens associadas ao curso e conta
+        List<CursoImg> imagens = cursoImgRepository.findByCursoIdCursoAndCursoContaIdConta(idCurso, idConta);
+
+        // Se não houver imagens, lança uma exceção
+        if (imagens.isEmpty()) {
+            throw new IllegalArgumentException("O curso com ID " + idCurso + " não está vinculado à conta " + idConta + " ou não possui imagens.");
+        }
+
+        // Mapeia as imagens para o DTO com os IDs
+        return imagens.stream()
+                      .map(CursoImgDTO::new)  // Mapeia para CursoImgDTO, que inclui apenas os IDs
+                      .collect(Collectors.toList());
     }
-
 
 
     @Transactional

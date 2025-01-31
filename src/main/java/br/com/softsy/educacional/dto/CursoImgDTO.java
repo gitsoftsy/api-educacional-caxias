@@ -13,29 +13,32 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CursoImgDTO {
 
-    private Long idCursoImg; 
+    private Long idCursoImg;
+	 
+    private Long contaId; 
     
-    private ContaDTO idConta; 
+    private Long cursoId; 
     
-    private CursoDTO idCurso; 
-
-    private UsuarioDTO idUsuario; 
+    private Long usuarioId; 
 
     private LocalDateTime dataCadastro; 
 
+    @NotNull
     private String  tipoDispositivo; // Tipo do dispositivo ('D' ou 'M')
     
+    @NotNull
     private String pathImg;
     
+    @NotNull
     private Integer ordem; 
     
     private String url; 
 
     public CursoImgDTO(CursoImg cursoImg) {
         this.idCursoImg = cursoImg.getIdCursoImg();
-        this.idConta = new ContaDTO(cursoImg.getConta());
-        this.idCurso = new CursoDTO(cursoImg.getCurso());
-        this.idUsuario = new UsuarioDTO(cursoImg.getUsuario());
+        this.contaId = cursoImg.getConta().getIdConta();
+        this.cursoId = cursoImg.getCurso().getIdCurso();
+        this.usuarioId = cursoImg.getUsuario().getIdUsuario();
         this.dataCadastro = cursoImg.getDataCadastro();
         this.tipoDispositivo = cursoImg.getTipoDispositivo();
         this.pathImg = cursoImg.getPathImg();

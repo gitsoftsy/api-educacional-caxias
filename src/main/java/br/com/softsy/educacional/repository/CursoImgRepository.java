@@ -12,5 +12,6 @@ public interface CursoImgRepository extends JpaRepository<CursoImg, Long>{
 
 	  List<CursoImg> findByCurso_IdCursoAndOrdem(Long idCurso, Integer ordem);
 	  
-	  List<CursoImg> findByCurso_IdCursoAndConta(Long idCurso, Long idConta);
+	  List<CursoImg> findByCursoIdCursoAndCursoContaIdConta(Long idCurso, Long idConta);
+
 }
