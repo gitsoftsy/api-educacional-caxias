@@ -1,8 +1,12 @@
 package br.com.softsy.educacional.service;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -39,29 +43,21 @@ public class CursoImgService {
     
     @Transactional
     public List<CursoImgDTO> listarImagensCurso(Long idCurso, Long idConta) {
-        // Verifica se o curso existe
         Curso curso = cursoRepository.findById(idCurso)
                 .orElseThrow(() -> new IllegalArgumentException("O curso com ID " + idCurso + " não existe."));
 
-        // Verifica se a conta está associada ao curso
         if (!curso.getConta().getIdConta().equals(idConta)) {
             throw new IllegalArgumentException("A conta com ID " + idConta + " não está associada ao curso com ID " + idCurso + ".");
         }
 
-        // Busca as imagens associadas ao curso e conta
         List<CursoImg> imagens = cursoImgRepository.findByCursoIdCursoAndCursoContaIdConta(idCurso, idConta);
-
-        // Se não houver imagens, lança uma exceção
         if (imagens.isEmpty()) {
-            throw new IllegalArgumentException("O curso com ID " + idCurso + " não está vinculado à conta " + idConta + " ou não possui imagens.");
+            throw new IllegalArgumentException("O curso com ID " + idCurso + " não possui imagens associadas à conta com ID " + idConta);
         }
-
-        // Mapeia as imagens para o DTO com os IDs
         return imagens.stream()
-                      .map(CursoImgDTO::new)  // Mapeia para CursoImgDTO, que inclui apenas os IDs
+                      .map(CursoImgDTO::new)
                       .collect(Collectors.toList());
     }
-
 
     @Transactional
     public CadastroCursoImgDTO salvar(CadastroCursoImgDTO dto) throws IOException {
@@ -85,9 +81,6 @@ public class CursoImgService {
         return cursoImgCriada;
     }
 
-
-
-
     private void atualizaDados(CursoImg destino, CadastroCursoImgDTO origem) {
         BeanUtils.copyProperties(origem, destino, "idCursoImg", "dataCadastro");
 
@@ -99,12 +92,14 @@ public class CursoImgService {
     }
 
     private CursoImg criarCursoImgAPartirDTO(CadastroCursoImgDTO dto) {
+ 
         if (!"D".equals(dto.getTipoDispositivo()) && !"M".equals(dto.getTipoDispositivo())) {
             throw new IllegalArgumentException("O tipo de dispositivo deve ser 'D' para Desktop ou 'M' para Mobile.");
         }
+
         List<CursoImg> imagensExistentes = cursoImgRepository.findByCurso_IdCursoAndOrdem(dto.getCursoId(), dto.getOrdem());
         if (!imagensExistentes.isEmpty()) {
-            throw new IllegalArgumentException("Já existe uma imagem cadastrada com essa ordem para este curso.");
+            throw new IllegalArgumentException("Já existe uma imagem cadastrada com a ordem " + dto.getOrdem() + " para o curso com ID " + dto.getCursoId());
         }
 
         CursoImg cursoImg = new CursoImg();
@@ -112,14 +107,11 @@ public class CursoImgService {
 
         Curso curso = cursoRepository.findById(dto.getCursoId())
                 .orElseThrow(() -> new IllegalArgumentException("Curso não encontrado"));
-
         Conta conta = contaRepository.findById(dto.getContaId())
                 .orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
-        
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
-                .orElseThrow(() -> new IllegalArgumentException("Usuario não encontrada"));
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 
-       
         cursoImg.setCurso(curso);
         cursoImg.setDataCadastro(LocalDateTime.now());
         cursoImg.setConta(conta);
@@ -131,4 +123,49 @@ public class CursoImgService {
 
         return cursoImg;
     }
+    
+    public CursoImgDTO obterImagemCurso(Long idCursoImg, Long idConta) {
+        Optional<CursoImg> cursoImgOptional = cursoImgRepository.findById(idCursoImg);
+
+        if (!cursoImgOptional.isPresent()) {
+            throw new IllegalArgumentException("A imagem com ID " + idCursoImg + " não foi encontrada.");
+        }
+        CursoImg cursoImg = cursoImgOptional.get();
+
+        if (!cursoImg.getCurso().getConta().getIdConta().equals(idConta)) {
+            throw new IllegalArgumentException("O curso de imagem com ID " + idCursoImg + " não está vinculado à conta com ID " + idConta + ".");
+        }
+
+        return new CursoImgDTO(cursoImg);
+    }
+    
+    private static final String IMAGE_FOLDER_PATH = "/path/to/images/";
+    
+    @Transactional
+    public void removerImagemDescricao(Long idCursoImg, Long idConta) {
+        CursoImg imagemRemover = cursoImgRepository.findById(idCursoImg)
+                .orElseThrow(() -> new IllegalArgumentException("A imagem com ID " + idCursoImg + " não existe."));
+        
+        if (!imagemRemover.getCurso().getConta().getIdConta().equals(idConta)) {
+            throw new IllegalArgumentException("A imagem com ID " + idCursoImg + " não está vinculada à conta com ID " + idConta + ".");
+        }
+        
+        cursoImgRepository.delete(imagemRemover);
+        List<CursoImg> imagensRestantes = cursoImgRepository.findByCursoIdCursoAndCursoContaIdContaOrderByOrdem(imagemRemover.getCurso().getIdCurso(), idConta);
+        
+        for (CursoImg imagem : imagensRestantes) {
+            if (imagem.getOrdem() > imagemRemover.getOrdem()) {
+                imagem.setOrdem(imagem.getOrdem() - 1);  
+                cursoImgRepository.save(imagem); 
+            }
+        }
+
+        Path path = Paths.get(imagemRemover.getPathImg());
+        try {
+            Files.deleteIfExists(path); // Exclui o arquivo
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao excluir o arquivo da imagem no servidor.", e);
+        }
+    }
+
 }
