@@ -131,43 +131,35 @@ public class OfertaConcursoImgService {
 
 	    OfertaConcursoImg ofertaConcursoImg = ofertaConcursoImgOptional.get();
 
-	    // Verificar se a imagem está vinculada ao idConta
 	    if (!ofertaConcursoImg.getOfertaConcurso().getCurso().getConta().getIdConta().equals(idConta)) {
 	        throw new IllegalArgumentException(
 	                "A imagem de oferta de concurso com ID " + idOfertaConcursoImg +
 	                " não está vinculada à conta com ID " + idConta + ".");
 	    }
-
-	    // Retornar o DTO da imagem
 	    return new OfertaConcursoImgDTO(ofertaConcursoImg);
 	}
 	
 	@Transactional
 	public void removerImagemOfertaConcurso(Long idOfertaConcursoImg, Long idConta) {
-	    // Buscar a imagem a ser removida
 	    OfertaConcursoImg imagemRemover = ofertaConcursoImgRepository.findById(idOfertaConcursoImg)
 	            .orElseThrow(() -> new IllegalArgumentException("A imagem com ID " + idOfertaConcursoImg + " não existe."));
 
-	    // Validar se a imagem está vinculada à conta fornecida
 	    if (!imagemRemover.getOfertaConcurso().getCurso().getConta().getIdConta().equals(idConta)) {
 	        throw new IllegalArgumentException("A imagem com ID " + idOfertaConcursoImg + " não está vinculada à conta com ID " + idConta + ".");
 	    }
 
-	    // Remover a imagem do banco de dados
+	
 	    ofertaConcursoImgRepository.delete(imagemRemover);
-
-	    // Reordenar as imagens restantes
 	    List<OfertaConcursoImg> imagensRestantes = ofertaConcursoImgRepository.findByOfertaConcurso_IdOfertaConcursoOrderByOrdem(
 	            imagemRemover.getOfertaConcurso().getIdOfertaConcurso());
 
 	    for (OfertaConcursoImg imagem : imagensRestantes) {
 	        if (imagem.getOrdem() > imagemRemover.getOrdem()) {
-	            imagem.setOrdem(imagem.getOrdem() - 1); // Atualizar a ordem
-	            ofertaConcursoImgRepository.save(imagem); // Salvar a reordenação
+	            imagem.setOrdem(imagem.getOrdem() - 1);
+	            ofertaConcursoImgRepository.save(imagem); 
 	        }
 	    }
 
-	    // Remover o arquivo da imagem no servidor
 	    Path path = Paths.get(imagemRemover.getPathImg());
 	    try {
 	        Files.deleteIfExists(path);

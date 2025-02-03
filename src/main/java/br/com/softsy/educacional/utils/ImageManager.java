@@ -517,6 +517,39 @@ public class ImageManager {
 	     return caminhoArquivo;
 
 }
+	
+	/// ************************ TRATAMENTO DE IMAGENS DE OFERTA CONCURSO ARQ /// *********************************///
+	public static String salvaArquivoOfertaConcurso(String base64, Long ofertaConcursoArqId, String nomeArquivo) throws IOException {
+		byte[] fileBytes = Base64.getDecoder().decode(base64);
+
+	     String fileType;
+	     if (base64.startsWith("iVBORw0KGgo")) {
+	         fileType = "png";
+	     } else if (base64.startsWith("JVBERi0xLj")) {
+	         fileType = "pdf";
+	     } else {
+	         throw new IllegalArgumentException("Tipo de arquivo não suportado. Somente PNG e PDF são aceitos.");
+	     }
+
+	     String directoryPath = ImageProperties.getImagePath() + "/uploads/ofertaConcursoArq/" + ofertaConcursoArqId.toString();
+	     Path diretorio = Paths.get(directoryPath);
+
+	     String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+	     String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + "." + fileType;
+
+	     File directory = new File(directoryPath);
+	     if (!directory.exists()) {
+	         directory.mkdirs();
+	     }
+
+	     try (FileOutputStream fos = new FileOutputStream(caminhoArquivo)) {
+	         fos.write(fileBytes);
+	     }
+
+	     return caminhoArquivo;
+
+}
+	
  	
  	
 }
