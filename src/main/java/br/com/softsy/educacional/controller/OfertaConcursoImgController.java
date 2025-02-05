@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroOfertaConcursoImgDTO;
+import br.com.softsy.educacional.dto.OfertaConcursoArquivoDTO;
 import br.com.softsy.educacional.dto.OfertaConcursoImgDTO;
 import br.com.softsy.educacional.service.OfertaConcursoImgService;
 
@@ -32,11 +33,11 @@ public class OfertaConcursoImgController {
 	private OfertaConcursoImgService ofertaConcursoImgService;
 
 	@GetMapping("/oferta/{idOfertaConcurso}/imagens")
-	public ResponseEntity<Object> listarImagensOfertaConcurso(@PathVariable Long idOfertaConcurso,
+	public ResponseEntity<Object> listarArquivosOfertaConcurso(@PathVariable Long idOfertaConcurso,
 			@RequestHeader("idConta") Long idConta) {
 		try {
-			List<OfertaConcursoImgDTO> imagens = ofertaConcursoImgService.listarImagensOfertaConcurso(idOfertaConcurso,
-					idConta);
+			List<OfertaConcursoImgDTO> imagens = ofertaConcursoImgService
+					.listarImagensOfertaConcurso(idOfertaConcurso, idConta);
 			return new ResponseEntity<>(imagens, HttpStatus.OK);
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
