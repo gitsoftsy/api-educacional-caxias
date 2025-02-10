@@ -111,9 +111,12 @@ public class OfertaConcursoDescrService {
         Usuario usuario = usuarioRepository.findById(origem.getUsuarioId())
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
         
-        boolean ordemExistente = ofertaConcursoDescrRepository.existsByOrdemAndOfertaConcursoAndConta(origem.getOrdem(), ofertaConcurso, conta);
-        if (ordemExistente) {
-            throw new IllegalArgumentException("Já existe um registro com essa ordem para a mesma oferta de concurso e conta.");
+       
+        if (origem.getOrdem() != destino.getOrdem()) {
+            boolean ordemExistente = ofertaConcursoDescrRepository.existsByOrdemAndOfertaConcursoAndConta(origem.getOrdem(), ofertaConcurso, conta);
+            if (ordemExistente) {
+                throw new IllegalArgumentException("Já existe um registro com essa ordem para a mesma oferta de concurso e conta.");
+            }
         }
 
         destino.setConta(conta);
