@@ -22,7 +22,7 @@ import br.com.softsy.educacional.dto.PagarmeRecebedorEscolaDTO;
 import br.com.softsy.educacional.service.PagarmeRecebedorEscolaService;
 
 @RestController
-@RequestMapping("/recebedorUtm")
+@RequestMapping("/recebedorEscola")
 public class PagarmeRecebedorEscolaController {
 
 	@Autowired
