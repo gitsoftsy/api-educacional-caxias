@@ -3,6 +3,7 @@ package br.com.softsy.educacional.controller;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -154,11 +155,14 @@ public class TurmaController {
         List<Map<String, Object>> result = turmaService.filtrarTurmaDisciplina(idEscola, idPeriodoLetivo, idTurno);
 
         if (result.isEmpty()) {
-            return ResponseEntity.ok(Collections.singletonMap("mensagem", "Nenhum resultado encontrado para os parâmetros informados."));
+            Map<String, String> response = new HashMap<>();
+            response.put("mensagem", "Nenhum resultado encontrado para os parâmetros informados.");
+            return ResponseEntity.ok(response);
         }
 
         return ResponseEntity.ok(result);
     }
+
     
     @GetMapping("/filtroTurno")
     public ResponseEntity<Object> filtrarTurmaTurno(

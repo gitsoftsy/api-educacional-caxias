@@ -28,9 +28,8 @@ public class PagarmeRecebedorEscola {
 	@JoinColumn(name = "ID_CONTA", nullable = false)
 	private Conta conta;
 
-//    @ManyToOne
-//    @JoinColumn(name = "ID_PAGARME_RECEBEDOR", nullable = false)
-//    private Pagarme Pagarme;
+	@Column(name = "ID_PAGARME_RECEBEDOR", nullable = false)
+    private Long idRecebedor = 1L;
 
 	@ManyToOne
 	@JoinColumn(name = "ID_ESCOLA", nullable = false)

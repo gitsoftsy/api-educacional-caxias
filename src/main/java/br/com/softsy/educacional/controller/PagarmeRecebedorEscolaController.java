@@ -1,7 +1,9 @@
 package br.com.softsy.educacional.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -17,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroPagarmeRecebedorEscolaDTO;
-import br.com.softsy.educacional.dto.CadastroPagarmeRecebedorUtmDTO;
 import br.com.softsy.educacional.dto.PagarmeRecebedorEscolaDTO;
+import br.com.softsy.educacional.model.AllResponse;
 import br.com.softsy.educacional.service.PagarmeRecebedorEscolaService;
 
 @RestController
@@ -29,19 +31,56 @@ public class PagarmeRecebedorEscolaController {
 	private PagarmeRecebedorEscolaService pagarmeRecebedorEscolaService;
 
 	@GetMapping
-	public ResponseEntity<List<PagarmeRecebedorEscolaDTO>> listar() {
-		List<PagarmeRecebedorEscolaDTO> recebedorEscola = pagarmeRecebedorEscolaService.listarTudo();
-		return ResponseEntity.ok(recebedorEscola);
+	public ResponseEntity<?> listar() {
+		try {
+			List<PagarmeRecebedorEscolaDTO> recebedorEscola = pagarmeRecebedorEscolaService.listarTudo();
+			return ResponseEntity.ok(recebedorEscola);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new AllResponse(e.getMessage(), new ArrayList<>()));
+		}
 	}
 
 	@GetMapping("/{idPagarmeRecebedorEscola}")
-	public ResponseEntity<PagarmeRecebedorEscolaDTO> buscarPorId(@PathVariable Long idTurma) {
-		PagarmeRecebedorEscolaDTO recebedorEscola = pagarmeRecebedorEscolaService.buscarPorId(idTurma);
-		return ResponseEntity.ok(recebedorEscola);
+	public ResponseEntity<?> buscarPorId(@PathVariable Long idPagarmeRecebedorEscola) {
+		try {
+			PagarmeRecebedorEscolaDTO recebedorEscola = pagarmeRecebedorEscolaService
+					.buscarPorId(idPagarmeRecebedorEscola);
+			return ResponseEntity.ok(recebedorEscola);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body(new AllResponse(e.getMessage(), new ArrayList<>()));
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(new AllResponse("Erro interno", new ArrayList<>()));
+		}
+	}
+
+	@GetMapping("/escola/{idEscola}")
+	public ResponseEntity<?> listarParceiroPorEscola(@PathVariable Long idEscola) {
+	    try {
+	        List<Map<String, Object>> recebedores = pagarmeRecebedorEscolaService.listarParceiroPorEscola(idEscola);
+	        return ResponseEntity.ok(recebedores);
+	    } catch (IllegalArgumentException e) {
+	        return ResponseEntity.badRequest().body(new AllResponse(e.getMessage(), new ArrayList<>()));
+	    } catch (Exception e) {
+	        return ResponseEntity.status(500).body(new AllResponse("Erro interno", new ArrayList<>()));
+	    }
+	}
+	 
+	
+	@GetMapping("/recebedor/{idRecebedor}")
+	public ResponseEntity<?> listarEscolaPorRecebedor(@PathVariable Long idRecebedor) {
+	    try {
+	        List<Map<String, Object>> recebedores = pagarmeRecebedorEscolaService.listarEscolaPorRecebedor(idRecebedor);
+	        return ResponseEntity.ok(recebedores);
+	    } catch (IllegalArgumentException e) {
+	        return ResponseEntity.badRequest().body(new AllResponse(e.getMessage(), new ArrayList<>()));
+	    } catch (Exception e) {
+	        return ResponseEntity.status(500).body(new AllResponse("Erro interno", new ArrayList<>()));
+	    }
 	}
 
 	@PostMapping
-	public ResponseEntity<PagarmeRecebedorEscolaDTO> cadastrar(@RequestBody @Valid CadastroPagarmeRecebedorEscolaDTO dto) {
+	public ResponseEntity<PagarmeRecebedorEscolaDTO> cadastrar(
+			@RequestBody @Valid CadastroPagarmeRecebedorEscolaDTO dto) {
 		PagarmeRecebedorEscolaDTO cadastroDTO = pagarmeRecebedorEscolaService.salvar(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(cadastroDTO.getIdPagarmeRecebedorEscola()).toUri();
@@ -50,19 +89,30 @@ public class PagarmeRecebedorEscolaController {
 
 	@PutMapping
 	public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroPagarmeRecebedorEscolaDTO dto) {
-		return ResponseEntity.ok(pagarmeRecebedorEscolaService.atualizar(dto));
+		try {
+			return ResponseEntity.ok(pagarmeRecebedorEscolaService.atualizar(dto));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new AllResponse(e.getMessage(), new ArrayList<>()));
+		}
 	}
 
 	@PutMapping("/{idPagarmeRecebedorEscola}/ativar")
-	public ResponseEntity<?> ativar(@PathVariable Long idPagarmeRecebedorEscola) {
-		pagarmeRecebedorEscolaService.ativaDesativa('S', idPagarmeRecebedorEscola);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<String> ativar(@PathVariable Long idPagarmeRecebedorEscola) {
+		try {
+			pagarmeRecebedorEscolaService.ativaDesativa('S', idPagarmeRecebedorEscola);
+			return ResponseEntity.ok("O recebedor foi ativado com sucesso.");
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body("Erro ao ativar recebedor: " + e.getMessage());
+		}
 	}
 
 	@PutMapping("/{idPagarmeRecebedorEscola}/desativar")
-	public ResponseEntity<?> desatviar(@PathVariable Long idPagarmeRecebedorEscola) {
-		pagarmeRecebedorEscolaService.ativaDesativa('N', idPagarmeRecebedorEscola);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<String> desativar(@PathVariable Long idPagarmeRecebedorEscola) {
+		try {
+			pagarmeRecebedorEscolaService.ativaDesativa('N', idPagarmeRecebedorEscola);
+			return ResponseEntity.ok("O recebedor foi desativado.");
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body("Erro ao desativar recebedor: " + e.getMessage());
+		}
 	}
-
 }

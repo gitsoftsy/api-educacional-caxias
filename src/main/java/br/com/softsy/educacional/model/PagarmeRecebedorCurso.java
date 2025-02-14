@@ -15,14 +15,14 @@ import javax.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "TBL_PAGARME_RECEBEDOR_UTM")
+@Table(name = "TBL_PAGARME_RECEBEDOR_CURSO")
 @Data
-public class PagarmeRecebedorUtm {
-
+public class PagarmeRecebedorCurso {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID_PAGARME_RECEBEDOR_UTM")
-	private Long idPagarmeRecebedorUtm;
+	@Column(name = "ID_PAGARME_RECEBEDOR_CURSO")
+	private Long idPagarmeRecebedorCurso;
 
 	@ManyToOne
 	@JoinColumn(name = "ID_CONTA", nullable = false)
@@ -32,8 +32,8 @@ public class PagarmeRecebedorUtm {
     private Long idRecebedor = 1L;
 
 	@ManyToOne
-	@JoinColumn(name = "ID_UTM", nullable = false)
-	private Utm utm;
+	@JoinColumn(name = "ID_CURSO", nullable = false)
+	private Curso curso;
 
 	@Column(name = "DT_CADASTRO", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataCadastro;
@@ -46,5 +46,6 @@ public class PagarmeRecebedorUtm {
 	
 	@Column(name = "VALOR_REPASSE", precision = 10, scale = 2)
     private BigDecimal valorRepasse;
+
 
 }

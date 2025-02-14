@@ -22,7 +22,7 @@ public class CadastroPagarmeRecebedorEscolaDTO {
 //	private Long PagarmeId;
 
 	@NotNull
-	private Long EscolaId;
+	private Long escolaId;
 
 	private LocalDateTime dataCadastro;
 
@@ -40,7 +40,7 @@ public class CadastroPagarmeRecebedorEscolaDTO {
 		this.idPagarmeRecebedorEscola = pagarmeRecebedorEscola.getIdPagarmeRecebedorEscola();
 		this.contaId = pagarmeRecebedorEscola.getConta().getIdConta();
 		// this.PagarmeId = pagarmeRecebedorUtm.getPagarme.getIdPagarme();
-		this.EscolaId = pagarmeRecebedorEscola.getEscola().getIdEscola();
+		this.escolaId = pagarmeRecebedorEscola.getEscola().getIdEscola();
 		this.dataCadastro = pagarmeRecebedorEscola.getDataCadastro();
 		this.ativo = pagarmeRecebedorEscola.getAtivo();
 		this.tipoRepasse = pagarmeRecebedorEscola.getTipoRepasse();
