@@ -53,8 +53,6 @@ public class ContaDTO {
 	
 	private Character ativo;
 
-	@NotNull
-	private String logoConta;
 	
 	public ContaDTO(Conta conta) {
 		this.idConta = conta.getIdConta();
@@ -71,7 +69,6 @@ public class ContaDTO {
 		this.uf = conta.getUf();
 		this.ativo = conta.getAtivo();
 		this.dataCadastro = conta.getDataCadastro();
-		this.logoConta = conta.getLogoConta();
 	}
 
 }

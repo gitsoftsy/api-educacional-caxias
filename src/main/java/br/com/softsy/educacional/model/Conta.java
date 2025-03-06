@@ -60,8 +60,5 @@ public class Conta {
 	
 	@Column(name = "ATIVO", nullable = false)
 	private Character ativo;
-	
-	@Column(name = "LOGO_CONTA", nullable = false)
-	private String logoConta;
 
 }

@@ -33,46 +33,31 @@ public class ContaService {
 		return new ContaDTO(repository.getReferenceById(id));
 	}
 
-	public String getLogoById(Long idConta) throws IOException {
-		Optional<Conta> contaOptional = repository.findById(idConta);
-
-		String imagemCarregada;
-		imagemCarregada = ImageManager.buscaImagem(contaOptional.get().getLogoConta());
-
-		if (contaOptional.isPresent()) {
-			return imagemCarregada;
-		} else {
-			return null;
-		}
-	}
+	
+	
+//	public String getLogoById(Long idConta) throws IOException {
+//		Optional<Conta> contaOptional = repository.findById(idConta);
+//
+//		String imagemCarregada;
+//		imagemCarregada = ImageManager.buscaImagem(contaOptional.get().getLogoConta());
+//
+//		if (contaOptional.isPresent()) {
+//			return imagemCarregada;
+//		} else {
+//			return null;
+//		}
+//	}
 
 	@Transactional
-	public CadastroContaDTO salvar(CadastroContaDTO dto) throws IOException {
-		validarConta(dto.getConta());
+	public CadastroContaDTO salvar(CadastroContaDTO dto) {
+	    validarConta(dto.getConta());
 
-		String base64 = "";
-		Conta conta = criarContaAPartirDTO(dto);
+	    Conta conta = criarContaAPartirDTO(dto);
+	    conta = repository.save(conta);
+	    dto.setIdConta(conta.getIdConta());
 
-		base64 = conta.getLogoConta();
-
-		conta.setLogoConta(null);
-		// Salvando a escola no banco de dados após tratar a imagem
-		conta = repository.save(conta);
-
-		// Manipulando a imagem e obtendo o caminho
-		String caminhoIMG = ImageManager.salvaImagemConta(base64, conta.getIdConta(),"logoConta" + dto.getConta());
-
-		// Setando a imagem diretamente no objeto escola
-		conta.setLogoConta(caminhoIMG);
-		dto.setLogoConta(caminhoIMG);
-		dto.setIdConta(conta.getIdConta());
-
-		atualizaDados(conta, dto);
-
-		// Criando o DTO com os dados atualizados da escola
-		CadastroContaDTO contaCriada = new CadastroContaDTO(conta);
-
-		return contaCriada;
+	    atualizaDados(conta, dto);
+	    return new CadastroContaDTO(conta);
 	}
 
 	private Conta criarContaAPartirDTO(CadastroContaDTO dto) {
@@ -90,29 +75,29 @@ public class ContaService {
 		return new ContaDTO(conta);
 	}
 	
-	@Transactional
-	public ContaDTO alterarImagemConta(Long idConta, String novaImagemBase64) throws IOException {
-		Conta conta = repository.findById(idConta).orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
-
-	    // Verificar se já existe uma imagem e apagar do servidor
-	    if (conta.getLogoConta() != null) {
-	        File imagemExistente = new File(conta.getLogoConta());
-	        if (imagemExistente.exists()) {
-	            imagemExistente.delete();
-	        }
-	    }
-
-	    // Salvar a nova imagem
-	    String novoCaminhoIMG = ImageManager.salvaImagemConta(novaImagemBase64, idConta, "conta" + conta.getConta());
-
-	    // Atualizar o caminho da imagem no banco de dados
-	    conta.setLogoConta(novoCaminhoIMG);
-	    repository.save(conta);
-
-	    // Criar e retornar o DTO atualizado
-	    ContaDTO contaAtualizada = new ContaDTO(conta);
-	    return contaAtualizada;
-	}
+//	@Transactional
+//	public ContaDTO alterarImagemConta(Long idConta, String novaImagemBase64) throws IOException {
+//		Conta conta = repository.findById(idConta).orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
+//
+//	    // Verificar se já existe uma imagem e apagar do servidor
+//	    if (conta.getLogoConta() != null) {
+//	        File imagemExistente = new File(conta.getLogoConta());
+//	        if (imagemExistente.exists()) {
+//	            imagemExistente.delete();
+//	        }
+//	    }
+//
+//	    // Salvar a nova imagem
+//	    String novoCaminhoIMG = ImageManager.salvaImagemConta(novaImagemBase64, idConta, "conta" + conta.getConta());
+//
+//	    // Atualizar o caminho da imagem no banco de dados
+//	    conta.setLogoConta(novoCaminhoIMG);
+//	    repository.save(conta);
+//
+//	    // Criar e retornar o DTO atualizado
+//	    ContaDTO contaAtualizada = new ContaDTO(conta);
+//	    return contaAtualizada;
+//	}
 
 	@Transactional
 	public void ativaDesativa(char status, Long idConta) {
