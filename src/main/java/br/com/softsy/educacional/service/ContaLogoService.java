@@ -41,48 +41,43 @@ public class ContaLogoService {
 	public ContaLogoDTO buscarPorId(Long id) {
 		return new ContaLogoDTO(repository.getReferenceById(id));
 	}
-
 	@Transactional
-    public CadastroContaLogoDTO salvar(CadastroContaLogoDTO dto) throws IOException {
-        Conta conta = contaRepository.findById(dto.getContaId())
-            .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
-        Aplicacao aplicacao = aplicacaoRepository.findById(dto.getAplicacaoId())
-            .orElseThrow(() -> new EntityNotFoundException("Aplicação não encontrada"));
-        
-        Optional<ContaLogo> optionalContaLogo = repository.findByContaIdContaAndAplicacaoIdAplicacao(dto.getContaId(), dto.getAplicacaoId());
+	public CadastroContaLogoDTO salvar(CadastroContaLogoDTO dto) throws IOException {
+	    Conta conta = contaRepository.findById(dto.getContaId())
+	        .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
+	    Aplicacao aplicacao = aplicacaoRepository.findById(dto.getAplicacaoId())
+	        .orElseThrow(() -> new EntityNotFoundException("Aplicação não encontrada"));
 
-        String base64 = dto.getPathLogo();
-        String caminhoIMG = ImageManager.salvaImagemConta(base64, conta.getIdConta(), "logoConta_" + conta.getConta());
+	    Optional<ContaLogo> optionalContaLogo = repository.findByContaIdContaAndAplicacaoIdAplicacao(dto.getContaId(), dto.getAplicacaoId());
 
-        ContaLogo contaLogo;
-        if (optionalContaLogo.isPresent()) {
-            contaLogo = optionalContaLogo.get();
+	    if (optionalContaLogo.isPresent()) {
+	        return null;
+	    }
 
-            contaLogo.setPathLogo(caminhoIMG);
-            contaLogo.setDataCadastro(LocalDateTime.now());
-            
-        } else {
-            contaLogo = new ContaLogo();
-            contaLogo.setConta(conta);
-            contaLogo.setAplicacao(aplicacao);
-            contaLogo.setPathLogo(caminhoIMG);
-            contaLogo.setDataCadastro(LocalDateTime.now());
-        }
+	    String base64 = dto.getPathLogo();
+	    String caminhoIMG = ImageManager.salvaImagemConta(base64, conta.getIdConta(), "logoConta_" + conta.getConta());
 
-        contaLogo = repository.save(contaLogo);
-        dto.setIdContaLogo(contaLogo.getIdContaLogo());
-        dto.setPathLogo(contaLogo.getPathLogo());
-        dto.setDataCadastro(contaLogo.getDataCadastro());
+	    ContaLogo contaLogo = new ContaLogo();
+	    contaLogo.setConta(conta);
+	    contaLogo.setAplicacao(aplicacao);
+	    contaLogo.setPathLogo(caminhoIMG);
+	    contaLogo.setDataCadastro(LocalDateTime.now());
 
-        return dto;
-    }
+	    contaLogo = repository.save(contaLogo);
+	    dto.setIdContaLogo(contaLogo.getIdContaLogo());
+	    dto.setPathLogo(contaLogo.getPathLogo());
+	    dto.setDataCadastro(contaLogo.getDataCadastro());
 
-	private ContaLogo criarContaLogoAPartirDTO(CadastroContaLogoDTO dto, Conta conta, String caminhoIMG) {
-		ContaLogo contaLogo = new ContaLogo();
-		contaLogo.setConta(conta);
-		contaLogo.setPathLogo(caminhoIMG);
-		contaLogo.setDataCadastro(LocalDateTime.now());
-		return contaLogo;
+	    return dto;
+	}
+
+	private ContaLogo criarContaLogoAPartirDTO(CadastroContaLogoDTO dto, Conta conta, Aplicacao aplicacao, String caminhoIMG) {
+	    ContaLogo contaLogo = new ContaLogo();
+	    contaLogo.setConta(conta);
+	    contaLogo.setAplicacao(aplicacao);
+	    contaLogo.setPathLogo(caminhoIMG);
+	    contaLogo.setDataCadastro(LocalDateTime.now());
+	    return contaLogo;
 	}
 
 

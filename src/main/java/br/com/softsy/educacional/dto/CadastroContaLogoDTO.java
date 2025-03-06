@@ -14,15 +14,13 @@ public class CadastroContaLogoDTO {
 
 	private Long idContaLogo;
 
-	@NotNull
 	private Long contaId;
 
 	private LocalDateTime dataCadastro;
 
-	@NotNull
+
 	private String pathLogo;
 
-	@NotNull
 	private Long aplicacaoId;
 
 	public CadastroContaLogoDTO(ContaLogo contaLogo) {

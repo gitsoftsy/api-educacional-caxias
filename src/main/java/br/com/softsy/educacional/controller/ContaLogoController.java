@@ -1,10 +1,9 @@
 package br.com.softsy.educacional.controller;
 
 import java.io.IOException;
-import java.net.URI;
+import java.util.LinkedHashMap;
 import java.util.List;
-
-import javax.validation.Valid;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,10 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.softsy.educacional.dto.CadastroContaLogoDTO;
 import br.com.softsy.educacional.dto.ContaLogoDTO;
@@ -40,14 +39,26 @@ public class ContaLogoController {
 	public ResponseEntity<ContaLogoDTO> buscarPorId(@PathVariable Long idContaLogo) {
 		return ResponseEntity.ok(service.buscarPorId(idContaLogo));
 	}
-
+	
 	@PostMapping
-	public ResponseEntity<CadastroContaLogoDTO> cadastrar(@RequestBody @Valid CadastroContaLogoDTO dto)
-			throws IOException {
-		CadastroContaLogoDTO contaLogoDTO = service.salvar(dto);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(contaLogoDTO.getIdContaLogo()).toUri();
-		return ResponseEntity.created(uri).body(contaLogoDTO);
+	public ResponseEntity<Map<String, Object>> salvarLogo(
+	        @RequestHeader("idConta") Long idConta,
+	        @RequestBody CadastroContaLogoDTO dto) throws IOException {
+	    dto.setContaId(idConta);
+	    CadastroContaLogoDTO resultado = service.salvar(dto);
+
+	    if (resultado == null) {
+	        Map<String, Object> errorResponse = new LinkedHashMap<>();
+	        errorResponse.put("mensagem", "Já existe uma logo cadastrado para esta aplicação. Não é permitido mais de um logo por aplicação.");
+	        errorResponse.put("status", "erro");
+
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+	    }
+	    Map<String, Object> response = new LinkedHashMap<>();
+	    response.put("mensagem", "Logo cadastrado com sucesso!");
+	    response.put("logo", resultado);
+
+	    return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@DeleteMapping("/{idContaLogo}")
