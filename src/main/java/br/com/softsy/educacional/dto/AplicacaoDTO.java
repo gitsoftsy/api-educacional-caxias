@@ -1,9 +1,5 @@
 package br.com.softsy.educacional.dto;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
-
 import br.com.softsy.educacional.model.Aplicacao;
 import lombok.Data;
 import lombok.NoArgsConstructor;
