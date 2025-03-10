@@ -43,6 +43,11 @@ public class ContaImagemLoginService {
 
 	@Transactional
 	public List<ContaImagemLoginDTO> listarImagens(Long idConta, String aplicacao, String apenasExibiveis) {
+		
+		
+	    if (apenasExibiveis != null && !apenasExibiveis.equalsIgnoreCase("S") && !apenasExibiveis.equalsIgnoreCase("N")) {
+	        throw new IllegalArgumentException("O parâmetro 'apenasExibiveis' deve ser 'S' ou 'N'.");
+	    }
 
 		Conta conta = contaRepository.findById(idConta)
 				.orElseThrow(() -> new EntityNotFoundException("Conta com ID " + idConta + " não encontrada."));
