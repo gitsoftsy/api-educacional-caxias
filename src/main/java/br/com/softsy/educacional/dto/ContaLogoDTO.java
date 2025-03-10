@@ -14,21 +14,21 @@ public class ContaLogoDTO {
 
 	private Long idContaLogo;
 
-	private Long contaId;
+	private Long idConta;
 
 	private LocalDateTime dataCadastro;
 
 	private String pathLogo;
 
-	private Long aplicacaoId;
+	private AplicacaoDTO aplicacao;
 
 	public ContaLogoDTO(ContaLogo contaLogo) {
 
 		this.idContaLogo = contaLogo.getIdContaLogo();
-		this.contaId = contaLogo.getConta().getIdConta();
+		this.idConta = contaLogo.getConta().getIdConta();
 		this.dataCadastro = contaLogo.getDataCadastro();
 		this.pathLogo = contaLogo.getPathLogo();
-		this.aplicacaoId = contaLogo.getAplicacao().getIdAplicacao();
+		this.aplicacao = new AplicacaoDTO(contaLogo.getAplicacao());
 
 	}
 }

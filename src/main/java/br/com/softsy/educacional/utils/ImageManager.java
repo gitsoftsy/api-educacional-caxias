@@ -559,6 +559,36 @@ public class ImageManager {
 	            imagem.delete();
 	        }
 	    }
+	 
+		/// ************************ TRATAMENTO DE IMAGENS DE CONTA /// ******************************///
+
+		
+		public static String salvaImagemContaLogin(String base64, Long contaId, String nomeArquivo) throws IOException {
+	        // Decodifica a string base64 em um array de bytes
+	        byte[] imageBytes = Base64.getDecoder().decode(base64);
+	        
+	        String directoryPath = ImageProperties.getImagePath() +"/uploads/conta/"+contaId.toString();
+	 
+	        // Define o caminho para salvar a imagem
+	        Path diretorio = Paths.get(directoryPath);
+	        // Adiciona um timestamp para garantir um nome de arquivo único
+	        String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+	        String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + ".png"; // ou outra extensão
+	 
+	        // Cria o diretório, se não existir
+	        File directory = new File(directoryPath);
+	        if (!directory.exists()) {
+	            directory.mkdirs();
+	        }
+	 
+	        // Salva a imagem no disco
+	        try (FileOutputStream fos = new FileOutputStream(caminhoArquivo)) {
+	            fos.write(imageBytes);
+	        }
+	 
+	        return caminhoArquivo;
+	    }
+		
 	
  	
  	

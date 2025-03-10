@@ -18,10 +18,10 @@ public class CadastroContaLogoDTO {
 
 	private LocalDateTime dataCadastro;
 
-
 	private String pathLogo;
 
-	private Long aplicacaoId;
+	private Long aplicacaoId; 
+	private String aplicacao; 
 
 	public CadastroContaLogoDTO(ContaLogo contaLogo) {
 
@@ -29,7 +29,8 @@ public class CadastroContaLogoDTO {
 		this.contaId = contaLogo.getConta().getIdConta();
 		this.dataCadastro = contaLogo.getDataCadastro();
 		this.pathLogo = contaLogo.getPathLogo();
-		this.aplicacaoId = contaLogo.getAplicacao().getIdAplicacao();
+		this.aplicacaoId = contaLogo.getAplicacao().getIdAplicacao(); 
+        this.aplicacao = contaLogo.getAplicacao().getAplicacao(); 
 
 	}
 

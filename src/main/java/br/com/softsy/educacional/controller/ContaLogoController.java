@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -31,37 +32,41 @@ public class ContaLogoController {
 	ContaLogoService service;
 
 	@GetMapping
-	public ResponseEntity<List<ContaLogo>> listar() {
-		return ResponseEntity.ok(service.listarTudo());
+	public ResponseEntity<Object> getLogo(@RequestHeader("idConta") Long idConta,
+			@RequestParam(value = "aplicacao", required = false) String aplicacao) {
+		return service.buscarLogosPorConta(idConta, aplicacao);
 	}
 
-	@GetMapping("/{idContaLogo}")
-	public ResponseEntity<ContaLogoDTO> buscarPorId(@PathVariable Long idContaLogo) {
-		return ResponseEntity.ok(service.buscarPorId(idContaLogo));
-	}
-	
 	@PostMapping
-	public ResponseEntity<Map<String, Object>> salvarLogo(
-	        @RequestHeader("idConta") Long idConta,
-	        @RequestBody CadastroContaLogoDTO dto) throws IOException {
-	    dto.setContaId(idConta);
-	    CadastroContaLogoDTO resultado = service.salvar(dto);
+	public ResponseEntity<Map<String, Object>> salvarLogo(@RequestHeader("idConta") Long idConta,
+			@RequestBody CadastroContaLogoDTO dto) throws IOException {
 
-	    if (resultado == null) {
-	        Map<String, Object> errorResponse = new LinkedHashMap<>();
-	        errorResponse.put("mensagem", "Já existe uma logo cadastrado para esta aplicação. Não é permitido mais de um logo por aplicação.");
-	        errorResponse.put("status", "erro");
+		if (idConta == null) {
+			Map<String, Object> errorResponse = new LinkedHashMap<>();
+			errorResponse.put("mensagem", "O idConta não pode ser nulo.");
+			errorResponse.put("status", "erro");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+		}
 
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-	    }
-	    Map<String, Object> response = new LinkedHashMap<>();
-	    response.put("mensagem", "Logo cadastrado com sucesso!");
-	    response.put("logo", resultado);
+		dto.setContaId(idConta);
+		CadastroContaLogoDTO resultado = service.salvar(dto);
 
-	    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+		if (resultado == null) {
+			Map<String, Object> errorResponse = new LinkedHashMap<>();
+			errorResponse.put("mensagem",
+					"Já existe uma logo cadastrada para esta aplicação. Não é permitido mais de um logo por aplicação.");
+			errorResponse.put("status", "erro");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+		}
+
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("mensagem", "Logo cadastrado com sucesso!");
+		response.put("logo", resultado);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
-	@DeleteMapping("/{idContaLogo}")
+	@DeleteMapping("/{idContaImagemLogin}")
 	public ResponseEntity<Void> excluir(@PathVariable Long idContaLogo) {
 		try {
 			service.excluir(idContaLogo);
