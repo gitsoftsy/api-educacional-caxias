@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -132,5 +133,20 @@ public class TratadorDeErros {
 
 		return ResponseEntity.status(status).body(error);
 	}
+	
+
+    @ExceptionHandler(MissingPathVariableException.class)
+    public ResponseEntity<StandardError> tratarPathVariableObrigatorio(MissingPathVariableException e,
+            HttpServletRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError error = new StandardError();
+        error.setTimestamp(Instant.now());
+        error.setStatus(status.value());
+        error.setError("Parâmetro obrigatório");
+        error.setMessage("O parâmetro de URL '" + e.getVariableName() + "' é obrigatório.");
+        error.setPath(request.getRequestURI());
+
+        return ResponseEntity.status(status).body(error);
+    }
 
 }

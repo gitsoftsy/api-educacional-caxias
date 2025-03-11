@@ -2,6 +2,7 @@ package br.com.softsy.educacional.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,5 +20,9 @@ public interface ContaImagemLoginRepository extends JpaRepository<ContaImagemLog
 	List<ContaImagemLogin> findByConta_IdContaAndAplicacao(Long idConta, Aplicacao aplicacao);
 
 	List<ContaImagemLogin> findByConta(Long idConta);
+
+	Optional<ContaImagemLogin> findByIdContaImagemLoginAndConta_IdConta(Long idContaImagemLogin, Long idConta);
+
+	boolean existsById(Long idContaImagemLogin);
 
 }

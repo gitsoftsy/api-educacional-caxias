@@ -66,7 +66,7 @@ public class ContaImagemLoginController {
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
-	
+
 	@DeleteMapping("/{idContaLogo}")
 	public ResponseEntity<Void> excluir(@PathVariable Long idContaLogo) {
 		try {
@@ -77,5 +77,18 @@ public class ContaImagemLoginController {
 		}
 	}
 
+	@GetMapping("/{idContaImagemLogin}")
+	public ResponseEntity<Map<String, Object>> buscarImagem(
+			@RequestHeader(name = "idConta", required = true) Long idConta,
+			@PathVariable(name = "idContaImagemLogin", required = true) Long idContaImagemLogin) {
+
+		ContaImagemLoginDTO resultado = service.buscarImagemPorId(idContaImagemLogin, idConta);
+
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("mensagem", "Imagem encontrada com sucesso!");
+		response.put("imagem", resultado);
+
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
 
 }

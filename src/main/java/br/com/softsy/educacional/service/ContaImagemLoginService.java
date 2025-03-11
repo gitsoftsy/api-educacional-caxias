@@ -159,4 +159,34 @@ public class ContaImagemLoginService {
 		repository.deleteById(id);
 	}
 
+	
+	
+	@Transactional
+	public ContaImagemLoginDTO buscarImagemPorId(Long idContaImagemLogin, Long idConta) {
+
+		if (!contaRepository.existsById(idConta)) {
+			throw new EntityNotFoundException("Conta com ID " + idConta + " não encontrada.");
+		}
+
+		if (!repository.existsById(idContaImagemLogin)) {
+			throw new EntityNotFoundException("Imagem com ID " + idContaImagemLogin + " não encontrada.");
+		}
+
+		if (idConta == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O parâmetro 'idConta' é obrigatório.");
+		}
+
+		if (idContaImagemLogin == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"O parâmetro 'idContaImagemLogin' é obrigatório.");
+		}
+
+		ContaImagemLogin contaImagemLogin = repository
+				.findByIdContaImagemLoginAndConta_IdConta(idContaImagemLogin, idConta)
+				.orElseThrow(() -> new EntityNotFoundException(
+						"Imagem com ID " + idContaImagemLogin + " não encontrada para a conta " + idConta));
+
+		return new ContaImagemLoginDTO(contaImagemLogin);
+	}
+
 }

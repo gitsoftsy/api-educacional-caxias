@@ -13,6 +13,6 @@ public interface ContaRepository extends JpaRepository<Conta, Long>{
 
 	List<Conta> findByConta (String conta);
 	
-
+	boolean existsById(Long idConta);
 	
 }
