@@ -39,6 +39,34 @@ public class ContaImagemLoginController {
 		return ResponseEntity.ok(imagens);
 	}
 
+	@GetMapping("/obter")
+	public ResponseEntity<?> getImagemAtiva(@RequestHeader("idConta") Long idConta,
+			@RequestParam("aplicacao") String aplicacao) {
+
+		Long idAplicacao = converterAplicacaoParaId(aplicacao);
+		if (idAplicacao == null) {
+			return ResponseEntity.badRequest().body("Aplicação inválida.");
+		}
+
+		List<Map<String, Object>> imagens = service.obtemImagemLogin(idConta, idAplicacao);
+
+		if (imagens.isEmpty()) {
+
+			Map<String, Object> emptyResponse = new LinkedHashMap<>();
+			emptyResponse.put("mensagem", "Nenhuma imagem encontrada para os parâmetros informados.");
+			emptyResponse.put("status", "erro");
+
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(emptyResponse);
+		}
+
+		return ResponseEntity.ok(imagens);
+	}
+
+	private Long converterAplicacaoParaId(String aplicacao) {
+		Map<String, Long> aplicacoes = Map.of("Secretaria", 1L, "Aluno", 2L, "Docente", 3L);
+		return aplicacoes.get(aplicacao);
+	}
+
 	@PostMapping
 	public ResponseEntity<Map<String, Object>> salvarImagemLogin(@RequestHeader("idConta") Long idConta,
 			@RequestBody CadastroContaImagemLoginDTO dto) throws IOException {

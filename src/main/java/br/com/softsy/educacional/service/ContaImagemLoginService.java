@@ -2,12 +2,18 @@ package br.com.softsy.educacional.service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +40,9 @@ public class ContaImagemLoginService {
 
 	@Autowired
 	private AplicacaoRepository aplicacaoRepository;
+
+	@Autowired
+	private EntityManager entityManager;
 
 	@Transactional(readOnly = true)
 	public List<ContaImagemLoginDTO> listarTudo() {
@@ -74,6 +83,34 @@ public class ContaImagemLoginService {
 				.collect(Collectors.toList());
 
 		return imagens.stream().map(ContaImagemLoginDTO::new).collect(Collectors.toList());
+	}
+
+	@Transactional
+	public List<Map<String, Object>> obtemImagemLogin(Long idConta, Long idAplicacao) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("CALL PROC_CONTA_IMAGEM_LOGIN_ATIVA(:pIdConta, :pIdAplicacao, :pDataAtual)");
+ 
+		Query query = entityManager.createNativeQuery(sql.toString());
+ 
+		query.setParameter("pIdConta", idConta);
+		query.setParameter("pIdAplicacao", idAplicacao);
+		query.setParameter("pDataAtual", LocalDateTime.now());
+ 
+		List<Object[]> resultList = query.getResultList();
+		List<Map<String, Object>> mappedResultList = new ArrayList<>();
+ 
+		for (Object[] result : resultList) {
+			Map<String, Object> resultMap = new HashMap<>();
+			resultMap.put("idContaImgLogin", result[0]);
+			resultMap.put("idConta", result[1]);
+			resultMap.put("dtCadastro", result[2]);
+			resultMap.put("pathImagem", result[3]);
+			resultMap.put("aplicacao", result[4]);
+			resultMap.put("dtInicio", result[5]);
+			resultMap.put("dtFim", result[6]);
+			mappedResultList.add(resultMap);
+		}
+		return mappedResultList;
 	}
 
 	@Transactional
@@ -159,8 +196,6 @@ public class ContaImagemLoginService {
 		repository.deleteById(id);
 	}
 
-	
-	
 	@Transactional
 	public ContaImagemLoginDTO buscarImagemPorId(Long idContaImagemLogin, Long idConta) {
 
