@@ -84,28 +84,6 @@ public class CursoController {
         return ResponseEntity.ok(curso);
     }
     
-//    @GetMapping("ativos/conta/{idConta}")
-//    public ResponseEntity<?> listarCursosContaAtiva(@PathVariable String idConta) {
-//        try {
-//            Long id = Long.parseLong(idConta);
-//            if (id <= 0) {
-//                return ResponseEntity.badRequest().body(
-//                    new AllResponse("O idConta não pode ser um número negativo ou zero!", new ArrayList<>())
-//                );
-//            }
-//            List<CursoDTO> cursos = cursoService.buscarCursosAtivosPorIdConta(id);
-//            return ResponseEntity.ok(cursos);
-// 
-//        } catch (NumberFormatException e) {
-//            return ResponseEntity.badRequest().body(
-//                new AllResponse("O valor de idConta deve ser um número válido.", new ArrayList<>())
-//            );
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.badRequest().body(
-//                new AllResponse(e.getMessage(), new ArrayList<>())
-//            );
-//        }
-//    }
 
     @PostMapping
     public ResponseEntity<CursoDTO> cadastrar(@RequestBody @Valid CadastroCursoDTO dto) {

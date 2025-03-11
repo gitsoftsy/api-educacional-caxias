@@ -30,17 +30,6 @@ public class CadastroCursoDTO {
     @NotNull
     private Long contaId;
     
-    @NotNull
-    private String base64; // Base64 da imagem
-
-    @NotNull
-    private String tipoDispositivo; // 'D' ou 'M'
-
-    @NotNull
-    private Integer ordem; // Ordem da imagem
-    
-    private String pathImg; // Caminho da imagem salva
-    
     public CadastroCursoDTO(Curso curso) {
         this.idCurso = curso.getIdCurso();
         this.codCurso = curso.getCodCurso();

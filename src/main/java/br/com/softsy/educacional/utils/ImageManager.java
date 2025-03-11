@@ -456,34 +456,38 @@ public class ImageManager {
 	
 	 /// ************************ TRATAMENTO DE ARQUIVOS DE CONCURSO /// *********************************///
     
- 	public static String salvaArquivoConcurso(String base64, Long concursoId, String nomeArquivo) throws IOException {
-		byte[] fileBytes = Base64.getDecoder().decode(base64);
+	public static String salvaArquivoConcurso(String base64, Long concursoId, String nomeArquivo) throws IOException {
+	    if (base64 == null || base64.trim().isEmpty()) {
+	        throw new IllegalArgumentException("O conteúdo Base64 não pode ser nulo ou vazio.");
+	    }
 
-	     String fileType;
-	     if (base64.startsWith("JVBERi0xLj")) {
-	         fileType = "pdf";
-	     } else {
-	         throw new IllegalArgumentException("Tipo de arquivo não suportado. Somente arquivos PDF são aceitos.");
-	     }
+	    byte[] fileBytes = Base64.getDecoder().decode(base64);
 
-	     String directoryPath = ImageProperties.getImagePath() + "/uploads/concurso/" + concursoId.toString();
-	     Path diretorio = Paths.get(directoryPath);
+	    String fileType;
+	    if (base64.startsWith("JVBERi0xLj")) {
+	        fileType = "pdf";
+	    } else {
+	        throw new IllegalArgumentException("Tipo de arquivo não suportado. Somente arquivos PDF são aceitos.");
+	    }
 
-	     String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
-	     String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + "." + fileType;
+	    String directoryPath = ImageProperties.getImagePath() + "/uploads/concurso/" + concursoId.toString();
+	    Path diretorio = Paths.get(directoryPath);
 
-	     File directory = new File(directoryPath);
-	     if (!directory.exists()) {
-	         directory.mkdirs();
-	     }
+	    String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date());
+	    String caminhoArquivo = directoryPath + "/" + nomeArquivo + "_" + timestamp + "." + fileType;
 
-	     try (FileOutputStream fos = new FileOutputStream(caminhoArquivo)) {
-	         fos.write(fileBytes);
-	     }
+	    File directory = new File(directoryPath);
+	    if (!directory.exists()) {
+	        directory.mkdirs();
+	    }
 
-	     return caminhoArquivo;
-	
- 	}
+	    try (FileOutputStream fos = new FileOutputStream(caminhoArquivo)) {
+	        fos.write(fileBytes);
+	    }
+
+	    return caminhoArquivo;
+	}
+
  	
 
 	/// ************************ TRATAMENTO DE IMAGENS DE CURSO IMG /// *********************************///

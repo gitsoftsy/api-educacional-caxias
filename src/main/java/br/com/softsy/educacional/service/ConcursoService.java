@@ -88,28 +88,25 @@ public class ConcursoService {
 
     @Transactional
     public CadastroConcursoDTO salvar(CadastroConcursoDTO dto) throws IOException {
-    	
-    	String base64 = "";
-        Concurso concurso = criarConcursoAPartirDTO(dto);
         
-        base64 = concurso.getPathEdital();
+        Concurso concurso = criarConcursoAPartirDTO(dto);
+        String base64 = concurso.getPathEdital();
         
         concurso.setPathEdital(null);
         concurso = concursoRepository.save(concurso);
         
-		String caminhoIMG = ImageManager.salvaArquivoConcurso(base64, concurso.getIdConcurso(),"docConcurso" + dto.getIdConcurso());
+        if (base64 != null && !base64.trim().isEmpty()) {
+            String caminhoIMG = ImageManager.salvaArquivoConcurso(base64, concurso.getIdConcurso(), "docConcurso" + dto.getIdConcurso());
+            concurso.setPathEdital(caminhoIMG);
+            dto.setPathEdital(caminhoIMG);
+        }
 
-		
-		concurso.setPathEdital(caminhoIMG);
-		dto.setPathEdital(caminhoIMG);
-		dto.setIdConcurso(concurso.getIdConcurso());
-        
-		atualizarDados(concurso, dto);
-		
-		CadastroConcursoDTO concursoCriado = new CadastroConcursoDTO(concurso);
+        dto.setIdConcurso(concurso.getIdConcurso());
+        atualizarDados(concurso, dto);
 
-		return concursoCriado;
+        return new CadastroConcursoDTO(concurso);
     }
+
     
     
     @Transactional
