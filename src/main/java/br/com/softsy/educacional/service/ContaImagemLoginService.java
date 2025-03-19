@@ -13,7 +13,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -184,6 +183,44 @@ public class ContaImagemLoginService {
 
 		return dto;
 	}
+	
+	
+	@Transactional
+	public CadastroContaImagemLoginDTO atualizarImagemLogin(Long idConta, CadastroContaImagemLoginDTO dto) throws IOException {
+
+	    Conta conta = contaRepository.findById(idConta)
+	            .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
+
+	    Aplicacao aplicacao = aplicacaoRepository.findById(dto.getAplicacaoId())
+	            .orElseThrow(() -> new EntityNotFoundException("Aplicação não encontrada"));
+
+	    List<ContaImagemLogin> imagensExistentes = repository.findByConta_IdContaAndAplicacao(idConta, aplicacao);
+	    if (imagensExistentes.isEmpty()) {
+	        throw new EntityNotFoundException("Imagem não encontrada para atualização");
+	    }
+
+	    ContaImagemLogin imagemExistente = imagensExistentes.get(0);
+
+	    ImageManager.excluirImagem(imagemExistente.getPathImagem());
+
+	    String caminhoIMG = ImageManager.salvaImagemContaLogin(dto.getPathImagem(), conta.getIdConta(), "login_" + conta.getConta());
+
+	    imagemExistente.setPathImagem(caminhoIMG);
+	    imagemExistente.setDataInicioExibicao(dto.getDataInicioExibicao());
+	    imagemExistente.setDataFimExibicao(dto.getDataFimExibicao());
+	    imagemExistente.setDataCadastro(LocalDateTime.now());
+
+	    repository.save(imagemExistente);
+
+	    dto.setIdContaImagemLogin(imagemExistente.getIdContaImagemLogin());
+	    dto.setPathImagem(imagemExistente.getPathImagem());
+	    dto.setDataCadastro(imagemExistente.getDataCadastro());
+	    dto.setAplicacaoId(imagemExistente.getAplicacao().getIdAplicacao());
+	    dto.setAplicacao(imagemExistente.getAplicacao().getAplicacao());
+
+	    return dto;
+	}
+
 
 	// Método auxiliar para verificar se duas faixas de datas se sobrepõem
 	private boolean isDateRangeOverlap(LocalDateTime start1, LocalDateTime end1, LocalDateTime start2,

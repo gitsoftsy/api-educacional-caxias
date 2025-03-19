@@ -10,11 +10,6 @@ public class PasswordEncrypt {
     public boolean checkPass(String plainPassword, String hashedPassword) {
         return BCrypt.checkpw(plainPassword, hashedPassword);
     }
+   
     
-    public void executarCriptografia() {
-        String senha = "#@Sum@re#@";
-        String senhaCriptografada = hashPassword(senha);
-        System.out.println("Senha original: " + senha);
-        System.out.println("Senha criptografada: " + senhaCriptografada);
-    }
 }
