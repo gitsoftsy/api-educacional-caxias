@@ -184,8 +184,6 @@ public class ContaImagemLoginService {
 		return dto;
 	}
 
-
-
 	@Transactional
 	public CadastroContaImagemLoginDTO atualizarImagemLogin(Long idConta, CadastroContaImagemLoginDTO dto)
 			throws IOException {
@@ -195,13 +193,47 @@ public class ContaImagemLoginService {
 				.orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
 
 		// Buscar a aplicação pelo nome
-		Aplicacao aplicacao = aplicacaoRepository.findByAplicacao(dto.getAplicacao()) // Busca a aplicação pelo nome
+		Aplicacao aplicacao = aplicacaoRepository.findByAplicacao(dto.getAplicacao())
 				.orElseThrow(() -> new EntityNotFoundException("Aplicação não encontrada"));
 
 		// Verifica se já existe uma imagem associada à conta e aplicação
 		List<ContaImagemLogin> imagensExistentes = repository.findByConta_IdContaAndAplicacao(idConta, aplicacao);
 		if (imagensExistentes.isEmpty()) {
 			throw new EntityNotFoundException("Imagem não encontrada para atualização");
+		}
+
+		// Se a data de início e data de fim forem informadas
+		if (dto.getDataInicioExibicao() != null && dto.getDataFimExibicao() != null) {
+			for (ContaImagemLogin imagem : imagensExistentes) {
+				if (isDateRangeOverlap(dto.getDataInicioExibicao(), dto.getDataFimExibicao(),
+						imagem.getDataInicioExibicao(), imagem.getDataFimExibicao())) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							"Já existe uma imagem com essas datas de exibição.");
+				}
+			}
+		} else if (dto.getDataInicioExibicao() != null) {
+			for (ContaImagemLogin imagem : imagensExistentes) {
+				if (imagem.getDataFimExibicao() == null
+						&& imagem.getDataInicioExibicao().equals(dto.getDataInicioExibicao())) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							"Já existe uma imagem com essa data de início.");
+				}
+			}
+		} else if (dto.getDataFimExibicao() != null) {
+			for (ContaImagemLogin imagem : imagensExistentes) {
+				if (imagem.getDataInicioExibicao() == null
+						&& imagem.getDataFimExibicao().equals(dto.getDataFimExibicao())) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							"Já existe uma imagem com essa data de fim.");
+				}
+			}
+		} else {
+			for (ContaImagemLogin imagem : imagensExistentes) {
+				if (imagem.getDataInicioExibicao() == null && imagem.getDataFimExibicao() == null) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							"Já existe uma imagem sem datas de exibição.");
+				}
+			}
 		}
 
 		// Atualiza a imagem

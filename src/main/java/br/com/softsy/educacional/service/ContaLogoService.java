@@ -48,35 +48,67 @@ public class ContaLogoService {
 	@Transactional
 	public CadastroContaLogoDTO salvar(CadastroContaLogoDTO dto) throws IOException {
 
+		// Buscar a conta e a aplicação
 		Conta conta = contaRepository.findById(dto.getContaId())
 				.orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
 		Aplicacao aplicacao = aplicacaoRepository.findById(dto.getAplicacaoId())
 				.orElseThrow(() -> new EntityNotFoundException("Aplicação não encontrada"));
+
+		// Verificar se já existe um logo registrado para a conta e a aplicação
 		Optional<ContaLogo> optionalContaLogo = repository.findByContaIdContaAndAplicacaoIdAplicacao(dto.getContaId(),
 				dto.getAplicacaoId());
 
+		// Se o logo já existe, devemos atualizar
 		if (optionalContaLogo.isPresent()) {
-			return null;
+			// Exclui a imagem anterior
+			ContaLogo logoExistente = optionalContaLogo.get();
+			ImageManager.excluirImagem(logoExistente.getPathLogo());
+
+			// Atualizar o logo
+			String base64 = dto.getPathLogo();
+			String caminhoIMG = ImageManager.salvaImagemConta(base64, conta.getIdConta(),
+					"logoConta_" + conta.getConta());
+
+			// Atualiza o logo existente
+			logoExistente.setPathLogo(caminhoIMG);
+			logoExistente.setDataCadastro(LocalDateTime.now());
+
+			// Salva a imagem atualizada no banco
+			repository.save(logoExistente);
+
+			// Atualiza o DTO com os dados do logo
+			dto.setIdContaLogo(logoExistente.getIdContaLogo());
+			dto.setPathLogo(logoExistente.getPathLogo());
+			dto.setDataCadastro(logoExistente.getDataCadastro());
+			dto.setAplicacaoId(logoExistente.getAplicacao().getIdAplicacao());
+			dto.setAplicacao(logoExistente.getAplicacao().getAplicacao());
+
+			return dto;
+		} else {
+			// Se não existe logo, cria um novo
+			String base64 = dto.getPathLogo();
+			String caminhoIMG = ImageManager.salvaImagemConta(base64, conta.getIdConta(),
+					"logoConta_" + conta.getConta());
+
+			// Criar um novo logo
+			ContaLogo contaLogo = new ContaLogo();
+			contaLogo.setConta(conta);
+			contaLogo.setAplicacao(aplicacao);
+			contaLogo.setPathLogo(caminhoIMG);
+			contaLogo.setDataCadastro(LocalDateTime.now());
+
+			// Salvar o novo logo no banco
+			contaLogo = repository.save(contaLogo);
+
+			// Atualiza o DTO com os dados do logo
+			dto.setIdContaLogo(contaLogo.getIdContaLogo());
+			dto.setPathLogo(contaLogo.getPathLogo());
+			dto.setDataCadastro(contaLogo.getDataCadastro());
+			dto.setAplicacaoId(contaLogo.getAplicacao().getIdAplicacao());
+			dto.setAplicacao(contaLogo.getAplicacao().getAplicacao());
+
+			return dto;
 		}
-		String base64 = dto.getPathLogo();
-		String caminhoIMG = ImageManager.salvaImagemConta(base64, conta.getIdConta(), "logoConta_" + conta.getConta());
-
-		ContaLogo contaLogo = new ContaLogo();
-		contaLogo.setConta(conta);
-		contaLogo.setAplicacao(aplicacao);
-		contaLogo.setPathLogo(caminhoIMG);
-		contaLogo.setDataCadastro(LocalDateTime.now());
-
-		contaLogo = repository.save(contaLogo);
-
-		dto.setIdContaLogo(contaLogo.getIdContaLogo());
-		dto.setPathLogo(contaLogo.getPathLogo());
-		dto.setDataCadastro(contaLogo.getDataCadastro());
-
-		dto.setAplicacaoId(contaLogo.getAplicacao().getIdAplicacao());
-		dto.setAplicacao(contaLogo.getAplicacao().getAplicacao());
-
-		return dto;
 	}
 
 	public ResponseEntity<Object> buscarLogosPorConta(Long idConta, String aplicacao) {

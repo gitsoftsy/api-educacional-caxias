@@ -37,6 +37,7 @@ public class ContaLogoController {
 		return service.buscarLogosPorConta(idConta, aplicacao);
 	}
 
+
 	@PostMapping
 	public ResponseEntity<Map<String, Object>> salvarLogo(@RequestHeader("idConta") Long idConta,
 			@RequestBody CadastroContaLogoDTO dto) throws IOException {
@@ -49,18 +50,27 @@ public class ContaLogoController {
 		}
 
 		dto.setContaId(idConta);
+
+		// Chama o método de serviço para salvar ou atualizar o logo
 		CadastroContaLogoDTO resultado = service.salvar(dto);
 
+		// Caso o logo já exista, ele será atualizado e o serviço retornará o logo
+		// atualizado
 		if (resultado == null) {
 			Map<String, Object> errorResponse = new LinkedHashMap<>();
-			errorResponse.put("mensagem",
-					"Já existe uma logo cadastrada para esta aplicação. Não é permitido mais de um logo por aplicação.");
+			errorResponse.put("mensagem", "Erro ao tentar salvar o logo. Tente novamente mais tarde.");
 			errorResponse.put("status", "erro");
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
 		}
 
 		Map<String, Object> response = new LinkedHashMap<>();
-		response.put("mensagem", "Logo cadastrado com sucesso!");
+		// Verifica se o logo foi atualizado ou criado
+		if (resultado.getIdContaLogo() != null) {
+			response.put("mensagem", "Logo atualizado com sucesso!");
+		} else {
+			response.put("mensagem", "Logo cadastrado com sucesso!");
+		}
+
 		response.put("logo", resultado);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
