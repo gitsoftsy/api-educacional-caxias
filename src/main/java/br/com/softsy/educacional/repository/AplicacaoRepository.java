@@ -13,5 +13,8 @@ public interface AplicacaoRepository extends JpaRepository<Aplicacao, Long> {
 	List<Aplicacao> findAllByOrderByIdAplicacaoAsc();
 	
 	Optional<Aplicacao> findByAplicacaoIgnoreCase(String aplicacao);
+	
 	Optional<Aplicacao> findByAplicacao(String aplicacao);
+	
+
 }

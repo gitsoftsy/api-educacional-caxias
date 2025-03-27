@@ -95,29 +95,28 @@ public class ContaImagemLoginController {
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
-	
+
 	@PutMapping
-	public ResponseEntity<Map<String, Object>> atualizarImagemLogin(
-	        @RequestHeader("idConta") Long idConta,
-	        @RequestBody CadastroContaImagemLoginDTO dto) throws IOException {
+	public ResponseEntity<Map<String, Object>> atualizarImagemLogin(@RequestHeader("idConta") Long idConta,
+			@RequestBody CadastroContaImagemLoginDTO dto) throws IOException {
 
-	    if (idConta == null) {
-	        Map<String, Object> errorResponse = new LinkedHashMap<>();
-	        errorResponse.put("mensagem", "O idConta não pode ser nulo.");
-	        errorResponse.put("status", "erro");
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-	    }
+		if (idConta == null) {
+			Map<String, Object> errorResponse = new LinkedHashMap<>();
+			errorResponse.put("mensagem", "O idConta não pode ser nulo.");
+			errorResponse.put("status", "erro");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+		}
 
-	    dto.setIdConta(idConta);
-	    CadastroContaImagemLoginDTO resultado = service.atualizarImagemLogin(idConta, dto);
+		dto.setIdConta(idConta);
 
-	    Map<String, Object> response = new LinkedHashMap<>();
-	    response.put("mensagem", "Imagem atualizada com sucesso!");
-	    response.put("imagem", resultado);
+		CadastroContaImagemLoginDTO resultado = service.atualizarImagemLogin(idConta, dto);
 
-	    return ResponseEntity.status(HttpStatus.OK).body(response);
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("mensagem", "Imagem atualizada com sucesso!");
+		response.put("imagem", resultado);
+
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-
 
 	@DeleteMapping("/{idContaLogo}")
 	public ResponseEntity<Void> excluir(@PathVariable Long idContaLogo) {

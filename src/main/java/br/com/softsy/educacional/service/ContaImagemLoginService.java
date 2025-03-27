@@ -88,16 +88,16 @@ public class ContaImagemLoginService {
 	public List<Map<String, Object>> obtemImagemLogin(Long idConta, Long idAplicacao) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("CALL PROC_CONTA_IMAGEM_LOGIN_ATIVA(:pIdConta, :pIdAplicacao, :pDataAtual)");
- 
+
 		Query query = entityManager.createNativeQuery(sql.toString());
- 
+
 		query.setParameter("pIdConta", idConta);
 		query.setParameter("pIdAplicacao", idAplicacao);
 		query.setParameter("pDataAtual", LocalDateTime.now());
- 
+
 		List<Object[]> resultList = query.getResultList();
 		List<Map<String, Object>> mappedResultList = new ArrayList<>();
- 
+
 		for (Object[] result : resultList) {
 			Map<String, Object> resultMap = new HashMap<>();
 			resultMap.put("idContaImgLogin", result[0]);
@@ -183,44 +183,57 @@ public class ContaImagemLoginService {
 
 		return dto;
 	}
-	
-	
+
+
+
 	@Transactional
-	public CadastroContaImagemLoginDTO atualizarImagemLogin(Long idConta, CadastroContaImagemLoginDTO dto) throws IOException {
+	public CadastroContaImagemLoginDTO atualizarImagemLogin(Long idConta, CadastroContaImagemLoginDTO dto)
+			throws IOException {
 
-	    Conta conta = contaRepository.findById(idConta)
-	            .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
+		// Buscar a conta
+		Conta conta = contaRepository.findById(idConta)
+				.orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
 
-	    Aplicacao aplicacao = aplicacaoRepository.findById(dto.getAplicacaoId())
-	            .orElseThrow(() -> new EntityNotFoundException("Aplicação não encontrada"));
+		// Buscar a aplicação pelo nome
+		Aplicacao aplicacao = aplicacaoRepository.findByAplicacao(dto.getAplicacao()) // Busca a aplicação pelo nome
+				.orElseThrow(() -> new EntityNotFoundException("Aplicação não encontrada"));
 
-	    List<ContaImagemLogin> imagensExistentes = repository.findByConta_IdContaAndAplicacao(idConta, aplicacao);
-	    if (imagensExistentes.isEmpty()) {
-	        throw new EntityNotFoundException("Imagem não encontrada para atualização");
-	    }
+		// Verifica se já existe uma imagem associada à conta e aplicação
+		List<ContaImagemLogin> imagensExistentes = repository.findByConta_IdContaAndAplicacao(idConta, aplicacao);
+		if (imagensExistentes.isEmpty()) {
+			throw new EntityNotFoundException("Imagem não encontrada para atualização");
+		}
 
-	    ContaImagemLogin imagemExistente = imagensExistentes.get(0);
+		// Atualiza a imagem
+		ContaImagemLogin imagemExistente = imagensExistentes.get(0);
 
-	    ImageManager.excluirImagem(imagemExistente.getPathImagem());
+		// Exclui a imagem anterior
+		ImageManager.excluirImagem(imagemExistente.getPathImagem());
 
-	    String caminhoIMG = ImageManager.salvaImagemContaLogin(dto.getPathImagem(), conta.getIdConta(), "login_" + conta.getConta());
+		// Salva a nova imagem
+		String caminhoIMG = ImageManager.salvaImagemContaLogin(dto.getPathImagem(), conta.getIdConta(),
+				"login_" + conta.getConta());
 
-	    imagemExistente.setPathImagem(caminhoIMG);
-	    imagemExistente.setDataInicioExibicao(dto.getDataInicioExibicao());
-	    imagemExistente.setDataFimExibicao(dto.getDataFimExibicao());
-	    imagemExistente.setDataCadastro(LocalDateTime.now());
+		// Atualiza os dados da imagem
+		imagemExistente.setPathImagem(caminhoIMG);
+		imagemExistente.setDataInicioExibicao(dto.getDataInicioExibicao());
+		imagemExistente.setDataFimExibicao(dto.getDataFimExibicao());
+		imagemExistente.setDataCadastro(LocalDateTime.now());
 
-	    repository.save(imagemExistente);
+		// Salva a imagem atualizada no banco
+		repository.save(imagemExistente);
 
-	    dto.setIdContaImagemLogin(imagemExistente.getIdContaImagemLogin());
-	    dto.setPathImagem(imagemExistente.getPathImagem());
-	    dto.setDataCadastro(imagemExistente.getDataCadastro());
-	    dto.setAplicacaoId(imagemExistente.getAplicacao().getIdAplicacao());
-	    dto.setAplicacao(imagemExistente.getAplicacao().getAplicacao());
+		// Atualiza o DTO para retornar os dados da imagem
+		dto.setIdContaImagemLogin(imagemExistente.getIdContaImagemLogin());
+		dto.setPathImagem(imagemExistente.getPathImagem());
+		dto.setDataCadastro(imagemExistente.getDataCadastro());
+		dto.setAplicacao(imagemExistente.getAplicacao().getAplicacao()); // Nome da aplicação
 
-	    return dto;
+		// Atribui o aplicacaoId ao DTO
+		dto.setAplicacaoId(imagemExistente.getAplicacao().getIdAplicacao()); // Definindo o aplicacaoId
+
+		return dto;
 	}
-
 
 	// Método auxiliar para verificar se duas faixas de datas se sobrepõem
 	private boolean isDateRangeOverlap(LocalDateTime start1, LocalDateTime end1, LocalDateTime start2,

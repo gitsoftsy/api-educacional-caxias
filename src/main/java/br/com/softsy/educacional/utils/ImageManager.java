@@ -10,7 +10,10 @@ import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class ImageManager {
 
 	public static void saveImage(byte[] imageBytes, String imageName) throws IOException {
@@ -573,6 +576,7 @@ public class ImageManager {
 	        
 	        String directoryPath = ImageProperties.getImagePath() +"/uploads/conta/"+contaId.toString();
 	 
+	        
 	        // Define o caminho para salvar a imagem
 	        Path diretorio = Paths.get(directoryPath);
 	        // Adiciona um timestamp para garantir um nome de arquivo único
@@ -592,6 +596,8 @@ public class ImageManager {
 	 
 	        return caminhoArquivo;
 	    }
+		
+		
 		
 	
  	

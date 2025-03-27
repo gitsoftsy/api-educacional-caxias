@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import br.com.softsy.educacional.model.ContaImagemLogin;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,11 +24,14 @@ public class CadastroContaImagemLoginDTO {
 	private String pathImagem;
 
 	private Long aplicacaoId; 
+	
 	private String aplicacao; 
 
-	private LocalDateTime dataInicioExibicao;
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime dataInicioExibicao;
 
-	private LocalDateTime dataFimExibicao;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime dataFimExibicao;
 
 	public CadastroContaImagemLoginDTO(ContaImagemLogin contaImagemLogin) {
 		this.idContaImagemLogin = contaImagemLogin.getIdContaImagemLogin();

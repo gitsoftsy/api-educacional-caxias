@@ -21,6 +21,7 @@ public class CadastroContaLogoDTO {
 	private String pathLogo;
 
 	private Long aplicacaoId; 
+	
 	private String aplicacao; 
 
 	public CadastroContaLogoDTO(ContaLogo contaLogo) {
