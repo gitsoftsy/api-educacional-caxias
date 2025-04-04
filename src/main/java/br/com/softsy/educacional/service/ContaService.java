@@ -1,6 +1,5 @@
 package br.com.softsy.educacional.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +15,6 @@ import br.com.softsy.educacional.dto.ContaDTO;
 import br.com.softsy.educacional.infra.exception.UniqueException;
 import br.com.softsy.educacional.model.Conta;
 import br.com.softsy.educacional.repository.ContaRepository;
-import br.com.softsy.educacional.utils.ImageManager;
 
 @Service
 public class ContaService {
@@ -33,20 +31,6 @@ public class ContaService {
 		return new ContaDTO(repository.getReferenceById(id));
 	}
 
-	
-	
-//	public String getLogoById(Long idConta) throws IOException {
-//		Optional<Conta> contaOptional = repository.findById(idConta);
-//
-//		String imagemCarregada;
-//		imagemCarregada = ImageManager.buscaImagem(contaOptional.get().getLogoConta());
-//
-//		if (contaOptional.isPresent()) {
-//			return imagemCarregada;
-//		} else {
-//			return null;
-//		}
-//	}
 
 	@Transactional
 	public CadastroContaDTO salvar(CadastroContaDTO dto) {
@@ -74,30 +58,6 @@ public class ContaService {
 		atualizaDados(conta, dto);
 		return new ContaDTO(conta);
 	}
-	
-//	@Transactional
-//	public ContaDTO alterarImagemConta(Long idConta, String novaImagemBase64) throws IOException {
-//		Conta conta = repository.findById(idConta).orElseThrow(() -> new IllegalArgumentException("Conta não encontrada"));
-//
-//	    // Verificar se já existe uma imagem e apagar do servidor
-//	    if (conta.getLogoConta() != null) {
-//	        File imagemExistente = new File(conta.getLogoConta());
-//	        if (imagemExistente.exists()) {
-//	            imagemExistente.delete();
-//	        }
-//	    }
-//
-//	    // Salvar a nova imagem
-//	    String novoCaminhoIMG = ImageManager.salvaImagemConta(novaImagemBase64, idConta, "conta" + conta.getConta());
-//
-//	    // Atualizar o caminho da imagem no banco de dados
-//	    conta.setLogoConta(novoCaminhoIMG);
-//	    repository.save(conta);
-//
-//	    // Criar e retornar o DTO atualizado
-//	    ContaDTO contaAtualizada = new ContaDTO(conta);
-//	    return contaAtualizada;
-//	}
 
 	@Transactional
 	public void ativaDesativa(char status, Long idConta) {

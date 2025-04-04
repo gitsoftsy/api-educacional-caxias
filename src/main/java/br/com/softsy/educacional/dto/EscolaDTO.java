@@ -30,7 +30,6 @@ public class EscolaDTO {
 	private ContaDTO conta;
 
 	@NotNull
-	@JsonIgnore
 	private String logoEscola;
 
 	@NotNull

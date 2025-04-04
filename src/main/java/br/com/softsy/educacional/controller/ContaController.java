@@ -40,12 +40,6 @@ public class ContaController {
 		return ResponseEntity.ok(service.buscarPorId(idConta));
 	}
 	
-//	@GetMapping("/{id}/logo")
-//    public ResponseEntity<String> getLogoById(@PathVariable("id") Long id) throws IOException {
-//		String logo = service.getLogoById(id);
-//
-//       return ResponseEntity.ok(logo);
-//    }
 	
 	@PostMapping
 	public ResponseEntity<CadastroContaDTO> cadastrar(@RequestBody @Valid CadastroContaDTO dto) throws IOException{
@@ -59,21 +53,6 @@ public class ContaController {
 	public ResponseEntity<?> atualizar(@RequestBody @Valid CadastroContaDTO dto) throws IOException{
 		return ResponseEntity.ok(service.atualizar(dto));
 	}
-	
-//	@PutMapping("/imagem/{id}")
-//    public ResponseEntity<ContaDTO> alterarImagemConta(
-//            @PathVariable Long id,
-//            @RequestBody ContaDTO dto) {
-//        
-//        try {
-//        	ContaDTO contaAtualizada = service.alterarImagemConta(id, dto.getLogoConta());
-//            return ResponseEntity.ok(contaAtualizada);
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//        } catch (IOException e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//        }
-//    }
 	
 	@PutMapping("/{idConta}/ativar")
 	public ResponseEntity<?> ativar(@PathVariable Long idConta){

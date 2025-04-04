@@ -255,29 +255,29 @@ public class EscolaService {
 
 	@Transactional
 	public EscolaDTO alterarImagemEscola(Long idEscola, String novaImagemBase64) throws IOException {
-		Escola escola = repository.findById(idEscola)
-				.orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
+	    if (novaImagemBase64 == null || novaImagemBase64.isBlank()) {
+	        throw new IllegalArgumentException("A imagem em base64 não pode ser nula ou vazia");
+	    }
 
-		// Verificar se já existe uma imagem e apagar do servidor
-		if (escola.getLogoEscola() != null) {
-			File imagemExistente = new File(escola.getLogoEscola());
-			if (imagemExistente.exists()) {
-				imagemExistente.delete();
-			}
-		}
+	    Escola escola = repository.findById(idEscola)
+	            .orElseThrow(() -> new IllegalArgumentException("Escola não encontrada"));
 
-		// Salvar a nova imagem
-		String novoCaminhoIMG = ImageManager.salvaImagemConta(novaImagemBase64, idEscola,
-				"escola" + escola.getNomeEscola());
+	    if (escola.getLogoEscola() != null) {
+	        File imagemExistente = new File(escola.getLogoEscola());
+	        if (imagemExistente.exists()) {
+	            imagemExistente.delete();
+	        }
+	    }
 
-		// Atualizar o caminho da imagem no banco de dados
-		escola.setLogoEscola(novoCaminhoIMG);
-		repository.save(escola);
+	    String novoCaminhoIMG = ImageManager.salvaImagemEscola(novaImagemBase64, idEscola,
+	            "escola" + escola.getNomeEscola());
 
-		// Criar e retornar o DTO atualizado
-		EscolaDTO escolaAtualizada = new EscolaDTO(escola);
-		return escolaAtualizada;
+	    escola.setLogoEscola(novoCaminhoIMG);
+	    repository.save(escola);
+
+	    return new EscolaDTO(escola);
 	}
+
 
 	@Transactional
 	public void ativaDesativa(char status, Long id) {

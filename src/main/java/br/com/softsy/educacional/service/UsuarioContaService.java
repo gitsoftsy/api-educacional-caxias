@@ -107,7 +107,7 @@ public class UsuarioContaService {
         Escola escola = null;
         if (origem.getEscolaId() != null) {
         	escola = escolaRepository.findById(origem.getEscolaId())
-                    .orElseThrow(() -> new IllegalArgumentException("Erro ao encontrar conta padrão de acesso"));
+                    .orElseThrow(() -> new IllegalArgumentException("Erro ao encontrar Escola"));
         }
 
         destino.setEscola(escola);
